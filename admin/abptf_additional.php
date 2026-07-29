@@ -9,7 +9,7 @@
                 add_action('abptf_post_content', [$this, 'post_additional_service']);
                 add_filter('abptf_get_additional_array', array($this, 'get_additional_array'));
                 add_action('wp_ajax_abptf_save_global_additional', array($this, 'save_global_additional'));
-                add_action('wp_ajax_abptf_import_additional', array($this, 'import_additional'));
+                add_action('wp_ajax_abptf_import_additional_content', array($this, 'import_additional_content'));
             }
             public function global_additional(): void {
                 ?>
@@ -58,7 +58,7 @@
                                         <span class="_fs_label_mar_lr_xs"><?php esc_html_e('Use Global Additional Service ?', 'abp-transportforge'); ?></span>
                                     </div>
                                     <div data-collapse="#active_global_additional" class=" <?php echo esc_attr($active_global_additional == 'on' ? '' : 'abp_active'); ?>">
-                                        <button type="button" class="_btn_theme import_additional"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Additional Service', 'abp-transportforge'); ?></button>
+                                        <button type="button" class="_btn_theme" onclick="abptf_import_global('additional_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Additional Service', 'abp-transportforge'); ?></button>
                                     </div>
                                 </div>
                                 <div class="_divider_xs"></div>
@@ -217,7 +217,7 @@
                 }
                 return $additional_services;
             }
-            public function import_additional(): void {
+            public function import_additional_content(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
                 }
@@ -226,7 +226,7 @@
                 ob_start();
                 $this->additional_service($additional_services);
                 $html_content = ob_get_clean();
-                wp_send_json_success(['html' => $html_content, 'msg' => __('Additional services ImportedSuccessfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
+                wp_send_json_success(['html' => $html_content, 'msg' => __('Additional services Imported Successfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
             }
         }
         new ABPTF_Additional();

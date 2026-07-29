@@ -16,13 +16,14 @@
 			?>
             <div class=" abptf_missionary  item_<?php echo esc_attr( $column ); ?>">
 				<?php foreach ( $post_ids as $post_id ) {
+                    $post_infos['post_id']=$post_id;
 					$cat_id = ABPTF_Function::get_post_info( $post_id, 'abptf_category' );
 					$loc_id = ABPTF_Function::get_post_info( $post_id, 'abptf_location' );
 					$post_count ++;
 					$title = get_the_title( $post_id ); ?>
                     <div class="pagination_item item_box_1  <?php echo esc_attr( $show_post >= $post_count ? '' : 'abp_close' ); ?>" data-cat_id="<?php echo esc_attr( $cat_id ); ?>" data-loc_id="<?php echo esc_attr( $loc_id ); ?>">
                         <div class="item_head">
-							<?php do_action( 'abptf_category', $post_id, 'ribbon' ); ?>
+							<?php ABPTF_Layout::category($post_infos,'ribbon');?>
 							<?php ABPTF_Layout::image( $post_id ); ?>
 							<?php if ( ! empty( $global_order ) ) { ?>
                                 <button type="button" class="_btn_theme_xs_w_full select_post" data-post_id="<?php echo esc_attr( $post_id ); ?>">

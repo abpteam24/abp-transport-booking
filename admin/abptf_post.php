@@ -14,7 +14,6 @@
                 add_action('wp_ajax_abptf_reload_post_list', array($this, 'reload_post_list'));
             }
             public function load_posts($abptf_info = []): void {
-                $brand_icon = ABPTF_Function::icon();
                 $total_posts = $abptf_info['total_post'] ?? 0;
                 $total_publish = $abptf_info['total_publish'] ?? 0;
                 $total_draft = $abptf_info['total_draft'] ?? 0;
@@ -27,20 +26,23 @@
                 $status = $status ?? 'publish';
                 $filter_args['status'] = $status;
                 ?>
-                <div class="abptf_posts _abp_panel">
-                    <div class="_panel_head _fj_between_f_wrap">
-                        <h4 class="_abp_color_white"><?php ABPTF_Layout::image_icon($brand_icon); ?><?php esc_html_e('Post Lists', 'abp-transportforge'); ?></h4>
+                <div class="abptf_posts _section_card_xs">
+                    <div class="_fj_between_f_wrap">
                         <div class="_group_content">
                             <input type="hidden" name="select_hidden_post_status" value="<?php echo esc_attr($status); ?>"/>
-                            <button type="button" class="_btn_white_xs <?php echo esc_attr($status == 'all' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'all'])); ?>"><?php esc_html_e('All', 'abp-transportforge'); ?> ( <?php echo esc_html($total_posts); ?> )</button>
-                            <button type="button" class="_btn_white_xs <?php echo esc_attr($status == 'publish' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'publish'])); ?>"><?php esc_html_e('Published', 'abp-transportforge'); ?> ( <?php echo esc_html($total_publish); ?> )</button>
-                            <button type="button" class="_btn_white_xs <?php echo esc_attr($status == 'private' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'private'])); ?>"><?php esc_html_e('Private', 'abp-transportforge'); ?> ( <?php echo esc_html($total_private); ?> )</button>
-                            <button type="button" class="_btn_white_xs <?php echo esc_attr($status == 'draft' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'draft'])); ?>"><?php esc_html_e('Draft', 'abp-transportforge'); ?> ( <?php echo esc_html($total_draft); ?> )</button>
-                            <button type="button" class="_btn_white_xs <?php echo esc_attr($status == 'trash' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'trash'])); ?>"><?php esc_html_e('Trash', 'abp-transportforge'); ?> ( <?php echo esc_html($total_trash); ?> )</button>
+                            <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'all' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'all'])); ?>"><?php esc_html_e('All', 'abp-transportforge'); ?> ( <?php echo esc_html($total_posts); ?> )</button>
+                            <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'publish' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'publish'])); ?>"><?php esc_html_e('Published', 'abp-transportforge'); ?> ( <?php echo esc_html($total_publish); ?> )</button>
+                            <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'private' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'private'])); ?>"><?php esc_html_e('Private', 'abp-transportforge'); ?> ( <?php echo esc_html($total_private); ?> )</button>
+                            <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'draft' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'draft'])); ?>"><?php esc_html_e('Draft', 'abp-transportforge'); ?> ( <?php echo esc_html($total_draft); ?> )</button>
+                            <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'trash' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTF_Function::build_url('posts', ['status' => 'trash'])); ?>"><?php esc_html_e('Trash', 'abp-transportforge'); ?> ( <?php echo esc_html($total_trash); ?> )</button>
                         </div>
-                        <a class="_btn_light_white_xs" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTF_Function::get_cpt())); ?>"><span class="_mar_r_xs">➕</span><?php esc_html_e('Add New Post', 'abp-transportforge'); ?></a>
+                        <a class="_btn_navy_blue_xs" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTF_Function::get_cpt())); ?>">
+                            <?php ABPTF_Layout::icon_buddy('plus');
+                                esc_html_e('Add New Transport', 'abp-transportforge'); ?>
+                        </a>
                     </div>
-                    <div class="_panel_body post_list">
+                    <div class="_divider_xxs"></div>
+                    <div class=" post_list">
                         <?php $this->post_table($filter_args); ?>
                     </div>
                 </div>
@@ -77,20 +79,24 @@
                         <tr>
                             <th class="_w_50"><?php esc_html_e('SI', 'abp-transportforge'); ?></th>
                             <th class="_w_100"><?php esc_html_e('Image', 'abp-transportforge'); ?></th>
-                            <th><?php esc_html_e('Post', 'abp-transportforge'); ?></th>
-                            <th><?php esc_html_e('Rent Rule', 'abp-transportforge'); ?></th>
-                            <th class="_w_100"><?php esc_html_e('Property', 'abp-transportforge'); ?></th>
+                            <th><?php echo esc_html(ABPTF_Function::label()); ?></th>
+                            <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('Route', 'abp-transportforge'); ?></th>
+                            <th><?php esc_html_e('Ticket Type & Qty', 'abp-transportforge'); ?></th>
                             <th><?php esc_html_e('Shortcode', 'abp-transportforge'); ?></th>
-                            <th class="_w_175"><?php esc_html_e('Actions', 'abp-transportforge'); ?></th>
+                            <th><?php esc_html_e('Actions', 'abp-transportforge'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
                             foreach ($post_ids as $post_id) {
-                                $title = get_the_title($post_id);
+                                $post_infos = ABPTF_Function::get_all_meta($post_id);
+                                $title = $post_infos['post_title'] ?? '';
+                                $seat_type = $post_infos['seat_type'] ?? 'sp';
+                                $seat_type = ABPTF_Function::on_off('sp') ? $seat_type : 'ticket';
                                 $edit_link = get_edit_post_link($post_id);
-                                $post_sale_continue = ABPTF_Function::get_post_info($post_id, 'sale_continue', 'on');
-                                $rent_rule = ABPTF_Function::get_post_info($post_id, 'rent_rule');
+                                $sale_continue = $post_infos['sale_continue'] ?? 'on';
+                                $display_return = $post_infos['display_return'] ?? 'off';
+                                $display_return = ABPTF_Function::on_off('return') ? $display_return : 'off';
                                 $post_status = get_post_status($post_id);
                                 $new_post_url = add_query_arg(array('copy_post' => $post_id, '_abptf_nonce' => wp_create_nonce('abptf_copy_post_action'),), $new_post_url);
                                 ?>
@@ -98,43 +104,41 @@
                                     <th><?php echo esc_html($count); ?>.</th>
                                     <td><?php ABPTF_Layout::image($post_id); ?></td>
                                     <td>
-                                        <?php if ($post_status == 'trash') { ?>
-                                            <h5 class="_abp_color_warning"><?php
-                                                    if (ABPTF_Function::on_off('post_icon')) {
-                                                        ABPTF_Layout::image_icon(ABPTF_Function::get_post_info($post_id, 'post_icon'));
-                                                    }
-                                                    echo esc_html($title);
-                                                ?></h5>
-                                        <?php } else { ?>
-                                            <a href="<?php echo esc_url($edit_link); ?>" class="_abp_fs_h5_color_theme">
-                                                <?php if (ABPTF_Function::on_off('post_icon')) {
-                                                    ABPTF_Layout::image_icon(ABPTF_Function::get_post_info($post_id, 'post_icon'));
-                                                }
-                                                    echo esc_html($title); ?>
-                                            </a>
-                                        <?php } ?>
-                                        <div class="_d_flex">
-                                            <span class="_mar_r_xxs publish"><?php echo esc_html(__('ID : ', 'abp-transportforge') . ' ' . $post_id); ?></span>
-                                            <span class="_mar_r_xxs <?php echo esc_attr($post_sale_continue == 'on' ? 'publish' : 'trash'); ?>"><?php echo esc_html($post_sale_continue == 'on' ? __('Rent On', 'abp-transportforge') : __('Rent Off', 'abp-transportforge')); ?></span>
-                                            <span class="_mar_r_xxs <?php echo esc_attr($post_status); ?>"><?php echo esc_html($post_status); ?></span>
+                                        <div class="_mar_b_xxs">
+                                            <?php if ($post_status == 'trash') { ?>
+                                                <h5 class="_abp_color_warning"><?php ABPTF_Layout::title($post_infos); ?></h5>
+                                            <?php } else { ?>
+                                                <a href="<?php echo esc_url($edit_link); ?>" class="_abp_fs_h5_color_theme"><?php ABPTF_Layout::title($post_infos); ?></a>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="_gap_xxs">
+                                            <span class="abp_tag"><?php echo esc_html(__('ID : ', 'abp-transportforge') . ' ' . $post_id); ?></span>
+                                            <span class=" abp_tag <?php echo esc_attr($sale_continue == 'on' ? 'publish' : 'trash'); ?>">
+                                                <?php echo esc_html($sale_continue == 'on' ? __('Sale On', 'abp-transportforge') : __('Sale Off', 'abp-transportforge')); ?>
+                                            </span>
+                                            <span class="abp_tag <?php echo esc_attr($post_status); ?>"><?php echo esc_html($post_status); ?></span>
                                         </div>
                                     </td>
-                                    <th><?php echo esc_html(!empty($rent_rule) ? ABPTF_Layout::rent_rules($rent_rule) : ''); ?></th>
-                                    <th><?php echo esc_html(ABPTF_Query::get_property(['post_id' => $post_id], true)); ?></th>
                                     <th>
-                                        <p class="_abp"><code> [abptf-post post_id="<?php echo esc_attr($post_id); ?>"]</code></p>
-                                        <p class="_abp"><code> [abptf-property post_id="<?php echo esc_attr($post_id); ?>"]</code></p>
+                                        <div class="_abp_color_active"><?php ABPTF_Layout::route_direction($post_infos); ?></div>
+                                        <?php if ($display_return == 'on') { ?>
+                                            <div class="_abp_color_burnt_orange">
+                                                <?php ABPTF_Layout::route_direction($post_infos, '', true); ?>
+                                            </div>
+                                        <?php } ?>
                                     </th>
+                                    <th><?php echo esc_html(ABPTF_Layout::ticket_type($seat_type) . ' - ' . ABPTF_Function::get_total_qty($post_id, $post_infos)) ?></th>
+                                    <th><code> [abptf-post post_id="<?php echo esc_attr($post_id); ?>"]</code></th>
                                     <th>
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_navy_blue _mar_r_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">🔁</button>
+                                            <button type="button" class="_btn_light_navy_blue_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><?php ABPTF_Layout::icon_buddy('clone_1'); ?></button>
                                             <?php if ($post_status == 'trash') { ?>
-                                                <button type="button" class="_btn_light_success_mar_r_xxs post_restore" data-post_id="<?php echo esc_attr($post_id); ?>" title="<?php echo esc_html__('Restore : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">♻️</button>
-                                                <button type="button" class="_btn_light_danger_xxs post_permanent_remove" data-post_id="<?php echo esc_attr($post_id); ?>" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">❌</button>
+                                                <button type="button" class="_btn_light_success_xxs " onclick="abptf_post_action('restore','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Restore : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">♻️</button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptf_post_action('permanent_remove','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><?php ABPTF_Layout::icon_buddy('close_2'); ?></button>
                                             <?php } else { ?>
-                                                <button type="button" class="_btn_light_yellow_mar_r_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">✍️</button>
-                                                <button type="button" class="_btn_light_theme_mar_r_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transportforge') . ' ' . esc_html($title); ?>">👁️</button>
-                                                <button type="button" class="_btn_light_danger_xxs post_move_trash" data-post_id="<?php echo esc_attr($post_id); ?>" title="<?php echo esc_html__('Move to Trash : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><span class="fas fa-trash"></span></button>
+                                                <button type="button" class="_btn_light_yellow_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><?php ABPTF_Layout::icon_buddy('edit'); ?></button>
+                                                <button type="button" class="_btn_light_theme_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><?php ABPTF_Layout::icon_buddy('view_1'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptf_post_action('move_trash','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Move to Trash : ', 'abp-transportforge') . ' ' . esc_html($title); ?>"><?php ABPTF_Layout::icon_buddy('close_1'); ?></button>
                                             <?php } ?>
                                         </div>
                                     </th>
@@ -148,7 +152,7 @@
                     <?php
                     do_action('abptf_pagination', ['page_item' => $limit, 'page_number' => $page_number, 'total' => $total_post, 'style' => 'ajax']);
                 } else {
-                    ABPTF_Layout::layout_warning_info('not_post_found');
+                    ABPTF_Layout::layout_warning_info('not_found');
                 }
             }
             public function settings(): void {
@@ -169,13 +173,13 @@
                 <div class="abptf_area abptf_admin abp_post_config">
                     <input type="hidden" name="abptf_post_id" value="<?php echo esc_attr($post_id); ?>"/>
                     <div class="_abp_panel">
-                        <div class="abptf_tabs tab_top">
+                        <div class="abp_tabs tab_top">
                             <div class="_panel_head">
                                 <ul class="_abp tab_lists">
                                     <li data-tabs-target="#abptf_general"><span class="fas fa-rainbow"></span><?php esc_html_e('General', 'abp-transportforge'); ?></li>
-                                    <li data-tabs-target="#abptf_routing"><span class="fas fa-route"></span><?php esc_html_e('Route', 'abp-transportforge'); ?></li>
                                     <li data-tabs-target="#abptf_ticket"><span class="_mar_r_xxs">🎫 </span><?php esc_html_e('Ticket', 'abp-transportforge'); ?></li>
-                                    <li data-tabs-target="#abptf_price"><span class="_mar_r_xxs">💲 </span><?php esc_html_e(' Price', 'abp-transportforge'); ?></li>
+                                    <li data-tabs-target="#abptf_routing"><span class="fas fa-route"></span><?php esc_html_e('Route', 'abp-transportforge'); ?></li>
+                                    <li data-tabs-target="#abptf_price" onclick="abptf_price_load()"><span class="_mar_r_xxs">💲 </span><?php esc_html_e(' Price', 'abp-transportforge'); ?></li>
                                     <li data-tabs-target="#abptf_dates"><span class="_mar_r_xxs">🗓️</span><?php esc_html_e('Date', 'abp-transportforge'); ?></li>
                                     <li data-tabs-target="#abptf_times"><span class="_mar_r_xxs">⏰</span><?php esc_html_e('Time', 'abp-transportforge'); ?></li>
                                     <?php if (ABPTF_Function::on_off('additional_info')) { ?>
@@ -219,7 +223,7 @@
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
                                 <span class="_abp_label"><?php esc_html_e('Template', 'abp-transportforge'); ?></span>
-                                <select class="_form_control " name="abptf_template"  required>
+                                <select class="_form_control " name="abptf_template" required>
                                     <option disabled selected><?php esc_html_e('Please Select', 'abp-transportforge'); ?></option>
                                     <option value="default" <?php echo esc_attr($abptf_template == 'default' ? 'selected' : ''); ?>><?php esc_html_e('Default Template', 'abp-transportforge'); ?></option>
                                     <option value="light" <?php echo esc_attr($abptf_template == 'light' ? 'selected' : ''); ?>><?php esc_html_e('Light Template', 'abp-transportforge'); ?></option>
@@ -275,6 +279,31 @@
                                 <?php ABPTF_Layout::info_text('post_description'); ?>
                             </div>
                         <?php } ?>
+                        <?php if (ABPTF_Function::on_off('display_capacity')) { ?>
+                            <div class="setting_item">
+                                <div class="_fa_center">
+                                    <?php ABPTF_Layout::switch_checkbox('display_capacity', ($post_infos['display_capacity'] ?? 'off')); ?>
+                                    <span class="_abp_label"><?php esc_html_e('Display Capacity', 'abp-transportforge'); ?></span>
+                                </div>
+                                <div class="_divider_xxs"></div>
+                                <?php ABPTF_Layout::info_text('display_capacity'); ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (ABPTF_Function::on_off('category')) { ?>
+                            <div class="setting_item">
+                                <div class="_fj_between_fa_center">
+                                    <div class="_fa_center">
+                                        <?php ABPTF_Layout::switch_checkbox('display_category', ($post_infos['display_category'] ?? 'on')); ?>
+                                        <span class="_abp_label"><?php echo esc_html(ABPTF_Function::category_label()); ?></span>
+                                    </div>
+                                    <div class="tax_category _group_content">
+                                        <?php ABPTF_Category::category_selection($post_infos['abptf_category'] ?? ''); ?>
+                                    </div>
+                                </div>
+                                <div class="_divider_xxs"></div>
+                                <?php ABPTF_Layout::info_text('display_category'); ?>
+                            </div>
+                        <?php } ?>
                         <?php if (ABPTF_Function::on_off('organizer')) { ?>
                             <div class="setting_item">
                                 <div class="_fj_between_fa_center">
@@ -295,29 +324,13 @@
                                         <?php ABPTF_Layout::switch_checkbox('display_brand', ($post_infos['display_brand'] ?? 'off')); ?>
                                         <span class="_abp_label"><?php echo esc_html(ABPTF_Function::brand_label()); ?></span>
                                     </div>
-                                    <div class="tax_brand _group_content"><?php ABPTF_Brand::brand_selection($post_infos['abptf_organizer'] ?? ''); ?></div>
+                                    <div class="tax_brand _group_content"><?php ABPTF_Brand::brand_selection($post_infos['abptf_brand'] ?? ''); ?></div>
                                 </div>
                                 <div class="_divider_xxs"></div>
                                 <?php ABPTF_Layout::info_text('display_brand'); ?>
                             </div>
                         <?php } ?>
-                        <?php if (ABPTF_Function::on_off('category')) { ?>
-                            <div class="setting_item">
-                                <div class="_fj_between_fa_center">
-                                    <div class="_fa_center">
-                                        <?php ABPTF_Layout::switch_checkbox('display_category', ($post_infos['display_category'] ?? 'on')); ?>
-                                        <span class="_abp_label"><?php echo esc_html(ABPTF_Function::category_label()); ?></span>
-                                    </div>
-                                    <?php ABPTF_Layout::button_global_popup('tax_category', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::category_label()); ?>
-                                </div>
-                                <div class="_divider_xxs"></div>
-                                <?php ABPTF_Layout::info_text('display_category'); ?>
-                                <div class="_divider_xxs"></div>
-                                <div class="tax_category">
-                                    <?php ABPTF_Category::category_selection($post_infos['abptf_category'] ?? ''); ?>
-                                </div>
-                            </div>
-                        <?php } ?>
+
                         <?php if (ABPTF_Function::on_off('related')) { ?>
                             <div class="setting_item related_item">
                                 <div class="_fj_between_fa_center">
@@ -364,9 +377,9 @@
                         <div class="setting_item full_width">
                             <span class="_abp_label"><?php esc_html_e('Gallery', 'abp-transportforge'); ?></span>
                             <div class="_divider_xxs"></div>
-                            <?php ABPTF_Layout::info_text('abptf_sliders'); ?>
+                            <?php ABPTF_Layout::info_text('abptf_slider'); ?>
                             <div class="_divider_xxs"></div>
-                            <?php do_action('abptf_add_image_multiple', 'abptf_sliders', ($post_infos['abptf_sliders'] ?? '')); ?>
+                            <?php do_action('abptf_add_image_multiple', 'abptf_slider', ($post_infos['abptf_slider'] ?? '')); ?>
                         </div>
                     </div>
                 </div>
@@ -384,214 +397,232 @@
                     return;
                 }
                 if (get_post_type($post_id) == ABPTF_Function::get_cpt()) {
-                    //$post_int            = fn( $key, $default = 0 ) => isset( $_POST[ $key ] ) ? absint( $_POST[ $key ] ) : $default;
+                    $post_int = fn($key, $default = 0) => isset($_POST[$key]) ? absint($_POST[$key]) : $default;
                     $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
                     $post_textarea = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_textarea_field(wp_unslash($_POST[$key])) : $default;
                     $post_html = fn($key, $default = '') => isset($_POST[$key]) ? wp_kses_post(wp_unslash($_POST[$key])) : $default;
                     $post_int_array = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? array_map('absint', wp_unslash($_POST[$key])) : [];
                     $post_array = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? array_map('sanitize_text_field', wp_unslash($_POST[$key])) : [];
-                    $post_textarea_array = fn( $key ) => ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) ? array_map( 'sanitize_textarea_field', wp_unslash( $_POST[ $key ] ) ) : [];
+                    $post_textarea_array = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? array_map('sanitize_textarea_field', wp_unslash($_POST[$key])) : [];
+                    $post_deep = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? map_deep(wp_unslash($_POST[$key]), 'sanitize_text_field') : [];
                     //$post_html_array     = fn( $key ) => ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) ? array_map( 'wp_kses_post', wp_unslash( $_POST[ $key ] ) ) : [];
                     //$format_date         = fn( $date ) => $date ? gmdate( 'Y-m-d', strtotime( $date ) ) : '';
-                    $route_infos = [];
-                    $route_direction = [];
-                    $bp = [];
-                    $dp = [];
-                    $stops = $post_int_array('stop_name');
-                    $types = $post_array('stop_type');
-                    $display_pd = $post_array('display_pd');
-                    $times = $post_int_array('stop_time');
-                    $count = count($stops);
-                    for ($i = 0; $i < $count; $i++) {
-                        $stop = $stops[$i] ?? '';
-                        $type = $types[$i] ?? '';
-                        if ($stop && $type) {
-                            $route_infos[$i]['stop'] = $stop;
-                            $route_infos[$i]['type'] = $type;
-                            $route_infos[$i]['time'] = $times[$i] ?? '';
-                            $route_infos[$i]['display_pd'] = $display_pd[$i] ?? '';
-                            $route_direction[] = $stop;
-                        }
-                    }
-                    $count = sizeof($route_infos);
-                    if ($count > 0) {
-                        $route_infos[0]['type'] = 'bp';
-                        $route_infos[0]['display_drop'] = 'off';
-                        $route_infos[0]['time'] = 0;
-                        $route_infos[$count - 1]['type'] = 'dp';
-                        foreach ($route_infos as $route_info) {
-                            if ($route_info['type'] == 'bp') {
-                                $bp[] = $route_info['stop'];
-                            } elseif ($route_info['type'] == 'dp') {
-                                $dp[] = $route_info['stop'];
-                            } else {
-                                $bp[] = $route_info['stop'];
-                                $dp[] = $route_info['stop'];
-                            }
-                        }
-                    }
-                    /***********************************/
-                    $display_return = $post_val('display_return', 'off');
-                    $return_route_infos = [];
-                    $return_route_direction = [];
-                    $return_bp = [];
-                    $return_dp = [];
-                    if ($display_return == 'on') {
-                        $stops = $post_int_array('return_stop_name');
-                        $types = $post_array('return_stop_type');
-                        $display_pd = $post_array('return_display_pd');
-                        $times = $post_int_array('return_stop_time');
-                        $count = count($stops);
-                        for ($i = 0; $i < $count; $i++) {
-                            $stop = $stops[$i] ?? '';
-                            $type = $types[$i] ?? '';
-                            if ($stop && $type) {
-                                $return_route_infos[$i]['stop'] = $stop;
-                                $return_route_infos[$i]['type'] = $type;
-                                $return_route_infos[$i]['time'] = $times[$i] ?? '';
-                                $return_route_infos[$i]['display_pd'] = $display_pd[$i] ?? '';
-                                $return_route_direction[] = $stop;
-                            }
-                        }
-                        $count = sizeof($return_route_infos);
-                        if ($count > 0) {
-                            $return_route_infos[0]['type'] = 'bp';
-                            $return_route_infos[0]['display_drop'] = 'off';
-                            $return_route_infos[0]['time'] = 0;
-                            $return_route_infos[$count - 1]['type'] = 'dp';
-                            foreach ($return_route_infos as $route_info) {
-                                if ($route_info['type'] == 'bp') {
-                                    $return_bp[] = $route_info['stop'];
-                                } elseif ($route_info['type'] == 'dp') {
-                                    $return_dp[] = $route_info['stop'];
-                                } else {
-                                    $return_bp[] = $route_info['stop'];
-                                    $return_dp[] = $route_info['stop'];
-                                }
-                            }
-                        }
-                    }
                     /***********************************/
                     $seat_type = $post_val('seat_type');
                     $display_ticket_type = $post_val('display_ticket_type');
-                    $ticket_infos=[];
+                    $ticket_infos = [];
+                    $sp_infos = [];
+                    $all_ticket_types = [];
+                    if ($display_ticket_type == 'off') {
+                        $all_ticket_types[] = 'price';
+                    }
                     if ($seat_type == 'ticket') {
                         $ticket_ids = $post_array('ticket_name');
-                        $ticket_icon = $post_array('ticket_icon');
                         $ticket_qty = $post_array('ticket_qty');
+                        $reserve_qty = $post_array('reserve_qty');
+                        $ticket_min_qty = $post_array('ticket_min_qty');
                         $ticket_max_qty = $post_array('ticket_max_qty');
                         $ticket_description = $post_textarea_array('ticket_description');
                         if (!empty($ticket_ids)) {
                             foreach ($ticket_ids as $key => $id) {
                                 if (!empty($id)) {
+                                    if ($display_ticket_type == 'on') {
+                                        $all_ticket_types[] = $id;
+                                    }
                                     $ticket_infos[$id] = [
-                                        'icon' => $ticket_icon[$key] ?? '',
-                                        'qty' => $ticket_qty[$key] ?? '',
+                                        'qty' => $ticket_qty[$key] ?? 10,
+                                        'reserve' => $reserve_qty[$key] ?? 0,
+                                        'min_qty' => $ticket_min_qty[$key] ?? 1,
                                         'max_qty' => $ticket_max_qty[$key] ?? '',
                                         'description' => $ticket_description[$key] ?? '',
                                     ];
                                 }
                             }
                         }
-                        if($display_ticket_type == 'off' && !empty($ticket_infos)){
-                            $ticket_infos = array_slice($ticket_infos, 0, 1, true);
+                    } else {
+                        $sp_ids = $post_int_array('sp_id');
+                        $sp_names = $post_array('sp_name');
+                        $all_sp_id = [];
+                        if (!empty($sp_ids)) {
+                            foreach ($sp_ids as $key => $id) {
+                                if (!empty($id)) {
+                                    $all_sp_id[] = $id;
+                                    $sp_infos[] = [
+                                        'id' => $id,
+                                        'name' => $sp_names[$key] ?? '',
+                                    ];
+                                }
+                            }
+                        }
+                        if ($display_ticket_type == 'on') {
+                            $all_ticket_types = ABPTF_Function::get_sp_ticket($all_sp_id);
+                        }
+                    }
+                    /***********************************/
+                    $route_data = [];
+                    $route_infos = [];
+                    $price_infos = [];
+                    $stops = $post_int_array('stop_name');
+                    $types = $post_array('stop_type');
+                    $display_pd = $post_array('display_pd');
+                    $times = $post_int_array('stop_time');
+                    if (!empty($stops)) {
+                        foreach ($stops as $key => $stop) {
+                            if (!empty($stop)) {
+                                $route_infos[$stop]['type'] = $types[$key] ?? 'both';
+                                $route_infos[$stop]['time'] = $times[$key] ?? '';
+                                $route_infos[$stop]['pd'] = $display_pd[$key] ?? 'off';
+                            }
+                        }
+                    }
+                    $count = sizeof($route_infos);
+                    if ($count > 0) {
+                        $route_infos[array_key_first($route_infos)]['type'] = 'bp';
+                        $route_infos[array_key_first($route_infos)]['time'] = 0;
+                        if ($count > 1) {
+                            $route_infos[array_key_last($route_infos)]['type'] = 'dp';
+                        }
+                    }
+                    /***********************************/
+                    $route_ids = $post_array('route_id');
+                    if (!empty($route_ids) && !empty($all_ticket_types)) {
+                        foreach ($all_ticket_types as $ticket_type) {
+                            $price_data = $post_array($ticket_type . '_price');
+                            if (!empty($price_data)) {
+                                foreach ($price_data as $key => $price) {
+                                    $route_id = $route_ids[$key] ?? '';
+                                    if (!empty($route_id)) {
+                                        $price_infos[$route_id][$ticket_type] = $price;
+                                        $route_data[] = $route_id;
+                                    }
+                                }
+                            }
                         }
                     }
                     /***********************************/
                     $operation_time = [];
                     $operation_times = $post_array('operation_time');
                     if (!empty($operation_times)) {
-                        foreach ($operation_times as $value) {
-                            if (!empty($value)) {
-                                $operation_time[] = $value;
-                            }
-                        }
+                        $operation_time = array_values(array_unique(array_filter($operation_times)));
+                        sort($operation_time);
                     }
-                    $time_info['operation_time'] = !empty($operation_time) ? $operation_time : ['00:00'];
+                    $time_info['time'] = !empty($operation_time) ? $operation_time : ['00:00'];
                     $opt_time = $post_val('operation_time_optional');
                     $opt_time = !empty($opt_time) ? explode(',', $opt_time) : [];
                     if (in_array('day_wise_time', $opt_time)) {
-                        $day_time = [];
                         foreach (ABPTF_Layout::week_day() as $key => $day) {
-                            $time = $post_val($key . '_time');
-                            if ($time) {
-                                $day_time[$key] = $time;
+                            $times = $post_array($key . '_time');
+                            $times = array_filter($times);
+                            if (!empty($times)) {
+                                sort($times);
+                                $time_info['day_time'][$key] = array_values(array_unique($times));
                             }
                         }
-                        $time_info['day_time'] = $day_time;
                     }
                     if (in_array('date_wise_time', $opt_time)) {
                         $date_time_ids = $post_array('date_wise_time_id');
-                        $date_time = [];
+                        $all_dates = $post_deep('date_wise_date');
+                        $all_times = $post_deep('date_wise_time');
                         if (!empty($date_time_ids)) {
                             foreach ($date_time_ids as $time_id) {
-                                $date_wise_dates = $post_array('date_wise_date[' . $time_id . ']');
-                                $date_wise_time = $post_array('date_wise_time[' . $time_id . ']');
+                                $date_wise_dates = $all_dates[$time_id] ?? [];
+                                $date_wise_time = $all_times[$time_id] ?? [];
                                 if (!empty($date_wise_dates) && !empty($date_wise_time)) {
-                                    foreach ($date_wise_dates as $value) {
-                                        if (!empty($value)) {
-                                            $date_time[$time_id]['date'] = $value;
-                                            foreach ($date_wise_time as $value2) {
-                                                if (!empty($value2)) {
-                                                    $date_time[$time_id]['time'][] = $value2;
-                                                }
-                                            }
+                                    $clean_dates = array_filter($date_wise_dates);
+                                    $clean_dates = reset($clean_dates);
+                                    $clean_times = array_filter($date_wise_time);
+                                    if (!empty($clean_dates) && !empty($clean_times)) {
+                                        sort($clean_times);
+                                        $time_info['date_times'][$time_id]['date'] = $clean_dates;
+                                        $time_info['date_times'][$time_id]['time'] = array_values(array_unique($clean_times));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    /***********************************/
+                    $display_return = $post_val('display_return', 'off');
+                    $return_route_infos = [];
+                    $return_price_infos = [];
+                    $return_time_info = [];
+                    if ($display_return == 'on') {
+                        $stops = $post_int_array('return_stop_name');
+                        $types = $post_array('return_stop_type');
+                        $display_pd = $post_array('return_display_pd');
+                        $times = $post_int_array('return_stop_time');
+                        if (!empty($stops)) {
+                            foreach ($stops as $key => $stop) {
+                                if (!empty($stop)) {
+                                    $return_route_infos[$stop]['type'] = $types[$key] ?? 'both';
+                                    $return_route_infos[$stop]['time'] = $times[$key] ?? '';
+                                    $return_route_infos[$stop]['pd'] = $display_pd[$key] ?? 'off';
+                                }
+                            }
+                        }
+                        $count = sizeof($return_route_infos);
+                        if ($count > 0) {
+                            $return_route_infos[array_key_first($return_route_infos)]['type'] = 'bp';
+                            $return_route_infos[array_key_first($return_route_infos)]['time'] = 0;
+                            if ($count > 1) {
+                                $return_route_infos[array_key_last($return_route_infos)]['type'] = 'dp';
+                            }
+                        }
+                        /*****************/
+                        $route_ids = $post_array('return_route_id');
+                        if (!empty($route_ids) && !empty($all_ticket_types)) {
+                            foreach ($all_ticket_types as $ticket_type) {
+                                $price_data = $post_array('return_' . $ticket_type . '_price');
+                                if (!empty($price_data)) {
+                                    foreach ($price_data as $key => $price) {
+                                        $route_id = $route_ids[$key] ?? '';
+                                        if (!empty($route_id)) {
+                                            $return_price_infos[$route_id][$ticket_type] = $price;
+                                            $route_data[] = $route_id;
                                         }
                                     }
                                 }
                             }
                         }
-                        $time_info['date_times'] = $date_time;
-                    }
-                    /***********************************/
-                    $return_time_info = [];
-                    if ($display_return == 'on') {
-                        $operation_time = [];
+                        /*****************/
                         $operation_times = $post_array('return_operation_time');
-                        if (!empty($operation_times)) {
-                            foreach ($operation_times as $value) {
-                                if (!empty($value)) {
-                                    $operation_time[] = $value;
-                                }
-                            }
-                        }
-                        $return_time_info['return_operation_time'] = !empty($operation_time) ? $operation_time : ['00:00'];
+                        $operation_time = !empty($operation_times) ? array_values(array_unique(array_filter($operation_times))) : [];
+                        $operation_time = !empty($operation_time) ? $operation_time : ['00:00'];
+                        sort($operation_time);
+                        $return_time_info['time'] = $operation_time;
                         $opt_time = $post_val('return_operation_time_optional');
                         $opt_time = !empty($opt_time) ? explode(',', $opt_time) : [];
                         if (in_array('return_day_wise_time', $opt_time)) {
-                            $day_time = [];
                             foreach (ABPTF_Layout::week_day() as $key => $day) {
-                                $time = $post_val('return_' . $key . '_time');
-                                if ($time) {
-                                    $day_time[$key] = $time;
+                                $times = $post_array('return_' . $key . '_time');
+                                $times = array_filter($times);
+                                if (!empty($times)) {
+                                    sort($times);
+                                    $return_time_info['day_time'][$key] = array_values(array_unique($times));
                                 }
                             }
-                            $return_time_info['day_time'] = $day_time;
                         }
                         if (in_array('return_date_wise_time', $opt_time)) {
                             $date_time_ids = $post_array('return_date_wise_time_id');
-                            $date_time = [];
+                            $all_dates = $post_deep('return_date_wise_date');
+                            $all_times = $post_deep('return_date_wise_time');
                             if (!empty($date_time_ids)) {
                                 foreach ($date_time_ids as $time_id) {
-                                    $date_wise_dates = $post_array('return_date_wise_date[' . $time_id . ']');
-                                    $date_wise_time = $post_array('return_date_wise_time[' . $time_id . ']');
+                                    $date_wise_dates = $all_dates[$time_id] ?? [];
+                                    $date_wise_time = $all_times[$time_id] ?? [];
                                     if (!empty($date_wise_dates) && !empty($date_wise_time)) {
-                                        foreach ($date_wise_dates as $value) {
-                                            if (!empty($value)) {
-                                                $date_time[$time_id]['date'] = $value;
-                                                foreach ($date_wise_time as $value2) {
-                                                    if (!empty($value2)) {
-                                                        $date_time[$time_id]['time'][] = $value2;
-                                                    }
-                                                }
-                                            }
+                                        $clean_dates = array_filter($date_wise_dates);
+                                        $clean_times = array_filter($date_wise_time);
+                                        if (!empty($clean_dates) && !empty($clean_times)) {
+                                            sort($clean_times);
+                                            $return_time_info['date_times'][$time_id]['date'] = reset($clean_dates);
+                                            $return_time_info['date_times'][$time_id]['time'] = array_values(array_unique($clean_times));
                                         }
                                     }
                                 }
                             }
-                            $return_time_info['date_times'] = $date_time;
                         }
                     }
+                    //echo '<pre>';print_r($return_time_info);echo '</pre>';die();
                     /***********************************/
                     $active_global_dates = $post_val('active_global_dates', 'on');
                     $abptf_dates = $active_global_dates == 'on' ? [] : apply_filters('abptf_get_date_array', []);
@@ -619,25 +650,29 @@
                         'abptf_organizer' => $post_val('abptf_organizer'),
                         'display_brand' => $post_val('display_brand', 'off'),
                         'abptf_brand' => $post_val('abptf_brand'),
+                        'display_capacity' => $post_val('display_capacity', 'on'),
                         'display_category' => $post_val('display_category', 'on'),
                         'abptf_category' => $post_val('abptf_category'),
                         'related_item' => $post_val('related_item'),
                         'post_feature' => $post_val('post_feature'),
-                        'abptf_sliders' => $post_val('abptf_sliders'),
-                        //================//
-                        'routing_infos' => $route_infos,
-                        'route_direction' => $route_direction,
-                        'abptf_bp' => $bp,
-                        'abptf_dp' => $dp,
-                        'display_return' => $display_return,
-                        'return_routing_infos' => $return_route_infos,
-                        'return_route_direction' => $return_route_direction,
-                        'return_abptf_bp' => $return_bp,
-                        'return_abptf_dp' => $return_dp,
+                        'abptf_slider' => $post_val('abptf_slider'),
                         //================//
                         'seat_type' => $seat_type,
                         'display_ticket_type' => $display_ticket_type,
+                        'min_qty' => $post_int('min_qty'),
+                        'max_qty' => $post_int('max_qty'),
                         'ticket_infos' => $ticket_infos,
+                        'sp_infos' => $sp_infos,
+                        'all_ticket_type' => $all_ticket_types,
+                        //================//
+                        'routing_infos' => $route_infos,
+                        'display_return' => $display_return,
+                        'return_routing_infos' => $return_route_infos,
+                        'route_data' => $route_data,
+                        //================//
+                        'price_infos' => $price_infos,
+                        'return_price_infos' => $return_price_infos,
+                        'price_data' => array_merge($price_infos, $return_price_infos),
                         //================//
                         'active_global_dates' => $active_global_dates,
                         'abptf_dates' => $abptf_dates,
@@ -648,6 +683,7 @@
                         'additional_services' => $additional_services,
                         'display_client_form' => $display_client_form,
                         'active_global_form' => $active_global_form,
+                        'display_single_form' => $post_val('display_single_form', 'on'),
                         'abptf_forms' => $abptf_forms,
                         'display_faq' => $display_faq,
                         'active_global_faq' => $active_global_faq,
@@ -668,12 +704,6 @@
                             update_post_meta($post_id, sanitize_key($key), $value);
                         }
                     }
-                    //=============================//
-                    if (!empty(get_the_title($post_id))) {
-                        ABPTF_Function::update_dates($post_id);
-                        ABPTF_Function::update_time_slot($post_id);
-                        ABPTF_Function::update_global_data($post_id);
-                    }
                 }
             }
             public function post_permanent_remove(): void {
@@ -682,18 +712,15 @@
                 }
                 $post_id = isset($_POST['post_id']) ? absint(wp_unslash($_POST['post_id'])) : 0;
                 if ($post_id <= 0) {
-                    wp_send_json_error(['html' => '', 'msg' => __('Invalid Post ID ..... !! ', 'abp-transportforge')], 400);
+                    wp_send_json_error(['html' => '', 'msg' => __('Invalid ID ..... !! ', 'abp-transportforge'), 'type' => 'warn'], 400);
                 }
+                $title = get_the_title($post_id);
                 $link_wc_id = absint(ABPTF_Function::get_post_info($post_id, 'link_wc_id'));
                 if ($link_wc_id > 0) {
                     wp_delete_post($link_wc_id, true);
                 }
                 wp_delete_post($post_id, true);
-                global $wpdb;
-                $table_name = $wpdb->prefix . 'abptf_property';
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $wpdb->delete($table_name, ['post_id' => $post_id], ['%d']);
-                wp_send_json_success(['html' => '', 'msg' => __('Post permanently removed. ..... !! ', 'abp-transportforge')]);
+                wp_send_json_success(['html' => '', 'msg' => $title . ' : ' . __('Permanently removed. ..... !! ', 'abp-transportforge'), 'type' => 'error']);
             }
             public function post_move_trash(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
@@ -701,21 +728,15 @@
                 }
                 $post_id = isset($_POST['post_id']) ? absint(wp_unslash($_POST['post_id'])) : 0;
                 if ($post_id > 0) {
+                    $title = get_the_title($post_id);
                     $link_wc_id = absint(ABPTF_Function::get_post_info($post_id, 'link_wc_id'));
                     if ($link_wc_id > 0) {
                         wp_trash_post($link_wc_id);
                     }
                     wp_trash_post($post_id);
-                    global $wpdb;
-                    $table_name = $wpdb->prefix . 'abptf_property';
-                    $current_status = get_post_status($post_id) ? get_post_status($post_id) : 'trash';
-                    $data = ['status' => $current_status];
-                    $where = ['post_id' => $post_id];
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->update($table_name, $data, $where, ['%s', '%s', '%s'], ['%d']);
-                    wp_send_json_success(['html' => '', 'msg' => __('Post moved to trash successfully...... !! ', 'abp-transportforge')]);
+                    wp_send_json_success(['html' => '', 'msg' => $title . ' : ' . __('Moved to trash successfully...... !! ', 'abp-transportforge'), 'type' => 'warm']);
                 }
-                wp_send_json_error(['html' => '', 'msg' => __('Invalid Post ID ..... !! ', 'abp-transportforge')], 400);
+                wp_send_json_error(['html' => '', 'msg' => __('Invalid  ID ..... !! ', 'abp-transportforge'), 'type' => 'warn'], 400);
             }
             public function post_restore(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
@@ -733,16 +754,10 @@
                         'post_status' => 'publish',
                     ];
                     wp_update_post($updated_post);
-                    global $wpdb;
-                    $table_name = $wpdb->prefix . 'abptf_property';
-                    $current_status = get_post_status($post_id) ? get_post_status($post_id) : 'publish';
-                    $data = ['status' => $current_status];
-                    $where = ['post_id' => $post_id];
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->update($table_name, $data, $where, ['%s', '%s', '%s'], ['%d']);
-                    wp_send_json_success(['html' => '', 'msg' => __('Property restored successfully...... !! ', 'abp-transportforge')]);
+                    $title = get_the_title($post_id);
+                    wp_send_json_success(['html' => '', 'msg' => $title . ' : ' . __('Restored successfully...... !! ', 'abp-transportforge'), 'type' => 'success']);
                 }
-                wp_send_json_error(['html' => '', 'msg' => __('Invalid Post ID ..... !! ', 'abp-transportforge')], 400);
+                wp_send_json_error(['html' => '', 'msg' => __('Invalid  ID ..... !! ', 'abp-transportforge'), 'type' => 'warn'], 400);
             }
             public function reload_post_list(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
@@ -761,4 +776,3 @@
         }
         new ABPTF_Post();
     }
-

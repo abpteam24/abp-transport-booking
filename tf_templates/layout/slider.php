@@ -2,11 +2,11 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit; // Exit if accessed directly
 	}
-	add_action( 'abptf_slider_template', function ( $img_infos = [], $abptf_slider = [] ) {
-		if ( empty( $img_infos ) || ! is_array( $img_infos ) ) {
-			return;
-		}
-		$total_images        = count( $img_infos );
+	add_action( 'abptf_slider_template', function ( $img_ids = [], $abptf_slider = [] ) {
+        if ( empty( $img_ids ) || ! is_array( $img_ids ) ) {
+            return;
+        }
+		$total_images        = count( $img_ids );
 		$slider_indicator    = ( $abptf_slider['indicator_visible'] ?? 'on' ) ?: 'on';
 		$indication_position = ( $abptf_slider['indication_position'] ?? 'bottom' ) ?: 'bottom';
 		$indication_position = ( $slider_indicator === 'on' ) ? $indication_position : '';
@@ -21,25 +21,21 @@
                     </div>
                     <img src="#" class="slide_resize" alt="" aria-hidden="true"/>
 					<?php
-						foreach ( $img_infos as $img_info ) {
-							if ( ! is_array( $img_info ) ) {
-								continue;
-							}
-							$id = $img_info['id'] ?? '';
-							if ( empty( $id ) ) {
-								continue;
-							}
-							$url       = ABPTF_Function::get_image_url( '', $id ) ?: ABPTF_BLANK_IMG_URL;
-							$img_post  = $img_info['post'] ?? '';
-							$img_label = $img_info['label'] ?? '';
+                        foreach ($img_ids as $img_id) {
+                            if (!$img_id) {
+                                continue;
+                            }
+							$url       = ABPTF_Function::get_image_url( '', $img_id ) ?: ABPTF_BLANK_IMG_URL;
+//							$img_post  = $img_info['post'] ?? '';
+//							$img_label = $img_info['label'] ?? '';
 							?>
                             <div class="slider_item" <?php if ( $active_popup === 'on' ) { ?>data-target-popup="<?php echo esc_attr( $popup_id ); ?>"<?php } ?> data-img="<?php echo esc_url( $url ); ?>">
                                 <div class="slider_loading"></div>
-                                <img src="#" alt="<?php echo esc_html( $img_post ); ?>"/>
-                                <div class="item_caption">
-                                    <div class="caption_label"><?php echo esc_html( $img_post ); ?></div>
-                                    <div class="caption_title"><?php echo esc_html( $img_label ); ?></div>
-                                </div>
+                                <img src="#" alt="<?php echo esc_html( $img_id ); ?>"/>
+<!--                                <div class="item_caption">-->
+<!--                                    <div class="caption_label">--><?php //echo esc_html( $img_post ); ?><!--</div>-->
+<!--                                    <div class="caption_title">--><?php //echo esc_html( $img_label ); ?><!--</div>-->
+<!--                                </div>-->
                             </div>
 						<?php } ?>
                 </div>
@@ -58,5 +54,5 @@
             </div>
         </div>
 		<?php
-		do_action( 'abptf_slider_popup', $abptf_slider, $img_infos, $popup_id );
+		do_action( 'abptf_slider_popup', $abptf_slider, $img_ids, $popup_id );
 	}, 10, 2 );

@@ -2,13 +2,13 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit; // Exit if accessed directly
 	}
-	add_action( 'abptf_slider_popup_template', function ( $abptf_slider, $img_infos, $popup_id = '' ) {
+	add_action( 'abptf_slider_popup_template', function ( $abptf_slider, $img_ids, $popup_id = '' ) {
 		$active_popup = ( $abptf_slider['visible_popup'] ?? 'on' ) ?: 'on';
 		$indicator    = ( $abptf_slider['popup_image_indicator'] ?? 'on' ) ?: 'on';
-		if ( $active_popup !== 'on' || empty( $img_infos ) || ! is_array( $img_infos ) ) {
+		if ( $active_popup !== 'on' || empty( $img_ids )) {
 			return;
 		}
-		$total_images = count( $img_infos );
+		$total_images = count( $img_ids );
 		?>
         <div class="abp_popup" data-popup="<?php echo esc_attr( $popup_id ); ?>">
             <div class="popup_area abptf_slider">
@@ -21,25 +21,19 @@
                             </div>
                             <img src="#" class="slide_resize" alt="" aria-hidden="true"/>
 							<?php
-								foreach ( $img_infos as $img_info ) {
-									if ( ! is_array( $img_info ) ) {
+								foreach ( $img_ids as $img_id ) {
+									if (empty($img_id)) {
 										continue;
 									}
-									$id = $img_info['id'] ?? '';
-									if ( empty( $id ) ) {
-										continue;
-									}
-									$url       = ABPTF_Function::get_image_url( '', $id ) ?: ABPTF_BLANK_IMG_URL;
-									$img_post  = $img_info['post'] ?? '';
-									$img_label = $img_info['label'] ?? '';
+									$url       = ABPTF_Function::get_image_url( '', $img_id ) ?: ABPTF_BLANK_IMG_URL;
 									?>
                                     <div class="slider_item" data-img="<?php echo esc_url( $url ); ?>">
                                         <div class="slider_loading"></div>
-                                        <img src="#" alt="<?php echo esc_html( $img_post ); ?>"/>
-                                        <div class="item_caption">
-                                            <div class="caption_label"><?php echo esc_html( $img_post ); ?></div>
-                                            <div class="caption_title"><?php echo esc_html( $img_label ); ?></div>
-                                        </div>
+                                        <img src="#" alt="<?php echo esc_html( $img_id ); ?>"/>
+<!--                                        <div class="item_caption">-->
+<!--                                            <div class="caption_label">--><?php //echo esc_html( $img_post ); ?><!--</div>-->
+<!--                                            <div class="caption_title">--><?php //echo esc_html( $img_label ); ?><!--</div>-->
+<!--                                        </div>-->
                                     </div>
 								<?php } ?>
                         </div>

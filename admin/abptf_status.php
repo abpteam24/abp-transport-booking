@@ -6,17 +6,13 @@
         class ABPTF_Status {
             public function __construct() {
                 add_action('abptf_load_status', array($this, 'load_status'));
-                //=============================//
-                add_action('wp_ajax_abptf_install_and_active_wc', array($this, 'install_and_active_wc'));
-                add_action('wp_ajax_abptf_active_wc', array($this, 'active_wc'));
-                //=============================//
+                add_action('wp_ajax_abptf_wc_config', array($this, 'wc_config'));
                 add_action('wp_ajax_abptf_create_page', array($this, 'create_page'));
-                //=============================//
                 add_action('wp_ajax_abptf_import_dummy', array($this, 'import_dummy'));
             }
             public function load_status($abptf_info = []): void {
                 ?>
-                <div class="_abp_panel_max_1200_mar_auto abptf_status">
+                <div class="_abp_panel_max_1200_mar_auto abp_status">
                     <div class="_panel_head">
                         <h3 class="_abp"><span class="_mar_r_xxs">🛡️</span> <?php esc_html_e('Status  & Information', 'abp-transportforge'); ?></h3>
                     </div>
@@ -25,9 +21,9 @@
                             if (ABPTF_WC < 2) {
                                 ABPTF_Layout::layout_warning_info_xs('must_wc');
                                 if (ABPTF_WC == 1) { ?>
-                                    <button class="_btn_navy_blue_mar_t active_wc" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transportforge'); ?></button>
+                                    <button class="_btn_navy_blue_mar_t" onclick="abptf_wc_config('wc_active')" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transportforge'); ?></button>
                                 <?php } else { ?>
-                                    <button class="_btn_navy_blue_mar_t _mar_t install_and_active_wc" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transportforge'); ?></button>
+                                    <button class="_btn_navy_blue_mar_t _mar_t" onclick="abptf_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transportforge'); ?></button>
                                 <?php }
                             }
                             $this->version();
@@ -36,7 +32,7 @@
                             $this->wc();
                             if (ABPTF_WC > 1) {
                                 do_action('abptf_add_tools');
-                                $this->post_page($abptf_info);
+                                $this->post_page();
                             }
                         ?>
                     </div>
@@ -48,7 +44,7 @@
                 <div class="_section_xs_mar_t_xs">
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('TransportForge Version', 'abp-transportforge') ?> </h6>
-                        <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(ABPTF_VERSION); ?></button>
+                        <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(ABPTF_VERSION); ?></button>
                     </div>
                 </div>
                 <?php
@@ -60,9 +56,9 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('WordPress Version', 'abp-transportforge'); ?> </h6>
                         <?php if ($version > 5.5) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs_min_125" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
                         <?php } ?>
                     </div>
                 </div>
@@ -75,17 +71,17 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Php Version', 'abp-transportforge'); ?> </h6>
                         <?php if ($version > 7.4) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs_min_125" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
                         <?php } ?>
                     </div>
                 </div>
                 <?php
             }
             public function wc(): void {
-                $title = ABPTF_WC == 2 ? __('Woocommerce Plugin', 'abp-transportforge') : __('Woocommerce need to install and active', 'abp-transportforge');
-                $title = ABPTF_WC == 1 ? __('Woocommerce already installed but  not  activated', 'abp-transportforge') : $title;
+                $title = ABPTF_WC == 2 ? __('WooCommerce Plugin', 'abp-transportforge') : __('WooCommerce need to install and active', 'abp-transportforge');
+                $title = ABPTF_WC == 1 ? __('WooCommerce already installed but  not  activated', 'abp-transportforge') : $title;
                 $name = get_option('woocommerce_email_from_name');
                 $email = get_option('woocommerce_email_from_address');
                 ?>
@@ -93,147 +89,148 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php echo esc_html($title); ?></h6>
                         <?php if (ABPTF_WC == 2) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
                         <?php } elseif (ABPTF_WC == 1) { ?>
-                            <button class="_btn_warning_xs_min_125 active_wc" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transportforge'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptf_wc_config('wc_active')" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transportforge'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs_min_125 install_and_active_wc" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transportforge'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptf_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transportforge'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <?php if (ABPTF_WC == 2 && defined('WC_VERSION')) { ?>
                         <div class="_fa_center_fj_between">
-                            <h6 class="_abp"><?php esc_html_e('Woocommerce Version', 'abp-transportforge'); ?></h6>
+                            <h6 class="_abp"><?php esc_html_e('WooCommerce Version', 'abp-transportforge'); ?></h6>
                             <?php if (version_compare(WC_VERSION, '8.0', '>')) { ?>
-                                <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
+                                <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
                             <?php } else { ?>
-                                <button class="_btn_light_warning_xs_min_125" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
+                                <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
                             <?php } ?>
                         </div>
                         <?php if (!empty($name)) { ?>
                             <div class="_divider_xs"></div>
                             <div class="_fa_center_fj_between">
                                 <h6 class="_abp"><?php esc_html_e('Name', 'abp-transportforge'); ?></h6>
-                                <button class="_btn_light_success_xs_min_125" type="button"><?php echo esc_html($name); ?></button>
+                                <button class="_btn_light_success_xs" type="button"><?php echo esc_html($name); ?></button>
                             </div>
                         <?php } ?>
                         <?php if (!empty($email)) { ?>
                             <div class="_divider_xs"></div>
                             <div class="_fa_center_fj_between">
                                 <h6 class="_abp"><?php esc_html_e('Email Address', 'abp-transportforge'); ?></h6>
-                                <button class="_btn_light_success_xs_min_125_text_inherit" type="button"><?php echo esc_html($email); ?></button>
+                                <button class="_btn_light_success_xs_text_inherit" type="button"><?php echo esc_html($email); ?></button>
                             </div>
                         <?php } ?>
                     <?php } else { ?>
-                        <div class="_color_warning"><span class="_mar_r_xxs  fas fa-exclamation-triangle"></span><?php echo esc_html(ABPTF_Status::array_info('must_wc')); ?></div>
+                        <div class="_color_warning"><span class="_mar_r_xxs  fas fa-exclamation-triangle"></span><?php echo esc_html(ABPTF_Layout::array_info('must_wc')); ?></div>
                     <?php } ?>
                 </div>
                 <?php
             }
-            public function post_page($abptf_info = []): void {
+            public function post_page(): void {
                 $label = ABPTF_Function::label();
-                $total = sizeof($abptf_info['post_ids'] ?? ABPTF_Query::get_post_id());
+                $total = sizeof(ABPTF_Post_ids);
                 ?>
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Booking Page', 'abp-transportforge'); ?></h6>
                         <?php if (ABPTF_Function::get_page_by_slug('tf_booking')) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs_min_125 create_page" data-page_type="tf_booking" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add TransportForge Booking Page', 'abp-transportforge'); ?></button>
+                            <button class="_btn_warning_xs " onclick="abptf_create_page('tf_booking')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add TransportForge Booking Page', 'abp-transportforge'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Post List Page', 'abp-transportforge'); ?></h6>
                         <?php if (ABPTF_Function::get_page_by_slug('tf_post')) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs_min_125 create_page" data-page_type="tf_post" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add TransportForge List Page', 'abp-transportforge'); ?></button>
+                            <button class="_btn_warning_xs " onclick="abptf_create_page('tf_post')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add TransportForge List Page', 'abp-transportforge'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php esc_html_e('Gallery Page', 'abp-transportforge'); ?></h6>
                         <?php if (ABPTF_Function::get_page_by_slug('tf_gallery')) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transportforge'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs_min_125 create_page" data-page_type="tf_gallery" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add Gallery Page', 'abp-transportforge'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptf_create_page('tf_gallery')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add Gallery Page', 'abp-transportforge'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Number of Post', 'abp-transportforge'); ?> </h6>
                         <?php if ($total > 0) { ?>
-                            <button class="_btn_light_success_xs_min_125" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($total); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($total); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs_min_125" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php esc_html_e('Can Not Find Post', 'abp-transportforge'); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php esc_html_e('Can Not Find Post', 'abp-transportforge'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Dummy Import', 'abp-transportforge'); ?> </h6>
-                        <button class="<?php echo esc_attr($total > 0 ? '_btn_light_success_xs' : '_btn_warning_xs'); ?>_btn_theme_min_125 import_dummy" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add New Dummy Post', 'abp-transportforge'); ?></button>
+                        <button class="<?php echo esc_attr($total > 0 ? '_btn_light_success_xs' : '_btn_warning_xs'); ?>" onclick="abptf_import_global('dummy')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add New Dummy Post', 'abp-transportforge'); ?></button>
                     </div>
                 </div>
                 <?php
             }
             //=============================//
-            public function install_and_active_wc(): void {
+            public function wc_config(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
                 }
-                include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
-                include_once(ABSPATH . 'wp-admin/includes/file.php');
-                include_once(ABSPATH . 'wp-admin/includes/misc.php');
-                include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
-                $plugin = 'woocommerce';
-                $api = plugins_api('plugin_information', array(
-                    'slug' => $plugin,
-                    'fields' => array(
-                        'short_description' => false,
-                        'sections' => false,
-                        'requires' => false,
-                        'rating' => false,
-                        'ratings' => false,
-                        'downloaded' => false,
-                        'last_updated' => false,
-                        'added' => false,
-                        'tags' => false,
-                        'compatibility' => false,
-                        'homepage' => false,
-                        'donate_link' => false,
-                    ),
-                ));
-                if (is_wp_error($api)) {
-                    wp_send_json_error(['html' => '', 'msg' => $api->get_error_message()]);
-                }
-                $title = 'title';
-                $url = 'url';
-                $nonce = 'nonce';
-                $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
-                $installed = $woocommerce_plugin->install($api->download_link);
-                if (is_wp_error($installed)) {
-                    wp_send_json_error(['msg' => $installed->get_error_message()]);
-                }
-                $activated = activate_plugin('woocommerce/woocommerce.php');
-                if (is_wp_error($activated)) {
-                    wp_send_json_error(['msg' => $activated->get_error_message()]);
-                }
-                wp_send_json_success(['msg' => esc_html__('WooCommerce installed and activated successfully!', 'abp-transportforge')]);
-            }
-            public function active_wc(): void {
-                if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
-                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
-                }
-                if (defined('ABPTF_WC') && ABPTF_WC == 1) {
+                $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
+                $page_type = $post_val('type');
+                if ($page_type == 'wc_install_active') {
+                    include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
+                    include_once(ABSPATH . 'wp-admin/includes/file.php');
+                    include_once(ABSPATH . 'wp-admin/includes/misc.php');
+                    include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+                    $plugin = 'woocommerce';
+                    $api = plugins_api('plugin_information', array(
+                        'slug' => $plugin,
+                        'fields' => array(
+                            'short_description' => false,
+                            'sections' => false,
+                            'requires' => false,
+                            'rating' => false,
+                            'ratings' => false,
+                            'downloaded' => false,
+                            'last_updated' => false,
+                            'added' => false,
+                            'tags' => false,
+                            'compatibility' => false,
+                            'homepage' => false,
+                            'donate_link' => false,
+                        ),
+                    ));
+                    if (is_wp_error($api)) {
+                        wp_send_json_error(['html' => '', 'msg' => $api->get_error_message()]);
+                    }
+                    $title = 'title';
+                    $url = 'url';
+                    $nonce = 'nonce';
+                    $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
+                    $installed = $woocommerce_plugin->install($api->download_link);
+                    if (is_wp_error($installed)) {
+                        wp_send_json_error(['msg' => $installed->get_error_message()]);
+                    }
                     $activated = activate_plugin('woocommerce/woocommerce.php');
                     if (is_wp_error($activated)) {
                         wp_send_json_error(['msg' => $activated->get_error_message()]);
                     }
-                    wp_send_json_success(['msg' => esc_html__('WooCommerce activated successfully!', 'abp-transportforge')]);
+                    wp_send_json_success(['msg' => esc_html__('WooCommerce installed and activated successfully!', 'abp-transportforge'), 'type' => 'success'], 200);
                 }
-                wp_send_json_error(['msg' => esc_html__('WooCommerce is either not installed or already active.', 'abp-transportforge')]);
+                if ($page_type == 'wc_active') {
+                    if (defined('ABPTF_WC') && ABPTF_WC == 1) {
+                        $activated = activate_plugin('woocommerce/woocommerce.php');
+                        if (is_wp_error($activated)) {
+                            wp_send_json_error(['msg' => $activated->get_error_message()]);
+                        }
+                        wp_send_json_success(['msg' => esc_html__('WooCommerce activated successfully!', 'abp-transportforge'), 'type' => 'success'], 200);
+                    }
+                }
+                wp_send_json_error(['msg' => esc_html__('WooCommerce is either not installed or already active.', 'abp-transportforge'), 'type' => 'warn'], 403);
             }
             public function create_page(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
@@ -265,17 +262,17 @@
                         );
                         $post_id = wp_insert_post($page);
                         if (is_wp_error($post_id) || 0 === $post_id) {
-                            wp_send_json_error(['info_type' => 'warn', 'msg' => esc_html__('Failed to create page.', 'abp-transportforge')]);
+                            wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Failed to create page.', 'abp-transportforge')]);
                         }
                         flush_rewrite_rules();
                         /* translators: %s: Custom rental item type label (e.g., Vehicle, Equipment, Property) */
                         $translated_format = esc_html__('%s Page Created successfully.....', 'abp-transportforge');
                         $msg = sprintf($translated_format, $label);
-                        wp_send_json_success(['info_type' => 'success', 'msg' => $msg]);
+                        wp_send_json_success(['type' => 'success', 'msg' => $msg]);
                     }
-                    wp_send_json_error(['info_type' => 'warn', 'msg' => esc_html__('Page already exists.', 'abp-transportforge')]);
+                    wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Page already exists.', 'abp-transportforge')]);
                 } else {
-                    wp_send_json_error(['info_type' => 'warn', 'msg' => esc_html__('Something Wrong...!', 'abp-transportforge')]);
+                    wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Something Wrong...!', 'abp-transportforge')]);
                 }
             }
             public function import_dummy(): void {
@@ -297,7 +294,6 @@
             }
             public static function add_data($_category): void {
                 global $wpdb;
-                $table_name = $wpdb->prefix . 'abptf_property';
                 $dummy_infos = self::dummy_data();
                 if (isset($dummy_infos['taxonomy'])) {
                     foreach ($dummy_infos['taxonomy'] as $tax => $taxonomy_option) {
@@ -357,32 +353,6 @@
                                             $post_loc = implode(',', $post_loc_key);
                                         }
                                         update_post_meta($post_id, 'abptf_location', $post_loc);
-                                        $properties = $post_data['property'] ?? [];
-                                        if (!empty($properties)) {
-                                            foreach ($properties as $property) {
-                                                $abptf_brand = sizeof($abptf_brand) > 0 ? array_rand($abptf_brand) : '';
-                                                $data = [
-                                                    'post_id' => intval($post_id),
-                                                    'sale_continue' => 'on',
-                                                    'name' => sanitize_text_field($property['name'] ?? ''),
-                                                    'brand' => sanitize_text_field($abptf_brand),
-                                                    'category' => sanitize_text_field($post_cat),
-                                                    'location' => sanitize_text_field($post_loc),
-                                                    'features' => sanitize_text_field($property['features'] ?? ''),
-                                                    'rent_rule' => sanitize_text_field($rent_rule),
-                                                    'price_qty_info' => wp_json_encode($property['price_qty_info'] ?? []),
-                                                    'gallery' => sanitize_text_field($property['gallery'] ?? ''),
-                                                    'status' => !empty($post_id) ? get_post_status($post_id) : '',
-                                                    'others' => wp_json_encode($property['others'] ?? []),
-                                                    'updated_at' => current_time('Y-m-d H:i')
-                                                ];
-                                                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                                                $wpdb->insert($table_name, $data);
-                                            }
-                                        }
-                                        ABPTF_Function::update_dates($post_id);
-                                        ABPTF_Function::update_time_slot($post_id);
-                                        ABPTF_Function::update_global_data($post_id);
                                     }
                                 }
                             }
@@ -602,7 +572,7 @@
                     'active_global_faq' => 'on',
                     'display_tc' => 'on',
                     'active_global_tc' => 'on',
-                    'abptf_sliders' => '10,20,30,40,50,100,60,70,80,90',
+                    'abptf_slider' => '10,20,30,40,50,100,60,70,80,90',
                     'dummy' => 'on',
                 ];
             }
@@ -821,133 +791,6 @@
                     73 => ['icon' => '🚪', 'label' => 'Emergency Exit'],
                     74 => ['icon' => '⛑️', 'label' => 'First Aid Kit'],
                 ];
-            }
-            public static function array_info($key) {
-                $current_date = current_time('Y-m-d H:i');
-                $des = array(
-                    'general_config' => __('Note: Configure the general settings for this transport here. If you do not want to use any specific feature, you can enable or disable it from Main Configuration → On/Off Sections. Disabling a feature will remove it from the entire site.', 'abp-transportforge'),
-                    'sale_continue' => __('Note: This switch indicate Transport Ticket sale close/continue . You can  sale close/continue  by this switch. By default sale will be  continue', 'abp-transportforge'),
-                    'abptf_template' => __('Note: Here You can change your details page template.', 'abp-transportforge'),
-                    'post_sku' => __('Note: Here you can add an SKU for this post. You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
-                    'post_icon' => __('Note: Set a custom icon or emoji for this post. The selected icon/emoji will be displayed alongside the post title wherever the title appears across the website, helping it stand out and improve visual recognition.', 'abp-transportforge'),
-                    'sub_title' => __('Note: Add a Sub-title to enable the Post sub-tile. Leave this blank if you dont want to show any Sub-title information for this Post.', 'abp-transportforge'),
-                    'post_description' => __('Note: Add short description about this Transport . Leave this blank if you dont want to show any  description for this Transport.', 'abp-transportforge'),
-                    'display_organizer' => __('Note : This switch indicate Transport Organizer . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
-                    'display_brand' => __('Note : This switch indicate Transport Brand name . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
-                    'display_category' => __('Note : This switch indicate Transport Category . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
-                    'related_item' => __('Note: Select related items to display on the details page. Leave this option empty or disabled if you do not want to show related items.', 'abp-transportforge'),
-                    'post_feature' => __('Note: If you want to add feature for this Transport, you can add Here. These feature will be show with this Transport . You may leave this section empty if you do not want to show frontend. ', 'abp-transportforge'),
-                    'abptf_sliders' => __('Note: If you want to add an image gallery for this transport, you can upload images below.  You may leave this section empty if you do not want to show images. ', 'abp-transportforge'),
-                    //=============================//
-                    'route_config' => __('Note: Configure the transport route by selecting the required stops and their types. You can also add new stops while configuring the route. Boarding stops allow passengers to board only, Dropping stops allow passengers to get off only, and Both stops support both boarding and dropping. The first stop must always be Boarding, the last stop must always be Dropping, and the first stop time must be 0 minutes. All remaining stop times represent the travel time in minutes from the first stop and are applied according to your Transport Time Configuration. Enable Multiple Pickup/Drop-off Points to allow passengers to select from multiple pickup and drop-off locations. The available options are based on the configured route stops: Boarding stops become Pickup Points, Dropping stops become Drop-off Points, and Both stops are available for both. If the return journey uses the same transport, enable Same Transport Return to automatically use the same transport configuration for the return trip. ', 'abp-transportforge'),
-                    'seat_type' => __('Note: Please select your Transport seat type . Default is Seat Plan', 'abp-wc-transport-manager'),
-                    'ticket_type' => __('Note: You have disabled the Seat Plan System from the Global On/Off Settings, so your ticket types will function as regular tickets only.If you want to use a seat plan, enable Seat Plan System from the Global On/Off Settings. Once enabled, you can turn the Seat Plan feature on or off for each transport individually, allowing you to use either a seat plan or regular tickets as needed.', 'abp-wc-transport-manager'),
-                    'single_ticket_type' => __('Note: If the Global Multiple Ticket System is disabled, you cannot use multiple ticket types for any transport.To enable this feature, turn on Multiple Ticket System from the Global On/Off Settings. Once enabled, you can configure multiple ticket types and prices for each transport. You can also choose to use a single ticket for specific transports whenever needed.', 'abp-wc-transport-manager'),
-                    'display_ticket_type' => esc_html__('This switch indicate Transport ticket type. if your all ticket/seat same type then switch will be off. if you want to multiple type please switch on', 'abp-wc-transport-manager'),
-                    //=============================//
-                    //=============================//
-                    'no_category' => __('No Category Found !', 'abp-transportforge'),
-                    'cat_name' => __('Note: Please enter a category name — the field cannot be empty. ', 'abp-transportforge'),
-                    'cat_slug' => __('Note: Category slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
-                    'cat_des' => __('Note: Category description is optional — you can add details to better explain this category. ', 'abp-transportforge'),
-                    //=============================//
-                    'no_organizer' => __('No Organizer Found !', 'abp-transportforge'),
-                    'org_name' => __('Note: Please enter a Organizer name — the field cannot be empty. ', 'abp-transportforge'),
-                    'org_slug' => __('Note: Organizer slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
-                    'org_des' => __('Note: Organizer description is optional — you can add details to better explain this Organizer. ', 'abp-transportforge'),
-                    //=============================//
-                    'no_location' => __('No Location Found ! ', 'abp-transportforge'),
-                    'loc_name' => __('Note: Please enter a Location name — the field cannot be empty. ', 'abp-transportforge'),
-                    'loc_slug' => __('Note: Location slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
-                    'loc_des' => __('Note: Location Address is optional — you can add details to better explain this Location Full  Address. ', 'abp-transportforge'),
-                    'display_pd' => __('You can add multiple pickup/drop-off  points for a single location. For each pickup/drop-off  point, set the travel time relative to the main location. Use a negative value (in minutes) if the pickup/drop-off  point is before the main location, or a positive value (in minutes) if it is after the main location. For example, use -15 for 15 minutes before the main location, or 20 for 20 minutes after it.', 'abp-transportforge'),
-                    //=============================//
-                    'no_brand' => __('No Brand Found ! ', 'abp-transportforge'),
-                    'brand_name' => __('Note: Please enter a Brand name — the field cannot be empty. ', 'abp-transportforge'),
-                    'brand_slug' => __('Note: Brand slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
-                    'brand_des' => __('Note: Brand description  is optional — you can add details to better explain this Brand. ', 'abp-transportforge'),
-                    //=============================//
-                    'no_feature' => __('No Feature Found ! ', 'abp-transportforge'),
-                    'feature_value' => __('Note: Please enter a Feature Value  — the field optional ', 'abp-transportforge'),
-                    'feature_icon' => __('Note: You can add an icon, or emoji for this Feature(optional).', 'abp-transportforge'),
-                    'feature_name' => __('Note: Please enter a Feature Name  — the field cannot be empty.', 'abp-transportforge'),
-                    //=============================//
-                    'date_format' => __('Note:  If you want to change the Date  Format, simply choose a different format. The default date is: ', 'abp-transportforge') . ' ' . date_i18n('D j M , Y', strtotime($current_date)),
-                    'time_format' => __('Note : If you want to change the Time Format, simply choose a different format. The default Time Format is: ', 'abp-transportforge') . ' ' . date_i18n(get_option('time_format'), strtotime($current_date)),
-                    'sale_close_before' => __('Note:  Enter the time in minutes to close ticket sales before the transport starts. If not specified, it will default to 0 (e.g. 1 hour equals 60 minutes). ', 'abp-transportforge'),
-                    'advance_date_number' => __('Note: Kindly provide the number of days in advance for booking. By default, the advance booking period is set to 28 days.(optional) ', 'abp-transportforge'),
-                    'active_global_dates' => __('Note: Keep this switch ON to apply the global date settings.Switch it OFF if you want to set special date rules for this transport.Date configuration options will open when turned OFF. ', 'abp-transportforge'),
-                    'date_type' => __('Note: Please Select your Transport operational date type. Default operational date will be Periodic', 'abp-transportforge'),
-                    'specific_dates' => __('Note: Please add your Transport operational Specific Date lists  .', 'abp-transportforge'),
-                    'operation_time' => __('Note: Operation Time is required. If you do not specify any operation time, it will automatically be set to 12:00 AM (00:00). You can add multiple operation times for the same transport within a single day if needed. However, at least one operation time is required.', 'abp-transportforge'),
-                    'periodic_start_date' => __('Note: Please add your Transport Launching Date otherwise it will be start today ', 'abp-transportforge'),
-                    'periodic_end_date' => __('Note: Please add your Transport Terminate  Date otherwise it will be Continuously running periodically', 'abp-transportforge'),
-                    'periodic_after' => __('Note: Please add your periodically after days. if  your Transport operation day everyday this will be one(1).(optional)', 'abp-transportforge'),
-                    'date_rule' => __('Note: Enable this checkbox to configure special on/off date  settings. This option is optional. If you set a date/time in the special “On” date, that date will remain active even if it falls within an “Off” date range or on weekends.', 'abp-transportforge'),
-                    'special_on_dates' => __('Note: If you add any date  in Special On Dates, it will always remain active—even if that date falls within an off date range or on weekends.', 'abp-transportforge'),
-                    'weekend' => __('Note: Please select your weekend.Default all days open(optional)', 'abp-transportforge'),
-                    'day_wise_time' => __('Note:Add Day-wise Time if your transport operates on different schedules throughout the week. You can assign multiple departure times for each day, and only the configured times for the selected day will be available to passengers. ', 'abp-transportforge'),
-                    'specific_off_dates' => __('Note: please add your specific Operation off dates.(optional)', 'abp-transportforge'),
-                    'date_wise_time' => __('Note: Set the transport operation time for specific dates. A date will only be saved if it has at least one operation time. If a date is not saved, the regular day-wise schedule or the default operation time will be applied. You can add multiple operation times for the same date.(optional)', 'abp-transportforge'),
-                    'off_date_range' => __('Note: If you have off days between two dates which can add here.(optional)', 'abp-transportforge'),
-                    'abptf_dates' => __('Note: Set a global date configuration for your Transport  that can be reused across all posts, with options to import and customize anytime.', 'abp-transportforge'),
-                    //=============================//
-                    'qty_reserve_min_max' => __('Note: Set the total stock quantity available for sale. This field is required to save the transport. You can also set reserve, minimum, and maximum quantity limits for customer bookings. Reserve quantity keeps specific items unavailable, minimum quantity defaults to 1, and maximum quantity will follow the available stock if left empty.', 'abp-transportforge'),
-                    //=============================//
-                    '_tax_class' => __('Note: If you want to add any new tax class , Please go to WooCommerce ->configuration->Tax Area', 'abp-transportforge'),
-                    'enable_tax_msg' => __('Note: Your Woo-commerce Tax setting already disable. If you want to enable tax please enable woo-commerce tax.', 'abp-transportforge'),
-                    //=============================//
-                    'display_additional_services' => __('Note: If you want sale additional product/equipment with this  transport then active this button and add additional service. Additional item not depends on  operation time.', 'abp-transportforge'),
-                    'additional_services' => __('Note: Add extra services for products/equipment with your transport—import or set per Post (also usable globally); stock applies per Post, empty quantity = unlimited, empty max qty = no limit, empty/Zero price = free.', 'abp-transportforge'),
-                    'active_global_additional' => __('Note: Keep this switch ON to apply the global additional settings.Switch it OFF if you want to set special additional rules for this transport.additional configuration options will open when turned OFF. ', 'abp-transportforge'),
-                    //=============================//
-                    'client_form_option' => __('Use comma( , ) to separate option.', 'abp-transportforge'),
-                    'display_client_form' => __('Note: If you want to get Client information then active this button and add form/import global form or use global form as a client form', 'abp-transportforge'),
-                    'active_global_form' => __('Note: Keep this switch ON to apply the global Client Form settings.Switch it OFF if you want to set special  Client Form rules for this transport. Client Form configuration options will open when turned OFF. ', 'abp-transportforge'),
-                    'global_client_forms' => __('Note: This is a flexibility global form system. Once you design the structure here, it serves as a global form. You can effortlessly import this form into any transport or use this setting at any transport,', 'abp-transportforge'),
-                    //=============================//
-                    'abptf_tc' => __('You can set all transport-related Term & Condition here and use them globally across all transport. You can also import these Term & Condition into any individual transport and customize them as needed.', 'abp-transportforge'),
-                    'tc_item' => __('Use the editor to customize and design your Terms & Conditions as you prefer. The content and formatting you create here will be displayed the same way on the frontend.', 'abp-transportforge'),
-                    'display_tc' => __('Use this switch to control whether the Term & Condition is displayed on the frontend. Turn the switch ON to show the Term & Condition, and OFF to hide it. By default, this option is set to ON.', 'abp-transportforge'),
-                    'active_global_tc' => __('Enable this switch to apply the global Term & Condition to this post. If you want to add custom Term & Condition specifically for this post, turn the switch OFF and add your custom Term & Condition below.You can also use the Import button to bring in global Term & Condition, which you can then edit or delete based on your needs.', 'abp-transportforge'),
-                    //=============================//
-                    'abptf_faqs' => __('You can set all transport-related FAQs here and use them globally across all transports. You can also import these FAQs into any individual transport and customize them as needed.', 'abp-transportforge'),
-                    'faq_item' => __('Both the Title and Description fields are required. If either field is left empty, this FAQ item will not be displayed on the frontend.', 'abp-transportforge'),
-                    'display_faq' => __('Use this switch to control whether the FAQ is displayed on the frontend. Turn the switch ON to show the FAQ, and OFF to hide it. By default, this option is set to ON.', 'abp-transportforge'),
-                    'active_global_faq' => __('Enable this switch to apply the global FAQ to this post. If you want to add custom FAQs specifically for this post, turn the switch OFF and add your custom FAQs below.You can also use the Import button to bring in global FAQs, which you can then edit or delete based on your needs.', 'abp-transportforge'),
-                    //=============================//
-                    'search_get_wrong_data_info' => __('Somethings went Wrong ! Please Try again', 'abp-transportforge'),
-                    'sale_close_msg' => __('This transport sale close shortly. please try another transport.', 'abp-transportforge'),
-                    'not_date' => __('No Dates Found !', 'abp-transportforge'),
-                    'not_match' => __('No Results Found !', 'abp-transportforge'),
-                    'not_found' => __('No Post Found !', 'abp-transportforge'),
-                    'not_post_found' => __('No Post Found !', 'abp-transportforge'),
-                    'not_transport_found' => __('No transport Found !', 'abp-transportforge'),
-                    'no_sp' => __('No Seat Plan Found. Click Add New to create one.', 'abp-transportforge'),
-                    'transport_not_available' => __('The transport is not available for the selected date and time. Please choose a different schedule.', 'abp-transportforge'),
-                    //=============================//
-                    'no_ticket_type' => __('No Ticket Type Found ! Please add Ticket Type to use Multiple Ticket Type', 'abp-transportforge'),
-                    'ticket_image' => __('You can add an image, icon, or emoji for this ticket type. It will be used as the seat layout representation in the Seat Plan. Once configured here, all seats assigned to this ticket type will automatically use the same image, icon, or emoji.', 'abp-transportforge'),
-                    'ticket_name' => __('Enter the transport ticket or seat name. This name will be displayed throughout the booking process and used to identify the ticket or seat type in the Seat Plan and related booking information.', 'abp-transportforge'),
-                    'ticket_color' => __('Choose the color for this ticket or seat type. The selected color will be used for all tickets or seats assigned to this type in the Seat Plan, making them easy to identify.', 'abp-transportforge'),
-                    'ticket_prefix' => __('Enter a prefix for the seat name, such as A, B, or VIP. This prefix will be automatically added before the seat number when generating seat names (e.g., A1, A2, VIP1).', 'abp-transportforge'),
-                    //=============================//
-                    'no_decor_item' => __('No Decor Item Found ! Please add Decor item to use Multiple Decor item', 'abp-transportforge'),
-                    'decor_image' => __('You can add an image, icon, or emoji for this Decor item. It will be used as the Decor item layout representation in the Seat Plan. Once configured here, all seats assigned to this ticket type will automatically use the same image, icon, or emoji.', 'abp-transportforge'),
-                    'decor_name' => __('Enter the Decor Item name. This item is used only for designing the Seat Plan layout and is not treated as a bookable seat. Its name will not be displayed anywhere during the booking process or on the Seat Plan. If needed, you can double-click the item in the Seat Plan editor to add custom text for display.', 'abp-transportforge'),
-                    'decor_color' => __('Choose the background color for this Decor Item. This color is used only in the Seat Plan editor to visually represent the item and does not affect booking, pricing, or seat availability.', 'abp-transportforge'),
-                    //=============================//
-                    'must_wc' => __('TransportForge is entirely dependent on the WooCommerce plugin. Please install and activate the WooCommerce plugin otherwise the plugin will not work. Installing this tool may take some time', 'abp-transportforge'),
-                    //=============================//
-                    //=============================//
-                    'sign_up_msg' => __('Please Login your account to Download/View ticket !', 'abp-transportforge'),
-                    'no_permit_msg' => __('You are not permitted to Download/View this ticket !', 'abp-transportforge'),
-                    'wrong_msg_id' => __('We see, this id are not valid !', 'abp-transportforge'),
-                    'no_order_found' => __('Sorry ! We can not find any Order in your criteria.', 'abp-transportforge'),
-                    //''          => __( '', 'abp-transportforge' ),
-                );
-                $des = apply_filters('abptf_info_array_filter', $des);
-                return $des[$key] ?? '';
             }
         }
         new ABPTF_Status();

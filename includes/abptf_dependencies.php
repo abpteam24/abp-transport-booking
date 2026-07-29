@@ -15,8 +15,13 @@
 				add_action('admin_init', array($this, 'activation_redirect'));
 			}
 			public function admin_enqueue($hook): void {
-				//if (!str_contains($hook, 'transport-forge')) return;
+				$screen = get_current_screen();
+				$post_type = $screen ? $screen->post_type : '';
+				if (!str_contains($hook, 'transport-forge') && $post_type !== 'abptf_post') {
+					return;
+				}
 				$label = ABPTF_Function::label();
+				$post_id = get_the_ID();
 				$this->global_enqueue();
 				wp_enqueue_editor();
 				wp_enqueue_media();
@@ -32,18 +37,25 @@
 					'ajax_url' => admin_url('admin-ajax.php'),
 					'nonce' => wp_create_nonce('abptf_admin_ajax_nonce'),
 					'icon_url' => ABPTF_URL . 'assets/js/abptf_icons.json',
-					'related_info' => wp_json_encode(ABPTF_Function::related_info_js(get_the_ID())),
-					'location_info' => wp_json_encode(ABPTF_Location::location_info_js(get_the_ID())),
-					'feature_data' => wp_json_encode(ABPTF_Feature::get_feature_js()),
+					'related_info' => wp_json_encode(ABPTF_Function::related_info_js($post_id)),
+					'feature_data' => wp_json_encode(ABPTF_Feature::get_feature_js($post_id)),
+					'sp_data' => wp_json_encode(ABPTF_Seat_Plan::get_sp_js($post_id)),
 					'msg' => [
 						'confirm_delete' => __('Are you sure you want to delete this item?', 'abp-transportforge'),
 						'confirm_ok' => __('1. Ok : To Remove Item .', 'abp-transportforge'),
 						'confirm_cancel' => __('2. Cancel : To Cancel .', 'abp-transportforge'),
 						'saving' => __('Saving.............!', 'abp-transportforge'),
 						'saved' => __('Saved...............!', 'abp-transportforge'),
+						'date_content' => __('Importing Global Date Configuration........', 'abp-transportforge'),
+						'additional_content' => __('Importing Global Additional Service Configuration........', 'abp-transportforge'),
+						'client_form_content' => __('Importing Global Attendee Form Configuration........', 'abp-transportforge'),
+						'faq_content' => __('Importing Global FAQ Configuration........', 'abp-transportforge'),
+						'tc_content' => __('Importing Global term And Condition Configuration........', 'abp-transportforge'),
 						'importing' => __('Importing........', 'abp-transportforge'),
 						'imported' => __('Imported Successfully............. !', 'abp-transportforge'),
 						'loading' => __('Loading........', 'abp-transportforge'),
+						'price_loading' => __('Price Configuration Loading........', 'abp-transportforge'),
+						'type_switch' => __('Ticket Type Switching... Please Wait.......', 'abp-transportforge'),
 						'loaded' => __('Loaded Successfully............. !', 'abp-transportforge'),
 						'order_loading' => __('Order Loading........ !', 'abp-transportforge'),
 						'error' => __('An error occurred. Please try again.', 'abp-transportforge'),
@@ -51,15 +63,12 @@
 						'delete_success' => __('Item Deleted Successfully............. !', 'abp-transportforge'),
 						'select_stops' => __('Select Stops..', 'abp-transportforge'),
 						'select_ticket' => __('Select Ticket Type..', 'abp-transportforge'),
-						'property_loading' => __('Property List Loading.............', 'abp-transportforge'),
 						'post_loading' => $label . ' ' . __('List Loading.............', 'abp-transportforge'),
-						'post_deleting' => $label . ' ' . __('Permanent Deleting.........!', 'abp-transportforge'),
-						'post_trashing' => $label . ' ' . __('move to Trashing.........!', 'abp-transportforge'),
-						'post_restoring' => $label . ' ' . __('Restoring.........!', 'abp-transportforge'),
-						'wc_install' => __('Woocommerce Downloading And Installing.........!', 'abp-transportforge'),
-						'wc_installing' => __('Woocommerce  Installing.........!', 'abp-transportforge'),
-						'wc_installed_success' => __('Woocommerce Downloaded And Installed successfully ..... !! ', 'abp-transportforge'),
-						'wc_installed' => __('Woocommerce Installed successfully.... !  ', 'abp-transportforge'),
+						'permanent_remove' => $label . ' ' . __('Permanent Deleting.........!', 'abp-transportforge'),
+						'move_trash' => $label . ' ' . __('move to Trashing.........!', 'abp-transportforge'),
+						'restore' => $label . ' ' . __('Restoring.........!', 'abp-transportforge'),
+						'wc_install_active' => __('WooCommerce Downloading And Installing.........Please Wait...............!!', 'abp-transportforge'),
+						'wc_active' => __('WooCommerce  Installing.........Please Wait...............!!', 'abp-transportforge'),
 						'create_post_page' => __('Page Creating ........!', 'abp-transportforge'),
 						'no_item' => __('No More Item Found !', 'abp-transportforge'),
 						'no_item_selected' => __('No Item selected !', 'abp-transportforge'),
@@ -139,11 +148,11 @@
 				$color_theme_aa = $color_theme . 'aa';
 				$color_theme_88 = $color_theme . '88';
 				$color_theme_77 = $color_theme . '77';
-				$default_br = !empty($abptf_css_var['br_default']) ? $abptf_css_var['br_default'] . 'px' : '0';
-				$br_xl = !empty($abptf_css_var['br_default']) ? $abptf_css_var['br_default'] * 2 . 'px' : '0';
-				$fs_h1 = !empty($abptf_css_var['fs_h1']) ? $abptf_css_var['fs_h1'] . 'px' : '35px';
-				$fs_h2 = !empty($abptf_css_var['fs_h2']) ? $abptf_css_var['fs_h2'] . 'px' : '30px';
-				$fs_h3 = !empty($abptf_css_var['fs_h3']) ? $abptf_css_var['fs_h3'] . 'px' : '25px';
+				$default_br = !empty($abptf_css_var['br_default']) ? $abptf_css_var['br_default'] . 'px' : '5px';
+				$br_xl = !empty($abptf_css_var['br_default']) ? $abptf_css_var['br_default'] * 2 . 'px' : '10px';
+				$fs_h1 = !empty($abptf_css_var['fs_h1']) ? $abptf_css_var['fs_h1'] . 'px' : '30px';
+				$fs_h2 = !empty($abptf_css_var['fs_h2']) ? $abptf_css_var['fs_h2'] . 'px' : '26px';
+				$fs_h3 = !empty($abptf_css_var['fs_h3']) ? $abptf_css_var['fs_h3'] . 'px' : '24px';
 				$fs_h4 = !empty($abptf_css_var['fs_h4']) ? $abptf_css_var['fs_h4'] . 'px' : '20px';
 				$fs_h5 = !empty($abptf_css_var['fs_h5']) ? $abptf_css_var['fs_h5'] . 'px' : '17px';
 				$fs_h6 = !empty($abptf_css_var['fs_h6']) ? $abptf_css_var['fs_h6'] . 'px' : '15px';
@@ -182,21 +191,21 @@
 					}";
 				wp_add_inline_style('abptf_lib', wp_kses_post($abptf_var));
 				wp_enqueue_style('abptf', ABPTF_URL . 'assets/css/abptf.css', array(), time());
-				$all_time = ABPTF_Function::get_time(get_the_id(), 'js');
 				wp_enqueue_script('abptf_infos', ABPTF_URL . 'assets/js/abptf.js', array('jquery'), time(), true);
 				$rental_data = array(
 					'ajax_url' => admin_url('admin-ajax.php'),
 					'nonce' => wp_create_nonce('abptf_ajax_nonce'),
-					'date_info' => wp_json_encode($all_time),
+					'route_info' => wp_json_encode(ABPTF_Function::get_route_info()),
+					'location_info' => wp_json_encode(ABPTF_Function::location_info_js()),
 					'now' => current_time('Y-m-d H:i'),
 					'msg' => [
-						'end_date_loading' => __('End Date  Loading.............', 'abp-transportforge'),
-						'property_loading' => __('Property List Loading.............', 'abp-transportforge'),
+						'date_loading' => __('Date  Loading.............', 'abp-transportforge'),
+						'end_date_loading' => __('Return Date  Loading.............', 'abp-transportforge'),
+						'bp_select' => __('Please select boarding point......!', 'abp-transportforge'),
+						'dp_select' => __('Please select dropping point......!', 'abp-transportforge'),
 						'select_post' => __('Please Select', 'abp-transportforge') . ' ' . ABPTF_Function::label(),
 						'select_journey_date' => __('Please Select Journey Date', 'abp-transportforge'),
-						'select_return_date' => __('Please Select Return Date', 'abp-transportforge'),
 						'select_journey_time' => __('Please Select Journey Time', 'abp-transportforge'),
-						'select_return_time' => __('Please Select Return Time', 'abp-transportforge'),
 						'free' => __('FREE', 'abp-transportforge'),
 						'loading' => __('Loading..............!', 'abp-transportforge'),
 					],
@@ -213,6 +222,7 @@
 					require_once ABPTF_DIR . 'admin/abptf_post.php';
 					require_once ABPTF_DIR . 'admin/abptf_routing.php';
 					require_once ABPTF_DIR . 'admin/abptf_ticket.php';
+					require_once ABPTF_DIR . 'admin/abptf_price.php';
 					require_once ABPTF_DIR . 'admin/abptf_dashboard.php';
 					require_once ABPTF_DIR . 'admin/abptf_orders.php';
 					require_once ABPTF_DIR . 'admin/abptf_dates.php';
@@ -284,38 +294,6 @@
 					'show_in_nav_menus' => true,  // you should be able to add it to menus
 					'has_archive' => true,  // it should have archive page
 				]);
-				register_taxonomy('abptf_category', $cpt, [
-					'hierarchical' => true,
-					"public" => true,
-					'labels' => [
-						'name' => $label . ' ' . ABPTF_Function::category_label(),
-						'singular_name' => $label . ' ' . ABPTF_Function::category_label(),
-					],
-					'show_ui' => true,
-					'show_admin_column' => false,
-					'show_in_menu' => false,
-					'query_var' => true,
-					'rewrite' => ['slug' => ABPTF_Function::category_slug()],
-					'show_in_rest' => true,
-					'rest_base' => 'abptf_category',
-					'meta_box_cb' => false,
-				]);
-				register_taxonomy('abptf_organizer', $cpt, [
-					'hierarchical' => true,
-					"public" => true,
-					'labels' => [
-						'name' => $label . ' ' . ABPTF_Function::organizer_label(),
-						'singular_name' => $label . ' ' . ABPTF_Function::organizer_label(),
-					],
-					'show_ui' => true,
-					'show_admin_column' => false,
-					'show_in_menu' => false,
-					'query_var' => true,
-					'rewrite' => ['slug' => ABPTF_Function::organizer_slug()],
-					'show_in_rest' => true,
-					'rest_base' => 'abptf_organizer',
-					'meta_box_cb' => false,
-				]);
 				register_taxonomy('abptf_location', $cpt, [
 					'hierarchical' => true,
 					"public" => true,
@@ -332,22 +310,60 @@
 					'rest_base' => 'abptf_location',
 					'meta_box_cb' => false,
 				]);
-				register_taxonomy('abptf_brand', $cpt, [
-					'hierarchical' => true,
-					"public" => true,
-					'labels' => [
-						'name' => $label . ' ' . ABPTF_Function::brand_label(),
-						'singular_name' => $label . ' ' . ABPTF_Function::brand_label(),
-					],
-					'show_ui' => true,
-					'show_admin_column' => false,
-					'show_in_menu' => false,
-					'query_var' => true,
-					'rewrite' => ['slug' => ABPTF_Function::brand_slug()],
-					'show_in_rest' => true,
-					'rest_base' => 'abptf_brand',
-					'meta_box_cb' => false,
-				]);
+				if (ABPTF_Function::on_off('category')) {
+					register_taxonomy('abptf_category', $cpt, [
+						'hierarchical' => true,
+						"public" => true,
+						'labels' => [
+							'name' => $label . ' ' . ABPTF_Function::category_label(),
+							'singular_name' => $label . ' ' . ABPTF_Function::category_label(),
+						],
+						'show_ui' => true,
+						'show_admin_column' => false,
+						'show_in_menu' => false,
+						'query_var' => true,
+						'rewrite' => ['slug' => ABPTF_Function::category_slug()],
+						'show_in_rest' => true,
+						'rest_base' => 'abptf_category',
+						'meta_box_cb' => false,
+					]);
+				}
+				if (ABPTF_Function::on_off('organizer')) {
+					register_taxonomy('abptf_organizer', $cpt, [
+						'hierarchical' => true,
+						"public" => true,
+						'labels' => [
+							'name' => $label . ' ' . ABPTF_Function::organizer_label(),
+							'singular_name' => $label . ' ' . ABPTF_Function::organizer_label(),
+						],
+						'show_ui' => true,
+						'show_admin_column' => false,
+						'show_in_menu' => false,
+						'query_var' => true,
+						'rewrite' => ['slug' => ABPTF_Function::organizer_slug()],
+						'show_in_rest' => true,
+						'rest_base' => 'abptf_organizer',
+						'meta_box_cb' => false,
+					]);
+				}
+				if (ABPTF_Function::on_off('brand')) {
+					register_taxonomy('abptf_brand', $cpt, [
+						'hierarchical' => true,
+						"public" => true,
+						'labels' => [
+							'name' => $label . ' ' . ABPTF_Function::brand_label(),
+							'singular_name' => $label . ' ' . ABPTF_Function::brand_label(),
+						],
+						'show_ui' => true,
+						'show_admin_column' => false,
+						'show_in_menu' => false,
+						'query_var' => true,
+						'rewrite' => ['slug' => ABPTF_Function::brand_slug()],
+						'show_in_rest' => true,
+						'rest_base' => 'abptf_brand',
+						'meta_box_cb' => false,
+					]);
+				}
 				flush_rewrite_rules();
 			}
 			public static function activation(): void {

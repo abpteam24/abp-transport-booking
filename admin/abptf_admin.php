@@ -38,7 +38,7 @@
                 }
                 ?>
                 <div class="abptf_area  abptf_admin">
-                    <div class="admin_head _fj_between">
+                    <div class="admin_head ">
                         <div class="head_brand _d_flex">
                             <div class="brand_icon _all_center"><?php ABPTF_Layout::image_icon($icon); ?></div>
                             <div class="_fd_column">
@@ -46,29 +46,29 @@
                                 <span class="brand_version"><?php echo esc_html(ABPTF_VERSION); ?></span>
                             </div>
                         </div>
+                        <div class="_group_content">
+                            <!--                            <a href="--><?php //echo esc_url( add_query_arg( 'tab', 'dashboard' ) ); ?><!--" class="_btn_light_info --><?php //echo esc_attr( $active_tab == 'dashboard' ? 'abp_active' : '' ); ?><!--"><span class="_mar_r_xs">📊</span>--><?php //esc_html_e( 'Dashboard', 'abp-transportforge' ); ?><!--</a>-->
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('posts')); ?>" class="_btn_white_xs post_tab <?php echo esc_attr($active_tab == 'posts' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::image_icon($icon); ?><?php echo esc_html($label).' '.esc_html__('Lists', 'abp-transportforge'); ?><sup class="_mar_l_xs_circle_icon_xs"><?php echo esc_html($total_post); ?></sup></a>
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('orders')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'orders' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::icon_buddy('order'); esc_html_e('Orders', 'abp-transportforge'); ?><sup class="_mar_l_xs_circle_icon_xs"><?php echo esc_html($total_order); ?></sup></a>
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('sp')); ?>" class="_btn_white_xs  <?php echo esc_attr($active_tab == 'sp' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::icon_buddy('seat'); esc_html_e('Ticket/Seat Plan', 'abp-transportforge'); ?></a>
+                            <?php do_action('abptf_add_admin_menu_tab_middle', $active_tab); ?>
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('global')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'global' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::icon_buddy('globe'); esc_html_e('Global Data', 'abp-transportforge'); ?></a>
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('configuration')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'configuration' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::icon_buddy('setting');  esc_html_e('Configuration', 'abp-transportforge'); ?></a>
+                            <a href="<?php echo esc_url(ABPTF_Function::build_url('status')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'status' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::icon_buddy('status');  esc_html_e('Status', 'abp-transportforge'); ?></a>
+                            <?php do_action('abptf_add_admin_menu_tab', $active_tab); ?>
+                        </div>
                         <?php if (ABPTF_WC == 2) { ?>
                             <div class="_group_content">
-                                <button type="button" class="_btn_white" data-href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTF_Function::get_cpt())); ?>" data-blank="_blank"><span class="_mar_r_xs">➕</span><?php esc_html_e('Add New Transport', 'abp-transportforge'); ?></button>
-                                <?php ABPTF_Layout::button_global_popup('tax_location', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::location_label(), '_btn_white');
+                                <button type="button" class="_btn_white_xs" data-href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTF_Function::get_cpt())); ?>" data-blank="_blank"><?php ABPTF_Layout::icon_buddy('plus'); echo esc_html($label); ?></button>
+                                <?php ABPTF_Layout::button_global_popup('tax_location',  ABPTF_Function::location_label(), '_btn_white_xs');
                                     if (ABPTF_Function::on_off('category')) {
-                                        ABPTF_Layout::button_global_popup('tax_category', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::category_label(), '_btn_white');
+                                        ABPTF_Layout::button_global_popup('tax_category', ABPTF_Function::category_label(), '_btn_white_xs');
                                     } ?>
                             </div>
                         <?php } ?>
                     </div>
-                    <div class="admin_menu">
-                        <div class="menu_list">
-                            <!--                            <a href="--><?php //echo esc_url( add_query_arg( 'tab', 'dashboard' ) ); ?><!--" class="_btn_light_info --><?php //echo esc_attr( $active_tab == 'dashboard' ? 'abp_active' : '' ); ?><!--"><span class="_mar_r_xs">📊</span>--><?php //esc_html_e( 'Dashboard', 'abp-transportforge' ); ?><!--</a>-->
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('posts')); ?>" class="_btn_info post_tab <?php echo esc_attr($active_tab == 'posts' ? 'abp_active' : ''); ?>"><?php ABPTF_Layout::image_icon($icon); ?><?php esc_html_e('Transport Lists', 'abp-transportforge'); ?><sup class="_mar_l_xs_circle_icon_xs"><?php echo esc_html($total_post); ?></sup></a>
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('orders')); ?>" class="_btn_info <?php echo esc_attr($active_tab == 'orders' ? 'abp_active' : ''); ?>"><span class="_mar_r_xxs">📋</span><?php esc_html_e('Orders', 'abp-transportforge'); ?><sup class="_mar_l_xs_circle_icon_xs"><?php echo esc_html($total_order); ?></sup></a>
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('sp')); ?>" class="_btn_info  <?php echo esc_attr($active_tab == 'sp' ? 'abp_active' : ''); ?>"><span class="_mar_r_xxs">💺</span> <?php esc_html_e('Ticket/Seat Plan', 'abp-transportforge'); ?></a>
-                            <?php do_action('abptf_add_admin_menu_tab_middle', $active_tab); ?>
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('global')); ?>" class="_btn_info <?php echo esc_attr($active_tab == 'global' ? 'abp_active' : ''); ?>"><span class="_mar_r_xxs">🌐</span><?php esc_html_e('Global Data', 'abp-transportforge'); ?></a>
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('configuration')); ?>" class="_btn_info <?php echo esc_attr($active_tab == 'configuration' ? 'abp_active' : ''); ?>"><span class="_mar_r_xxs">⚙️</span><?php esc_html_e('Configuration', 'abp-transportforge'); ?></a>
-                            <a href="<?php echo esc_url(ABPTF_Function::build_url('status')); ?>" class="_btn_info <?php echo esc_attr($active_tab == 'status' ? 'abp_active' : ''); ?>"><span class="_mar_r_xxs">🛡️</span><?php esc_html_e('Status', 'abp-transportforge'); ?></a>
-                            <?php do_action('abptf_add_admin_menu_tab', $active_tab); ?>
-                        </div>
-                    </div>
+
+
                     <div class="dashboard_content">
                         <?php do_action('abptf_load_' . $active_tab, $abptf_info); ?>
                     </div>

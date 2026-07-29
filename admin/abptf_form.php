@@ -9,7 +9,7 @@
                 add_action('abptf_post_content', [$this, 'post_client_form']);
                 add_filter('abptf_get_form_array', array($this, 'get_form_array'));
                 add_action('wp_ajax_abptf_save_form_config', array($this, 'save_form_config'));
-                add_action('wp_ajax_abptf_import_global_form', array($this, 'import_global_form'));
+                add_action('wp_ajax_abptf_import_client_form_content', array($this, 'import_client_form_content'));
             }
             public function global_client_form(): void {
                 ?>
@@ -33,43 +33,61 @@
             }
             public function post_client_form($post_infos): void {
                 if (ABPTF_Function::on_off('client_info')) {
-                    $client_forms = $post_infos['client_forms'] ?? [];
+                    $client_forms = $post_infos['abptf_forms'] ?? [];
                     $display = $post_infos['display_client_form'] ?? 'off';
                     $active_global_form = $post_infos['active_global_form'] ?? 'on';
+                    $display_single_form = $post_infos['display_single_form'] ?? 'on';
+                    $display_single_form = ABPTF_Function::on_off('same_attendee') ? $display_single_form : 'off';
                     ?>
                     <div class="tab_item abptf_client_form" data-tabs="#abptf_client_form">
                         <h4 class=" _abp_color_theme"><span class="_mar_r_xxs">📋</span> <?php esc_html_e('Client Forms Configuration', 'abp-transportforge'); ?></h4>
                         <div class="_divider_xs"></div>
-                        <div class="group_setting">
-                            <div class="setting_item">
-                                <div class="_f_wrap_fj_between_fa_center">
-                                    <div class="_fa_center">
-                                        <?php ABPTF_Layout::switch_checkbox('display_client_form', $display); ?>
-                                        <span class="_fs_label_mar_l_xs"><?php esc_html_e('Active Client Form ?', 'abp-transportforge'); ?></span>
+                        <?php if (ABPTF_Function::on_off('custom_attendee')) { ?>
+                            <div class="group_setting">
+                                <div class="setting_item">
+                                    <div class="_f_wrap_fj_between_fa_center">
+                                        <div class="_fa_center">
+                                            <?php ABPTF_Layout::switch_checkbox('display_client_form', $display); ?>
+                                            <span class="_abp_label"><?php esc_html_e('Client Form ?', 'abp-transportforge'); ?></span>
+                                        </div>
                                     </div>
+                                    <div class="_divider_xs"></div>
+                                    <?php ABPTF_Layout::info_text('display_client_form'); ?>
                                 </div>
-                                <div class="_divider_xs"></div>
-                                <?php ABPTF_Layout::info_text('display_client_form'); ?>
-                            </div>
-                            <div data-collapse="#display_client_form" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
-                                <div class="_fj_between">
-                                    <div class="_fa_center">
-                                        <?php ABPTF_Layout::switch_checkbox('active_global_form', $active_global_form); ?>
-                                        <span class="_fs_label_mar_lr_xs"><?php esc_html_e('Use Global Client Form ?', 'abp-transportforge'); ?></span>
+                                <div data-collapse="#display_client_form" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
+                                    <div class="_fj_between">
+                                        <div class="_fa_center">
+                                            <?php ABPTF_Layout::switch_checkbox('active_global_form', $active_global_form); ?>
+                                            <span class="_abp_label"><?php esc_html_e('Use Global Client Form ?', 'abp-transportforge'); ?></span>
+                                        </div>
+                                        <div data-collapse="#active_global_form" class=" <?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>">
+                                            <button type="button" class="_btn_theme" onclick="abptf_import_global('client_form_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Client Form', 'abp-transportforge'); ?></button>
+                                        </div>
                                     </div>
-                                    <div data-collapse="#active_global_form" class=" <?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>">
-                                        <button type="button" class="_btn_theme import_global_form"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Client Form', 'abp-transportforge'); ?></button>
-                                    </div>
+                                    <div class="_divider_xs"></div>
+                                    <?php ABPTF_Layout::info_text('active_global_form'); ?>
                                 </div>
-                                <div class="_divider_xs"></div>
-                                <?php ABPTF_Layout::info_text('active_global_form'); ?>
+                                <?php if (ABPTF_Function::on_off('same_attendee')) { ?>
+                                    <div data-collapse="#display_client_form" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
+                                        <div class="_fa_center">
+                                            <?php ABPTF_Layout::switch_checkbox('display_single_form', $display_single_form); ?>
+                                            <span class="_abp_label"><?php esc_html_e('Same Attendee ?', 'abp-transportforge'); ?></span>
+                                        </div>
+                                        <div class="_divider_xs"></div>
+                                        <?php ABPTF_Layout::info_text('display_single_form'); ?>
+                                    </div>
+                                <?php } else { ?>
+                                    <input type="hidden" name="display_single_form" value="<?php echo esc_attr($display_single_form); ?>">
+                                <?php } ?>
                             </div>
-                        </div>
-                        <div class="<?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>" data-collapse="#active_global_form">
-                            <div class="client_form_content _mar_t_xs">
-                                <?php $this->passenger_form_settings($client_forms); ?>
+                            <div class="<?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>" data-collapse="#active_global_form">
+                                <div class="client_form_content _mar_t_xs">
+                                    <?php $this->passenger_form_settings($client_forms); ?>
+                                </div>
                             </div>
-                        </div>
+                        <?php } else {
+                            ABPTF_Layout::layout_warning_info_xs('attendee_off');
+                        } ?>
                     </div>
                     <?php
                 }
@@ -108,7 +126,7 @@
                     <div class="_fj_between">
                         <?php ABPTF_Layout::button_add(__('Add New Form Item', 'abp-transportforge'));
                             if ($global) {
-                                ABPTF_Layout::button_global_save('form_config',__('Save Global Client Form Configuration', 'abp-transportforge'));
+                                ABPTF_Layout::button_global_save('form_config', __('Save Global Client Form Configuration', 'abp-transportforge'));
                             } ?>
                     </div>
                     <div class="abp_hidden">
@@ -231,9 +249,9 @@
                 }
                 $form_infos = $this->get_form_array();
                 update_option('abptf_forms', $form_infos);
-                wp_send_json_success(['msg' => __('Client Form Configuration Saved Successfully..... !! ', 'abp-transportforge')]);
+                wp_send_json_success(['msg' => __('Client Form Configuration Saved Successfully..... !! ', 'abp-transportforge'), 'type' => 'success']);
             }
-            public function import_global_form(): void {
+            public function import_client_form_content(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
                 }

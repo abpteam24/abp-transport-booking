@@ -172,6 +172,7 @@
 								$end_time         = $booking_list['end_time'] ?? '';
 								$end_date         = ! empty( $end_time ) ? gmdate( 'Y-m-d', strtotime( $end_time ) ) : '';
 								$end_time_format  = strtotime( $start_date ) === strtotime( $end_date ) ? 'time' : 'full';
+                                $post_infos['post_id'] = $post_id;
 								?>
                                 <tr>
                                     <th>
@@ -187,11 +188,11 @@
                                         <p class="_abp_fs_label_color_theme"><?php echo esc_html( ABPTF_Function::date_format( $order_time ) ); ?></p>
                                     </th>
 									<?php if ( $post_id === 0 ) { ?>
-                                        <th class="_text_left"><?php ABPTF_Layout::title( $_post_id ); ?></th>
+                                        <th class="_text_left"><?php ABPTF_Layout::title( $post_infos ); ?></th>
 									<?php } ?>
                                     <td>
 										<?php echo esc_html( ABPTF_Function::date_format( $start_time, 'full' ) . '-' . ABPTF_Function::date_format( $end_time, $end_time_format ) ); ?>
-                                        <p class="_abp_fs_label_color_theme"><?php echo esc_html( $others['duration'] ?? '' ) . '-' . esc_html( ABPTF_Layout::rent_rules( $others['rent_rule'] ?? '' ) ); ?></p>
+                                        <p class="_abp_fs_label_color_theme"><?php echo esc_html( $others['duration'] ?? '' ); ?></p>
                                     </td>
 
                                         <td><?php echo esc_html( ABPTF_Function::location_value( $booking_list['location'] ?? '' ) ); ?></td>

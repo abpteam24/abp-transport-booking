@@ -1,0 +1,47 @@
+<?php
+    if (!defined('ABSPATH')) {
+        exit; // Exit if accessed directly
+    }
+    add_action('abptf_type_head_template', function ($post_infos, $form_data = [], $prefix = '') {
+        if (!empty($post_infos)) {
+            //echo '<pre>';        print_r($form_data);        echo '</pre>';
+            $ticket_infos = $post_infos['ticket_infos'] ?? [];
+            if (is_array($ticket_infos) && sizeof($ticket_infos) > 0) {
+                $bp_dp = $form_data['bp_dp'] ?? '';
+                $journey_date = $form_data['journey_date'] ?? '';
+                $journey_time = $form_data['journey_time'] ?? '';
+                $bp_times = $form_data['bp_times'] ?? [];
+                $double_route = $form_data['double_route'] ?? '';
+                ?>
+                <div class="post_top_filter">
+                    <?php if(empty($double_route)){ ?>
+                    <h3 class="_abp"><?php esc_html_e('Available Ticket', 'abp-transportforge'); ?></h3>
+                    <?php } ?>
+                    <?php if (!empty($bp_dp)) { ?>
+                        <h5 class="_abp _d_flex_fa_center ">
+                            <?php ABPTF_Layout::route_direction($post_infos, $bp_dp,'',$double_route); ?>
+                        </h5>
+                        <?php
+                        if ($journey_date && empty($bp_times)) {
+                            ABPTF_Layout::layout_warning_info_xs('', __('No time available : ', 'abp-transportforge') . ' ' . ABPTF_Function::date_format($journey_date, 'date'));
+                        }
+                        ?>
+                        <label class="_text_nowrap">
+                            <span class=" _mar_r_xxs">⏰</span><span class="_abp_label"> <?php esc_html_e('Time :', 'abp-transportforge'); ?></span>
+                            <?php if (!empty($bp_times) && sizeof($bp_times) > 1) { ?>
+                                <select class="_form_control" name="<?php echo esc_attr($prefix); ?>journey_time">
+                                    <?php foreach ($bp_times as $bp_time) { ?>
+                                        <option value="<?php echo esc_attr($bp_time); ?>" <?php selected($journey_time, $bp_time) ?>><?php echo esc_html(ABPTF_Function::date_format($bp_time)); ?></option>
+                                    <?php } ?>
+                                </select>
+                            <?php } else { ?>
+                                <?php echo esc_html(ABPTF_Function::date_format($journey_time)); ?>
+                                <input type="hidden" name="<?php echo esc_attr($prefix); ?>journey_time" value="<?php echo esc_attr($journey_time); ?>">
+                            <?php } ?>
+                        </label>
+                    <?php } ?>
+                </div>
+                <?php
+            }
+        }
+    }, 10, 3);

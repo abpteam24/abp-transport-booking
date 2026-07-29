@@ -72,14 +72,17 @@
 				if ( ! defined( 'ABPTF_Locations' ) ) {
 					define( 'ABPTF_Locations', ABPTF_Function::get_option( 'abptf_location' ) );
 				}
-				if ( ! defined( 'ABPTF_Brands' ) ) {
-					define( 'ABPTF_Brands', ABPTF_Function::get_option( 'abptf_brand' ) );
+				if ( ! defined( 'ABPTF_Brand' ) ) {
+					define( 'ABPTF_Brand', ABPTF_Function::get_option( 'abptf_brand' ) );
 				}
-				if ( ! defined( 'ABPTF_Min_Price' ) ) {
-					define( 'ABPTF_Min_Price', ABPTF_Function::get_option( 'abptf_min_price' ) );
+				if ( ! defined( 'ABPTF_Post_ids' ) ) {
+					define( 'ABPTF_Post_ids', ABPTF_Query::get_post_id());
 				}
-				if ( ! defined( 'ABPTF_ticket_type' ) ) {
-					define( 'ABPTF_ticket_type', ABPTF_Function::get_option( 'abptf_ticket' ) );
+				if ( ! defined( 'ABPTF_ticket' ) ) {
+					define( 'ABPTF_ticket', ABPTF_Function::get_option( 'abptf_ticket' ) );
+				}
+				if ( ! defined( 'ABPTF_sp_ticket' ) ) {
+					define( 'ABPTF_sp_ticket', ABPTF_Function::get_option( 'abptf_sp_ticket' ) );
 				}
 				if ( ! defined( 'ABPTF_On_Off' ) ) {
 					define( 'ABPTF_On_Off', ABPTF_Function::get_option( 'abptf_on_off' ) );

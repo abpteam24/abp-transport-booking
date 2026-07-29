@@ -10,8 +10,8 @@
                 add_filter('abptf_get_faq_array', array($this, 'get_faq_array'));
                 add_action('abptf_post_content', array($this, 'post_resource'));
                 add_action('wp_ajax_abptf_save_tc_config', array($this, 'save_tc_config'));
-                add_action('wp_ajax_abptf_import_faq', array($this, 'import_faq'));
-                add_action('wp_ajax_abptf_import_tc', array($this, 'import_tc'));
+                add_action('wp_ajax_abptf_import_faq_content', array($this, 'import_faq_content'));
+                add_action('wp_ajax_abptf_import_tc_content', array($this, 'import_tc_content'));
             }
             public function global_resource(): void {
                 if (ABPTF_Function::on_off('faq')) {
@@ -78,7 +78,7 @@
                 $title = $faq['title'] ?? __('NEW', 'abp-transportforge');
                 $description = $faq['des'] ?? '';
                 $description = $description ? html_entity_decode($description) : '';
-                $editor_id = 'abptf_editor_faq' . wp_rand(0, 999);
+                $editor_id =uniqid('abptf_editor_');
                 ?>
                 <div class="delete_area faq_item _mar_b_xs <?php echo esc_attr(empty($faq) ? 'active' : ''); ?>">
                     <div class="faq_question">
@@ -208,7 +208,7 @@
                                     <span class="_abp_label"><?php esc_html_e('Use Global FAQ ?', 'abp-transportforge'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_faq" class=" <?php echo esc_attr($active_global_faq == 'on' ? '' : 'abp_active'); ?>">
-                                    <button type="button" class="_btn_theme import_faq"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global FAQ', 'abp-transportforge'); ?></button>
+                                    <button type="button" class="_btn_theme" onclick="abptf_import_global('faq_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global FAQ', 'abp-transportforge'); ?></button>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>
@@ -251,7 +251,7 @@
                                     <span class="_abp_label"><?php esc_html_e('Use Global Term & Conditions ?', 'abp-transportforge'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_tc" class=" <?php echo esc_attr($active_global_tc == 'on' ? '' : 'abp_active'); ?>">
-                                    <button type="button" class="_btn_theme import_tc"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Term & Conditions', 'abp-transportforge'); ?></button>
+                                    <button type="button" class="_btn_theme_xs" onclick="abptf_import_global('tc_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Term & Conditions', 'abp-transportforge'); ?></button>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>
@@ -339,7 +339,7 @@
                 }
                 return $abptf_faqs;
             }
-            public function import_tc(): void {
+            public function import_tc_content(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
                 }
@@ -347,9 +347,9 @@
                 ob_start();
                 $this->tc($tcs);
                 $html_content = ob_get_clean();
-                wp_send_json_success(['html' => $html_content, 'msg' => __('Term & Conditions  Imported Successfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
+                wp_send_json_success(['html' => $html_content, 'msg' => __('Global Term & Conditions  Imported Successfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
             }
-            public function import_faq(): void {
+            public function import_faq_content(): void {
                 if (!check_ajax_referer('abptf_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transportforge'), 'type' => 'warn'], 403);
                 }
@@ -358,7 +358,7 @@
                 ob_start();
                 $this->faq($faqs);
                 $html_content = ob_get_clean();
-                wp_send_json_success(['html' => $html_content, 'msg' => __('FAQ ImportedSuccessfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
+                wp_send_json_success(['html' => $html_content, 'msg' => __('FAQ Imported Successfully ..... !! ', 'abp-transportforge'), 'type' => 'success']);
             }
         }
         new ABPTF_Resource();

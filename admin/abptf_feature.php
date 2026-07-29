@@ -119,7 +119,7 @@
                 wp_send_json_success([
                     'html' => $html,
                     'msg' => __('Feature Saved Successfully..........!!', 'abp-transportforge'),
-                    'js' => (!empty($post_id) && $post_id > 0 ? self::get_feature_js() : ''),
+                    'js' => self::get_feature_js($post_id),
                 ]);
             }
             public function delete_option_feature(): void {
@@ -169,13 +169,15 @@
                     ABPTF_Layout::layout_warning_info('no_feature');
                 }
             }
-            public static function get_feature_js(): array {
-                $features = ABPTF_Function::get_option('abptf_feature');
-                $features = is_array($features) ? $features : [];
+            public static function get_feature_js($post_id): array {
                 $feature_js = [];
-                if (sizeof($features) > 0) {
-                    foreach ($features as $key => $feature) {
-                        $feature_js[] = ['id' => $key, 'icon' => ($feature['icon'] ?? ''), 'label' => ($feature['label'] ?? ''), 'value' => ($feature['value'] ?? '')];
+                if (!empty($post_id) && $post_id > 0) {
+                    $features = ABPTF_Function::get_option('abptf_feature');
+                    $features = is_array($features) ? $features : [];
+                    if (sizeof($features) > 0) {
+                        foreach ($features as $key => $feature) {
+                            $feature_js[] = ['id' => $key, 'icon' => ($feature['icon'] ?? ''), 'label' => ($feature['label'] ?? ''), 'value' => ($feature['value'] ?? '')];
+                        }
                     }
                 }
                 return $feature_js;

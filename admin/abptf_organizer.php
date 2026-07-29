@@ -210,24 +210,20 @@
                 }
             }
             public static function organizer_selection($value = ''): void {
-                ?>
-                <div class="_group_content">
-                    <?php $options = ABPTF_Function::get_option('abptf_organizer');
-                        if (!empty($options) && is_array($options) && sizeof($options) > 0) { ?>
-                            <label>
-                                <select class="_form_control" name="abptf_organizer">
-                                    <option value="" selected><?php echo esc_html__('Please Select', 'abp-transportforge') .' '.esc_html(ABPTF_Function::organizer_label()); ?></option>
-                                    <?php foreach ($options as $key => $option) { ?>
-                                        <option value="<?php echo esc_attr($key); ?>" <?php echo esc_attr($key == $value ? 'selected' : ''); ?>><?php echo esc_html($option['name'] ?? ''); ?></option>
-                                    <?php } ?>
-                                </select>
-                            </label>
-                        <?php } else {
-                            ABPTF_Layout::layout_info_xs('no_organizer');
-                        }
-                        ABPTF_Layout::button_global_popup('tax_organizer', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::organizer_label()); ?>
-                </div>
-                <?php
+                $options = ABPTF_Function::get_option('abptf_organizer');
+                if (!empty($options) && is_array($options) && sizeof($options) > 0) { ?>
+                    <label>
+                        <select class="_form_control" name="abptf_organizer">
+                            <option value="" selected><?php echo esc_html__('Please Select', 'abp-transportforge') . ' ' . esc_html(ABPTF_Function::organizer_label()); ?></option>
+                            <?php foreach ($options as $key => $option) { ?>
+                                <option value="<?php echo esc_attr($key); ?>" <?php echo esc_attr($key == $value ? 'selected' : ''); ?>><?php echo esc_html($option['name'] ?? ''); ?></option>
+                            <?php } ?>
+                        </select>
+                    </label>
+                <?php } else {
+                    ABPTF_Layout::layout_info_xs('no_organizer');
+                }
+                ABPTF_Layout::button_global_popup('tax_organizer', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::organizer_label());
             }
         }
         new ABPTF_Organizer();

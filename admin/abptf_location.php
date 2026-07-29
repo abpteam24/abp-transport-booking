@@ -182,7 +182,7 @@
                 }
                 wp_send_json_success([
                     'html' => $html, 'type' => 'success', 'msg' => ABPTF_Function::location_label() . ' ' . __('Saved Successfully !', 'abp-transportforge'),
-                    'js' => (!empty($post_id) && $post_id > 0 ? self::location_info_js($post_id) : ''),
+                    'js' => (!empty($post_id) && $post_id > 0 ? ABPTF_Function::location_info_js() : ''),
                 ]);
             }
             public function delete_tax_location(): void {
@@ -301,21 +301,6 @@
                     <?php ABPTF_Layout::button_delete_sort(); ?>
                 </div>
                 <?php
-            }
-            public static function location_info_js($_post_id = ''): array {
-                $all_info = [];
-                if (!empty($_post_id) && $_post_id > 0) {
-                    $all_location = ABPTF_Function::get_option('abptf_location');
-                    if (!empty($all_location)) {
-                        foreach ($all_location as $key => $location) {
-                            $name = $location['name'] ?? '';
-                            if ($name) {
-                                $all_info[] = ['id' => $key, 'label' => $name];
-                            }
-                        }
-                    }
-                }
-                return $all_info;
             }
         }
         new ABPTF_Location();

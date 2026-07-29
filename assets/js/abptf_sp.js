@@ -204,7 +204,7 @@ let abptf_decor_item = abptf_sp_config.decor_item ? JSON.parse(abptf_sp_config.d
             if (name) {
                 initialLayout[baseIndex].name = name;
             }
-            if(font_size && font_size>=8){
+            if (font_size && font_size >= 8) {
                 initialLayout[baseIndex].fs = font_size;
             }
         }
@@ -311,7 +311,7 @@ let abptf_decor_item = abptf_sp_config.decor_item ? JSON.parse(abptf_sp_config.d
         }
         syncLayoutFromDOM();
         initialLayout[targetIndex] = {
-            index: targetIndex, type: type, id: groupId, name: finalName, color: color, icon: icon, img: img,fs:parseInt(fs),
+            index: targetIndex, type: type, id: groupId, name: finalName, color: color, icon: icon, img: img, fs: parseInt(fs),
             width_ratio: parseInt(cSpan), height_ratio: parseInt(rSpan), rotate: parseInt(rotate)
         };
         isCloningMode = false;
@@ -363,7 +363,7 @@ let abptf_decor_item = abptf_sp_config.decor_item ? JSON.parse(abptf_sp_config.d
     }
     function applyGroupToCell(element) {
         let cell = $(element).closest('.sp_cell');
-        if (cell.attr('data-cell-type') === activeGroup.type && parseInt(cell.attr('data-group-id')) === parseInt(activeGroup.id)) {
+        if (cell.attr('data-cell-type') === activeGroup.type && cell.attr('data-group-id') === activeGroup.id) {
             return;
         }
         let index = cell.data('index');

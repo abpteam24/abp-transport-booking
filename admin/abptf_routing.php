@@ -11,6 +11,7 @@
                 $routing_infos = $post_infos['routing_infos'] ?? [];
                 $return_routing_infos = $post_infos['return_routing_infos'] ?? [];
                 $display_return = $post_infos['display_return'] ?? 'off';
+                $display_return=ABPTF_Function::on_off('return')?$display_return:'off';
                 ?>
                 <div class="tab_item abptf_routing" data-tabs="#abptf_routing">
                     <div class="_fj_between_fa_center">
@@ -47,8 +48,8 @@
                                     <tbody class="insertable_area sortable_area route_configuration">
                                     <?php
                                         if (!empty($routing_infos)) {
-                                            foreach ($routing_infos as $routing_info) {
-                                                $this->stop_item($routing_info);
+                                            foreach ($routing_infos as $key=>$routing_info) {
+                                                $this->stop_item($routing_info,$key);
                                             }
                                         }
                                     ?>
@@ -82,11 +83,11 @@
                                             <th class="_w_75"><?php esc_html_e('Action', 'abp-wc-transport-manager'); ?></th>
                                         </tr>
                                         </thead>
-                                        <tbody class="insertable_area sortable_area route_configuration">
+                                        <tbody class="insertable_area sortable_area return_route_configuration">
                                         <?php
                                             if (!empty($return_routing_infos)) {
-                                                foreach ($return_routing_infos as $routing_info) {
-                                                    $this->stop_item($routing_info, 'return_');
+                                                foreach ($return_routing_infos as $key=>$routing_info) {
+                                                    $this->stop_item($routing_info, $key,'return_');
                                                 }
                                             }
                                         ?>
@@ -108,15 +109,14 @@
                 </div>
                 <?php
             }
-            public function stop_item($field = [],$prefix=''): void {
-                $stop = $field['stop'] ?? '';
+            public function stop_item($field = [],$stop='',$prefix=''): void {
                 $type = $field['type'] ?? 'bp';
                 ?>
                 <tr class="delete_area data_single_collapse">
                     <th class="_text_table_center "><span class="fas fa-arrow-down"></span></th>
                     <td>
                         <label>
-                            <select name="<?php echo esc_attr($prefix);?>stop_name[]" class='_form_control_w_full'>
+                            <select name="<?php echo esc_attr($prefix);?>stop_name[]" class='_form_control'>
                                 <option value="" selected><?php esc_html_e('Select Stops.', 'abp-wc-transport-manager'); ?></option>
                                 <?php if (!empty(ABPTF_Locations)) {
                                     foreach (ABPTF_Locations as $key => $location) { ?>
@@ -129,7 +129,7 @@
                     </td>
                     <th>
                         <label>
-                            <select name="<?php echo esc_attr($prefix);?>stop_type[]" class='_form_control_w_full'>
+                            <select name="<?php echo esc_attr($prefix);?>stop_type[]" class='_form_control'>
                                 <option value="bp" <?php echo esc_attr($type == 'bp' ? 'selected' : ''); ?>><?php esc_html_e('Boarding', 'abp-wc-transport-manager'); ?></option>
                                 <option value="dp" <?php echo esc_attr($type == 'dp' ? 'selected' : ''); ?>><?php esc_html_e('Dropping', 'abp-wc-transport-manager'); ?></option>
                                 <option value="both" <?php echo esc_attr($type == 'both' ? 'selected' : ''); ?>><?php esc_html_e('Both', 'abp-wc-transport-manager'); ?></option>
@@ -138,13 +138,13 @@
                     </th>
                     <th>
                         <label>
-                            <input type="number" class="_form_control_w_full validation_number" name="<?php echo esc_attr($prefix);?>stop_time[]" value="<?php echo esc_attr($field['time'] ?? ''); ?>"/>
+                            <input type="number" class="_form_control validation_number" name="<?php echo esc_attr($prefix);?>stop_time[]" value="<?php echo esc_attr($field['time'] ?? ''); ?>"/>
                         </label>
                     </th>
                     <?php if (ABPTF_Function::on_off('pickup')) { ?>
                         <td>
                             <div class="_all_center">
-                                <?php ABPTF_Layout::switch_checkbox('<?php echo esc_attr($prefix);?>display_pd[]', ($field['display_pd'] ?? 'on')); ?>
+                                <?php ABPTF_Layout::switch_checkbox($prefix.'display_pd[]', ($field['pd'] ?? 'on')); ?>
                             </div>
                         </td>
                     <?php } ?>

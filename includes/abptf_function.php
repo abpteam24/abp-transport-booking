@@ -42,6 +42,7 @@
 							$all_data[$key] = self::data_sanitize($meta[0]);
 						}
 					}
+					$all_data['capacity'] = self::get_total_qty($post_id, $all_data);
 				}
 				return $all_data;
 			}
@@ -70,15 +71,15 @@
 				return $default;
 			}
 			public static function booking_status() { return (ABPTF_Configuration['booked_status'] ?? null) ?: 'wc-processing,wc-completed'; }
-			public static function label() { return (ABPTF_Configuration['label'] ?? null) ?: __('TransportForge', 'abp-transportforge'); }
+			public static function label() { return (ABPTF_Configuration['label'] ?? null) ?: __('Transport', 'abp-transportforge'); }
 			public static function slug() { return (ABPTF_Configuration['slug'] ?? null) ?: 'transport-forge'; }
 			public static function icon_wp() { return (ABPTF_Configuration['icon'] ?? null) ?: 'dashicons-tickets'; }
 			public static function icon() { return (ABPTF_Configuration['brand_icon'] ?? null) ?: '🚐'; }
 			public static function feature_label() { return (ABPTF_Configuration['feature_label'] ?? null) ?: __('Feature', 'abp-transportforge'); }
 			public static function brand_label() { return (ABPTF_Configuration['brand_label'] ?? null) ?: __('Brand', 'abp-transportforge'); }
 			public static function brand_slug() { return (ABPTF_Configuration['brand_slug'] ?? null) ?: 'brand'; }
-			public static function brand_value($id) { return (ABPTF_Brands[$id]['name'] ?? null) ?: $id; }
-			public static function category_label() { return (ABPTF_Configuration['category_label'] ?? null) ?: __('Category', 'abp-transportforge'); }
+			public static function brand_value($id) { return (ABPTF_Brand[$id]['name'] ?? null) ?: $id; }
+			public static function category_label() { return (ABPTF_Configuration['category_label'] ?? null) ?: __('Transport Type', 'abp-transportforge'); }
 			public static function category_slug() { return (ABPTF_Configuration['cat_slug'] ?? null) ?: 'category'; }
 			public static function category_value($id) { return (ABPTF_Category[$id]['name'] ?? null) ?: $id; }
 			public static function organizer_label() { return (ABPTF_Configuration['organizer_label'] ?? null) ?: __('Organizer', 'abp-transportforge'); }
@@ -87,7 +88,8 @@
 			public static function location_label() { return (ABPTF_Configuration['location_label'] ?? null) ?: __('Stops', 'abp-transportforge'); }
 			public static function location_slug() { return (ABPTF_Configuration['location_slug'] ?? null) ?: 'location'; }
 			public static function location_value($id) { return (ABPTF_Locations[$id]['name'] ?? null) ?: $id; }
-			public static function ticket_name($id) { return (ABPTF_ticket_type[$id]['label'] ?? null) ?: __('Ticket/Seat', 'abp-transportforge'); }
+			public static function ticket_name($id) { return (ABPTF_ticket[$id]['label'] ?? null) ?: __('Ticket/Seat', 'abp-transportforge'); }
+			public static function ticket_icon($id) { return (ABPTF_ticket[$id]['icon'] ?? null) ?: ''; }
 			public static function on_off($key): bool {
 				$value = (ABPTF_On_Off[$key] ?? 'on') ?: 'on';
 				return $value !== 'off';
@@ -207,11 +209,11 @@
 			//=========== Template Related==================//
 			public static function details_template_path($post_id): string {
 				$post_id = $post_id ?? get_the_id();
-				$template_name = self::get_post_info($post_id, 'abptf_template', 'grid');
+				$template_name = self::get_post_info($post_id, 'abptf_template', 'default');
 				$file_name = 'details_theme/' . $template_name . '.php';
 				$dir = ABPTF_DIR . 'tf_templates/' . $file_name;
 				if (!file_exists($dir)) {
-					$file_name = 'details_theme/grid.php';
+					$file_name = 'details_theme/default.php';
 				}
 				return self::template_path($file_name);
 			}
@@ -219,6 +221,53 @@
 				$file_path = wp_normalize_path(WP_CONTENT_DIR . DIRECTORY_SEPARATOR . '/tf_templates/' . $file_name);
 				$default_dir = wp_normalize_path(ABPTF_DIR . 'tf_templates/' . $file_name);
 				return file_exists($file_path) ? $file_path : $default_dir;
+			}
+			//============== Transport Function===============//
+			public static function get_route_info(): array {
+				$_post_id = get_the_ID();
+				$post_ids = (!empty($_post_id) && $_post_id > 0 && get_post_type($_post_id) == ABPTF_Function::get_cpt()) ? [$_post_id] : ABPTF_Post_ids;
+				$route_infos = [];
+				if (!empty($post_ids)) {
+					$all_bp = [];
+					foreach ($post_ids as $post_id) {
+						$route_data = ABPTF_Function::get_post_info($post_id, 'route_data', []);
+						if (!empty($route_data)) {
+							$info = [];
+							foreach ($route_data as $data) {
+								[$bp, $dp] = array_map('intval', explode('_', $data));
+								$info[$bp][] = $dp;
+								$info['all_bp'][] = $bp;
+								$all_bp[] = $bp;
+							}
+							$info = array_map(function ($subArray) {
+								return array_values(array_unique($subArray));
+							}, $info);
+							$route_infos[$post_id] = $info;
+						}
+					}
+					$route_infos['all_bp'] = array_unique($all_bp);
+				}
+				return $route_infos;
+			}
+			public static function return_check($post_infos, $bp_dp): bool {
+				if (!empty($post_infos) && !empty($bp_dp)) {
+					$display_return = $post_infos['display_return'] ?? 'off';
+					$display_return = ABPTF_Function::on_off('return') ? $display_return : 'off';
+					if ($display_return == 'on') {
+						$return_price_infos = $post_infos['return_price_infos'] ?? [];
+						return isset($return_price_infos[$bp_dp]);
+					}
+				}
+				return false;
+			}
+			public static function start_point($post_infos, $bp_dp): int|string|null {
+				$start_point = '';
+				if (!empty($post_infos) && !empty($bp_dp)) {
+					$key = self::return_check($post_infos, $bp_dp) ? 'return_routing_infos' : 'routing_infos';
+					$route = $post_infos[$key] ?? [];
+					$start_point = array_key_first($route);
+				}
+				return $start_point;
 			}
 			//============= Date function================//
 			public static function check_date_exit($post_infos = []): bool {
@@ -231,8 +280,8 @@
 				}
 				$start = gmdate('Y-m-d', strtotime($start_date_time));
 				$end = gmdate('Y-m-d', strtotime($end_date_time));
-				$all_dates = self::get_start_dates($post_id);
-				$all_end_dates = ($rent_rule === 'hourly') ? $all_dates : self::get_end_dates($post_id, $start, $all_dates);
+				$all_dates = self::date($post_id);
+				$all_end_dates = ($rent_rule === 'hourly') ? $all_dates : self::date($post_id);
 				if (!in_array($start, $all_dates, true) || !in_array($end, $all_end_dates, true)) {
 					return false;
 				}
@@ -263,164 +312,42 @@
 				}
 				return false;
 			}
-			public static function get_start_dates($post_id): array {
+			public static function date_all($post_ids = [], $_date = ''): array {
 				$all_dates = [];
-				if (!empty($post_id) && $post_id > 0) {
-					$active_global_dates = self::get_post_info($post_id, 'active_global_dates', 'on');
-					if ($active_global_dates == 'on') {
-						$post_id = 'global';
-						$all_dates = json_decode(get_transient('abptf_date_global'), true);
-					} else {
-						$all_dates = json_decode(get_transient('abptf_date_' . $post_id), true);
+				$post_ids = !empty($post_ids) ? $post_ids : ABPTF_Post_ids;
+				if (!empty($post_ids)) {
+					$global_complete = 0;
+					foreach ($post_ids as $post_id) {
+						if (!empty($post_id) && $post_id > 0) {
+							$active_global_dates = self::get_post_info($post_id, 'active_global_dates', 'on');
+							if ($active_global_dates == 'on') {
+								$date_infos = self::get_option('abptf_dates');
+								$global_complete++;
+							} else {
+								$date_infos = self::get_post_info($post_id, 'abptf_dates', []);
+							}
+							if (!empty($date_infos) && $global_complete < 2) {
+								$dates = self::date($post_id, $date_infos, $_date);
+								$all_dates = array_merge($all_dates, $dates);
+							}
+						}
 					}
-					if (empty($all_dates)) {
-						self::update_dates($post_id);
-						$all_dates = json_decode(get_transient('abptf_date_' . $post_id), true);
-					}
+					$all_dates = array_unique($all_dates);
+					usort($all_dates, "ABPTF_Function::sort_date");
 				}
 				return $all_dates;
 			}
-			public static function get_end_dates($post_id, $_start_date = '', $all_dates = []): array {
-				$all_dates = empty($all_dates) ? self::get_start_dates($post_id) : $all_dates;
-				$all_end_date = [];
-				$_start_date = gmdate('Y-m-d', strtotime($_start_date));
-				if (!empty($post_id) && $post_id > 0 && !empty($_start_date) && in_array($_start_date, $all_dates)) {
-					$mm_time = ABPTF_Function::get_option('abptf_mm_time');
-					$mm = $mm_time[$post_id] ?? [];
-					$active_global_dates = self::get_post_info($post_id, 'active_global_dates', 'on');
-					if ($active_global_dates == 'on') {
-						$date_infos = self::get_option('abptf_dates');
-					} else {
-						$date_infos = self::get_post_info($post_id, 'abptf_dates', []);
-					}
-					$min = ($mm['min'] ?? null) ?: 1;
-					$max = ($mm['max'] ?? null) ?: 100;
-					$rent_rule = ABPTF_Function::get_post_info($post_id, 'rent_rule');
-					if ($rent_rule == 'monthly') {
-						$_date = new DateTime($_start_date);
-						$_date->modify('first day of this month');
-						if ($min > 1) {
-							$_date->modify('+' . ($min - 1) . ' months');
-						}
-						$start_date_obj = clone $_date;
-						$start_date_obj->modify('last day of this month');
-						$_start_date = $start_date_obj->format('Y-m-d');
-						if ($min == $max) {
-							$_end_date = $_start_date;
-						} else {
-							if ($max > $min) {
-								$months_to_add = $max - $min;
-								$_date->modify('+' . $months_to_add . ' months');
-								$_date->modify('last day of this month');
-								$_end_date = $_date->format('Y-m-d');
-							}
-						}
-					} else {
-						$_start_date = $min > 1 ? gmdate('Y-m-d', strtotime($_start_date . ' +' . ($min - 1) . ' day')) : $_start_date;
-						$_end_date = gmdate('Y-m-d', strtotime($_start_date . ' +' . ($max - 1) . ' day'));
-					}
-					if (!empty($_end_date)) {
-						$date_type = ($date_infos['date_type'] ?? null) ?: 'periodic_date';
-						if ($date_type == 'specific_date') {
-							$specific_dates = $date_infos['specific_dates'] ?? [];
-							if (is_array($specific_dates) && sizeof($specific_dates) > 0) {
-								foreach ($specific_dates as $specific_date) {
-									$date_item = $specific_date['date'] ?? '';
-									if (!empty($date_item)) {
-										$date_item = gmdate('Y-m-d', strtotime($date_item));
-										if (strtotime($date_item) >= strtotime($_start_date) && strtotime($date_item) <= strtotime($_end_date)) {
-											$all_end_date[] = $date_item;
-										}
-									}
-								}
-							}
-						} else {
-							$start_date = $date_infos['periodic_start_date'] ?? '';
-							$start_date = $start_date ?: $_start_date;
-							$end_date = $date_infos['periodic_end_date'] ?? '';
-							$end_date = !empty($end_date) ? gmdate('Y-m-d', strtotime($end_date)) : $_end_date;
-							if (strtotime($_start_date) >= strtotime($start_date)) {
-								$start_date = $_start_date;
-							}
-							if (strtotime($end_date) >= strtotime($_end_date)) {
-								$end_date = $_end_date;
-							}
-							$all_end_date = self::repeated_date_list_modify($start_date, $end_date, $date_infos);
-						}
-					}
-					if (!empty($all_end_date)) {
-						$all_end_date = array_unique($all_end_date);
-						usort($all_end_date, "ABPTF_Function::sort_date");
-					}
-				}
-				return $all_end_date;
-			}
-			public static function get_start_month($post_id, $dateList = []): array {
-				$cut_off_date = self::get_post_info($post_id, 'cut_off_date', 10);
-				sort($dateList);
-				$month_list = [];
-				$processedMonths = [];
-				foreach ($dateList as $dateStr) {
-					$timestamp = strtotime($dateStr);
-					$monthKey = gmdate('Y-m', $timestamp);
-					if (in_array($monthKey, $processedMonths)) {
-						continue;
-					}
-					$day = (int)gmdate('d', $timestamp);
-					if ($day <= $cut_off_date) {
-						$month_list[] = [
-							'value' => $dateStr,
-							'label' => gmdate('F Y', $timestamp)
-						];
-					}
-					$processedMonths[] = $monthKey;
-				}
-				return $month_list;
-			}
-			public static function get_end_month($post_id = '', $start_date = ''): array {
-				$dateList = self::get_end_dates($post_id, $start_date);
-				$month_list = [];
-				if (!empty($dateList)) {
-					$processedMonths = [];
-					foreach ($dateList as $dateStr) {
-						$timestamp = strtotime($dateStr);
-						$monthKey = gmdate('Y-m', $timestamp);
-						if (in_array($monthKey, $processedMonths)) {
-							continue;
-						}
-						$actualLastDate = gmdate('Y-m-t', $timestamp);
-						$month_list[] = [
-							'value' => $actualLastDate,
-							'label' => gmdate('F Y', $timestamp)
-						];
-						$processedMonths[] = $monthKey;
-					}
-				}
-				return $month_list;
-			}
-			public static function get_time($post_id, $type = 'time'): array {
-				$option_name = $type == 'js' ? 'abptf_time_info_js' : 'abptf_time_info';
-				$time_info = ABPTF_Function::get_option($option_name);
-				$info = [];
-				if (!empty($post_id)) {
-					$info = $time_info[$post_id] ?? ($time_info['global'] ?? []);
-				}
-				return $info;
-			}
-			public static function update_dates($post_id): void {
-				if (!empty($post_id)) {
-					if ($post_id == 'global') {
-						$date_infos = self::get_option('abptf_dates');
-					} else {
+			public static function date($post_id, $date_infos = [], $_date = ''): array {
+				$all_dates = [];
+				if (!empty($post_id) && $post_id > 0) {
+					if (empty($date_infos)) {
 						$active_global_dates = self::get_post_info($post_id, 'active_global_dates', 'on');
 						if ($active_global_dates == 'on') {
 							$date_infos = self::get_option('abptf_dates');
-							$post_id = 'global';
 						} else {
 							$date_infos = self::get_post_info($post_id, 'abptf_dates', []);
 						}
 					}
-					$all_dates = [];
 					$date_type = $date_infos['date_type'] ?? 'periodic_date';
 					$now = current_time('Y-m-d');
 					if ($date_type == 'specific_date') {
@@ -437,6 +364,7 @@
 						}
 					} else {
 						$start_date = $date_infos['periodic_start_date'] ?? '';
+						$start_date = !empty($_date) ? $_date : $start_date;
 						$start_date = $start_date ?: $now;
 						$sale_end_date = $date_infos['periodic_end_date'] ?? '';
 						$sale_end_date = $sale_end_date ? gmdate('Y-m-d', strtotime($sale_end_date)) : '';
@@ -448,14 +376,35 @@
 						if ($sale_end_date && strtotime($sale_end_date) < strtotime($end_date)) {
 							$end_date = $sale_end_date;
 						}
-						$all_dates = self::repeated_date_list_modify($start_date, $end_date, $date_infos);
+						$all_dates = self::date_list_modify($start_date, $end_date, $date_infos);
 					}
 					$all_dates = sizeof($all_dates) > 1 ? array_unique($all_dates) : $all_dates;
 					usort($all_dates, "ABPTF_Function::sort_date");
-					set_transient('abptf_date_' . $post_id, wp_json_encode($all_dates), HOUR_IN_SECONDS);
+					$current_date = current($all_dates);
+					$now = strtotime(current_time('Y-m-d'));
+					if ($now == strtotime($current_date)) {
+						$time_infos = self::get_post_info($post_id, 'time_infos', []);
+						$time_info = self::time($time_infos, $current_date);
+						if (!empty($time_info)) {
+							$exit = false;
+							$buffer_time = ABPTF_Dates['sale_close_after'] ?? 0;
+							$now_time = strtotime(current_time('Y-m-d H:i'));
+							foreach ($time_info as $_time) {
+								$date = $current_date . ' ' . $_time;
+								$date = $buffer_time > 0 ? strtotime($date) - $buffer_time : strtotime($date);
+								if ($now_time < $date) {
+									$exit = true;
+								}
+							}
+							if (!$exit) {
+								unset($all_dates[array_key_first($all_dates)]);
+							}
+						}
+					}
 				}
+				return $all_dates;
 			}
-			public static function repeated_date_list_modify($start_date, $end_date, $date_infos): array {
+			public static function date_list_modify($start_date, $end_date, $date_infos): array {
 				$all_dates = [];
 				if (strtotime($start_date) <= strtotime($end_date)) {
 					$now = current_time('Y-m-d');
@@ -520,123 +469,98 @@
 				}
 				return $all_dates;
 			}
-			public static function update_time_slot($post_id = ''): void {
-				$all_slots = ABPTF_Function::get_option('abptf_time_info');
-				$all_js_slots = ABPTF_Function::get_option('abptf_time_info_js');
-				$date_infos = ABPTF_Dates;
-				$key = 'global';
-				if (!empty($post_id)) {
-					$active_global_dates = self::get_post_info($post_id, 'active_global_dates', 'on');
-					if ($active_global_dates !== 'on') {
-						$date_infos = self::get_post_info($post_id, 'abptf_dates', []);
-						$key = $post_id;
-					}
+			public static function time_route($post_infos, $bp_dp, $journey_date): array {
+				$time_info = [];
+				if (!empty($post_infos) && !empty($bp_dp) && !empty($journey_date)) {
+					$is_return = self::return_check($post_infos, $bp_dp);
+					$key = $is_return ? 'return_time_infos' : 'time_infos';
+					$time_infos = $post_infos[$key] ?? [];
+					$time_info = self::time($time_infos, $journey_date);
 				}
-				if (is_array($date_infos)) {
-					$slots = self::get_time_slot($date_infos);
-					$all_slots[$key] = $slots;
-					$js_slots = [];
-					if (!empty($slots)) {
-						foreach ($slots as $count => $slot) {
-							if (!empty($slot)) {
-								$slot_info = explode('-', $slot);
-								$start_time = $slot_info[0] ?? '';
-								$end_time = $slot_info[1] ?? '';
-								if (!empty($start_time) && !empty($end_time)) {
-									$slot_data = self::generate_time_slot($start_time, $end_time);
-									if (!empty($slot_data)) {
-										$js_slots[$count] = $slot_data;
-									}
-								}
-							}
-						}
-					}
-					$all_js_slots[$key] = $js_slots;
-					update_option('abptf_time_info', $all_slots);
-					update_option('abptf_time_info_js', $all_js_slots);
-				}
+				return $time_info;
 			}
-			public static function get_time_slot($date_infos = []): array {
-				if (!is_array($date_infos)) {
-					return [];
-				}
-				$all_slots = [];
-				$date_type = $date_infos['date_type'] ?? 'periodic_date';
-				if ($date_type === 'specific_date') {
-					$specific_dates = $date_infos['specific_dates'] ?? [];
-					if (is_array($specific_dates) && !empty($specific_dates)) {
-						foreach ($specific_dates as $specific_date) {
-							if (!is_array($specific_date)) {
-								continue;
-							}
-							$date_item = $specific_date['date'] ?? '';
-							if ($date_item === '') {
-								continue;
-							}
-							$start_time = $specific_date['start'] ?? '';
-							$end_time = $specific_date['end'] ?? '';
-							if ($start_time !== '' && $end_time !== '' && strtotime($start_time) < strtotime($end_time)) {
-								$all_slots[$date_item] = $start_time . '-' . $end_time;
-							}
-						}
-					}
-				} else {
-					$date_rule = $date_infos['date_rule'] ?? '';
-					$date_rule_array = $date_rule ? explode(',', $date_rule) : [];
-					if (in_array('special_on_dates', $date_rule_array, true)) {
-						$special_on_dates = $date_infos['special_on_dates'] ?? [];
-						if (is_array($special_on_dates) && !empty($special_on_dates)) {
-							foreach ($special_on_dates as $special_on_date) {
-								if (!is_array($special_on_date)) {
-									continue;
-								}
-								$date_item = $special_on_date['date'] ?? '';
-								if ($date_item === '') {
-									continue;
-								}
-								$start_time = $special_on_date['start'] ?? '';
-								$end_time = $special_on_date['end'] ?? '';
-								if ($start_time !== '' && $end_time !== '' && strtotime($start_time) < strtotime($end_time)) {
-									$all_slots[$date_item] = $start_time . '-' . $end_time;
-								}
-							}
-						}
-					}
-					$operation_times = $date_infos['day_wise_time'] ?? [];
-					if (in_array('day_wise_time', $date_rule_array, true) && is_array($operation_times) && !empty($operation_times)) {
-						$days = ABPTF_Layout::week_day();
-						foreach ($days as $key => $day) {
-							$times = $operation_times[$key] ?? [];
-							if (is_array($times)) {
-								$start_time = $times['start'] ?? '';
-								$end_time = $times['end'] ?? '';
-								if ($start_time !== '' && $end_time !== '' && strtotime($start_time) < strtotime($end_time)) {
-									$all_slots[$key] = $start_time . '-' . $end_time;
-								}
-							}
+			public static function time($time_infos, $journey_date) {
+				$day_times = $time_infos['day_time'] ?? [];
+				$date_times = $time_infos['date_times'] ?? [];
+				$default_time = $time_infos['time'] ?? [];
+				if (!empty($day_times)) {
+					foreach ($day_times as $day_key => $day_time) {
+						if (!empty($day_time)) {
+							$time_info[strtolower($day_key)] = $day_time;
 						}
 					}
 				}
-				return $all_slots;
+				if (!empty($date_times)) {
+					foreach ($date_times as $date_time) {
+						$date = $date_time['date'] ?? '';
+						$time = $date_time['time'] ?? [];
+						if (!empty($date) && !empty($time)) {
+							$time_info[$date] = $time;
+						}
+					}
+				}
+				if (!empty($time_info[$journey_date])) {
+					return $time_info[$journey_date];
+				}
+				$day_name = strtolower(date('l', strtotime($journey_date)));
+				if (!empty($time_info[$day_name])) {
+					return $time_info[$day_name];
+				}
+				return $default_time;
 			}
-			public static function generate_time_slot($start_time, $end_time, $interval = 60): string {
-				$slots = [];
-				if (!empty($start_time) && !empty($end_time)) {
-					$start = new DateTime($start_time);
-					$end = new DateTime($end_time);
-					$minute = (int)$start->format('i');
-					if ($minute > 0 && $minute % $interval !== 0) {
-						$diff = $interval - ($minute % $interval);
-						$start->modify("+$diff minutes");
-					}
-					$start->setTime((int)$start->format('H'), (int)$start->format('i'), 0);
-					while ($start < $end) {
-						$current_slot_start = $start->format('H:i');
-						$start->add(new DateInterval("PT{$interval}M"));
-						$slots[] = $current_slot_start . '--' . self::date_format($current_slot_start, 'time');
+			public static function time_bp($post_infos, $bp_dp, $journey_date, $all_start_time = []): array {
+				$time_info = [];
+				if (!empty($post_infos) && !empty($bp_dp) && !empty($journey_date)) {
+					$is_return = self::return_check($post_infos, $bp_dp);
+					$key = $is_return ? 'return_routing_infos' : 'routing_infos';
+					$route_infos = $post_infos[$key] ?? [];
+					$all_start_time = !empty($all_start_time) ? $all_start_time : self::time_route($post_infos, $bp_dp, $journey_date);
+					[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+					$info = $route_infos[$bp] ?? '';
+					if (!empty($bp) && !empty($dp) && !empty($all_start_time) && !empty($info)) {
+						$buffer_time = ABPTF_Dates['sale_close_after'] ?? 0;
+						$now = strtotime(current_time('Y-m-d H:i'));
+						$min = $info['time'] ?? 0;
+						foreach ($all_start_time as $_time) {
+							$date = $journey_date . ' ' . $_time;
+							$date = gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($date)));
+							$_date = $buffer_time > 0 ? gmdate('Y-m-d H:i', strtotime($date) - $buffer_time) : $date;
+							if ($now < strtotime($_date)) {
+								$time_info[$_time] = $date;
+							}
+						}
 					}
 				}
-				return implode('##', $slots);
+				return $time_info;
+			}
+			public static function time_difference($start_time, $end_time): string {
+				$text = '';
+				if (!empty($end_time)) {
+					$start_time = $start_time ?? 0;
+					$totalMinutes = $end_time - $start_time;
+					if ($totalMinutes <= 0) {
+						return __('0 Min', 'abp-transportforge');
+					}
+					$days = floor($totalMinutes / 1440);
+					$hours = floor(($totalMinutes % 1440) / 60);
+					$minutes = $totalMinutes % 60;
+					if ($days > 0) {
+						$text .= sprintf(
+						/* translators: %s = Days */
+							_n(' %s Day', ' %s Days', $days, 'abp-transportforge'), $days);
+					}
+					if ($hours > 0) {
+						$text .= sprintf(
+						/* translators: %s = Hours */
+							_n(' %s Hour', ' %s Hours', $hours, 'abp-transportforge'), $hours);
+					}
+					if ($minutes > 0) {
+						$text .= sprintf(
+						/* translators: %s = Minutes */
+							_n(' %s Minute', ' %s Minutes', $minutes, 'abp-transportforge'), $minutes);
+					}
+				}
+				return $text;
 			}
 			public static function date_format($date, $format = ''): string {
 				if (!empty($date)) {
@@ -710,18 +634,11 @@
 					return -1;
 				}
 			}
-			public static function get_date_time_difference($start_time, $end_time, $rent_rule): array {
+			public static function get_date_time_difference($start_time, $end_time) {
 				$text = '';
-				$info = [];
 				if (!empty($start_time) && !empty($end_time) && strtotime($start_time) <= strtotime($end_time)) {
-					if (!empty($rent_rule) && $rent_rule == 'monthly') {
-						$start_time = gmdate('Y-m-01', strtotime($start_time));
-					}
 					$date1 = date_create($start_time);
 					$date2 = date_create($end_time);
-					if (date_format($date1, 'H:i:s') === '00:00:00' && date_format($date2, 'H:i:s') === '00:00:00') {
-						date_modify($date2, '+1 day');
-					}
 					$diff = date_diff($date1, $date2);
 					$years = $diff->y;
 					$months = $diff->m;
@@ -733,43 +650,34 @@
 						$text .= sprintf(
 						/* translators: %s =Years */
 							_n(' %s Year', ' %s Years', $years, 'abp-transportforge'), $years);
-						$info['month'] = $years * 12;
 					}
 					if ($months > 0) {
 						$text .= sprintf(
 						/* translators: %s = Months */
 							_n(' %s Month', ' %s Months', $months, 'abp-transportforge'), $months);
-						$exit_month = $info['month'] ?? 0;
-						$info['month'] = $exit_month + $months;
 					}
 					if ($days > 0) {
 						$text .= sprintf(
 						/* translators: %s = Days */
 							_n(' %s Day', ' %s Days', $days, 'abp-transportforge'), $days);
-						$info['day'] = $days;
 					}
 					if ($hours > 0) {
 						$text .= sprintf(
 						/* translators: %s = Hours */
 							_n(' %s Hour', ' %s Hours', $hours, 'abp-transportforge'), $hours);
-						$info['hour'] = $hours;
 					}
 					if ($minutes > 0) {
 						$text .= sprintf(
 						/* translators: %s = Minutes */
 							_n(' %s Minute', ' %s Minutes', $minutes, 'abp-transportforge'), $minutes);
-						$info['min'] = $minutes;
 					}
 					if ($seconds > 0) {
 						$text .= sprintf(
 						/* translators: %s = Seconds */
 							_n(' %s Second', ' %s Seconds', $seconds, 'abp-transportforge'), $seconds);
-						$info['sec'] = $seconds;
 					}
-					$info['text'] = $text;
-					$info['duration'] = abs(strtotime($end_time) - strtotime($start_time));
 				}
-				return $info;
+				return $text;
 			}
 			public static function check_time_slot_exit($main_slots, $input_slots): bool {
 				if (!empty($main_slots) && !empty($input_slots)) {
@@ -784,35 +692,6 @@
 					}
 				}
 				return false;
-			}
-			public static function time_duration($post_infos = [], $price_info = []) {
-				$rent_rule = $post_infos['rent_rule'] ?? '';
-				$date_info = $post_infos['date_info'] ?? [];
-				$dif = $dif_exit = 0;
-				if (!empty($rent_rule) && !empty($date_info)) {
-					$duration = $date_info['duration'] ?? 0;
-					$min = $price_info['min'] ?? 1;
-					$max = $price_info['max'] ?? '';
-					if ($rent_rule == 'hourly') {
-						$dif = $duration / 3600;
-						$dif = ceil($dif);
-						$dif = max(1, $dif);
-					} elseif ($rent_rule == 'daily') {
-						$dif = $date_info['day'] ?? 0;
-					} elseif ($rent_rule == 'multi_day') {
-						$dif = $duration / 86400;
-					} elseif ($rent_rule == 'monthly') {
-						$dif = $date_info['month'] ?? 0;
-					} elseif ($rent_rule == 'multi_month') {
-						$dif = ($date_info['month'] ?? 0) . '.' . ($date_info['day'] ?? 0);
-					}
-					if (!empty($max)) {
-						$dif_exit = $min <= $dif && $max >= $dif ? 1 : 0;
-					} else {
-						$dif_exit = $min <= $dif ? 1 : 0;
-					}
-				}
-				return $dif_exit > 0 ? $dif : false;
 			}
 			public static function booking_buffer($time, $end = ''): string {
 				$date_infos = ABPTF_Dates;
@@ -851,103 +730,31 @@
 				}
 				return $return_price;
 			}
-			public static function get_price($post_infos = [], $property = [], $time_duration = ''): int|string {
-				$price = 0;
-				$post_id = $post_infos['post_id'] ?? 0;
-				$rent_rule = $post_infos['rent_rule'] ?? '';
-				$qty = $post_infos['qty'] ?? 1;
-				$property_id = $post_infos['property_id'] ?? 0;
-				if (empty($property)) {
-					$db_property = ABPTF_Query::get_property(['property_id' => $property_id]);
-					$property = is_array($db_property) ? current($db_property) : [];
-				}
-				$property = is_array($property) ? $property : [];
-				$price_qty_info = $property['price_qty_info'] ?? '';
-				$price_qty_info = !empty($price_qty_info) ? json_decode($price_qty_info, true) : [];
-				$location = $post_infos['location'] ?? '';
-				$price_qty_info = (!empty($price_qty_info) && !empty($location) && isset($price_qty_info[$location])) ? $price_qty_info[$location] : $price_qty_info;
-				$price_info = $price_qty_info[$rent_rule] ?? [];
-				$time_duration = !empty($time_duration) ? $time_duration : self::time_duration($post_infos, $price_info);
-				if (!empty($rent_rule) && !empty($time_duration) && !empty($price_info)) {
-					$price_info = apply_filters('abptf_filter_discount_price_info', $price_info, $post_infos);
-					$rate = (is_array($price_info) ? ($price_info['price'] ?? 0) : 0) ?: 0;
-					if (in_array($rent_rule, ['hourly', 'daily', 'monthly'], true)) {
-						$price = $rate * $time_duration * $qty;
-					}
-					if ($rent_rule === 'multi_day') {
-						$price_multi = $price_info['price_multi'] ?? 0;
-						$threshold = ABPTF_Function::get_post_info($post_id, 'hour_threshold', 24);
-						$days = floor($time_duration);
-						$hours = ($time_duration - $days) * 24;
-						if (!empty($threshold) && $threshold <= $hours) {
-							$days++;
-							$hours -= $threshold;
+			public static function get_price($post_infos, $bp_dp, $type = 'price', $date = ''): bool|int|string|null {
+				if (!empty($bp_dp)) {
+					$price = 0;
+					$post_id = absint($post_infos['post_id'] ?? 0);
+					if (!empty($post_id) && $post_id > 0 && !empty($type)) {
+						$display_ticket_type = $post_infos['display_ticket_type'] ?? ABPTF_Function::get_post_info($post_id, 'display_ticket_type', 'on');
+						$display_ticket_type = ABPTF_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
+						$type = $display_ticket_type == 'on' ? $type : 'price';
+						$price_infos = $post_infos['price_data'] ?? ABPTF_Function::get_post_info($post_id, 'price_data', []);
+						if (!empty($price_infos) && array_key_exists($bp_dp, $price_infos)) {
+							$price = $price_infos[$bp_dp][$type] ?? (current($price_infos[$bp_dp]) ?? 0);
+							$price = $price > 0 ? apply_filters('abptf_filter_price', $price, $date) : $price;
 						}
-						$price = ($rate * $days * $qty) + ($price_multi * $hours * $qty);
 					}
-					if ($rent_rule === 'multi_month') {
-						$price_multi = $price_info['price_multi'] ?? 0;
-						$threshold = ABPTF_Function::get_post_info($post_id, 'day_threshold', 30);
-						$parts = explode('.', (string)$time_duration);
-						$month_num = (int)$parts[0];
-						$day_num = isset($parts[1]) ? (int)$parts[1] : 0;
-						if (!empty($threshold) && $threshold <= $day_num) {
-							$month_num++;
-							$day_num -= $threshold;
-						}
-						$price = ($rate * $month_num * $qty) + ($price_multi * $day_num * $qty);
-					}
-					$discount = (is_array($price_info) ? ($price_info['discount'] ?? 0) : 0) ?: 0;
-					$price = $price - ($price * $discount / 100);
+					return $price > 0 ? self::tax_with_price($post_id, $price) : 0;
 				}
-				return $price > 0 ? self::tax_with_price($post_id, $price) : 0;
+				return null;
 			}
-			public static function get_deposit_price(array $post_infos = [], array $property = []): int|float {
+			public static function get_additional_price($post_infos=[], $i_d=''): int|string {
+				$services = ABPTF_Function::additional_data($post_infos);
 				$price = 0;
-				if (empty($post_infos)) {
-					return $price;
-				}
-				$property_id = $post_infos['property_id'] ?? 0;
-				$rent_rule = $post_infos['rent_rule'] ?? '';
-				$qty = $post_infos['qty'] ?? 0;
-				if (empty($property)) {
-					$db_property = ABPTF_Query::get_property(['property_id' => $property_id]);
-					$property = is_array($db_property) ? current($db_property) : [];
-				}
-				$property = is_array($property) ? $property : [];
-				$price_qty_info = $property['price_qty_info'] ?? '';
-				$price_qty_info = !empty($price_qty_info) ? json_decode($price_qty_info, true) : [];
-				$location = $post_infos['location'] ?? '';
-				$price_qty_info = (!empty($price_qty_info) && !empty($location) && isset($price_qty_info[$location])) ? $price_qty_info[$location] : $price_qty_info;
-				$price_info = (!empty($rent_rule) && is_array($price_qty_info)) ? ($price_qty_info[$rent_rule] ?? []) : [];
-				$deposit_info = $price_info['deposit'] ?? [];
-				$deposit_type = $deposit_info['type'] ?? '';
-				$deposit_value = $deposit_info['value'] ?? '';
-				if (!empty($deposit_type) && !empty($deposit_value) && $qty > 0 && !empty($property)) {
-					if ($deposit_type === 'fixed') {
-						$price = $deposit_value;
-					} elseif ($deposit_type === 'percent') {
-						$base_price = $post_infos['price'] ?? 0;
-						$price = ($base_price * $deposit_value) / 100;
-					} else {
-						$price = $qty * $deposit_value;
-					}
-				}
-				return $price;
-			}
-			public static function get_additional_price(int|string $post_id, string $service_name, array $post_infos = []): int|string {
-				$display = $post_infos['display_additional_services'] ?? ABPTF_Function::get_post_info($post_id, 'display_additional_services', 'on');
-				$active_global_additional = $post_infos['active_global_additional'] ?? ABPTF_Function::get_post_info($post_id, 'active_global_additional', 'on');
-				if ($active_global_additional === 'on') {
-					$services = ABPTF_Function::get_option('abptf_additional');
-				} else {
-					$services = $post_infos['abptf_additional'] ?? ABPTF_Function::get_post_info($post_id, 'abptf_additional', []);
-				}
-				$price = 0;
-				if ($display === 'on' && !empty($services) && is_array($services)) {
-					foreach ($services as $service) {
-						$ex_name = $service['name'] ?? '';
-						if ($ex_name === $service_name) {
+				$post_id = $post_infos['post_id'] ?? '';
+				if (!empty($services) && is_array($services) && !empty($i_d)) {
+					foreach ($services as $id => $service) {
+						if ($id == $i_d) {
 							$price = $service['price'] ?? 0;
 							break;
 						}
@@ -956,113 +763,117 @@
 				return $price > 0 ? self::tax_with_price($post_id, $price) : 0;
 			}
 			//=============================//
-			public static function update_global_data($post_id = ''): void {
-				$post_id = absint($post_id);
-				if ($post_id <= 0) {
-					return;
-				}
-				$arg = [
-					'sale_continue' => 'on',
-					'status' => 'publish',
-					'post_id' => $post_id,
-				];
-				$properties = ABPTF_Query::get_property($arg);
-				if (empty($properties) || !is_array($properties)) {
-					return;
-				}
-				$img_info = [];
-				$fec_info = [];
-				$brand_names = [];
-				$min_price = ABPTF_Function::get_option('abptf_min_price');
-				$min_price = is_array($min_price) ? $min_price : [];
-				$mm_time = ABPTF_Function::get_option('abptf_mm_time');
-				$mm_time = is_array($mm_time) ? $mm_time : [];
-				$count = 0;
-				$rent_rule = ABPTF_Function::get_post_info($post_id, 'rent_rule');
-				$title = get_the_title($post_id);
-				$rate = [];
-				$min_time = [];
-				$max_time = [];
-				foreach ($properties as $property) {
-					if (!is_array($property)) {
-						continue;
+			public static function get_total_qty($post_id, $post_infos = []) {
+				$total_qty = 0;
+				if (!empty($post_id) && $post_id > 0) {
+					if (!empty($post_infos)) {
+						$seat_type = $post_infos['seat_type'] ?? 'sp';
+						$ticket_infos = $post_infos['ticket_infos'] ?? [];
+						$sp_infos = $post_infos['sp_infos'] ?? [];
+					} else {
+						$seat_type = ABPTF_Function::get_post_info($post_id, 'seat_type', 'sp');
+						$ticket_infos = ABPTF_Function::get_post_info($post_id, 'ticket_infos', []);
+						$sp_infos = ABPTF_Function::get_post_info($post_id, 'sp_infos', []);
 					}
-					$slider = $property['gallery'] ?? '';
-					$name = $property['name'] ?? '';
-					$brand = $property['brand'] ?? '';
-					if (!empty($brand)) {
-						$brand_names[] = $brand;
-					}
-					if (!empty($slider)) {
-						$image_ids = explode(',', $slider);
-						foreach ($image_ids as $id) {
-							if ($id !== '') {
-								$img_info[$count] = [
-									'id' => $id,
-									'post' => $title,
-									'label' => $name,
-								];
-								$count++;
+					$seat_type = ABPTF_Function::on_off('sp') ? $seat_type : 'ticket';
+					if ($seat_type === 'ticket') {
+						if (!empty($ticket_infos)) {
+							foreach ($ticket_infos as $ticket_info) {
+								$total_qty += $ticket_info['qty'] ?? 0;
 							}
 						}
-					}
-					$features = $property['features'] ?? '';
-					if (!empty($features)) {
-						$feature_array = explode(',', $features);
-						$fec_info = array_merge($fec_info, $feature_array);
-					}
-					$price_qty_info = $property['price_qty_info'] ?? '';
-					$price_qty_info = ($price_qty_info !== '') ? json_decode($price_qty_info, true) : [];
-					$price_info = ($rent_rule !== '' && is_array($price_qty_info)) ? ($price_qty_info[$rent_rule] ?? []) : [];
-					$rate[] = floatval($price_info['price'] ?? 0);
-					$_min_time = $price_info['min'] ?? '';
-					if ($rent_rule === 'multi_month') {
-						if ($_min_time !== '') {
-							$_min_time = absint($_min_time) * 30;
-						}
 					} else {
-						if ($_min_time === '') {
-							$_min_time = 1;
+						if (!empty($sp_infos)) {
+							$ids = [];
+							foreach ($sp_infos as $ticket_info) {
+								$id = $ticket_info['id'] ?? '';
+								if (!empty($id)) {
+									$ids[] = $id;
+								}
+							}
+							$total_qty = self::get_sp_ticket($ids, true);
 						}
 					}
-					$min_time[] = absint($_min_time);
-					$_max_time = absint($price_info['max'] ?? 0);
-					if ($_max_time < 1) {
-						$_max_time = match ($rent_rule) {
-							'hourly' => 24,
-							'daily' => 100,
-							'multi_day' => 100,
-							'monthly' => 12,
-							'multi_month' => 365,
-							default => ($_max_time * 30),
-						};
-					}
-					$max_time[] = $_max_time;
 				}
-				$fec_info = implode(',', array_unique($fec_info));
-				$brand_info = implode(',', array_unique($brand_names));
-				$min_price[$post_id] = !empty($rate) ? min($rate) : 0;
-				$mm_time[$post_id] = [
-					'min' => !empty($min_time) ? min($min_time) : 0,
-					'max' => !empty($max_time) ? max($max_time) : 0,
-				];
-				update_post_meta($post_id, 'abptf_sliders', $img_info);
-				update_post_meta($post_id, 'abptf_features', $fec_info);
-				update_post_meta($post_id, 'abptf_brand', $brand_info);
-				update_option('abptf_min_price', $min_price);
-				update_option('abptf_mm_time', $mm_time);
+				return $total_qty;
 			}
+			public static function get_sp_ticket(array $ids = [], bool $count = false) {
+				if (empty($ids)) {
+					return $count ? 0 : [];
+				}
+				$tickets = [];
+				$total = 0;
+				foreach ($ids as $id) {
+					$seat_infos = ABPTF_sp_ticket[$id] ?? null;
+					if (empty($seat_infos)) {
+						continue;
+					}
+					if ($count) {
+						$total += $seat_infos['total'] ?? 0;
+					} else {
+						$seat_info = $seat_infos['type'] ?? [];
+						if (!empty($seat_info)) {
+							$tickets = array_merge($tickets, array_keys($seat_info));
+						}
+					}
+				}
+				return $count ? $total : array_values(array_unique($tickets));
+			}
+			//=============================//
+			public static function client_data($post_infos = []) {
+				$data = [];
+				if (ABPTF_Function::on_off('client_info') && !empty($post_infos)) {
+					$display = $post_infos['display_client_form'] ?? 'on';
+					if ($display === 'on') {
+						$active_global = $post_infos['active_global_form'] ?? 'on';
+						if ($active_global === 'on') {
+							$data = ABPTF_Function::get_option('abptf_forms');
+						} else {
+							$data = $post_infos['abptf_forms'] ?? [];
+						}
+					}
+				}
+				return $data;
+			}
+			public static function additional_data($post_infos = []) {
+				$data = [];
+				if (ABPTF_Function::on_off('additional_info') && !empty($post_infos)) {
+					$display = $post_infos['display_additional_services'] ?? 'on';
+					if ($display === 'on') {
+						$active_global = $post_infos['active_global_additional'] ?? 'on';
+						if ($active_global === 'on') {
+							$data = ABPTF_Function::get_option('abptf_additional');
+						} else {
+							$data = $post_infos['additional_services'] ?? [];
+						}
+					}
+				}
+				return $data;
+			}
+			//=============================//
 			public static function related_info_js($_post_id = ''): array {
 				$all_info = [];
 				if (!empty($_post_id) && $_post_id > 0) {
-					$all_post_ids = ABPTF_Query::get_post_id();
-					if (!empty($all_post_ids)) {
+					if (!empty(ABPTF_Post_ids)) {
 						$active_icon = ABPTF_Function::on_off('post_icon');
-						foreach ($all_post_ids as $post_id) {
+						foreach (ABPTF_Post_ids as $post_id) {
 							if ($post_id !== $_post_id) {
 								$icon = $active_icon ? ABPTF_Function::get_post_info($post_id, 'post_icon') : '';
 								$all_info[] = ['id' => $post_id, 'icon' => $icon, 'label' => get_the_title($post_id)];
 							}
+						}
+					}
+				}
+				return $all_info;
+			}
+			public static function location_info_js(): array {
+				$all_info = [];
+				$all_location = ABPTF_Function::get_option('abptf_location');
+				if (!empty($all_location)) {
+					foreach ($all_location as $key => $location) {
+						$name = $location['name'] ?? '';
+						if ($name) {
+							$all_info[] = ['id' => $key, 'label' => $name];
 						}
 					}
 				}

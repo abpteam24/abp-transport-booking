@@ -144,7 +144,7 @@
                     ob_start();
                     $this->category_list();
                     $html = ob_get_clean();
-                    wp_send_json_error(['html' => $html, 'msg' => $label. ' ' . __('id Invalid...!', 'abp-transportforge'), 'type' => 'warn']);
+                    wp_send_json_error(['html' => $html, 'msg' => $label . ' ' . __('id Invalid...!', 'abp-transportforge'), 'type' => 'warn']);
                 }
                 $result = wp_delete_term($tax_id, 'abptf_category');
                 $this->update_category();
@@ -175,12 +175,12 @@
                     <table class="_abp">
                         <thead>
                         <tr>
-                            <th><?php esc_html_e('SI', 'abp-transportforge') ?></th>
+                            <th><?php esc_html_e('SI', 'abp-transportforge'); ?></th>
                             <th class="_min_150"><?php echo esc_html(ABPTF_Function::category_label()); ?></th>
-                            <th><?php esc_html_e('ID', 'abp-transportforge') ?></th>
-                            <th class="_min_150"><?php esc_html_e('Description', 'abp-transportforge') ?></th>
-                            <th class="_w_250"><?php esc_html_e('Shortcode', 'abp-transportforge') ?></th>
-                            <th class="_w_100"><?php esc_html_e('Action', 'abp-transportforge') ?></th>
+                            <th><?php esc_html_e('ID', 'abp-transportforge'); ?></th>
+                            <th class="_min_150"><?php esc_html_e('Description', 'abp-transportforge'); ?></th>
+                            <th class="_w_250"><?php esc_html_e('Shortcode', 'abp-transportforge'); ?></th>
+                            <th class="_w_100"><?php esc_html_e('Action', 'abp-transportforge'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -209,24 +209,21 @@
                     ABPTF_Layout::layout_warning_info('no_category');
                 }
             }
-            public static function category_selection($_category = ''): void {
-                $all_categories = ABPTF_Function::get_option('abptf_category');
-                if (!empty($all_categories) && is_array($all_categories) && sizeof($all_categories) > 0) { ?>
-                    <div class="custom_radio _f_wrap_gap_xs">
-                        <input type="hidden" name="abptf_category" value="<?php echo esc_attr($_category); ?>"/>
-                        <?php foreach ($all_categories as $key => $category) {
-                            $name = $category['name'] ?? ''; ?>
-                            <div class="radio_item">
-                                <button type="button" class="_btn_light_info_xs <?php echo esc_attr($_category == $key ? 'abp_active' : ''); ?>" data-radio="<?php echo esc_attr($key); ?>" data-open-icon="far fa-check-circle" data-close-icon="far fa-circle">
-                                    <span data-icon class="_mar_r_xs <?php echo esc_attr($_category == $key ? 'far fa-check-circle' : 'far fa-circle'); ?>"></span><span class="_text_left_fs_label"><?php echo esc_html($name); ?></span>
-                                </button>
-                            </div>
-                        <?php } ?>
-                    </div>
-                <?php } else { ?>
-                    <p><?php echo esc_html(ABPTF_Status::array_info('no_category')); ?></p>
-                    <?php
+            public static function category_selection($value = ''): void {
+                $options = ABPTF_Function::get_option('abptf_category');
+                if (!empty($options) && is_array($options) && sizeof($options) > 0) { ?>
+                    <label>
+                        <select class="_form_control" name="abptf_category">
+                            <option value="" selected><?php echo esc_html__('Please Select', 'abp-transportforge') . ' ' . esc_html(ABPTF_Function::category_label()); ?></option>
+                            <?php foreach ($options as $key => $option) { ?>
+                                <option value="<?php echo esc_attr($key); ?>" <?php echo esc_attr($key == $value ? 'selected' : ''); ?>><?php echo esc_html($option['name'] ?? ''); ?></option>
+                            <?php } ?>
+                        </select>
+                    </label>
+                <?php } else {
+                    ABPTF_Layout::layout_info_xs('no_category');
                 }
+                ABPTF_Layout::button_global_popup('tax_category', __('Add New', 'abp-transportforge') . ' ' . ABPTF_Function::category_label());
             }
         }
         new ABPTF_Category();

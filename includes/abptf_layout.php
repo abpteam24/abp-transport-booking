@@ -8,7 +8,6 @@
                 add_action('abptf_load_date_picker', [$this, 'load_date_picker'], 10, 2);
                 //==============================//
                 add_action('abptf_add_icon', array($this, 'load_icon'), 10, 2);
-                add_action('abptf_add_image', array($this, 'add_single_image'), 10, 2);
                 add_action('abptf_add_image_multiple', array($this, 'add_image_multi'), 10, 2);
                 add_action('abptf_add_image_icon', array($this, 'selection_icon_image'), 10, 3);
                 add_action('abptf_image_selection', array($this, 'image_selection'), 10, 3);
@@ -84,7 +83,8 @@
                 $button_text = $button_text ?: __('Add New', 'abp-transportforge');
                 ?>
                 <button class="<?php echo esc_attr($button_class . ' ' . $class); ?>" type="button">
-                    <span class="_mar_r_xxs">➕</span><?php echo esc_html($button_text); ?>
+                    <?php ABPTF_Layout::icon_buddy('plus');
+                        echo esc_html($button_text); ?>
                 </button>
                 <?php
             }
@@ -116,7 +116,7 @@
             public static function button_edit($class_edit = 'edit_hook'): void {
                 ?>
                 <button class="_btn_light_navy_blue_xs <?php echo esc_attr($class_edit); ?>" type="button" title="<?php esc_attr_e('Edit This Item', 'abp-transportforge'); ?>">
-                    <span class="fas fa-edit"></span>
+                    <?php ABPTF_Layout::icon_buddy('edit'); ?>
                 </button>
                 <?php
             }
@@ -128,7 +128,7 @@
             public static function button_sort(): void {
                 ?>
                 <div class="_btn_light_info_xxs sortable_handle" type="button" title="<?php esc_attr_e('Move This Item', 'abp-transportforge'); ?>">
-                    <span class="fas fa-arrows-alt"></span>
+                    <?php ABPTF_Layout::icon_buddy('drag'); ?>
                 </div>
                 <?php
             }
@@ -138,7 +138,8 @@
                     $text = $text ?: __('save', 'abp-transportforge');
                     ?>
                     <button class="<?php echo esc_attr($class); ?>" type="button" onclick="abptf_save_global('<?php echo esc_attr($action); ?>',this)">
-                        <span class="_mar_r_xxs">💾</span><?php echo esc_html($text); ?>
+                        <?php ABPTF_Layout::icon_buddy('save');
+                            echo esc_html($text); ?>
                     </button>
                     <?php
                 }
@@ -149,7 +150,8 @@
                     $text = $text ?: __('Add New', 'abp-transportforge');
                     ?>
                     <button type="button" class="<?php echo esc_attr($class) ?>" onclick="abptf_popup_open_global('<?php echo esc_attr($action); ?>')">
-                        <span class="_mar_r_xxs">➕</span><?php echo esc_html($text); ?>
+                        <?php ABPTF_Layout::icon_buddy('plus');
+                            echo esc_html($text); ?>
                     </button>
                     <?php
                 }
@@ -166,7 +168,7 @@
                 }
             }
             public static function info_text($key = '', $data = ''): void {
-                $data = empty($data) ? ABPTF_Status::array_info($key) : $data;
+                $data = empty($data) ? self::array_info($key) : $data;
                 if ($data) {
                     ?>
                     <div class="info_text load_more">
@@ -187,19 +189,19 @@
                 }
             }
             public static function layout_warning_info($key): void {
-                $data = ABPTF_Status::array_info($key);
+                $data = self::array_info($key);
                 if ($data) {
                     echo '<div class="_section_bg_warning_mar_zero"><h4 class="_abp_text_center_color_white">' . esc_html($data) . '</h4></div>';
                 }
             }
-            public static function layout_warning_info_xs($key): void {
-                $data = ABPTF_Status::array_info($key);
+            public static function layout_warning_info_xs($key, $data = ''): void {
+                $data = empty($data) ? self::array_info($key) : $data;
                 if ($data) {
                     echo '<div class="_abp_text_center_color_white_bg_warning_padding_xxs_fs_label">' . esc_html($data) . '</div>';
                 }
             }
-            public static function layout_info_xs($key): void {
-                $data = ABPTF_Status::array_info($key);
+            public static function layout_info_xs($key, $data = ''): void {
+                $data = empty($data) ? self::array_info($key) : $data;
                 if ($data) {
                     echo '<div class="_abp_bg_info_padding_xxs _all_center _color_5">' . esc_html($data) . '</div>';
                 }
@@ -416,22 +418,6 @@
                 </div>
                 <?php
             }
-            public function add_single_image($name, $image_id = ''): void {
-                ?>
-                <div class="add_image">
-                    <input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($image_id); ?>"/>
-                    <?php if ($image_id) { ?>
-                        <div class="add_image_item" data-image-id="<?php echo esc_attr($image_id); ?>'">
-                            <span class="fas fa-times _circle_icon_xs remove_image"></span>
-                            <img class="_img_control" src="<?php echo esc_url(wp_get_attachment_image_url($image_id, 'medium')); ?>" alt="<?php echo esc_attr($image_id); ?>"/>
-                        </div>
-                    <?php } ?>
-                    <button type="button" class="_btn_default_xs_bg_color_5_w_full <?php echo esc_attr($image_id ? '_d_none' : ''); ?>">
-                        <span class="fas fa-image _mar_r_xs"></span><?php esc_html_e('Image', 'abp-transportforge'); ?>
-                    </button>
-                </div>
-                <?php
-            }
             public function image_selection($name, $image_id = '', $target = ''): void {
                 ?>
                 <div class="image_selection">
@@ -504,6 +490,13 @@
                 <?php
             }
             //=============static array================//
+            public static function ticket_type($key = '') {
+                $types = [
+                    'sp' => __('Seat Plan', 'abp-transportforge'),
+                    'ticket' => __('Ticket', 'abp-transportforge'),
+                ];
+                return !empty($key) ? ($types[$key] ?? '') : $types;
+            }
             public static function status_text($status): string {
                 if (!is_string($status) && !is_int($status)) {
                     return '';
@@ -576,71 +569,6 @@
                 ];
                 return apply_filters('abptf_filter_rent_rule', $rules);
             }
-            public static function rent_rules_options(): array {
-                $options = (ABPTF_On_Off['rent_rule'] ?? null) ?: self::rent_rules_string();
-                $options = !empty($options) ? explode(',', $options) : [];
-                $rent_rules = [];
-                foreach ($options as $option) {
-                    if (!empty($option)) {
-                        $rent_rules[$option] = self::rent_rules($option);
-                    }
-                }
-                return $rent_rules;
-            }
-            public static function rent_rules($key = '') {
-                $rules = [
-                    'hourly' => __('Hourly Rate', 'abp-transportforge'),
-                    'daily' => __('Daily Rate', 'abp-transportforge'),
-                    'multi_day' => __('Daily & Hourly Rate', 'abp-transportforge'),
-                    'monthly' => __('Monthly Rate', 'abp-transportforge'),
-                    'multi_month' => __('Monthly & Daily Rate', 'abp-transportforge')
-                ];
-                $rules = apply_filters('abptf_filter_rent_rule', $rules);
-                if (!is_string($key) && !is_int($key)) {
-                    return is_array($rules) ? $rules : [];
-                }
-                if ($key === '') {
-                    return is_array($rules) ? $rules : [];
-                }
-                return is_array($rules) ? ($rules[$key] ?? '') : '';
-            }
-            public static function rent_rules_string() {
-                return apply_filters('abptf_filter_rent_rule_string', 'hourly,daily,multi_day,monthly,multi_month');
-            }
-            public static function per_rent_rules($key = '') {
-                $rules = [
-                    'hourly' => __('/hr', 'abp-transportforge'),
-                    'daily' => __('/day', 'abp-transportforge'),
-                    'multi_day' => __('/day', 'abp-transportforge'),
-                    'monthly' => __('/month', 'abp-transportforge'),
-                    'multi_month' => __('/month', 'abp-transportforge')
-                ];
-                $rules = apply_filters('abptf_filter_per_rent_rule', $rules);
-                if (!is_string($key) && !is_int($key)) {
-                    return is_array($rules) ? $rules : [];
-                }
-                if ($key === '') {
-                    return is_array($rules) ? $rules : [];
-                }
-                return is_array($rules) ? ($rules[$key] ?? '') : '';
-            }
-            public static function rent_rules_sin_plu($key = '') {
-                $rules = [
-                    'hourly' => ['sin' => __('Hour', 'abp-transportforge'), 'plu' => __('Hours', 'abp-transportforge')],
-                    'daily' => ['sin' => __('Day', 'abp-transportforge'), 'plu' => __('Days', 'abp-transportforge')],
-                    'multi_day' => ['sin' => __('Day', 'abp-transportforge'), 'plu' => __('Days', 'abp-transportforge')],
-                    'monthly' => ['sin' => __('Month', 'abp-transportforge'), 'plu' => __('Months', 'abp-transportforge')],
-                    'multi_month' => ['sin' => __('Month', 'abp-transportforge'), 'plu' => __('Months', 'abp-transportforge')]
-                ];
-                $rules = apply_filters('abptf_filter_sin_plu_rent_rule', $rules);
-                if (!is_string($key) && !is_int($key)) {
-                    return is_array($rules) ? $rules : [];
-                }
-                if ($key === '') {
-                    return is_array($rules) ? $rules : [];
-                }
-                return is_array($rules) ? ($rules[$key] ?? []) : [];
-            }
             public static function array_date_format(): array {
                 $current_date = current_time('Y-m-d');
                 return [
@@ -659,76 +587,138 @@
                 ];
             }
             //=============================//
-            public static function location_select($post_id = '', $location = ''): void {
-                $all_locations = ABPTF_Locations;
-                if (!empty($all_locations)) {
-                    if (!empty($post_id)) {
-                        $location_array = !empty($location) ? explode(',', $location) : [];
-                        if (!empty($location_array)) {
-                            if (sizeof($location_array) > 1) {
-                                ?>
-                                <div class="_input_item">
-                                    <label>
-                                        <span><i class="fas fa-location _mar_r_xxs"></i><?php esc_html_e('Location', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                                        <select class="_form_control" name="location">
-                                            <?php foreach ($location_array as $loc_id) {
-                                                if (in_array($loc_id, $location_array)) {
-                                                    ?>
-                                                    <option value="<?php echo esc_attr($loc_id); ?>"><?php echo esc_html($all_locations[$loc_id]['name'] ?? ''); ?></option>
-                                                <?php }
-                                            } ?>
-                                        </select>
-                                    </label>
-                                </div>
-                                <?php
-                            } else {
-                                ?><input type="hidden" name="location" value="<?php echo esc_attr($location); ?>" /><?php
+            public static function title($post_infos = []): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (!empty($post_id) && $post_id > 0) {
+                    $display_sku = $post_infos['display_sku'] ?? ABPTF_Function::get_post_info($post_id, 'display_sku', 'off');
+                    $post_sku = $post_infos['post_sku'] ?? ABPTF_Function::get_post_info($post_id, 'post_sku');
+                    if (ABPTF_Function::on_off('post_icon')) {
+                        ABPTF_Layout::image_icon(($post_infos['post_icon'] ?? ABPTF_Function::get_post_info($post_id, 'post_icon')));
+                    }
+                    echo esc_html(get_the_title($post_id)); ?>
+                    <?php if (!empty($post_sku) && $display_sku == 'on' && ABPTF_Function::on_off('sku')) { ?>
+                        <small class="_abp_color_gray">&nbsp;(<?php echo esc_html($post_sku); ?>)</small>
+                    <?php }
+                }
+            }
+            public static function sub_title($post_infos = [], $class = 'sub_title'): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('sub_title') && $post_id > 0) {
+                    $value = $post_infos['sub_title'] ?? ABPTF_Function::get_post_info($post_id, 'sub_title');
+                    if (!empty($value)) { ?>
+                        <p class="_abp <?php echo esc_attr($class); ?>">
+                            <?php echo esc_html($value); ?>
+                        </p>
+                        <?php
+                    }
+                }
+            }
+            public static function capacity($post_infos = [], $class = 'publish'): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('display_capacity') && $post_id > 0) {
+                    $display = $post_infos['display_capacity'] ?? ABPTF_Function::get_post_info($post_id, 'display_capacity', 'on');
+                    $capacity = $post_infos['capacity'] ?? ABPTF_Function::get_total_qty($post_id, $post_infos);
+                    if (!empty($capacity) && $display === 'on') { ?>
+                        <div class="abp_tag <?php echo esc_attr($class); ?>">
+                            <?php ABPTF_Layout::icon_buddy('user_group_2');
+                                echo esc_html($capacity . ' ' . __('Passengers   ', 'abp-transportforge')); ?>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+            public static function category($post_infos = [], $class = ''): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('category') && $post_id > 0) {
+                    $display = $post_infos['display_category'] ?? ABPTF_Function::get_post_info($post_id, 'display_category', 'on');
+                    $value = $post_infos['abptf_category'] ?? ABPTF_Function::get_post_info($post_id, 'abptf_category');
+                    if (!empty($value) && $display === 'on') {
+                        $value = ABPTF_Function::category_value($value); ?>
+                        <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTF_Function::category_label() . ' : ' . $value); ?>">
+                            <?php ABPTF_Layout::icon_buddy('category');
+                                echo esc_html($value); ?>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+            public static function brand($post_infos = [], $class = ''): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('brand') && $post_id > 0) {
+                    $display = $post_infos['display_brand'] ?? ABPTF_Function::get_post_info($post_id, 'display_brand', 'off');
+                    $value = $post_infos['abptf_brand'] ?? ABPTF_Function::get_post_info($post_id, 'abptf_brand');
+                    if (!empty($value) && $display === 'on') {
+                        $value = ABPTF_Function::brand_value($value); ?>
+                        <span class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTF_Function::brand_label() . ' : ' . $value); ?>">
+                                    <?php ABPTF_Layout::icon_buddy('brand_2');
+                                        echo esc_html($value); ?>
+                                </span>
+                        <?php
+                    }
+                }
+            }
+            public static function organizer($post_infos = [], $class = ''): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('organizer') && $post_id > 0) {
+                    $display = $post_infos['display_organizer'] ?? ABPTF_Function::get_post_info($post_id, 'display_organizer', 'off');
+                    $value = $post_infos['abptf_organizer'] ?? ABPTF_Function::get_post_info($post_id, 'abptf_organizer');
+                    if (!empty($value) && $display === 'on') {
+                        $value = ABPTF_Function::organizer_value($value);
+                        ?>
+                        <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTF_Function::organizer_label() . ' : ' . $value); ?>">
+                            <?php ABPTF_Layout::icon_buddy('organizer_2');
+                                echo esc_html($value); ?>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+            public static function description($post_infos = [], $class = ''): void {
+                $post_id = absint($post_infos['post_id'] ?? 0);
+                if (ABPTF_Function::on_off('post_des') && $post_id > 0) {
+                    $value = $post_infos['post_description'] ?? ABPTF_Function::get_post_info($post_id, 'post_description');
+                    if (!empty($value)) { ?>
+                        <div class="_section_white_xxs <?php echo esc_attr($class); ?>">
+                            <?php self::load_more($value); ?>
+                        </div>
+                        <?php
+                    }
+                }
+            }
+            public static function route_direction($post_infos = [], $bp_dp = '', $return = '', $details = ''): void {
+                if (!empty($post_infos)) {
+                    $post_id = absint($post_infos['post_id'] ?? 0);
+                    if (!empty($bp_dp)) {
+                        $key = ABPTF_Function::return_check($post_infos, $bp_dp) ? 'return_routing_infos' : 'routing_infos';
+                        $route = $post_infos[$key] ?? ABPTF_Function::get_post_info($post_id, $key, []);
+                        [$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+                    } else {
+                        $key = $return ? 'return_routing_infos' : 'routing_infos';
+                        $route = $post_infos[$key] ?? ABPTF_Function::get_post_info($post_id, $key, []);
+                        $bp = array_key_first($route);
+                        $dp = array_key_last($route);
+                    }
+                    if (!empty($route)) {
+                        $start_time = $route[$bp]['time'] ?? 0;
+                        $end_time = $route[$dp]['time'] ?? 0;
+                        $keys = array_keys($route);
+                        $difference = abs(array_search($dp, $keys) - array_search($bp, $keys)) + 1;
+                        ?>
+                        <span class="fas fa-route _mar_r_xxs _color_theme"></span>
+                        <span class="_color_active_mar_r_xxs"><?php echo esc_html(ABPTF_Function::location_value($bp)); ?></span>
+                        <span class="fas fa-arrow-right _color_green_pale_mar_r_xxs"></span>
+                        <span class="_color_burnt_orange_mar_r_xxs"> <?php echo esc_html(ABPTF_Function::location_value($dp)); ?></span>
+                        <?php if (empty($details)) { ?>
+                            <span class="_color_theme_mar_r_xxs">(<?php echo esc_html(ABPTF_Function::time_difference($start_time, $end_time)); ?>)</span>
+                            <?php
+                            if ($difference > 1) {
+                                echo esc_html(' - ' . $difference . ' ' . __('Stops', 'abp-transportforge'));
                             }
                         }
                     }
                 }
             }
-            public static function rent_start_month($all_dates): void {
-                if (sizeof($all_dates) > 0) {
-                    ?>
-                    <label>
-                        <span><i class="fas fa-calendar-check _mar_r_xxs"></i><?php esc_html_e('Pickup Month', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                        <select name="rent_start_date" class="_form_control">
-                            <option value=""><?php esc_html_e('Select Pickup Month', 'abp-transportforge'); ?></option>
-                            <?php foreach ($all_dates as $option) { ?>
-                                <option value="<?php echo esc_attr($option['value']); ?>">
-                                    <?php echo esc_html($option['label']); ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </label>
-                    <?php
-                } else {
-                    esc_html_e('Month Configuration not complete', 'abp-transportforge');
-                }
-            }
-            public static function rent_end_month($post_id, $start_date): void {
-                $all_dates = ABPTF_Function::get_end_month($post_id, $start_date);
-                //echo '<pre>';print_r($all_dates);echo '</pre>';
-                if (sizeof($all_dates) > 0) {
-                    ?>
-                    <label>
-                        <span><i class="fas fa-calendar-check _mar_r_xxs"></i><?php esc_html_e('Drop-Off Month', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                        <select name="rent_end_date" class="_form_control">
-                            <option value=""><?php esc_html_e('Select Drop-Off Month', 'abp-transportforge'); ?></option>
-                            <?php foreach ($all_dates as $option) { ?>
-                                <option value="<?php echo esc_attr($option['value']); ?>">
-                                    <?php echo esc_html($option['label']); ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </label>
-                    <?php
-                } else {
-                    esc_html_e('Month Configuration not complete', 'abp-transportforge');
-                }
-            }
-            public static function rent_start_date($all_dates, $date = '', $post_id = ''): void {
+            public static function journey_date($all_dates, $date = ''): void {
                 //echo '<pre>';print_r($all_dates);					echo '</pre>';
                 if (sizeof($all_dates) > 0) {
                     $date_format = ABPTF_Function::date_format_php();
@@ -739,78 +729,39 @@
                     $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
                     ?>
                     <label>
-                        <span>📆<i class="_mar_r_xxs"></i><?php esc_html_e('Pickup Date', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                        <input type="hidden" name="rent_start_date" value="<?php echo esc_attr($hidden_date); ?>" required/>
-                        <input id="start_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" data-alert="<?php esc_attr_e('Please Select Pickup Date', 'abp-transportforge'); ?>" readonly required/>
+                        <span><?php ABPTF_Layout::icon_buddy('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
+                        <input type="hidden" name="journey_date" value="<?php echo esc_attr($hidden_date); ?>" required/>
+                        <input id="journey_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" data-alert="<?php esc_attr_e('Please Select Journey Date', 'abp-transportforge'); ?>" readonly required/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transportforge'); ?>"></span>
                     </label>
                     <?php
-                    do_action('abptf_load_date_picker', '#start_date', $all_dates);
+                    do_action('abptf_load_date_picker', '#journey_date', $all_dates);
                     //}
                 } else {
-                    if (!empty($post_id)) {
-                        ABPTF_Layout::layout_warning_info_xs('not_date');
-                    } else {
-                        $date_format = ABPTF_Function::date_format_php();
-                        $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
-                        ?>
-                        <label>
-                            <span>📆<i class="_mar_r_xxs"></i><?php esc_html_e('Pickup Date', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                            <input type="hidden" name="rent_start_date" value="" required/>
-                            <input type="text" id="start_date" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
-                            <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transportforge'); ?>"></span>
-                        </label>
-                        <?php
-                    }
+                    ABPTF_Layout::layout_warning_info_xs('not_date');
                 }
             }
-            public static function rent_end_date($all_dates, $post_id = ''): void {
+            public static function return_date($all_dates, $date = ''): void {
                 $date_format = ABPTF_Function::date_format_php();
                 $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
                 if (sizeof($all_dates) > 0) {
-                    $date = current($all_dates);
                     //if ( sizeof( $all_dates ) > 10 ) {
                     $hidden_date = !empty($date) ? gmdate('Y-m-d', strtotime($date)) : '';
                     $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
                     ?>
                     <label>
-                        <span>🗓️<i class=" _mar_r_xxs"></i><?php esc_html_e('Drop-Off Date', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                        <input type="hidden" name="rent_end_date" value="<?php echo esc_attr($hidden_date); ?>" required/>
-                        <input id="end_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" data-alert="<?php esc_attr_e('Please Select Drop-Off  Date', 'abp-transportforge'); ?>" readonly required/>
+                        <span><?php ABPTF_Layout::icon_buddy('date_2'); ?><?php esc_html_e('Return Date (optional)', 'abp-transportforge'); ?></span>
+                        <input type="hidden" name="return_date" value="<?php echo esc_attr($hidden_date); ?>"/>
+                        <input id="return_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transportforge'); ?>"></span>
                     </label>
                     <?php
-                    do_action('abptf_load_date_picker', '#end_date', $all_dates);
+                    do_action('abptf_load_date_picker', '#return_date', $all_dates);
                     //}
                 } else {
-                    if (!empty($post_id)) {
-                        ABPTF_Layout::layout_warning_info_xs('not_date');
-                    } else {
-                        $date_format = ABPTF_Function::date_format_php();
-                        $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
-                        ?>
-                        <label>
-                            <span>🗓️<i class=" _mar_r_xxs"></i><?php esc_html_e('Drop-Off Date', 'abp-transportforge'); ?><sup class="_color_required">*</sup></span>
-                            <input type="hidden" name="rent_end_date" value="" required/>
-                            <input type="text" id="end_date" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
-                            <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transportforge'); ?>"></span>
-                        </label>
-                        <?php
-                    }
+                    ?><span></span><?php
+                    ABPTF_Layout::layout_warning_info_xs('not_date');
                 }
-            }
-            public static function title($post_id): void {
-                $post_sku = ABPTF_Function::get_post_info($post_id, 'post_sku');
-                if (ABPTF_Function::on_off('post_icon')) {
-                    ABPTF_Layout::image_icon(ABPTF_Function::get_post_info($post_id, 'post_icon'));
-                }
-                echo esc_html(get_the_title($post_id)); ?>
-                <p class="_abp">
-                    <?php if (!empty($post_sku) && ABPTF_Function::on_off('sku')) { ?>
-                        <small class=" _abp_color_gray"><?php echo esc_html__('SKU : ', 'abp-transportforge') . esc_html($post_sku); ?></small>
-                    <?php } ?>
-                </p>
-                <?php
             }
             public static function item_feature($features = ''): void {
                 if (ABPTF_Function::on_off('feature')) {
@@ -824,233 +775,82 @@
                     }
                     ?>
                     <div class="item_spec load_more">
-                        <?php
-                            foreach ($feature_ids as $fec_id) {
-                                $feature = $abptf_feature[$fec_id] ?? null;
-                                if (!is_array($feature)) {
-                                    continue;
-                                }
-                                $label = $feature['label'] ?? '';
-                                $value = $feature['value'] ?? '';
-                                $icon = $feature['icon'] ?? '';
-                                if ($value !== '') {
-                                    echo '<span class="spec_badge" title="' . esc_attr($label) . '">';
-                                    ABPTF_Layout::image_icon($icon);
-                                    echo esc_html($label . ' - ' . $value);
-                                    echo '</span>';
-                                }
-                            } ?>
+                        <div class="_f_wrap_gap_xs">
+                            <?php
+                                foreach ($feature_ids as $fec_id) {
+                                    $feature = $abptf_feature[$fec_id] ?? null;
+                                    if (!is_array($feature)) {
+                                        continue;
+                                    }
+                                    $label = $feature['label'] ?? '';
+                                    $value = $feature['value'] ?? '';
+                                    $icon = $feature['icon'] ?? '';
+                                    if ($label || $value) {
+                                        echo '<span class="abp_tag spec_badge" title="' . esc_attr($label) . '">';
+                                        ABPTF_Layout::image_icon($icon);
+                                        $output = implode(' - ', array_filter([$label, $value]));
+                                        echo esc_html($output);
+                                        echo '</span>';
+                                    }
+                                } ?>
+                        </div>
                         <span class="load_more_action" data-less="<?php esc_html_e('....Less ', 'abp-transportforge'); ?>" data-more="<?php esc_html_e('.... More', 'abp-transportforge'); ?>"><?php esc_html_e('.... More', 'abp-transportforge'); ?></span>
                     </div>
                     <?php
                 }
             }
-            public static function item_condition($rent_rule, $price_info = []): string {
-                if (!is_array($price_info)) {
-                    return '';
-                }
-                $condition = '';
-                $min = $price_info['min'] ?? '';
-                $max = $price_info['max'] ?? '';
-                if ($min !== '' || $max !== '') {
-                    $rule_info = self::rent_rules_sin_plu($rent_rule);
-                    $rule_info = is_array($rule_info) ? $rule_info : [];
-                    $sin_text = $rule_info['sin'] ?? '';
-                    $plu_text = $rule_info['plu'] ?? '';
-                    $min_val = absint($min);
-                    $unit_text = (1 === $min_val) ? $sin_text : $plu_text;
-                    if ((string)$min === (string)$max) {
-                        $condition .= sprintf(
-                        // translators: 1: minimum number, 2: time unit (e.g. hours)
-                            __('Rental is available for %1$s %2$s Only', 'abp-transportforge'),
-                            $min,
-                            $unit_text
-                        );
-                    } else {
-                        if ($min !== '') {
-                            $condition .= '📉 ' . sprintf(
-                                // translators: 1: The minimum number, 2: The unit text (e.g., "Hours").
-                                    __('Min. %1$s %2$s', 'abp-transportforge'),
-                                    $min,
-                                    $unit_text
-                                );
-                        }
-                        if ($max !== '') {
-                            $max_val = absint($max);
-                            $max_unit_text = (1 === $max_val) ? $sin_text : $plu_text;
-                            if ($min !== '') {
-                                $condition .= '  📈  ';
-                            } else {
-                                $condition .= '📈 ';
-                            }
-                            $condition .= sprintf(
-                            // translators: 1: The maximum number, 2: The unit text (e.g., "Hours").
-                                __('Max. %1$s %2$s', 'abp-transportforge'),
-                                $max,
-                                $max_unit_text
-                            );
-                        }
-                    }
-                } else {
-                    $text = self::rent_rules($rent_rule);
-                    $text = is_string($text) ? $text : '';
-                    // translators: %s is the user role or restriction text .
-                    $condition .= sprintf(__('Rental is available for %s  only', 'abp-transportforge'), $text);
-                }
-                return $condition;
-            }
-            public static function item_deposit($price_info): void {
-                if (ABPTF_Function::on_off('deposit')) {
-                    if (!is_array($price_info)) {
-                        return;
-                    }
-                    $deposit_info = $price_info['deposit'] ?? [];
-                    if (!is_array($deposit_info)) {
-                        return;
-                    }
-                    $deposit_type = $deposit_info['type'] ?? '';
-                    $deposit_value = $deposit_info['value'] ?? '';
-                    if ($deposit_type !== '' && $deposit_value !== '') {
-                        ?>
-                        <div class="item_condition">
-                            <?php
-                                if ($deposit_type === 'fixed') {
-                                    echo wp_kses_post(sprintf(
-                                    /* translators: %s = deposit label' */
-                                        _x('• Deposit: %s Fixed', 'deposit label', 'abp-transportforge'),
-                                        wc_price($deposit_value)
-                                    ));
-                                } elseif ($deposit_type === 'percent') {
-                                    echo esc_html(sprintf(
-                                    /* translators: %s = deposit label' */
-                                        _x('• Deposit: %s of Total Price', 'deposit label', 'abp-transportforge'),
-                                        $deposit_value . '%'
-                                    ));
-                                } else {
-                                    echo wp_kses_post(sprintf(
-                                    /* translators: %s = deposit label' */
-                                        _x('• Deposit: %s Per Item', 'deposit label', 'abp-transportforge'),
-                                        wc_price($deposit_value)
-                                    ));
-                                }
-                            ?>
-                        </div>
-                        <?php
-                    }
-                }
-            }
-            public static function item_price($post_id, $rent_rule, $price_info): void {
-                if (!is_array($price_info)) {
+            public static function item_select($post_infos, $ticket_info, $key, $price = 0, $prefix = ''): void {
+                //echo '<pre>';print_r($bp_dp);echo '</pre>';
+                if (!is_array($ticket_info) || empty($key)) {
                     return;
                 }
-                $rent_rule = is_string($rent_rule) ? $rent_rule : '';
-                ?>
-                <span class="price_label"><?php echo esc_html(ABPTF_Layout::rent_rules($rent_rule)); ?></span>
-                <span class="price_value">
-                        <?php
-                            $price = $price_info['price'] ?? '';
-                            $price = apply_filters('abptf_filter_price', $price, $rent_rule, $price_info);
-                            $price = ($price !== '' && $price > 0) ? ABPTF_Function::tax_with_price($post_id, $price) : 0;
-                            echo ($price > 0) ? wp_kses_post(wc_price($price)) : esc_html__('Free', 'abp-transportforge');
-                            echo esc_html(ABPTF_Layout::per_rent_rules($rent_rule));
-                            if ($rent_rule === 'multi_day' || $rent_rule === 'multi_month') {
-                                $price_multi = $price_info['price_multi'] ?? '';
-                                $price_multi = apply_filters('abptf_filter_price_multi', $price_multi, $rent_rule, $price_info);
-                                $price_multi = ($price_multi !== '' && $price_multi > 0) ? ABPTF_Function::tax_with_price($post_id, $price_multi) : 0;
-                                esc_html_e(' & ', 'abp-transportforge');
-                                echo ($price_multi > 0) ? wp_kses_post(wc_price($price_multi)) : esc_html__('Free', 'abp-transportforge');
-                                echo ($rent_rule === 'multi_day') ? esc_html(ABPTF_Layout::per_rent_rules('hourly')) : esc_html(ABPTF_Layout::per_rent_rules('daily'));
-                            }
-                        ?>
-                    </span>
-                <?php
-            }
-            public static function item_cost($post_infos, $price_info, $total_price, $time_duration): void {
-                if (!is_array($post_infos)) {
-                    return;
-                }
-                $rent_rule = $post_infos['rent_rule'] ?? '';
-                $date_info = $post_infos['date_info'] ?? [];
-                $dif_text = is_array($date_info) ? ($date_info['text'] ?? '') : '';
-                $price_info = is_array($price_info) ? $price_info : [];
-                ?>
-                <div class="calculated_cost">
-                    <?php if (!empty($time_duration)) { ?>
-                        <div class="cost_label">
-                            <?php echo esc_html__('Total for ', 'abp-transportforge') . ' ' . esc_html($dif_text); ?>
-                        </div>
-                        <div class="cost_value">
-                            <?php echo $total_price > 0 ? wp_kses_post(wc_price($total_price)) : esc_html__('Free ', 'abp-transportforge'); ?>
-                        </div>
-                    <?php } else { ?>
-                        <div class="cost_condition">
-                            <?php echo esc_html(ABPTF_Layout::item_condition($rent_rule, $price_info)); ?>
-                        </div>
-                    <?php } ?>
-                </div>
-                <?php
-            }
-            public static function item_select_property($post_infos, $price_info, $total_price = 0): void {
-                if (!is_array($post_infos)) {
-                    return;
-                }
-                $price_info = is_array($price_info) ? $price_info : [];
-                $post_id = $post_infos['post_id'] ?? '';
-                $property_id = $post_infos['property_id'] ?? '';
-                $name = $post_infos['property_name'] ?? '';
-                $deposit_info = $price_info['deposit'] ?? [];
-                $deposit_type = is_array($deposit_info) ? ($deposit_info['type'] ?? '') : '';
-                $deposit_value = is_array($deposit_info) ? ($deposit_info['value'] ?? '') : '';
-                $total_qty = intval($price_info['qty'] ?? 0);
-                $reserve_qty = intval($price_info['reserve'] ?? 0);
-                $min_qty = intval($price_info['min_qty'] ?? 1);
-                $max_qty = $price_info['max_qty'] ?? '';
+                $total_qty = intval($ticket_info['qty'] ?? 0);
+                $reserve_qty = intval($ticket_info['reserve'] ?? 0);
+                $max_qty = $ticket_info['max_qty'] ?? '';
                 $sold_qty = intval(ABPTF_Query::get_sold_qty($post_infos));
                 $available_qty = $total_qty - $reserve_qty - $sold_qty;
                 $max_qty = ($max_qty !== '' && intval($max_qty) <= $available_qty) ? intval($max_qty) : $available_qty;
-                $min_qty = max($min_qty, 1);
+                $min_qty = $ticket_info['min_qty'] ??1;
                 if ($max_qty >= $min_qty) {
-                    $collapse_id = '#' . $post_id . '_' . $property_id;
+                    $collapse_id = '#ticket_' . $key;
                     ?>
-                    <div class="select_property">
-                        <input type="hidden" name="property_id[]" value="<?php echo esc_attr($property_id); ?>"/>
-                        <input type="hidden" name="deposit_type[]" value="<?php echo esc_attr($deposit_type); ?>"/>
-                        <input type="hidden" name="deposit_value[]" value="<?php echo esc_attr($deposit_value); ?>"/>
+                    <div class="_divider_xxs"></div>
+                    <div class="item_select">
                         <div class="custom_checkbox">
-                            <input type="hidden" name="property_check[]" value="" data-id="<?php echo esc_attr($collapse_id); ?>"/>
-                            <div class="checkbox_item _fa_center _fs_label" data-checked="1" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
+                            <input type="hidden" name="<?php echo esc_attr($prefix); ?>item_check[]" value="" data-id="<?php echo esc_attr($collapse_id); ?>"/>
+                            <div class="checkbox_item _fa_center _fs_label" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
                                 <h3 class="_abp"><span data-icon class="_mar_r_xs far fa-square"></span></h3>
-                                <?php echo esc_html__('Select ', 'abp-transportforge') . ' ' . esc_html($name); ?>
+                                <?php echo esc_html__('Select ', 'abp-transportforge') . ' ' . esc_html(ABPTF_Function::ticket_name($key)); ?>
                             </div>
                         </div>
                         <?php
                             if ($max_qty > $min_qty) {
                                 $input_info = [
-                                    'name' => 'property_qty[]',
-                                    'price' => $total_price,
+                                    'name' => $prefix . 'item_qty[]',
+                                    'price' => $price,
                                     'available' => $available_qty,
-                                    'min_qty' => $min_qty,
+                                    'min_qty' => 1,
                                     'max_qty' => $max_qty,
                                     'collapse_id' => $collapse_id,
                                 ];
                                 ABPTF_Layout::quantity_input($input_info);
                             } else {
                                 ?>
-                                <input type="hidden" name="property_qty[]" value="<?php echo esc_attr($min_qty); ?>" data-price="<?php echo esc_attr($total_price); ?>"/>
+                                <input type="hidden" name="<?php echo esc_attr($prefix); ?>item_qty[]" value="<?php echo esc_attr($min_qty); ?>" data-price="<?php echo esc_attr($price); ?>"/>
                                 <?php
                             }
                         ?>
                     </div>
+                <?php } else { ?>
+                    <span class="trash abp_tag"><?php esc_html_e('Sold Out !', 'abp-transportforge'); ?></span>
                     <?php
-                } else {
-                    ABPTF_Layout::layout_warning_info_xs('property_not_available');
                 }
             }
-            public static function create_client_form($form, $name): void {
+            public static function create_client_form($form, $name, $prefix = ''): void {
                 if (!is_array($form)) {
                     return;
                 }
-                $name = is_string($name) ? $name : '';
+                $name = is_string($name) ? $prefix . $name . '[]' : '';
                 $type = $form['type'] ?? '';
                 $required = (($form['required'] ?? '') === 'on') ? 'required' : '';
                 $label = $form['label'] ?? '';
@@ -1183,23 +983,21 @@
                 }
             }
             //=============================//
-            public static function filter_post_list($post_id = 0): void {
+            public static function filter_post_list(): void {
                 $label = ABPTF_Function::label();
-                $all_post_ids = ABPTF_Query::get_post_id();
-                $value = $post_id > 0 ? $post_id : '';
                 $brand_icon = ABPTF_Function::icon();
                 // echo '<pre>';print_r($configuration);echo '</pre>';
                 ?>
-                <div class="_input_item abp_dropdown">
+                <div class="_input_item abp_dropdown post_selection">
                     <label>
                         <span><?php ABPTF_Layout::image_icon($brand_icon); ?><?php echo esc_html($label); ?></span>
-                        <input type="hidden" name="post_id" value="<?php echo esc_attr($value); ?>"/>
-                        <input type="text" class="_form_control_w_full" name="" placeholder="<?php echo esc_attr($label); ?>" value="<?php echo esc_attr(get_the_title($post_id)); ?>"/>
+                        <input type="hidden" name="post_id" value=""/>
+                        <input type="text" class="_form_control_w_full" name="" placeholder="<?php echo esc_attr($label); ?>" value=""/>
                     </label>
-                    <?php if (sizeof($all_post_ids) > 0) { ?>
+                    <?php if (sizeof(ABPTF_Post_ids) > 0) { ?>
                         <div class="dropdown_list">
                             <ul class="_abp ">
-                                <?php foreach ($all_post_ids as $all_post_id) {
+                                <?php foreach (ABPTF_Post_ids as $all_post_id) {
                                     $sku = ABPTF_Function::get_post_info($all_post_id, 'post_sku');
                                     $category = ABPTF_Function::get_post_info($all_post_id, 'category');
                                     $category = !empty($category) ? get_term($category)->name : '';
@@ -1387,6 +1185,173 @@
                     </div>
                 </div>
                 <?php
+            }
+            //=============================//
+            public static function array_info($key) {
+                $current_date = current_time('Y-m-d H:i');
+                $des = array(
+                    'general_config' => __('Note: Configure the general settings for this transport here. If you do not want to use any specific feature, you can enable or disable it from Main Configuration → On/Off Sections. Disabling a feature will remove it from the entire site.', 'abp-transportforge'),
+                    'sale_continue' => __('Note: This switch indicate Transport Ticket sale close/continue . You can  sale close/continue  by this switch. By default sale will be  continue', 'abp-transportforge'),
+                    'abptf_template' => __('Note: Here You can change your details page template.', 'abp-transportforge'),
+                    'post_sku' => __('Note: Here you can add an SKU for this post. You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
+                    'post_icon' => __('Note: Set a custom icon or emoji for this post. The selected icon/emoji will be displayed alongside the post title wherever the title appears across the website, helping it stand out and improve visual recognition.', 'abp-transportforge'),
+                    'sub_title' => __('Note: Add a Sub-title to enable the Post sub-tile. Leave this blank if you dont want to show any Sub-title information for this Post.', 'abp-transportforge'),
+                    'post_description' => __('Note: Add short description about this Transport . Leave this blank if you dont want to show any  description for this Transport.', 'abp-transportforge'),
+                    'display_capacity' => __('Note : Enable this option to display the capacity for this transport on the frontend. This setting only works when the global Transport Capacity Display option is enabled.', 'abp-transportforge'),
+                    'display_organizer' => __('Note : This switch indicate Transport Organizer . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
+                    'display_brand' => __('Note : This switch indicate Transport Brand name . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
+                    'display_category' => __('Note : This switch indicate Transport Category . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transportforge'),
+                    'related_item' => __('Note: Select related items to display on the details page. Leave this option empty or disabled if you do not want to show related items.', 'abp-transportforge'),
+                    'post_feature' => __('Note: If you want to add feature for this Transport, you can add Here. These feature will be show with this Transport . You may leave this section empty if you do not want to show frontend. ', 'abp-transportforge'),
+                    'abptf_slider' => __('Note: If you want to add an image gallery for this transport, you can upload images below.  You may leave this section empty if you do not want to show images. ', 'abp-transportforge'),
+                    //=============================//
+                    'route_config' => __('Note: Configure the transport route by selecting the required stops and their types. You can also add new stops while configuring the route. Boarding stops allow passengers to board only, Dropping stops allow passengers to get off only, and Both stops support both boarding and dropping. The first stop must always be Boarding, the last stop must always be Dropping, and the first stop time must be 0 minutes. All remaining stop times represent the travel time in minutes from the first stop and are applied according to your Transport Time Configuration. Enable Multiple Pickup/Drop-off Points to allow passengers to select from multiple pickup and drop-off locations. The available options are based on the configured route stops: Boarding stops become Pickup Points, Dropping stops become Drop-off Points, and Both stops are available for both. If the return journey uses the same transport, enable Same Transport Return to automatically use the same transport configuration for the return trip. ', 'abp-transportforge'),
+                    'seat_type' => __('Note: Please select your Transport seat type . Default is Seat Plan', 'abp-wc-transport-manager'),
+                    'ticket_type' => __('Note: You have disabled the Seat Plan System from the Global On/Off Settings, so your ticket types will function as regular tickets only.If you want to use a seat plan, enable Seat Plan System from the Global On/Off Settings. Once enabled, you can turn the Seat Plan feature on or off for each transport individually, allowing you to use either a seat plan or regular tickets as needed.', 'abp-wc-transport-manager'),
+                    'single_ticket_type' => __('Note: If the Global Multiple Ticket System is disabled, you cannot use multiple ticket types for any transport.To enable this feature, turn on Multiple Ticket System from the Global On/Off Settings. Once enabled, you can configure multiple ticket types and prices for each transport. You can also choose to use a single ticket for specific transports whenever needed.', 'abp-wc-transport-manager'),
+                    'display_ticket_type' => __('Note : This switch indicate Transport ticket type. if your all ticket/seat same type then switch will be off. if you want to multiple type please switch on', 'abp-wc-transport-manager'),
+                    'min_qty' => __('Note : Set the minimum quantity customers must select per order. This global setting applies across the entire booking system.', 'abp-wc-transport-manager'),
+                    'max_qty' => __('Note : Set the maximum quantity a customer can select per order. This global setting helps control the maximum number of tickets or seats a customer can book in a single order.', 'abp-wc-transport-manager'),
+                    //=============================//
+                    //=============================//
+                    'no_category' => __('No Category Found !', 'abp-transportforge'),
+                    'cat_name' => __('Note: Please enter a category name — the field cannot be empty. ', 'abp-transportforge'),
+                    'cat_slug' => __('Note: Category slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
+                    'cat_des' => __('Note: Category description is optional — you can add details to better explain this category. ', 'abp-transportforge'),
+                    //=============================//
+                    'no_organizer' => __('No Organizer Found !', 'abp-transportforge'),
+                    'org_name' => __('Note: Please enter a Organizer name — the field cannot be empty. ', 'abp-transportforge'),
+                    'org_slug' => __('Note: Organizer slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
+                    'org_des' => __('Note: Organizer description is optional — you can add details to better explain this Organizer. ', 'abp-transportforge'),
+                    //=============================//
+                    'no_location' => __('No Location Found ! ', 'abp-transportforge'),
+                    'loc_name' => __('Note: Please enter a Location name — the field cannot be empty. ', 'abp-transportforge'),
+                    'loc_slug' => __('Note: Location slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
+                    'loc_des' => __('Note: Location Address is optional — you can add details to better explain this Location Full  Address. ', 'abp-transportforge'),
+                    'display_pd' => __('You can add multiple pickup/drop-off  points for a single location. For each pickup/drop-off  point, set the travel time relative to the main location. Use a negative value (in minutes) if the pickup/drop-off  point is before the main location, or a positive value (in minutes) if it is after the main location. For example, use -15 for 15 minutes before the main location, or 20 for 20 minutes after it.', 'abp-transportforge'),
+                    //=============================//
+                    'no_brand' => __('No Brand Found ! ', 'abp-transportforge'),
+                    'brand_name' => __('Note: Please enter a Brand name — the field cannot be empty. ', 'abp-transportforge'),
+                    'brand_slug' => __('Note: Brand slug is optional — leave it blank to auto-generate from the name. ', 'abp-transportforge'),
+                    'brand_des' => __('Note: Brand description  is optional — you can add details to better explain this Brand. ', 'abp-transportforge'),
+                    //=============================//
+                    'no_feature' => __('No Feature Found ! ', 'abp-transportforge'),
+                    'feature_value' => __('Note: Please enter a Feature Value  — the field optional ', 'abp-transportforge'),
+                    'feature_icon' => __('Note: You can add an icon, or emoji for this Feature(optional).', 'abp-transportforge'),
+                    'feature_name' => __('Note: Please enter a Feature Name  — the field cannot be empty.', 'abp-transportforge'),
+                    //=============================//
+                    'date_format' => __('Note:  If you want to change the Date  Format, simply choose a different format. The default date is: ', 'abp-transportforge') . ' ' . date_i18n('D j M , Y', strtotime($current_date)),
+                    'time_format' => __('Note : If you want to change the Time Format, simply choose a different format. The default Time Format is: ', 'abp-transportforge') . ' ' . date_i18n(get_option('time_format'), strtotime($current_date)),
+                    'sale_close_before' => __('Note:  Enter the time in minutes to close ticket sales before the transport starts. If not specified, it will default to 0 (e.g. 1 hour equals 60 minutes). ', 'abp-transportforge'),
+                    'advance_date_number' => __('Note: Kindly provide the number of days in advance for booking. By default, the advance booking period is set to 28 days.(optional) ', 'abp-transportforge'),
+                    'active_global_dates' => __('Note: Keep this switch ON to apply the global date settings.Switch it OFF if you want to set special date rules for this transport.Date configuration options will open when turned OFF. ', 'abp-transportforge'),
+                    'date_type' => __('Note: Please Select your Transport operational date type. Default operational date will be Periodic', 'abp-transportforge'),
+                    'specific_dates' => __('Note: Please add your Transport operational Specific Date lists  .', 'abp-transportforge'),
+                    'operation_time' => __('Note: Operation Time is required. If you do not specify any operation time, it will automatically be set to 12:00 AM (00:00). You can add multiple operation times for the same transport within a single day if needed. However, at least one operation time is required.', 'abp-transportforge'),
+                    'periodic_start_date' => __('Note: Please add your Transport Launching Date otherwise it will be start today ', 'abp-transportforge'),
+                    'periodic_end_date' => __('Note: Please add your Transport Terminate  Date otherwise it will be Continuously running periodically', 'abp-transportforge'),
+                    'periodic_after' => __('Note: Please add your periodically after days. if  your Transport operation day everyday this will be one(1).(optional)', 'abp-transportforge'),
+                    'date_rule' => __('Note: Enable this checkbox to configure special on/off date  settings. This option is optional. If you set a date/time in the special “On” date, that date will remain active even if it falls within an “Off” date range or on weekends.', 'abp-transportforge'),
+                    'special_on_dates' => __('Note: If you add any date  in Special On Dates, it will always remain active—even if that date falls within an off date range or on weekends.', 'abp-transportforge'),
+                    'weekend' => __('Note: Please select your weekend.Default all days open(optional)', 'abp-transportforge'),
+                    'day_wise_time' => __('Note:Add Day-wise Time if your transport operates on different schedules throughout the week. You can assign multiple departure times for each day, and only the configured times for the selected day will be available to passengers. ', 'abp-transportforge'),
+                    'specific_off_dates' => __('Note: please add your specific Operation off dates.(optional)', 'abp-transportforge'),
+                    'date_wise_time' => __('Note: Set the transport operation time for specific dates. A date will only be saved if it has at least one operation time. If a date is not saved, the regular day-wise schedule or the default operation time will be applied. You can add multiple operation times for the same date.(optional)', 'abp-transportforge'),
+                    'off_date_range' => __('Note: If you have off days between two dates which can add here.(optional)', 'abp-transportforge'),
+                    'abptf_dates' => __('Note: Set a global date configuration for your Transport  that can be reused across all posts, with options to import and customize anytime.', 'abp-transportforge'),
+                    //=============================//
+                    'qty_reserve_min_max' => __('Note: Set the total stock quantity available for sale. This field is required to save the transport. You can also set reserve, minimum, and maximum quantity limits for customer bookings. Reserve quantity keeps specific items unavailable, minimum quantity defaults to 1, and maximum quantity will follow the available stock if left empty.', 'abp-transportforge'),
+                    //=============================//
+                    '_tax_class' => __('Note: If you want to add any new tax class , Please go to WooCommerce ->configuration->Tax Area', 'abp-transportforge'),
+                    'enable_tax_msg' => __('Note: Your Woo-commerce Tax setting already disable. If you want to enable tax please enable woo-commerce tax.', 'abp-transportforge'),
+                    //=============================//
+                    'display_additional_services' => __('Note: If you want sale additional product/equipment with this  transport then active this button and add additional service. Additional item not depends on  operation time.', 'abp-transportforge'),
+                    'additional_services' => __('Note: Add extra services for products/equipment with your transport—import or set per Post (also usable globally); stock applies per Post, empty quantity = unlimited, empty max qty = no limit, empty/Zero price = free.', 'abp-transportforge'),
+                    'active_global_additional' => __('Note: Keep this switch ON to apply the global additional settings.Switch it OFF if you want to set special additional rules for this transport.additional configuration options will open when turned OFF. ', 'abp-transportforge'),
+                    //=============================//
+                    'attendee_off' => __('Note: Globally, the Attendee Form feature is currently disabled. To add an attendee form for this transport, please enable the feature from the Global Settings, then reload this page.', 'abp-transportforge'),
+                    'client_form_option' => __('Use comma( , ) to separate option.', 'abp-transportforge'),
+                    'display_client_form' => __('Note: If you want to get Client information then active this button and add form/import global form or use global form as a client form', 'abp-transportforge'),
+                    'active_global_form' => __('Note: Keep this switch ON to apply the global Client Form settings.Switch it OFF if you want to set special  Client Form rules for this transport. Client Form configuration options will open when turned OFF. ', 'abp-transportforge'),
+                    'global_client_forms' => __('Note: This is a flexibility global form system. Once you design the structure here, it serves as a global form. You can effortlessly import this form into any transport or use this setting at any transport,', 'abp-transportforge'),
+                    'display_single_form' => __('If you want to get single traveller/attendee info for multiple ticket  then active this button .Default is on', 'abp-wc-transport-manager'),
+                    //=============================//
+                    'abptf_tc' => __('You can set all transport-related Term & Condition here and use them globally across all transport. You can also import these Term & Condition into any individual transport and customize them as needed.', 'abp-transportforge'),
+                    'tc_item' => __('Use the editor to customize and design your Terms & Conditions as you prefer. The content and formatting you create here will be displayed the same way on the frontend.', 'abp-transportforge'),
+                    'display_tc' => __('Use this switch to control whether the Term & Condition is displayed on the frontend. Turn the switch ON to show the Term & Condition, and OFF to hide it. By default, this option is set to ON.', 'abp-transportforge'),
+                    'active_global_tc' => __('Enable this switch to apply the global Term & Condition to this post. If you want to add custom Term & Condition specifically for this post, turn the switch OFF and add your custom Term & Condition below.You can also use the Import button to bring in global Term & Condition, which you can then edit or delete based on your needs.', 'abp-transportforge'),
+                    //=============================//
+                    'abptf_faqs' => __('You can set all transport-related FAQs here and use them globally across all transports. You can also import these FAQs into any individual transport and customize them as needed.', 'abp-transportforge'),
+                    'faq_item' => __('Both the Title and Description fields are required. If either field is left empty, this FAQ item will not be displayed on the frontend.', 'abp-transportforge'),
+                    'display_faq' => __('Use this switch to control whether the FAQ is displayed on the frontend. Turn the switch ON to show the FAQ, and OFF to hide it. By default, this option is set to ON.', 'abp-transportforge'),
+                    'active_global_faq' => __('Enable this switch to apply the global FAQ to this post. If you want to add custom FAQs specifically for this post, turn the switch OFF and add your custom FAQs below.You can also use the Import button to bring in global FAQs, which you can then edit or delete based on your needs.', 'abp-transportforge'),
+                    //=============================//
+                    'search_get_wrong_data_info' => __('Somethings went Wrong ! Please Try again', 'abp-transportforge'),
+                    'sale_close_msg' => __('This transport sale close shortly. please try another transport.', 'abp-transportforge'),
+                    'not_date' => __('No Dates Found !', 'abp-transportforge'),
+                    'not_match' => __('No Results Found !', 'abp-transportforge'),
+                    'not_found' => __('Nothing Found !', 'abp-transportforge'),
+                    'no_sp' => __('No Seat Plan Found. Click Add New to create one.', 'abp-transportforge'),
+                    'transport_not_available' => __('The transport is not available for the selected date and time. Please choose a different schedule.', 'abp-transportforge'),
+                    //=============================//
+                    'no_ticket_type' => __('No Ticket Type Found ! Please add Ticket Type to use Multiple Ticket Type', 'abp-transportforge'),
+                    'no_ticket_config' => __('No ticket configuration is available for this transport. Please contact the administrator.', 'abp-transportforge'),
+                    'ticket_settings' => __('Configure the ticket or seat type with a name, color, prefix, and optional image, icon, or emoji. These settings will be applied automatically to all assigned seats in the Seat Plan and used throughout the booking process for consistent identification.', 'abp-transportforge'), //=============================//
+                    'no_decor_item' => __('No Decor Item Found ! Please add Decor item to use Multiple Decor item', 'abp-transportforge'),
+                    'decor_image' => __('You can add an image, icon, or emoji for this Decor item. It will be used as the Decor item layout representation in the Seat Plan. Once configured here, all seats assigned to this ticket type will automatically use the same image, icon, or emoji.', 'abp-transportforge'),
+                    'decor_name' => __('Enter the Decor Item name. This item is used only for designing the Seat Plan layout and is not treated as a bookable seat. Its name will not be displayed anywhere during the booking process or on the Seat Plan. If needed, you can double-click the item in the Seat Plan editor to add custom text for display.', 'abp-transportforge'),
+                    'decor_color' => __('Choose the background color for this Decor Item. This color is used only in the Seat Plan editor to visually represent the item and does not affect booking, pricing, or seat availability.', 'abp-transportforge'),
+                    //=============================//
+                    'must_wc' => __('TransportForge is entirely dependent on the WooCommerce plugin. Please install and activate the WooCommerce plugin otherwise the plugin will not work. Installing this tool may take some time', 'abp-transportforge'),
+                    //=============================//
+                    //=============================//
+                    'sign_up_msg' => __('Please Login your account to Download/View ticket !', 'abp-transportforge'),
+                    'no_permit_msg' => __('You are not permitted to Download/View this ticket !', 'abp-transportforge'),
+                    'wrong_msg_id' => __('We see, this id are not valid !', 'abp-transportforge'),
+                    'no_order_found' => __('Sorry ! We can not find any Order in your criteria.', 'abp-transportforge'),
+                    //''          => __( '', 'abp-transportforge' ),
+                );
+                $des = apply_filters('abptf_info_array_filter', $des);
+                return $des[$key] ?? '';
+            }
+            public static function icon_buddy($key): void {
+                $des = [
+                    'user_group_1' => '<svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"  d="M17 20c0-1.657-2.239-3-5-3s-5 1.343-5 3m14-3c0-1.23-1.234-2.287-3-2.75M3 17c0-1.23 1.234-2.287 3-2.75m12-4.014a3 3 0 1 0-4-4.472m-8 4.472a3 3 0 0 1 4-4.472M12 14a3 3 0 1 1 0-6a3 3 0 0 1 0 6Z"/></svg>',
+                    'user_group_2' => '<svg  viewBox="0 0 24 24"> <path fill="currentColor" fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-1.5 8a4 4 0 0 0-4 4c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2a4 4 0 0 0-4-4zm6.8-3.1a5.5 5.5 0 0 0-2.8-6.3c.6-.4 1.3-.6 2-.6a3.5 3.5 0 0 1 .8 6.9m2.2 7.1h.5a2 2 0 0 0 2-2a4 4 0 0 0-4-4h-1.1l-.5.8c1.9 1 3.1 3 3.1 5.2M4 7.5a3.5 3.5 0 0 1 5.5-2.9A5.5 5.5 0 0 0 6.7 11A3.5 3.5 0 0 1 4 7.5M7.1 12H6a4 4 0 0 0-4 4c0 1.1.9 2 2 2h.5a6 6 0 0 1 3-5.2z" clip-rule="evenodd"/></svg>',
+                    'plus' => '<svg viewBox="0 0 16 16">    <path fill="currentColor" d="M14 7H9V2H7v5H2v2h5v5h2V9h5V7z"/></svg>',
+                    'save' => '<svg  viewBox="0 0 100 100.016"><path fill="#23475F" d="M88.555 0H83v.016a2 2 0 0 1-2 2H19a2 2 0 0 1-2-2V0H4a4 4 0 0 0-4 4v92.016a4 4 0 0 0 4 4h92a4 4 0 0 0 4-4V11.525C100.049 11.436 88.564.071 88.555 0z"/><path fill="#1C3C50" d="M81.04 53.016H18.96a2 2 0 0 0-2 2v45h66.08v-45c0-1.106-.895-2-2-2zm-61.957-10h61.834a2 2 0 0 0 2-2V.555A1.993 1.993 0 0 1 81 2.015H19c-.916 0-1.681-.62-1.917-1.46v40.46a2 2 0 0 0 2 2.001z"/><path fill="#EBF0F1" d="M22 55.985h56a2 2 0 0 1 2 2v37.031a2 2 0 0 1-2 2H22c-1.104 0-2-.396-2-1.5V57.985a2 2 0 0 1 2-2z"/><path fill="#BCC4C8" d="M25 77.016h50v1H25v-1zm0 10h50v1H25v-1z"/><path fill="#1C3C50" d="M7 84.016h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm83 0h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z"/><path fill="#BCC4C8" d="M37 1.989v36.026a2 2 0 0 0 2 2h39a2 2 0 0 0 2-2V1.989c0 .007-42.982.007-43 0zm37 29.027a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2V10.989a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v20.027z"/><path fill="#FF9D00" d="M78 55.985H22a2 2 0 0 0-2 2v10.031h60V57.985a2 2 0 0 0-2-2z"/></svg>',
+                    'edit' => '<svg  viewBox="0 0 16 16"><path fill="currentColor" d="M15.49 7.3h-1.16v6.35H1.67V3.28H8V2H1.67A1.21 1.21 0 0 0 .5 3.28v10.37a1.21 1.21 0 0 0 1.17 1.25h12.66a1.21 1.21 0 0 0 1.17-1.25z"/><path fill="currentColor" d="M10.56 2.87L6.22 7.22l-.44.44l-.08.08l-1.52 3.16a1.08 1.08 0 0 0 1.45 1.45l3.14-1.53l.53-.53l.43-.43l4.34-4.36l.45-.44l.25-.25a2.18 2.18 0 0 0 0-3.08a2.17 2.17 0 0 0-1.53-.63a2.19 2.19 0 0 0-1.54.63l-.7.69l-.45.44zM5.51 11l1.18-2.43l1.25 1.26zm2-3.36l3.9-3.91l1.3 1.31L8.85 9zm5.68-5.31a.91.91 0 0 1 .65.27a.93.93 0 0 1 0 1.31l-.25.24l-1.3-1.3l.25-.25a.88.88 0 0 1 .69-.25z"/></svg>',
+                    'drag' => '<svg  viewBox="0 0 16 16"><path fill="currentColor" d="m15.46 7l-3.2-2.19l-.71 1l2.29 1.57H8.62V2.16l1.57 2.29l1-.71L9 .54a1.25 1.25 0 0 0-2 0l-2.22 3.2l1 .71l1.59-2.29v5.22H2.16l2.29-1.57l-.71-1L.54 7a1.25 1.25 0 0 0 0 2l3.2 2.19l.71-1l-2.29-1.57h5.21v5.22l-1.56-2.29l-1 .71L7 15.46a1.25 1.25 0 0 0 2.06 0l2.19-3.2l-1-.71l-1.63 2.29V8.62h5.22l-2.29 1.57l.71 1L15.46 9a1.25 1.25 0 0 0 0-2z"/></svg>',
+                    'order' => '<svg  viewBox="0 0 16 16"> <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M5 11.5h4M5 9h6M5 6.5h6m-5.5-4h-2v12h9v-12h-2m-5-1h5l-.625 2h-3.75z"/></svg>',
+                    'seat' => '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 21v-6h16v6h-2v-4H6v4H4Zm-1-7v-3h3v3H3Zm4 0V3h10v11H7Zm11 0v-3h3v3h-3Z"/></svg>',
+                    'globe' => '<svg viewBox="0 0 100 100"><path id="gisGlobe0" fill="currentColor" fill-opacity="1" fill-rule="nonzero" stroke="none" stroke-dasharray="none" stroke-dashoffset="188.976" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke-opacity="1" stroke-width="5" d="M52.5 5.682v20.187h17.676c-.988-2.823-2.13-5.429-3.408-7.75c-3.966-7.2-9-11.541-14.268-12.437zm-5 .197c-4.93 1.223-9.61 5.462-13.342 12.24c-1.278 2.321-2.42 4.927-3.408 7.75H47.5V5.88zM35.98 7.232C25.985 10.5 17.545 17.163 12.01 25.87h13.455c1.187-3.695 2.633-7.112 4.312-10.162c1.793-3.255 3.88-6.123 6.203-8.475zm29.41.463c2.145 2.263 4.082 4.967 5.758 8.012c1.68 3.05 3.123 6.467 4.307 10.162H87.99c-5.28-8.306-13.202-14.761-22.6-18.174zM9.257 30.87A44.79 44.79 0 0 0 5.072 47.5h16.79c.194-5.872.957-11.469 2.202-16.63H9.256zm19.974 0c-1.32 5.077-2.15 10.696-2.363 16.631H47.5V30.87H29.23zm23.27 0V47.5H74.06c-.212-5.935-1.043-11.554-2.364-16.63H52.5zm24.355 0c1.243 5.163 2.004 10.76 2.198 16.631h15.875a44.79 44.79 0 0 0-4.184-16.63h-13.89zM5.072 52.5a44.79 44.79 0 0 0 4.184 16.63h14.572c-1.174-5.176-1.865-10.774-1.994-16.63H5.072zm21.762 0c.14 5.915.901 11.53 2.146 16.63H47.5V52.5H26.834zm25.666 0v16.63h19.445c1.245-5.1 2.006-10.715 2.147-16.63H52.5zm26.576 0c-.129 5.855-.815 11.453-1.986 16.63h13.654a44.79 44.79 0 0 0 4.184-16.63H79.076zM12.01 74.13c5.285 8.313 13.214 14.772 22.62 18.183c-1.785-2.05-3.415-4.407-4.853-7.018c-1.83-3.325-3.389-7.08-4.63-11.164H12.01zm18.394 0c1.062 3.216 2.326 6.159 3.754 8.753c3.5 6.355 7.834 10.475 12.424 11.974c.306.023.61.054.918.07V74.132H30.404zm22.096 0v20.798a45.48 45.48 0 0 0 2.127-.162c4.485-1.575 8.713-5.658 12.14-11.883c1.429-2.594 2.693-5.537 3.754-8.752H52.5zm23.275 0c-1.239 4.085-2.796 7.84-4.627 11.165c-1.311 2.382-2.782 4.556-4.386 6.476a45.06 45.06 0 0 0 21.228-17.64H75.775z" color="currentColor" color-interpolation="sRGB" color-rendering="auto" display="inline" opacity="1" vector-effect="none" visibility="visible"/></svg>',
+                    'setting' => '<svg viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="currentColor" d="M16 15c1.306 0 2.418.835 2.83 2H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2h9.17A3.001 3.001 0 0 1 16 15Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2ZM8 9a3 3 0 0 1 2.762 1.828l.067.172H20a1 1 0 0 1 .117 1.993L20 13h-9.17a3.001 3.001 0 0 1-5.592.172L5.17 13H4a1 1 0 0 1-.117-1.993L4 11h1.17A3.001 3.001 0 0 1 8 9Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2Zm8-8c1.306 0 2.418.835 2.83 2H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2h9.17A3.001 3.001 0 0 1 16 3Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2Z"/></g></svg>',
+                    'status' => '<svg  viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.001 5.2q-.262.385-.445.82a7 7 0 0 0-.157.405c-.165.461-.27.881-.373 1.303l-.005.019c-.132.533-.264 1.067-.525 1.687a5 5 0 0 1-.48.88l-.006.006l-.002.004c2.325.684 4.925-.224 5.868-2.452c.58-1.368.257-3.08-1.052-3.672c-1.054-.476-2.088-.086-2.822 1M3.184 12.023q.147-.447.38-.854q.111-.194.224-.37c.264-.408.532-.742.8-1.076l.026-.031c.335-.42.672-.84.998-1.414q.234-.407.386-.854l.006-.019l.018-.058c1.897 1.55 2.71 4.266 1.52 6.362c-.729 1.289-2.258 2.021-3.487 1.268c-.99-.605-1.29-1.702-.871-2.954M21 17.251c-2.51 0-4.544-2.108-4.544-4.708h-2.654C13.802 16.662 17.025 20 21 20zm-8.663-4.708c0 4.119-3.223 7.457-7.198 7.457v-2.75c2.51 0 4.544-2.107 4.544-4.707zm0 0l-.002-8.324H9.68l.002 8.324z" clip-rule="evenodd"/></svg>',
+                    'category' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/>  <path d="M3 9h18"/>  <path d="M7 16v2"/>  <path d="M17 16v2"/><circle cx="7" cy="18.5" r="0.5" fill="currentColor" stroke="none"/>  <circle cx="17" cy="18.5" r="0.5" fill="currentColor" stroke="none"/></svg>',
+                    'brand_1' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 5-3 8.5-7 11-4-2.5-7-6-7-11V5z"/>  <path d="M9 12l2 2 4-4"/></svg>',
+                    'brand_2' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="8" y1="7" x2="8" y2="7.01"/><line x1="12" y1="7" x2="12" y2="7.01"/><line x1="16" y1="7" x2="16" y2="7.01"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><path d="M9 21v-4h6v4"/></svg>',
+                    'organizer_1' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/>  <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/>  <path d="M17.5 4.5l1 1 2-2"/></svg>',
+                    'organizer_2' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h2"/><path d="M8 12h2"/><path d="M8 16h2"/><path d="M14 8l1.5 1.5L18 7"/><path d="M14 12l1.5 1.5L18 11"/><path d="M14 16l1.5 1.5L18 15"/></svg>',
+                    'date_1' => '<svg viewBox="0 0 48 48">    <path fill="#CFD8DC" d="M5 38V14h38v24c0 2.2-1.8 4-4 4H9c-2.2 0-4-1.8-4-4z"/>    <path fill="#F44336" d="M43 10v6H5v-6c0-2.2 1.8-4 4-4h30c2.2 0 4 1.8 4 4z"/>    <g fill="#B71C1C">        <circle cx="33" cy="10" r="3"/>        <circle cx="15" cy="10" r="3"/>    </g>    <path fill="#B0BEC5" d="M33 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2zM15 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2z"/>    <path fill="#90A4AE" d="M13 20h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg>',
+                    'date_2' => '<svg  viewBox="0 0 64 64">    <path fill="#ba9372" d="M58.1 19.6c-9.8-6-25-14.8-27.1-14.8c-2.1 0-16.7 8.9-26 14.8l-.5-.9C6.9 17.2 28 3.8 31 3.8s25.1 13.4 27.6 15l-.5.8"/>    <path fill="#93a2aa" d="M62 56.8c0 1.6-1.2 3-2.7 3H6.8c-1.5 0-2.7-1.3-2.7-3V21.1c0-1.6 1.2-3 2.7-3h52.5c1.5 0 2.7 1.3 2.7 3v35.7"/>    <path fill="#ed4c5c" d="M60 21.1c0-1.6-1.2-3-2.7-3H4.7c-1.5 0-2.7 1.3-2.7 3v9.5h58v-9.5z"/>    <path fill="#d9e3e8" d="M2 30.6v26.2c0 1.6 1.2 3 2.7 3h52.5c1.5 0 2.7-1.3 2.7-3V30.6H2z"/> <path fill="#93a2aa" d="M4.5 33h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zM28 37.4h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm-47 4.4h6V44h-6zm7.8 0h6V44h-6zm7.9 0h6V44h-6zm7.8 0h6V44h-6zm7.8 0h6V44h-6zm7.9 0h6V44h-6zm7.8 0h6V44h-6zm-47 4.5h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm-47 4.4h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm-47 4.4h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.8 0h6v2.2h-6zm7.9 0h6v2.2h-6z"/><ellipse cx="31.2" cy="6.2" fill="#333" rx="1.8" ry="1.9"/><ellipse cx="31" cy="6.2" fill="#93a2aa" rx="1.8" ry="1.9"/>    <path fill="#fff" d="M19.5 25.5v.2c0 .6.1 1 .2 1.3c.1.2.3.4.7.4c.4 0 .6-.1.7-.4c.1-.2.1-.4.1-.8v-5.5h1.6v5.4c0 .7-.1 1.2-.3 1.6c-.4.7-1 1-2 1s-1.6-.3-2-.8c-.3-.5-.5-1.3-.5-2.2v-.2h1.5m5-4.8h1.6v4.8c0 .5.1.9.2 1.2c.2.4.6.7 1.3.7c.6 0 1.1-.2 1.3-.7c.1-.3.1-.7.1-1.2v-4.8h1.6v4.8c0 .8-.1 1.5-.4 1.9c-.5.8-1.4 1.3-2.7 1.3c-1.3 0-2.2-.4-2.7-1.3c-.3-.5-.4-1.1-.4-1.9c.1 0 .1-4.8.1-4.8m7.7 0h1.6v6.4h3.8v1.4h-5.4v-7.8m10 0H44l-2.6 4.9v2.9h-1.6v-2.9l-2.7-4.9H39l1.6 3.4l1.6-3.4"/></svg>',
+                    'clone_1' => '<svg viewBox="0 0 1792 1792"><path fill="currentColor" d="M1664 1632V544q0-13-9.5-22.5T1632 512H544q-13 0-22.5 9.5T512 544v1088q0 13 9.5 22.5t22.5 9.5h1088q13 0 22.5-9.5t9.5-22.5zm128-1088v1088q0 66-47 113t-113 47H544q-66 0-113-47t-47-113V544q0-66 47-113t113-47h1088q66 0 113 47t47 113zm-384-384v160h-128V160q0-13-9.5-22.5T1248 128H160q-13 0-22.5 9.5T128 160v1088q0 13 9.5 22.5t22.5 9.5h160v128H160q-66 0-113-47T0 1248V160Q0 94 47 47T160 0h1088q66 0 113 47t47 113z"/></svg>',
+                    'clone_2' => '<svg viewBox="0 0 36 36"><path fill="currentColor" d="M24 10V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4V12a2 2 0 0 1 2-2Z" class="clr-i-solid clr-i-solid-path-1"/>    <path fill="currentColor" d="M30 12H14a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V14a2 2 0 0 0-2-2Zm-2 11h-5v5h-2v-5h-5v-2h5v-5h2v5h5Z" class="clr-i-solid clr-i-solid-path-2"/>    <path fill="none" d="M0 0h36v36H0z"/></svg>',
+                    'close_1' => '<svg viewBox="0 0 304 384"><path fill="currentColor" d="M299 73L179 192l120 119l-30 30l-120-119L30 341L0 311l119-119L0 73l30-30l119 119L269 43z"/></svg>',
+                    'close_2' => '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-3.4 14L12 13.4L8.4 17L7 15.6l3.6-3.6L7 8.4L8.4 7l3.6 3.6L15.6 7L17 8.4L13.4 12l3.6 3.6l-1.4 1.4Z"/></svg>',
+                    'view_1' => '<svg viewBox="0 0 24 24" stroke="currentColor"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M2.25.75h19.5s1.5 0 1.5 1.5v19.5s0 1.5-1.5 1.5H2.25s-1.5 0-1.5-1.5V2.25s0-1.5 1.5-1.5"/><path d="M4.267 10.722a1.825 1.825 0 0 0 0 2.544C5.818 14.821 8.591 17.25 12 17.25c3.41 0 6.183-2.428 7.735-3.983a1.825 1.825 0 0 0 0-2.544C18.182 9.168 15.406 6.739 12 6.739s-6.18 2.427-7.733 3.983"/><path d="M9.75 11.991a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 0 0-4.5 0"/></g></svg>',
+                    'view_2' => '<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21c-5 0-11-5-11-9s6-9 11-9s11 5 11 9s-6 9-11 9Zm0-14a5 5 0 1 0 0 10a5 5 0 0 0 0-10Z"/></svg>',
+                    'view_3' => '<svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z"/><path d="M12 13a1 1 0 1 0 0-2a1 1 0 0 0 0 2zm9 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/></g></svg>',
+                    'pdf_1' => '<svg  viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M7.45 5.5a2 2 0 0 0-1.95 2v33.1a2 2 0 0 0 2 2h33.1a2 2 0 0 0 2-2V7.45a2 2 0 0 0-2-1.95Z"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M20.09 30V18h2a6 6 0 0 1 6 6h0a6 6 0 0 1-6 6Zm12.39-11.96h5.98m-5.98 5.98h3.9m-3.9-5.98V30M9.54 30V18h4a4 4 0 0 1 0 8h-4"/></svg>',
+                    '' => '',
+                ];
+                $allowed_svg_tags = [
+                    'svg' => ['class' => true, 'aria-hidden' => true, 'aria-labelledby' => true, 'role' => true, 'xmlns' => true, 'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true,], 'g' => ['fill' => true,], 'title' => ['title' => true,], 'path' => ['d' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true,], 'rect' => ['x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'ry' => true, 'fill' => true, 'stroke' => true,],
+                    'circle' => ['cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true,],
+                    'line' => ['x1' => true, 'y1' => true, 'x2' => true, 'y2' => true, 'stroke' => true, 'stroke-width' => true,],
+                    'polyline' => ['points' => true, 'fill' => true, 'stroke' => true,],
+                ];
+                $icons = $des[$key] ?? '';
+                echo !empty($icons) ? wp_kses($icons, $allowed_svg_tags) : '';
             }
         }
         new ABPTF_Layout();
