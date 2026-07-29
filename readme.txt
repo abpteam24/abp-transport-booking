@@ -1,4 +1,4 @@
-=== ABP TransportForge ===
+=== ABP Transport Booking ===
 Contributors: abpteam
 Tags: transport booking , bus plugin , WooCommerce transport plugin , WordPress transport plugin, Seat Reservation ,
 Requires at least: 6.2
@@ -8,13 +8,13 @@ Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-ABP TransportForge extends WooCommerce into a complete transportation ticketing platform for managing routes, reservations, and ticket sales.
+ABP Transport Booking extends WooCommerce into a complete transportation ticketing platform for managing routes, reservations, and ticket sales.
 
 == Description ==
 
-ABP TransportForge is a WooCommerce-powered transportation booking and ticket management solution for WordPress. Built on top of WooCommerce, it allows transport operators to sell tickets online while leveraging WooCommerce's payment gateways, order management, customer accounts, coupons, and reporting features.
+ABP Transport Booking is a WooCommerce-powered transportation booking and ticket management solution for WordPress. Built on top of WooCommerce, it allows transport operators to sell tickets online while leveraging WooCommerce's payment gateways, order management, customer accounts, coupons, and reporting features.
 
-Whether you operate bus services, ferry routes, shuttle transportation, or other passenger transport businesses, TransportForge provides a complete booking experience with flexible route management, seat reservations, and automated ticket sales.
+Whether you operate bus services, ferry routes, shuttle transportation, or other passenger transport businesses, Transport Booking provides a complete booking experience with flexible route management, seat reservations, and automated ticket sales.
 
 === 🔑 Key Features ===
 
@@ -33,7 +33,7 @@ Whether you operate bus services, ferry routes, shuttle transportation, or other
 * Multi-Currency Support
 * Mobile-Friendly Booking Interface
 
-=== ❓ Why Choose ABP TransportForge?===
+=== ❓ Why Choose ABP Transport Booking?===
 
 - Built on the trusted WooCommerce ecosystem
 - Compatible with most WooCommerce payment gateways
@@ -69,15 +69,15 @@ Whether you operate bus services, ferry routes, shuttle transportation, or other
 
 ## 🚍 All-in-One Transportation Ticketing & Seat Reservation Solution
 
-Built by ABP-TEAM, ABP TransportForge is a powerful WooCommerce-based transportation booking and ticket management solution designed to simplify online ticket sales, seat reservations, and route operations for transport businesses of all sizes.
+Built by ABP-TEAM, ABP Transport Booking is a powerful WooCommerce-based transportation booking and ticket management solution designed to simplify online ticket sales, seat reservations, and route operations for transport businesses of all sizes.
 
-Whether you manage a small local transport service or a large-scale transportation network, TransportForge provides the tools needed to create a seamless booking experience while efficiently managing routes, schedules, passengers, and reservations from a single platform.
+Whether you manage a small local transport service or a large-scale transportation network, Transport Booking provides the tools needed to create a seamless booking experience while efficiently managing routes, schedules, passengers, and reservations from a single platform.
 
-Leveraging the flexibility of WooCommerce, ABP TransportForge enables transport operators to sell tickets online, manage seat availability, automate bookings, and streamline daily operations. From route planning and passenger management to secure checkout and order tracking, TransportForge delivers a modern and scalable solution for today's transportation industry.
+Leveraging the flexibility of WooCommerce, ABP Transport Booking enables transport operators to sell tickets online, manage seat availability, automate bookings, and streamline daily operations. From route planning and passenger management to secure checkout and order tracking, Transport Booking delivers a modern and scalable solution for today's transportation industry.
 
-Designed with performance, flexibility, and ease of use in mind, ABP TransportForge helps businesses reduce administrative workload, improve booking efficiency, and provide a professional ticketing experience for customers.
+Designed with performance, flexibility, and ease of use in mind, ABP Transport Booking helps businesses reduce administrative workload, improve booking efficiency, and provide a professional ticketing experience for customers.
 
-## 🚍 Let's Discover What ABP TransportForge Offers
+## 🚍 Let's Discover What ABP Transport Booking Offers
 
 ### 🔍 Advanced Route Search & Filtering
 
@@ -167,58 +167,58 @@ Need help or have suggestions?
 
 🌐 [Live Demo](https://transportforge.abp-team.com/)
 📖 [Documentation](https://transportforge.abp-team.com/documentation/)
-💬 [Support Forum](https://wordpress.org/support/plugin/abp-transportforge/)
-🐛 [Bug Reports](https://github.com/abpteam24/abp-transportforge/issues)
+💬 [Support Forum](https://wordpress.org/support/plugin/abp-transport-booking/)
+🐛 [Bug Reports](https://github.com/abpteam24/abp-transport-booking/issues)
 📧 Email: support@abp-team.com
 
-If you find TransportForge useful, please leave a ⭐⭐⭐⭐⭐ review on WordPress.org — it really helps!
+If you find Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review on WordPress.org — it really helps!
 
 == Shortcodes ==
 
 Use these shortcodes anywhere on your site:
 
-[abptf-booking]      — Display all Transport listings and booking
-[abptf-post]      — Display all Transport listings
-[abptf-gallery]  — Display all Transport image
+[abptb-booking]      — Display all Transport listings and booking
+[abptb-post]      — Display all Transport listings
+[abptb-gallery]  — Display all Transport image
 
 == Payment Gateways ==
 
-TransportForge does not include a separate payment system. All payments are fully managed by WooCommerce and its supported payment gateways.
+Transport Booking does not include a separate payment system. All payments are fully managed by WooCommerce and its supported payment gateways.
 
 == Theme Compatibility ==
 
-TransportForge is compatible with any well-coded and standards-compliant WordPress theme. It includes responsive frontend templates that adapt to different layouts.
+Transport Booking is compatible with any well-coded and standards-compliant WordPress theme. It includes responsive frontend templates that adapt to different layouts.
 
 == Installation ==
 
 = Automatic Installation (Recommended) =
 
 1. Go to Plugins → Add New in your WordPress dashboard.
-2. Search for "TransportForge".
+2. Search for "Transport Booking".
 3. Click Install Now and then Activate.
 
 = Manual Installation via Upload =
 
-1. Upload the abp-transportforge.zip file to the /wp-content/plugins/ directory.
+1. Upload the abp-transport-booking.zip file to the /wp-content/plugins/ directory.
 2. Activate the plugin from the Plugins menu in WordPress.
-3. Access the "TransportForge" menu from the admin sidebar to start configuration.
+3. Access the "Transport Booking" menu from the admin sidebar to start configuration.
 
 = Installation via FTP =
 
-1. Download the abp-transportforge.zip file.
-2. Extract the abp-transportforge folder on your computer.
+1. Download the abp-transport-booking.zip file.
+2. Extract the abp-transport-booking folder on your computer.
 3. Upload the folder to /wp-content/plugins/ via FTP.
 4. Activate the plugin from the WordPress Plugins dashboard.
 
 == Usage ==
 
-1. Go to TransportForge → Settings and complete the initial setup.
-2. Add your first Transport under TransportForge  → Add New.
+1. Go to Transport Booking → Settings and complete the initial setup.
+2. Add your first Transport under Transport Booking  → Add New.
 3. Configure title, description, and images.
 4. Set pricing (at least one pricing type is required).
 5. Use the shortcode below to display listings on any page:
 
-   [abptf-post]
+   [abptb-post]
 
 == Frequently Asked Questions ==
 
@@ -233,10 +233,10 @@ Yes. Special date settings allow you to override default availability rules.
 .
 
 = Does the plugin work with any WordPress theme? =
-Yes. TransportForge is designed to work with any well-coded WordPress theme and includes responsive frontend templates.
+Yes. Transport Booking is designed to work with any well-coded WordPress theme and includes responsive frontend templates.
 
 = Which payment gateways are supported? =
-TransportForge uses WooCommerce for payments, so all WooCommerce-supported gateways are available.
+Transport Booking uses WooCommerce for payments, so all WooCommerce-supported gateways are available.
 
 = Can I manage multiple Transport? =
 Yes. You can create unlimited Transport, each with individual pricing, availability, and settings.
@@ -246,23 +246,23 @@ Yes. You can create unlimited Transport, each with individual pricing, availabil
 Yes. The plugin is fully translation-ready and compatible with standard WordPress localization tools.
 
 = Does it work in local environments like XAMPP? =
-Yes. TransportForge works perfectly in local development environments such as XAMPP or LocalWP.
+Yes. Transport Booking works perfectly in local development environments such as XAMPP or LocalWP.
 
 = Where can I get support? =
 You can ask questions in the WordPress support forum:
-https://wordpress.org/support/plugin/abp-transportforge/
+https://wordpress.org/support/plugin/abp-transport-booking/
 Our team typically responds within 24–48 hours.
 
 = Do you offer customization services? =
 
-Absolutely! If you require custom features, design modifications, integrations, or any additional functionality for ABP TransportForge, we'd be happy to discuss your requirements.
+Absolutely! If you require custom features, design modifications, integrations, or any additional functionality for ABP Transport Booking, we'd be happy to discuss your requirements.
 
 Simply email us at support@abp-team.com, and our team will review your request and respond as soon as possible.
 
 == Screenshots ==
 
-1. TransportForge Post List Page(Grid View) — Overview of all posts-Clean and filterable grid layout.
-2. TransportForge Post List Page(List View)  — Overview of all posts-Clean and structured list layout.
+1. Transport Booking Post List Page(Grid View) — Overview of all posts-Clean and filterable grid layout.
+2. Transport Booking Post List Page(List View)  — Overview of all posts-Clean and structured list layout.
 3. Order List Page — Overview of all orders.
 4. Global Data Configuration — Clean and flexible global settings panel.
 5. Configuration Panel — Centralized and flexible configuration options.
