@@ -9,10 +9,10 @@
                 $display = $post_infos['display_faq'] ?? 'on';
                 $active_global_faq = $post_infos['active_global_faq'] ?? 'on';
                 if ($display === 'on') {
-                    $faq_infos = ($active_global_faq === 'on') ? ABPTB_Function::get_option('abptb_faqs') : ($post_infos['abptb_faqs'] ?? []);
+                    $faq_infos = ($active_global_faq === 'on') ? ABPTB_Function::get_option('abptb_faq') : ($post_infos['abptb_faq'] ?? []);
                 }
             } elseif ($type === 'global') {
-                $faq_infos = ABPTB_Function::get_option('abptb_faqs');
+                $faq_infos = ABPTB_Function::get_option('abptb_faq');
             }
             if (empty($faq_infos) || !is_array($faq_infos)) {
                 return;

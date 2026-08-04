@@ -10,7 +10,7 @@
 				add_filter('woocommerce_cart_item_thumbnail', array($this, 'cart_item_thumbnail'), 90, 3);
 				add_filter('woocommerce_get_item_data', array($this, 'get_item_data'), 90, 2);
 				//=============================//
-				add_action('woocommerce_after_checkout_validation', array($this, 'after_checkout_validation'));
+				//add_action('woocommerce_after_checkout_validation', array($this, 'after_checkout_validation'));
 				add_action('woocommerce_checkout_create_order_line_item', array($this, 'checkout_create_order_line_item'), 90, 4);
 				add_action('woocommerce_checkout_order_processed', array($this, 'checkout_order_processed'));
 				add_action('woocommerce_store_api_checkout_order_processed', array($this, 'api_checkout_order_processed'));
@@ -51,7 +51,7 @@
 					$cart_item = apply_filters('abptb_add_cart_item_data', $cart_item, $post_id);
 					$_SESSION['abptb_cart_success'] = get_the_title($post_id) . ' ' . __('Add to cart successfully!', 'abp-transport-booking');
 				}
-				echo '<pre>';				print_r($cart_item);				echo '</pre>';				die();
+				//echo '<pre>';				print_r($cart_item);				echo '</pre>';				die();
 				return $cart_item;
 			}
 			public function before_calculate_totals($cart_object): void {
@@ -67,7 +67,7 @@
 					}
 				}
 			}
-			public function cart_item_thumbnail($thumbnail, $cart_item, $item_key) {
+			public function cart_item_thumbnail($thumbnail, $cart_item) {
 				$post_id = $cart_item['post_id'] ?? 0;
 				if (get_post_type($post_id) == ABPTB_Function::get_cpt()) {
 					$url = ABPTB_Function::get_image_url($post_id) ?: ABPTB_BLANK_IMG_URL;
@@ -114,6 +114,7 @@
 					$post_id = $post_infos['post_id'] ?? '';
 					$journey_time = $post_val($prefix . 'journey_time');
 					$start_time = $post_val($prefix . 'start_time');
+					$start_point = $post_val($prefix . 'start_point');
 					$ticket_types = $post_array($prefix . 'item_check');
 					$item_qty = $post_int_array($prefix . 'item_qty');
 					$ticket_price = 0;
@@ -132,6 +133,7 @@
 							$additional_price = self::get_additional_price($additional_info);
 							$booking_info['journey_time'] = $journey_time;
 							$booking_info['start_time'] = $start_time;
+							$booking_info['start_point'] = $start_point;
 							$booking_info['pass_info'] = self::get_passenger_info($post_infos, $prefix);
 							$booking_info['additional_info'] = $additional_info;
 							$booking_info['price'] = $ticket_price;
@@ -195,59 +197,59 @@
 				}
 				return $pass_info;
 			}
-			public function display_cart_item_block($cart_item): array {
-				$start_time = $cart_item['start_time'] ?? '';
-				$end_time = $cart_item['end_time'] ?? '';
-				$duration = $cart_item['duration'] ?? '';
-				$location = $cart_item['location'] ?? '';
-				$ticket_infos = $cart_item['ticket_info'] ?? [];
-				$additional_info = $cart_item['additional_info'] ?? [];
-				$attendee_infos = $cart_item['pass_info'] ?? [];
+			public function display_cart_item_block($booking_infos): array {
 				$item_data = [];
-				if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
-					$item_data[] = array('name' => __('Booking Information', 'abp-transport-booking'), 'value' => '<br />');
-					$item_data[] = array('name' => __('Rent Start', 'abp-transport-booking'), 'value' => ABPTB_Function::date_format($start_time) . '<br />');
-					$item_data[] = array('name' => __('Rent End', 'abp-transport-booking'), 'value' => ABPTB_Function::date_format($end_time) . '<br />');
-					$item_data[] = array('name' => __('Duration', 'abp-transport-booking'), 'value' => $duration . '<br />');
-					if (!empty($location)) {
-						$item_data[] = array('name' => __('Location', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($location) . '<br />');
-					}
-					$item_data[] = array('name' => __('Property Information', 'abp-transport-booking'), 'value' => '<br />');
-					foreach ($ticket_infos as $key => $ticket_info) {
-						$item_data[] = array('name' => __('Name', 'abp-transport-booking'), 'value' => $ticket_info['name'] . '<br />');
-						$item_data[] = array('name' => __('Quantity', 'abp-transport-booking'), 'value' => $ticket_info['qty'] . '<br />');
-						$price = $ticket_info['price'] ?? 0;
-						$price = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
-						$item_data[] = array('name' => __('Rent', 'abp-transport-booking'), 'value' => $price . '<br />');
-						$deposit = $ticket_info['deposit'] ?? '';
-						if (ABPTB_Function::on_off('deposit') && !empty($deposit)) {
-							$item_data[] = array('name' => __('Deposit', 'abp-transport-booking'), 'value' => wc_price($deposit) . '<br />');
-						}
-						$brand = $ticket_info['brand'] ?? '';
-						if (!empty($brand) && ABPTB_Function::on_off('brand')) {
-							$item_data[] = array('name' => ABPTB_Function::brand_label(), 'value' => ABPTB_Function::brand_value($brand) . '<br />');
-						}
-						$item_data = apply_filters('abptb_cart_property_info_block', $item_data, $cart_item, $key);
-					}
-					if (ABPTB_Function::on_off('additional_info') && !empty($additional_info) && sizeof($additional_info) > 0) {
-						$item_data[] = array('name' => __('Additional Information', 'abp-transport-booking'), 'value' => '<br />');
-						foreach ($additional_info as $additional) {
-							if (is_array($additional)) {
-								$qty = $additional['qty'] ?? 1;
-								$price = $additional['price'] ?? 0;
-								$price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
-								$ex_price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
-								$item_data[] = array('name' => $additional['name'] ?? '', 'value' => $price_text . ' X ' . $qty . '  = ' . $ex_price . '<br />');
-							}
-						}
-					}
-					if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
-						$item_data[] = array('name' => __('Client Information', 'abp-transport-booking'), 'value' => '<br />');
-						foreach ($attendee_infos as $attendee_info) {
-							$label = $attendee_info['label'] ?? '';
-							$value = $attendee_info['value'] ?? '';
-							if ($label && $value) {
-								$item_data[] = array('name' => $label, 'value' => $value . '<br />');
+				$booking_info = $booking_infos['booking_infos'] ?? [];
+				if (!empty($booking_info) && sizeof($booking_info) > 0) {
+					$return = '';
+					foreach ($booking_info as $bp_dp => $cart_item) {
+						if (!empty($cart_item)) {
+							$ticket_infos = $cart_item['info'] ?? [];
+							if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
+								$journey_time = $cart_item['journey_time'] ?? '';
+								[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+								$item_data[] = array('name' => __('Booking Information', 'abp-transport-booking') . ' ' . $return, 'value' => '<br />');
+								$item_data[] = array('name' => __('Departure', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($bp) . '<br />');
+								$item_data[] = array('name' => __('Departure Time', 'abp-transport-booking'), 'value' => ABPTB_Function::date_format($journey_time) . '<br />');
+								$item_data[] = array('name' => __('Arrival', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($dp) . '<br />');
+								$item_data[] = array('name' => __('Ticket Information', 'abp-transport-booking'), 'value' => '<br />');
+								foreach ($ticket_infos as $key => $ticket_info) {
+									$item_data[] = array('name' => __('Ticket Name', 'abp-transport-booking'), 'value' => ABPTB_Function::ticket_name($key) . '<br />');
+									$item_data[] = array('name' => __('Quantity', 'abp-transport-booking'), 'value' => ($ticket_info['qty'] ?? 0) . '<br />');
+									$price = $ticket_info['price'] ?? 0;
+									$price = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
+									$item_data[] = array('name' => __('Price', 'abp-transport-booking'), 'value' => $price . '<br />');
+									$item_data = apply_filters('abptb_cart_property_info_block', $item_data, $cart_item, $key);
+								}
+								$additional_info = $cart_item['additional_info'] ?? [];
+								if (ABPTB_Function::on_off('additional_info') && !empty($additional_info) && sizeof($additional_info) > 0) {
+									$item_data[] = array('name' => __('Additional Information', 'abp-transport-booking'), 'value' => '<br />');
+									foreach ($additional_info as $additional) {
+										if (is_array($additional)) {
+											$qty = $additional['qty'] ?? 1;
+											$price = $additional['price'] ?? 0;
+											$price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
+											$ex_price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
+											$item_data[] = array('name' => $additional['name'] ?? '', 'value' => $price_text . ' X ' . $qty . '  = ' . $ex_price . '<br />');
+										}
+									}
+								}
+								$attendee_infos = $cart_item['pass_info'] ?? [];
+								if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
+									$item_data[] = array('name' => __('Client Information', 'abp-transport-booking'), 'value' => '<br />');
+									foreach ($attendee_infos as $attendee_info) {
+										if (!empty($attendee_info)) {
+											foreach ($attendee_info as $attendee) {
+												$label = $attendee['label'] ?? '';
+												$value = $attendee['value'] ?? '';
+												if ($label && $value) {
+													$item_data[] = array('name' => $label, 'value' => $value . '<br />');
+												}
+											}
+										}
+									}
+								}
+								$return = __('( Return )', 'abp-transport-booking');
 							}
 						}
 					}
@@ -298,93 +300,73 @@
 					}
 				}
 			}
-			public function checkout_create_order_line_item($item, $key, $cart_item): void {
-				$post_id = $cart_item['post_id'] ?? 0;
-				if (get_post_type($post_id) == ABPTB_Function::get_cpt()) {
-					$rent_rule = $cart_item['rent_rule'] ?? '';
-					$start_time = $cart_item['start_time'] ?? '';
-					$end_time = $cart_item['end_time'] ?? '';
-					$book_from = ($rent_rule == 'daily' || $rent_rule == 'monthly') ? $start_time : ABPTB_Function::booking_buffer($start_time);
-					$book_to = ($rent_rule == 'daily' || $rent_rule == 'monthly') ? $end_time : ABPTB_Function::booking_buffer($end_time, true);
-					$start_time = $cart_item['start_time'] ?? '';
-					$end_time = $cart_item['end_time'] ?? '';
-					$duration = $cart_item['duration'] ?? '';
-					$location = $cart_item['location'] ?? '';
-					$ticket_infos = $cart_item['ticket_info'] ?? [];
-					$additional_infos = $cart_item['additional_info'] ?? [];
-					$attendee_infos = $cart_item['pass_info'] ?? [];
-					if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
-						$item->add_meta_data(__('Booking Information', 'abp-transport-booking'), '');
-						$item->add_meta_data(__('Rent Start', 'abp-transport-booking'), ABPTB_Function::date_format($start_time));
-						$item->add_meta_data(__('Rent End', 'abp-transport-booking'), ABPTB_Function::date_format($end_time));
-						$item->add_meta_data(__('Duration', 'abp-transport-booking'), $duration);
-						if (!empty($location)) {
-							$item->add_meta_data(ABPTB_Function::location_label(), ABPTB_Function::location_value($location));
-						}
-						$item->add_meta_data(__('Property Information', 'abp-transport-booking'), '');
-						$all_brand = '';
-						foreach ($ticket_infos as $ticket_info) {
-							$item->add_meta_data(__('Property Name', 'abp-transport-booking'), $ticket_info['name']);
-							$item->add_meta_data(__('Quantity', 'abp-transport-booking'), $ticket_info['qty']);
-							$price = $ticket_info['price'] ?? 0;
-							$price = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
-							$item->add_meta_data(__('Rent', 'abp-transport-booking'), $price);
-							$deposit = $ticket_info['deposit'] ?? '';
-							if (ABPTB_Function::on_off('deposit') && !empty($deposit)) {
-								$item->add_meta_data(__('Deposit', 'abp-transport-booking'), wc_price($deposit));
-							}
-							$brand = $ticket_info['brand'] ?? '';
-							$all_brand = !empty($all_brand) ? $all_brand . ',' . $brand : $brand;
-							if (!empty($brand) && ABPTB_Function::on_off('brand')) {
-								$item->add_meta_data(ABPTB_Function::brand_label(), ABPTB_Function::brand_value($brand));
-							}
-						}
-						if (ABPTB_Function::on_off('additional_info') && !empty($additional_infos) && sizeof($additional_infos) > 0) {
-							$item->add_meta_data(__('Additional Information', 'abp-transport-booking'), '');
-							foreach ($additional_infos as $additional) {
-								$name = $additional['name'] ?? '';
-								$qty = $additional['qty'] ?? 1;
-								$price = $additional['price'] ?? 0;
-								$price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
-								if (!empty($name) && $qty > 0) {
-									$ex_price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
-									$item->add_meta_data($name, '  ( ' . $price_text . ' X ' . $qty . ') = ' . $ex_price);
+			public function checkout_create_order_line_item($item, $_key, $booking_infos): void {
+				$booking_info = $booking_infos['booking_infos'] ?? [];
+				$post_id = $booking_infos['post_id'] ?? 0;
+				if (get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
+					$return = '';
+					foreach ($booking_info as $bp_dp => $cart_item) {
+						if (!empty($cart_item)) {
+							$ticket_infos = $cart_item['info'] ?? [];
+							if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
+								$journey_time = $cart_item['journey_time'] ?? '';
+								[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+								$additional_infos = $cart_item['additional_info'] ?? [];
+								$attendee_infos = $cart_item['pass_info'] ?? [];
+								$item->add_meta_data(__('Booking Information', 'abp-transport-booking') . ' ' . $return, '');
+								$item->add_meta_data(__('Departure', 'abp-transport-booking'), ABPTB_Function::location_value($bp));
+								$item->add_meta_data(__('Departure Time: ', 'abp-transport-booking'), ABPTB_Function::date_format($journey_time));
+								$item->add_meta_data(__('Arrival : ', 'abp-transport-booking'), ABPTB_Function::location_value($dp));
+								$item->add_meta_data(__('Ticket Information', 'abp-transport-booking'), '');
+								foreach ($ticket_infos as $key => $ticket_info) {
+									if (!is_array($ticket_info)) {
+										continue;
+									}
+									$price = $ticket_info['price'] ?? 0;
+									$price_html = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
+									$item->add_meta_data(__('Ticket Name', 'abp-transport-booking'), ABPTB_Function::ticket_name($key));
+									$item->add_meta_data(__('Quantity', 'abp-transport-booking'), ($ticket_info['qty'] ?? 1));
+									$item->add_meta_data(__('Price ', 'abp-transport-booking'), $price_html);
 								}
-							}
-						}
-						if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
-							$item->add_meta_data(__('Client Information', 'abp-transport-booking'), '');
-							foreach ($attendee_infos as $attendee_info) {
-								$label = $attendee_info['label'] ?? '';
-								$value = $attendee_info['value'] ?? '';
-								if (!empty($label) && !empty($value)) {
-									$item->add_meta_data($label, $value);
+								if (ABPTB_Function::on_off('additional_info') && !empty($additional_infos) && sizeof($additional_infos) > 0) {
+									$item->add_meta_data(__('Additional Information', 'abp-transport-booking'), '');
+									foreach ($additional_infos as $additional) {
+										$name = $additional['name'] ?? '';
+										$qty = $additional['qty'] ?? 1;
+										$price = $additional['price'] ?? 0;
+										$price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
+										if (!empty($name) && $qty > 0) {
+											$ex_price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
+											$item->add_meta_data($name, '  ( ' . $price_text . ' X ' . $qty . ') = ' . $ex_price);
+										}
+									}
 								}
+								if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
+									$item->add_meta_data(__('Client Information', 'abp-transport-booking'), '');
+									foreach ($attendee_infos as $attendee_info) {
+										if (!empty($attendee_info)) {
+											foreach ($attendee_info as $attendee) {
+												$label = $attendee['label'] ?? '';
+												$value = $attendee['value'] ?? '';
+												if (!empty($label) && !empty($value)) {
+													$item->add_meta_data($label, $value);
+												}
+											}
+										}
+									}
+								}
+								//=============================//
 							}
 						}
-						//=============================//
-						$item_info = [
-							'post_id' => $post_id,
-							'user_id' => get_current_user_id(),
-							'start_time' => $start_time,
-							'end_time' => $end_time,
-							'book_from' => $book_from,
-							'book_to' => $book_to,
-							'duration' => $duration,
-							'location' => $location,
-							'brand' => $all_brand,
-							'rent_rule' => $rent_rule,
-							'ticket_info' => $ticket_infos,
-							'additional_info' => $additional_infos,
-							'pass_info' => $attendee_infos,
-							'rent' => $cart_item['rent'] ?? '',
-							'ex_price' => $cart_item['ex_price'] ?? '',
-							'deposit' => $cart_item['deposit'] ?? '',
-							'item_total' => $cart_item['total_price'] ?? '',
-						];
-						$item_info = apply_filters('abptb_checkout_create_order_line_item', $item_info, $cart_item);
-						$item->add_meta_data('_abptb_items', $item_info, true);
 					}
+					$item_info = [
+						'post_id' => $post_id,
+						'user_id' => get_current_user_id(),
+						'booking_infos' => $booking_info,
+						'item_total' => $cart_item['total_price'] ?? '',
+					];
+					$item_info = apply_filters('abptb_checkout_create_order_line_item', $item_info, $booking_infos);
+					$item->add_meta_data('_abptb_items', $item_info, true);
 				}
 			}
 			public static function save_custom_data($order_id): void {
@@ -402,75 +384,79 @@
 					$_billing_address_2 = $order_meta['_billing_address_2'][0] ?? '';
 					$billing_name = $_billing_first_name . ' ' . $_billing_last_name;
 					$billing_address = $_billing_address_1 . ' ' . $_billing_address_2;
-					$booked_status = ABPTB_Function::booking_status();
-					$booked_status = $booked_status ? explode(',', $booked_status) : [];
 					if ($order_status != 'failed') {
 						$total_order = ABPTB_Query::get_booking_query(['order_id' => $order_id], 0, 0, true);
 						if ($total_order == 0) {
 							foreach ($order->get_items() as $item_id => $item) {
-								$item_info = wc_get_order_item_meta($item_id, '_abptb_items');
-								if (!empty($item_info) && is_array($item_info) && sizeof($item_info) > 0) {
-									$post_id = $item_info['post_id'] ?? '';
-									if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt()) {
-										$ticket_infos = $item_info['ticket_info'] ?? [];
-										$start_time = $item_info['start_time'] ?? '';
-										$end_time = $item_info['end_time'] ?? '';
-										$book_from = $item_info['book_from'] ?? '';
-										$book_to = $item_info['book_to'] ?? '';
-										$additional_info = $item_info['additional_info'] ?? '';
-										global $wpdb;
-										$table_name = $wpdb->prefix . 'abptb_orders';
-										if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
-											$property_id = $ex_id = [];
-											foreach ($ticket_infos as $key => $ticket_info) {
-												$property_id[] = $key;
-											}
-											if (!empty($additional_info) && sizeof($additional_info) > 0) {
-												foreach ($additional_info as $key => $additional) {
-													$ex_id[] = $key;
+								$item_infos = wc_get_order_item_meta($item_id, '_abptb_items');
+								if (!empty($item_infos) && is_array($item_infos) && sizeof($item_infos) > 0) {
+									$post_id = $item_infos['post_id'] ?? '';
+									$booking_info = $item_infos['booking_infos'] ?? [];
+									if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
+										foreach ($booking_info as $bp_dp => $item_info) {
+											if (!empty($item_info)) {
+												$ticket_infos = $item_info['info'] ?? [];
+												[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+												$additional_info = $item_info['additional_info'] ?? [];
+												global $wpdb;
+												$table_name = $wpdb->prefix . 'abptb_orders';
+												if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
+													$ticket_id = $ex_id = [];
+													$qty=0;
+													foreach ($ticket_infos as $key => $ticket_info) {
+														$ticket_id[] = $key;
+														$qty=$qty+($ticket_info['qty'] ?? 1);
+													}
+													if (!empty($additional_info) && sizeof($additional_info) > 0) {
+														foreach ($additional_info as $key => $additional) {
+															$ex_id[] = $key;
+														}
+													}
+													$others = [];
+													$_order_status = 'wc-' . $order_status;
+													$data = [
+														'order_id' => intval($order_id),
+														'item_id' => intval($item_id),
+														'post_id' => intval($post_id),
+														'user_id' => intval($user_id),
+														'start_point' => intval($item_info['start_point'] ?? ''),
+														'start_time' => sanitize_text_field($item_info['start_time'] ?? ''),
+														'bp_dp' => sanitize_text_field($bp_dp),
+														'bp' => intval($bp),
+														'dp' => intval($dp),
+														'bp_time' => sanitize_text_field($item_info['journey_time'] ?? ''),
+														'dp_time' => sanitize_text_field($item_info['end_time'] ?? ''),
+														'pick_up' => sanitize_text_field($item_info['pick_up'] ?? ''),
+														'pick_up_time' => sanitize_text_field($item_info['pick_up_time'] ?? ''),
+														'drop_off' => sanitize_text_field($item_info['drop_off'] ?? ''),
+														'drop_off_time' => sanitize_text_field($item_info['drop_off_time'] ?? ''),
+														'sp_id' => intval($item_info['sp_id'] ?? ''),
+														'ticket_info' => wp_json_encode($ticket_infos),
+														'ticket_id' => wp_json_encode($ticket_id),
+														'qty' => intval($qty),
+														'price' => sanitize_text_field($item_info['price'] ?? ''),
+														'ex_info' => wp_json_encode($additional_info),
+														'ex_id' => wp_json_encode($ex_id),
+														'ex_price' => sanitize_text_field($item_info['ex_price'] ?? ''),
+														'total' => sanitize_text_field($item_info['total'] ?? ''),
+														'pass_info' => wp_json_encode($item_info['pass_info'] ?? []),
+														'checkin' => 0,
+														'female' => 0,
+														'book_type' => 0,
+														'order_status' => sanitize_text_field($_order_status),
+														'payment_method' => sanitize_text_field($payment_method),
+														'billing_name' => sanitize_text_field($billing_name),
+														'billing_email' => sanitize_text_field($billing_email),
+														'billing_phone' => sanitize_text_field($billing_phone),
+														'billing_address' => sanitize_text_field($billing_address),
+														'others' => wp_json_encode($others),
+														'created_at' => current_time('Y-m-d H:i'),
+														'updated_at' => current_time('Y-m-d H:i')
+													];
+													// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+													$wpdb->insert($table_name, $data);
 												}
 											}
-											$price_info['rent'] = $item_info['rent'] ?? '';
-											$price_info['ex_price'] = $item_info['ex_price'] ?? '';
-											$price_info['deposit'] = $item_info['deposit'] ?? '';
-											$price_info['item_total'] = $item_info['item_total'] ?? '';
-											$others['rent_rule'] = $item_info['rent_rule'] ?? '';
-											$others['duration'] = $item_info['duration'] ?? '';
-											$_order_status = 'wc-' . $order_status;
-											$data = [
-												'order_id' => intval($order_id),
-												'item_id' => intval($item_id),
-												'post_id' => intval($post_id),
-												'user_id' => intval($user_id),
-												'property_id' => wp_json_encode($property_id),
-												'ex_id' => wp_json_encode($ex_id),
-												'pick_up' => sanitize_text_field($item_info['pick_up'] ?? ''),
-												'start_time' => sanitize_text_field($start_time),
-												'drop_off' => sanitize_text_field($item_info['drop_off'] ?? ''),
-												'end_time' => sanitize_text_field($end_time),
-												'book_from' => sanitize_text_field($book_from),
-												'book_to' => sanitize_text_field($book_to),
-												'category' => sanitize_text_field(get_post_meta($post_id, 'category', true)),
-												'location' => sanitize_text_field($item_info['location'] ?? ''),
-												'brand' => sanitize_text_field($item_info['brand'] ?? ''),
-												'price_info' => wp_json_encode($price_info),
-												'property_info' => wp_json_encode($ticket_infos),
-												'ex_info' => wp_json_encode($additional_info),
-												'pass_info' => wp_json_encode($item_info['pass_info'] ?? []),
-												'delivery_option' => 0,
-												'book_status' => in_array($_order_status, $booked_status) ? 1 : 0,
-												'order_status' => sanitize_text_field($_order_status),
-												'payment_method' => sanitize_text_field($payment_method),
-												'billing_name' => sanitize_text_field($billing_name),
-												'billing_email' => sanitize_text_field($billing_email),
-												'billing_phone' => sanitize_text_field($billing_phone),
-												'billing_address' => sanitize_text_field($billing_address),
-												'others' => wp_json_encode($others),
-												'created_at' => current_time('Y-m-d H:i'),
-												'updated_at' => current_time('Y-m-d H:i')
-											];
-											// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-											$wpdb->insert($table_name, $data);
 										}
 									}
 								}

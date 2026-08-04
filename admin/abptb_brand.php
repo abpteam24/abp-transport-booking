@@ -18,6 +18,7 @@
                         <h5 class="_abp"><span class="_mar_r_xs">🏷️</span><?php echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('tax_brand', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
+                    <?php ABPTB_Layout::info_text('abptb_brand'); ?>
                     <div class="tax_brand _ov_auto_mar_t_xs">
                         <?php $this->brand_list(); ?>
                     </div>
@@ -194,8 +195,8 @@
                                 <th>
                                     <div class="_fj_center">
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_brand','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">✍️</button>
-                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_brand','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">❌</button>
+                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_brand','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_brand','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                         </div>
                                     </div>
                                 </th>

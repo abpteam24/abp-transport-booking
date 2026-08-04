@@ -3,7 +3,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
 (function ($) {
     'use strict';
     let seat_groups = [
-        {id: 1, label: 'Default', color: '#1D9E75', prefix: '', icon: '🎟️', type: 'seat'},
+        {id: 1, label: 'Default', color: '', prefix: '', icon: '🎟️', type: 'seat'},
         {id: 2, label: 'VIP', color: '#A78BFA', prefix: 'VIP-', icon: '👑', type: 'seat'},
         {id: 3, label: 'Business Class', color: '#0EA5E9', prefix: 'B-', icon: '🛋️', type: 'seat'},
         {id: 4, label: 'Special', color: '#6366F1', prefix: 'S-', icon: '⭐', type: 'seat'},
@@ -28,7 +28,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         {id: 11, label: 'Emergency Exit', color: '#EF4444', icon: '🚨', type: 'other'},
     ];
     abptb_decor_item = (abptb_decor_item && abptb_decor_item.length) ? abptb_decor_item : decor_items;
-    let activeGroup = abptb_ticket_type[1];
+    let activeGroup = '';
     let lastClickedIndex = null;
     let isDraggingSelection = false;
     let dragSourceCell = null;
@@ -52,6 +52,9 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
                     target.html(response.data.html).promise().done(function () {
                         abptb_init(target);
                         abptb_sp_init();
+                        setTimeout(function () {
+                            abptb_color_picker_init(target);
+                        }, 50);
                         abptb_toast_msg(response.data.msg, response.data.type);
                     });
                 }
@@ -119,12 +122,13 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
             id: sp_parent.find('#sp_saved_data').data('id') || '',
             name: sp_parent.find('.sp_name').val() || '',
             bg_image: sp_parent.find('.image_selection input').val(),
-            color: sp_parent.find('input[name="bg_color"]').val(),
+            bg_color: sp_parent.find('input[name="bg_color"]').val(),
             rows: sp_parent.find('.sp_rows').val(),
             cols: sp_parent.find('.sp_cols').val(),
             width: sp_parent.find('.sp_width').val(),
             height: sp_parent.find('.sp_height').val(),
             gap: sp_parent.find('.sp_gap').val(),
+            radius: sp_parent.find('.sp_radius').val(),
             layout_data: JSON.stringify(initialLayout),
             seat_info: JSON.stringify(typeCounts),
             nonce: abptb_sp_config.nonce
@@ -144,6 +148,9 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
     window.abptb_sp_init = function () {
         if (sp_parent.find('.sp_builder').length === 0) return;
         initialLayout = sp_parent.find('#sp_saved_data').data('layout') || [];
+        activeGroup = '';
+        lastClickedIndex = null;
+        isCloningMode=false;
         renderSidebarGroups();
         generateGrid();
     };
@@ -166,14 +173,17 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         generateGrid();
     };
     window.abptb_sp_cell_wh = function () {
-        let w = parseInt(sp_parent.find('.sp_width').val());
-        let h = parseInt(sp_parent.find('.sp_height').val());
-        let gap = parseInt(sp_parent.find('.sp_gap').val());
+        let w = parseInt(sp_parent.find('.sp_width').val()) || 50;
+        let h = parseInt(sp_parent.find('.sp_height').val()) || 50;
+        let gap = parseInt(sp_parent.find('.sp_gap').val()) || 0;
+        let radius = parseInt(sp_parent.find('.sp_radius').val()) || 0;
         sp_parent.find('.sp_canvas').css({'gap': gap + 'px'});
         sp_parent.find('.sp_cell').each(function () {
             let c = parseInt($(this).data('c-span')) || 1;
             let r = parseInt($(this).data('r-span')) || 1;
-            $(this).css({'width': (w * c) + 'px', 'height': (h * r) + 'px'});
+            let w_gap = c > 1 ? gap * c : 0;
+            let h_gap = r > 1 ? gap * r : 0;
+            $(this).css({'width': (w * c + w_gap) + 'px', 'height': (h * r + h_gap) + 'px', 'border-radius': radius + 'px'});
         });
     };
     window.abptb_sp_cell_design = function () {
@@ -195,15 +205,13 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         }
         if (initialLayout[baseIndex]) {
             let name = sp_parent.find('.custom_label').val() || '';
-            if (newCSpan > 1) {
+            if (newCSpan > 0) {
                 initialLayout[baseIndex].width_ratio = newCSpan;
             }
-            if (newRSpan > 1) {
+            if (newRSpan > 0) {
                 initialLayout[baseIndex].height_ratio = newRSpan;
             }
-            if (name) {
-                initialLayout[baseIndex].name = name;
-            }
+            initialLayout[baseIndex].name = name;
             if (font_size && font_size >= 8) {
                 initialLayout[baseIndex].fs = font_size;
             }
@@ -221,15 +229,27 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         e.preventDefault();
         let id = $(this).data('id');
         let type = $(this).data('type');
-        activeGroup = (type === 'seat') ? abptb_ticket_type.find(g => g.id === id) : abptb_decor_item.find(g => g.id === id);
+        activeGroup = (type === 'seat') ? abptb_ticket_type.find(g => String(g.id) === String(id)) : abptb_decor_item.find(g => String(g.id) === String(id));
+       // console.log(activeGroup);
         highlightActiveGroup();
+    });
+    sp_parent.on('click', '.sp_builder', function (e) {
+        if ($(e.target).closest('.sp_canvas').length) {
+            return;
+        }
+        e.preventDefault();
+        sp_parent.find('.sp_tab_content .selected').removeClass('selected');
+        activeGroup = '';
+        lastClickedIndex = null;
+        isCloningMode=false;
     });
     sp_parent.on('click', '.sp_tab', function () {
         sp_parent.find('.sp_tab, .sp_tab_content').removeClass('abp_active');
         $(this).addClass('abp_active');
         let targetTab = $(this).data('tab');
         sp_parent.find(`#${targetTab}`).addClass('abp_active');
-        activeGroup = (targetTab === 'sp_tab_seats') ? abptb_ticket_type[1] : abptb_decor_item[1];
+        activeGroup = '';
+        lastClickedIndex = null;
         highlightActiveGroup();
     });
     sp_parent.on('click', '.sp_rotation', function (e) {
@@ -240,7 +260,6 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         if (currentRotation === 0) nextRotation = 90;
         else if (currentRotation === 90) nextRotation = 180;
         else if (currentRotation === 180) nextRotation = 270;
-        else nextRotation = 0;
         cell.attr('data-rotate', nextRotation);
         cell.removeClass('rotate-90 rotate-180 rotate-270');
         if (nextRotation !== 0) cell.addClass(`rotate-${nextRotation}`);
@@ -250,6 +269,12 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
     sp_parent.on('mousedown', '.sp_cell', function (e) {
         if ($(e.target).closest('.sp_rotation').length) return;
         let targetCell = $(this).closest('.sp_cell');
+        let type = targetCell.attr('data-cell-type');
+        let id = targetCell.attr('data-group-id');
+        let target_tab = 'sp_tab_' + type;
+        if (activeGroup && String(activeGroup.id) === String(id) && activeGroup.type === type) {
+            return;
+        }
         if (e.altKey) {
             dragSourceCell = targetCell;
             isCloningMode = true;
@@ -259,6 +284,15 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         let currentIndex = targetCell.data('index');
         if (e.ctrlKey) {
             applyGroupToCell(targetCell);
+        } else if (lastClickedIndex === null && !activeGroup) {
+            activeGroup = (type === 'seat') ? abptb_ticket_type.find(g => String(g.id) === String(id)) : abptb_decor_item.find(g => String(g.id) === String(id));
+            console.log(activeGroup);
+            lastClickedIndex = currentIndex;
+            sp_parent.find('.sp_tab, .sp_tab_content').removeClass('abp_active');
+            sp_parent.find('[data-tab="' + target_tab + '"]').addClass('abp_active');
+            sp_parent.find(`#${target_tab}`).addClass('abp_active');
+            highlightActiveGroup();
+            //alert('yes');
         } else if (e.shiftKey && lastClickedIndex !== null) {
             let start = Math.min(lastClickedIndex, currentIndex);
             let end = Math.max(lastClickedIndex, currentIndex);
@@ -296,22 +330,19 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         let targetIndex = targetCell.data('index');
         let type = dragSourceCell.attr('data-cell-type');
         let groupId = dragSourceCell.attr('data-group-id');
-        let color = dragSourceCell.css('background-color');
-        let icon = dragSourceCell.attr('data-icon');
-        let img = dragSourceCell.attr('data-img');
         let cSpan = dragSourceCell.attr('data-c-span') || 1;
         let rSpan = dragSourceCell.attr('data-r-span') || 1;
         let fs = dragSourceCell.attr('data-fs') || 12;
         let rotate = dragSourceCell.attr('data-rotate') || 0;
         let finalName = dragSourceCell.find('.cell_label').text();
         if (type === 'seat') {
-            let activeSeatGroup = abptb_ticket_type.find(g => g.id === groupId);
+            let activeSeatGroup = abptb_ticket_type.find(g => String(g.id) === String(groupId));
             let prefix = activeSeatGroup ? activeSeatGroup.prefix : 'S-';
             finalName = prefix + (targetIndex + 1);
         }
         syncLayoutFromDOM();
         initialLayout[targetIndex] = {
-            index: targetIndex, type: type, id: groupId, name: finalName, color: color, icon: icon, img: img, fs: parseInt(fs),
+            index: targetIndex, type: type, id: groupId, name: finalName, fs: parseInt(fs),
             width_ratio: parseInt(cSpan), height_ratio: parseInt(rSpan), rotate: parseInt(rotate)
         };
         isCloningMode = false;
@@ -339,8 +370,14 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         sp_parent.find('.custom_font_size').val(activeCellForSpan.attr('data-fs') || 12);
         sp_parent.find('.custom_label').val(activeCellForSpan.find('.cell_label').text().trim() || '');
         sp_parent.find('.span_control').slideDown();
+        isCloningMode=false;
     });
     /**********************************/
+    function cell_data(type, id, key = 'icon') {
+        let list = (type === 'seat') ? abptb_ticket_type : abptb_decor_item;
+        let matchedItem = list.find(g => String(g.id) === String(id));
+        return matchedItem?.[key] ?? '';
+    }
     function highlightActiveGroup() {
         sp_parent.find('.group_item').removeClass('selected');
         sp_parent.find(`.group_item[data-id="${activeGroup.id}"][data-type="${activeGroup.type}"]`).addClass('selected');
@@ -349,13 +386,13 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         let seatHtml = '', otherHtml = '';
         abptb_ticket_type.forEach(g => {
             let icon = img_icon_emoji(g);
-            seatHtml += `<div class="group_item _fj_between" data-id="${g.id}" data-type="seat">
+            seatHtml += `<div class="group_item _fj_between" style="color:${g.color}"  data-id="${g.id}" data-type="seat">
                                             <div class="_fa_center_gap_xs_padding_xs"><span class="color_badge" style="background:${g.color}"></span>${icon}<span>${g.label}</span><strong class="group_count _color_theme">(0)</strong></div>
                                             <label><input type="text" class="_form_control" value="${g.prefix}" placeholder="Seat Prefix"></label></div>`;
         });
         abptb_decor_item.forEach(g => {
             let icon = img_icon_emoji(g);
-            otherHtml += `<div class="group_item _padding_xs" data-id="${g.id}" data-type="other"> <span class="color_badge" style="background:${g.color}"></span>${icon}<span>${g.label}</span><strong class="group_count _color_theme">(0)</strong></div>`;
+            otherHtml += `<div class="group_item _padding_xs" style="color:${g.color}" data-id="${g.id}" data-type="other"> <span class="color_badge" style="background:${g.color}"></span>${icon}<span>${g.label}</span><strong class="group_count _color_theme">(0)</strong></div>`;
         });
         sp_parent.find('.sp_group_seats').html(seatHtml);
         sp_parent.find('.sp_group_others').html(otherHtml);
@@ -363,61 +400,68 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
     }
     function applyGroupToCell(element) {
         let cell = $(element).closest('.sp_cell');
-        if (cell.attr('data-cell-type') === activeGroup.type && cell.attr('data-group-id') === activeGroup.id) {
+        if (cell.attr('data-cell-type') === activeGroup.type && String(cell.attr('data-group-id')) === String(activeGroup.id)) {
             return;
         }
         let index = cell.data('index');
         if (index === undefined) return;
-        let finalName = '';
+        let finalName = cell.find('.cell_label').text();
         if (activeGroup.type === 'seat') {
             let currentPrefix = sp_parent.find('.group_item.selected input').val() || '';
             finalName = currentPrefix + get_seat_name(activeGroup.id);
         }
+        //console.log(activeGroup);
+        let color = cell_data(activeGroup.type, activeGroup.id, 'color');
+        let img = cell_data(activeGroup.type, activeGroup.id, 'img');
+        let icon = cell_data(activeGroup.type, activeGroup.id);
         cell.attr('data-cell-type', activeGroup.type);
         cell.attr('data-group-id', activeGroup.id);
-        cell.attr('data-icon', activeGroup.icon);
-        cell.attr('data-img', activeGroup.img);
-        cell.css('background', activeGroup.color);
         cell.find('.cell_icon').text('').attr('class', 'cell_icon');
-        if (activeGroup.type === 'other' && activeGroup.id === 0) {
+        cell.css('color', color);
+        if (activeGroup.type === 'other' && activeGroup.id === 1) {
             cell.find('.cell_content').css('background', 'transparent');
-            cell.find('.cell_label').css('color', 'initial');
         } else {
-            if (activeGroup.img) {
-                cell.find('.cell_content').css('background', ' url("' + activeGroup.img + '")');
-                cell.find('.cell_label').css('color', activeGroup.color);
+            if (img) {
+                cell.find('.cell_content').css('background', ' url("' + img + '")');
             } else {
                 cell.find('.cell_content').css('background', 'transparent');
-                cell.find('.cell_label').css('color', 'initial');
-                if (abptb_emoji_check(activeGroup.icon)) {
-                    cell.find('.cell_icon').text(activeGroup.icon);
+                if (abptb_emoji_check(icon)) {
+                    cell.find('.cell_icon').text(icon);
                 } else {
-                    cell.find('.cell_icon').addClass(activeGroup.icon);
+                    cell.find('.cell_icon').addClass(icon);
                 }
             }
         }
-        if (finalName.length > 0) {
-            cell.find('.cell_label').text(finalName);
-        }
+        cell.find('.cell_label').text(finalName);
         updateLiveCounters();
     }
     function syncLayoutFromDOM() {
         initialLayout = [];
         sp_parent.find('.sp_cell').each(function () {
             let cell = $(this);
-            initialLayout.push({
+            let width_ratio = parseInt(cell.attr('data-c-span')) || 1;
+            let height_ratio = parseInt(cell.attr('data-r-span')) || 1;
+            let rotate = parseInt(cell.attr('data-rotate')) || 0;
+            let fs = parseInt(cell.attr('data-fs'));
+            let cellData = {
                 index: cell.data('index'),
                 type: cell.attr('data-cell-type') || 'other',
                 id: cell.attr('data-group-id') || 1,
-                color: cell.css('background-color'),
                 name: cell.find('.cell_label').text(),
-                icon: cell.attr('data-icon') || '',
-                img: cell.attr('data-img') || '',
-                width_ratio: parseInt(cell.attr('data-c-span')) || 1,
-                height_ratio: parseInt(cell.attr('data-r-span')) || 1,
-                fs: parseInt(cell.attr('data-fs')) || 12,
-                rotate: parseInt(cell.attr('data-rotate')) || 0
-            });
+            };
+            if (width_ratio > 1) {
+                cellData.width_ratio = width_ratio;
+            }
+            if (height_ratio > 1) {
+                cellData.height_ratio = height_ratio;
+            }
+            if (rotate > 0) {
+                cellData.rotate = rotate;
+            }
+            if (fs !== 12) {
+                cellData.fs = fs;
+            }
+            initialLayout.push(cellData);
         });
     }
     function generateGrid() {
@@ -425,6 +469,8 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         let cols = parseInt(sp_parent.find('.sp_cols').val()) || 10;
         let w = parseInt(sp_parent.find('.sp_width').val()) || 50;
         let h = parseInt(sp_parent.find('.sp_height').val()) || 50;
+        let gap = parseInt(sp_parent.find('.sp_gap').val()) || 0;
+        let radius = parseInt(sp_parent.find('.sp_radius').val()) || 0;
         sp_parent.find('.sp_canvas').css({'grid-template-columns': `repeat(${cols}, minmax(max-content, 1fr))`});
         let canvas = sp_parent.find('.sp_canvas').empty();
         let totalCells = rows * cols;
@@ -450,17 +496,20 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
             let cSpan = cellData.width_ratio || 1;
             let rSpan = cellData.height_ratio || 1;
             let fs = cellData.fs || 12;
+            let img = cell_data(cellData.type, cellData.id, 'img');
+            let icon = cell_data(cellData.type, cellData.id);
+            let color = cell_data(cellData.type, cellData.id, 'color');
             let rotationDegree = cellData.rotate || 0;
-            let cellStyle = `min-width:${w * cSpan}px; min-height:${h * rSpan}px; background:${cellData.color || 'transparent'}; grid-column: span ${cSpan}; grid-row: span ${rSpan};font-size:${fs}px;`;
+            let gap_width = cSpan > 1 && gap > 0 ? (cSpan - 1) * gap : 0;
+            let gap_height = rSpan > 1 && gap > 0 ? (rSpan - 1) * gap : 0;
+            let cellStyle = `width:${w * cSpan + gap_width}px; height:${h * rSpan + gap_height}px; color:${color}; grid-column: span ${cSpan}; grid-row: span ${rSpan};font-size:${fs}px;border-radius:${radius}px`;
             let classes = `sp_cell ${hiddenMap[i] ? 'cell_hidden' : ''} ${rotationDegree ? 'rotate-' + rotationDegree : ''}`;
-            let img = cellData.img || '';
-            let color = img ? cellData.color : 'initial';
             let cellHtml = `
-                <div class="${classes}" data-index="${i}" style="${cellStyle}" data-c-span="${cSpan}"  data-fs="${fs}" data-r-span="${rSpan}" data-icon="${cellData.icon || ''}" data-img="${img}" data-rotate="${rotationDegree}" data-cell-type="${cellData.type || 'other'}" data-group-id="${cellData.id || 0}" draggable="true">
+                <div class="${classes}" data-index="${i}" style="${cellStyle}" data-c-span="${cSpan}"  data-fs="${fs}" data-r-span="${rSpan}" data-rotate="${rotationDegree}" data-cell-type="${cellData.type || 'other'}" data-group-id="${cellData.id || 0}" draggable="true">
                     <span class="fa-solid fa-rotate-right sp_rotation"></span>
                     <div class="cell_content" style="background: url('${img}')">
-                        ${icon_emoji((cellData.icon || ''), 'cell_icon')}
-                        <span class="cell_label" style="color:${color} ">${cellData.name || ''}</span>
+                        ${icon_emoji(icon, 'cell_icon')}
+                        <span class="cell_label">${cellData.name || ''}</span>
                     </div>
                 </div>`;
             canvas.append(cellHtml);

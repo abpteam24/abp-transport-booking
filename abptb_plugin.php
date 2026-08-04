@@ -81,6 +81,9 @@
 				if ( ! defined( 'ABPTB_Ticket' ) ) {
 					define( 'ABPTB_Ticket', ABPTB_Function::get_option( 'abptb_ticket' ) );
 				}
+				if ( ! defined( 'ABPTB_Decor' ) ) {
+					define( 'ABPTB_Decor', ABPTB_Function::get_option( 'abptb_decor' ) );
+				}
 				if ( ! defined( 'ABPTB_Ticket_SP' ) ) {
 					define( 'ABPTB_Ticket_SP', ABPTB_Function::get_option( 'abptb_ticket_sp' ) );
 				}

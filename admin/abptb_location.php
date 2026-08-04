@@ -14,10 +14,10 @@
             public function global_location(): void {
                 $label = ABPTB_Function::location_label(); ?>
                 <div class="_fj_between">
-                    <h5 class="_abp"><span class="_mar_r_xs">📍</span><?php echo esc_html($label); ?></h5>
+                    <h5 class="_abp_gap_xs"><span class="fas fa-route"></span><?php echo esc_html($label); ?></h5>
                     <?php ABPTB_Layout::button_global_popup('tax_location', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                 </div>
-
+                <?php ABPTB_Layout::info_text('abptb_location'); ?>
                 <div class="tax_location _ov_auto_mar_t_xs">
                     <?php $this->location_list(); ?>
                 </div>
@@ -221,9 +221,11 @@
                         if (!empty($id) && (int)$id === (int)$term_id) {
                             $new_location = $pickup_info;
                         } else {
-                            $new_location = $old_location[$term_id] ?? [];
+                            $new_location = $old_location[$term_id]['pd_info'] ?? [];
                         }
-                        $location[$term_id]['pd_info'] = $new_location;
+                        if (!empty($new_location)) {
+                            $location[$term_id]['pd_info'] = $new_location;
+                        }
                     }
                 }
                 ksort($location);
@@ -274,8 +276,8 @@
                                 <td>
                                     <div class="_fj_center">
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">✍️</button>
-                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">❌</button>
+                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('close_2'); ?></button>
                                         </div>
                                     </div>
                                 </td>

@@ -83,7 +83,7 @@
                 $button_text = $button_text ?: __('Add New', 'abp-transport-booking');
                 ?>
                 <button class="<?php echo esc_attr($button_class . ' ' . $class); ?>" type="button">
-                    <?php ABPTB_Layout::icon_buddy('plus');
+                    <?php ABPTB_Layout::icon_svg('plus');
                         echo esc_html($button_text); ?>
                 </button>
                 <?php
@@ -116,19 +116,19 @@
             public static function button_edit($class_edit = 'edit_hook'): void {
                 ?>
                 <button class="_btn_light_navy_blue_xs <?php echo esc_attr($class_edit); ?>" type="button" title="<?php esc_attr_e('Edit This Item', 'abp-transport-booking'); ?>">
-                    <?php ABPTB_Layout::icon_buddy('edit'); ?>
+                    <?php ABPTB_Layout::icon_svg('edit'); ?>
                 </button>
                 <?php
             }
             public static function button_delete($class = 'delete_hook'): void {
                 ?>
-                <button class="_btn_light_danger_xxs <?php echo esc_attr($class); ?>" type="button" title="<?php esc_attr_e('Delete This Item', 'abp-transport-booking'); ?>">❌</button>
+                <button class="_btn_light_danger_xxs <?php echo esc_attr($class); ?>" type="button" title="<?php esc_attr_e('Delete This Item', 'abp-transport-booking'); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                 <?php
             }
             public static function button_sort(): void {
                 ?>
                 <div class="_btn_light_info_xxs sortable_handle" type="button" title="<?php esc_attr_e('Move This Item', 'abp-transport-booking'); ?>">
-                    <?php ABPTB_Layout::icon_buddy('drag'); ?>
+                    <?php ABPTB_Layout::icon_svg('drag'); ?>
                 </div>
                 <?php
             }
@@ -138,7 +138,7 @@
                     $text = $text ?: __('save', 'abp-transport-booking');
                     ?>
                     <button class="<?php echo esc_attr($class); ?>" type="button" onclick="abptb_save_global('<?php echo esc_attr($action); ?>',this)">
-                        <?php ABPTB_Layout::icon_buddy('save');
+                        <?php ABPTB_Layout::icon_svg('save');
                             echo esc_html($text); ?>
                     </button>
                     <?php
@@ -150,7 +150,7 @@
                     $text = $text ?: __('Add New', 'abp-transport-booking');
                     ?>
                     <button type="button" class="<?php echo esc_attr($class) ?>" onclick="abptb_popup_open_global('<?php echo esc_attr($action); ?>')">
-                        <?php ABPTB_Layout::icon_buddy('plus');
+                        <?php ABPTB_Layout::icon_svg('plus');
                             echo esc_html($text); ?>
                     </button>
                     <?php
@@ -248,14 +248,14 @@
                     }
                     ?>
                     <div class="_group_content qty_input">
-                        <div class="qty_decrease _ag_content"> ➖</div>
+                        <div class="qty_decrease _ag_content"><?php self::icon_svg('minus_1'); ?></div>
                         <label>
                             <input type="text" class="_form_control  validation_number <?php echo esc_attr($class); ?>"
                                    name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($min_qty); ?>"
                                    data-price="<?php echo esc_attr($price); ?>" data-min="<?php echo esc_attr($min_qty); ?>" data-max="<?php echo esc_attr($max_qty); ?>"
                             />
                         </label>
-                        <div class="qty_increase _ag_content">➕</div>
+                        <div class="qty_increase _ag_content"><?php self::icon_svg('plus'); ?></div>
                     </div>
                     <?php
                     if (!empty($collapse_id)) {
@@ -379,7 +379,7 @@
                     <?php
                 }
             }
-            public static function image_icon($icon_image, $class = '_mar_r_xxs'): void {
+            public static function image_icon($icon_image, $class = ''): void {
                 if (!empty($icon_image)) {
                     $icon = $image = $emoji = '';
                     if (is_numeric($icon_image)) {
@@ -504,51 +504,6 @@
                 $status_array = function_exists('wc_get_order_statuses') ? wc_get_order_statuses() : [];
                 return is_array($status_array) ? ($status_array[$status] ?? '') : '';
             }
-            public static function book_status_text($key): string {
-                $rules = [
-                    '0' => __('Pending', 'abp-transport-booking'),
-                    '1' => __('Waiting', 'abp-transport-booking'),
-                    '2' => __('In Rent', 'abp-transport-booking'),
-                    '3' => __('Completed', 'abp-transport-booking'),
-                    '4' => __('Delay', 'abp-transport-booking'),
-                    '5' => __('Canceled', 'abp-transport-booking')
-                ];
-                $rules = apply_filters('abptb_filter_book_status_rule', $rules);
-                $key = is_numeric($key) ? (string)$key : $key;
-                if (!is_string($key) && !is_int($key)) {
-                    return '';
-                }
-                return is_array($rules) ? ($rules[$key] ?? (string)$key) : (string)$key;
-            }
-            public static function get_book_status($order_id, $start_time, $end_time, $book_status): int {
-                $now = current_time('Y-m-d H:i:s');
-                if (!empty($book_status) && $book_status < 5 && $book_status > 0) {
-                    $_book_status = 0;
-                    if (strtotime($now) < strtotime($start_time)) {
-                        $_book_status = $book_status;
-                    } elseif (strtotime($now) > strtotime($start_time) && strtotime($now) < strtotime($end_time)) {
-                        $_book_status = 2;
-                    } elseif (strtotime($now) > strtotime($start_time) && strtotime($now) > strtotime($end_time)) {
-                        $_book_status = 3;
-                    }
-                    if ($_book_status > $book_status) {
-                        $book_status = $_book_status;
-                        global $wpdb;
-                        $table_name = $wpdb->prefix . 'abptb_orders';
-                        $booking_lists = ABPTB_Query::get_booking_query(['order_id' => $order_id]);
-                        if (!empty($booking_lists) && is_array($booking_lists)) {
-                            $data = [
-                                'book_status' => intval($book_status),
-                                'updated_at' => current_time('Y-m-d H:i:s')
-                            ];
-                            $where = ['order_id' => (int)$order_id];
-                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                            $wpdb->update($table_name, $data, $where, ['%s', '%s', '%s'], ['%d']);
-                        }
-                    }
-                }
-                return $book_status;
-            }
             public static function week_day(): array {
                 return [
                     'monday' => __('Monday', 'abp-transport-booking'),
@@ -620,7 +575,7 @@
                     $capacity = $post_infos['capacity'] ?? ABPTB_Function::get_total_qty($post_id, $post_infos);
                     if (!empty($capacity) && $display === 'on') { ?>
                         <div class="abp_tag <?php echo esc_attr($class); ?>">
-                            <?php ABPTB_Layout::icon_buddy('user_group_2');
+                            <?php ABPTB_Layout::icon_svg('user_group_2');
                                 echo esc_html($capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
                         </div>
                         <?php
@@ -635,7 +590,7 @@
                     if (!empty($value) && $display === 'on') {
                         $value = ABPTB_Function::category_value($value); ?>
                         <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::category_label() . ' : ' . $value); ?>">
-                            <?php ABPTB_Layout::icon_buddy('category');
+                            <?php ABPTB_Layout::icon_svg('category');
                                 echo esc_html($value); ?>
                         </div>
                         <?php
@@ -650,7 +605,7 @@
                     if (!empty($value) && $display === 'on') {
                         $value = ABPTB_Function::brand_value($value); ?>
                         <span class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::brand_label() . ' : ' . $value); ?>">
-                                    <?php ABPTB_Layout::icon_buddy('brand_2');
+                                    <?php ABPTB_Layout::icon_svg('brand_2');
                                         echo esc_html($value); ?>
                                 </span>
                         <?php
@@ -666,7 +621,7 @@
                         $value = ABPTB_Function::organizer_value($value);
                         ?>
                         <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::organizer_label() . ' : ' . $value); ?>">
-                            <?php ABPTB_Layout::icon_buddy('organizer_2');
+                            <?php ABPTB_Layout::icon_svg('organizer_2');
                                 echo esc_html($value); ?>
                         </div>
                         <?php
@@ -678,19 +633,17 @@
                 if (ABPTB_Function::on_off('post_des') && $post_id > 0) {
                     $value = $post_infos['post_description'] ?? ABPTB_Function::get_post_info($post_id, 'post_description');
                     if (!empty($value)) { ?>
-                        <div class="_section_white_xxs <?php echo esc_attr($class); ?>">
+                        <div class="_padding_xs <?php echo esc_attr($class); ?>">
                             <?php self::load_more($value); ?>
                         </div>
                         <?php
                     }
                 }
             }
-            public static function route_direction($post_infos = [], $bp_dp = '', $return = '', $details = ''): void {
+            public static function route_direction($post_infos = [], $bp_dp = '', $return = false, $details = true): void {
                 if (!empty($post_infos)) {
                     $post_id = absint($post_infos['post_id'] ?? 0);
                     if (!empty($bp_dp)) {
-                        $key = ABPTB_Function::return_check($post_infos, $bp_dp) ? 'return_routing_infos' : 'routing_infos';
-                        $route = $post_infos[$key] ?? ABPTB_Function::get_post_info($post_id, $key, []);
                         [$bp, $dp] = array_map('intval', explode('_', $bp_dp));
                     } else {
                         $key = $return ? 'return_routing_infos' : 'routing_infos';
@@ -698,17 +651,22 @@
                         $bp = array_key_first($route);
                         $dp = array_key_last($route);
                     }
-                    if (!empty($route)) {
-                        $start_time = $route[$bp]['time'] ?? 0;
-                        $end_time = $route[$dp]['time'] ?? 0;
-                        $keys = array_keys($route);
-                        $difference = abs(array_search($dp, $keys) - array_search($bp, $keys)) + 1;
+                    if (!empty($bp) && !empty($dp)) {
                         ?>
                         <span class="fas fa-route _mar_r_xxs _color_theme"></span>
                         <span class="_color_active_mar_r_xxs"><?php echo esc_html(ABPTB_Function::location_value($bp)); ?></span>
                         <span class="fas fa-arrow-right _color_green_pale_mar_r_xxs"></span>
                         <span class="_color_burnt_orange_mar_r_xxs"> <?php echo esc_html(ABPTB_Function::location_value($dp)); ?></span>
-                        <?php if (empty($details)) { ?>
+                        <?php if ($details) {
+                            if (empty($route)) {
+                                $key = ABPTB_Function::return_check($post_infos, $bp_dp) ? 'return_routing_infos' : 'routing_infos';
+                                $route = $post_infos[$key] ?? ABPTB_Function::get_post_info($post_id, $key, []);
+                            }
+                            $start_time = $route[$bp]['time'] ?? 0;
+                            $end_time = $route[$dp]['time'] ?? 0;
+                            $keys = array_keys($route);
+                            $difference = abs(array_search($dp, $keys) - array_search($bp, $keys)) + 1;
+                            ?>
                             <span class="_color_theme_mar_r_xxs">(<?php echo esc_html(ABPTB_Function::time_difference($start_time, $end_time)); ?>)</span>
                             <?php
                             if ($difference > 1) {
@@ -729,7 +687,7 @@
                     $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
                     ?>
                     <label>
-                        <span><?php ABPTB_Layout::icon_buddy('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                        <span class="_gap_xxs"><?php ABPTB_Layout::icon_svg('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
                         <input type="hidden" name="journey_date" value="<?php echo esc_attr($hidden_date); ?>" required/>
                         <input id="journey_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" data-alert="<?php esc_attr_e('Please Select Journey Date', 'abp-transport-booking'); ?>" readonly required/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
@@ -750,7 +708,7 @@
                     $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
                     ?>
                     <label>
-                        <span><?php ABPTB_Layout::icon_buddy('date_2'); ?><?php esc_html_e('Return Date (optional)', 'abp-transport-booking'); ?></span>
+                        <span class="_gap_xxs"><?php ABPTB_Layout::icon_svg('date_2'); ?><?php esc_html_e('Return Date (optional)', 'abp-transport-booking'); ?></span>
                         <input type="hidden" name="return_date" value="<?php echo esc_attr($hidden_date); ?>"/>
                         <input id="return_date" type="text" value="<?php echo esc_attr($visible_date); ?>" class="_form_control" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
@@ -810,7 +768,8 @@
                 $sold_qty = intval(ABPTB_Query::get_sold_qty($post_infos));
                 $available_qty = $total_qty - $reserve_qty - $sold_qty;
                 $max_qty = ($max_qty !== '' && intval($max_qty) <= $available_qty) ? intval($max_qty) : $available_qty;
-                $min_qty = $ticket_info['min_qty'] ??1;
+                $min_qty = intval($ticket_info['min_qty'] ?? 1);
+                //echo '<pre>';print_r($min_qty);echo '</pre>';
                 if ($max_qty >= $min_qty) {
                     $collapse_id = '#ticket_' . $key;
                     ?>
@@ -818,8 +777,8 @@
                     <div class="item_select">
                         <div class="custom_checkbox">
                             <input type="hidden" name="<?php echo esc_attr($prefix); ?>item_check[]" value="" data-id="<?php echo esc_attr($collapse_id); ?>"/>
-                            <div class="checkbox_item _fa_center _fs_label" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
-                                <h3 class="_abp"><span data-icon class="_mar_r_xs far fa-square"></span></h3>
+                            <div class="checkbox_item" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
+                                <h3 class="_abp"><span data-icon class="far fa-square"></span></h3>
                                 <?php echo esc_html__('Select ', 'abp-transport-booking') . ' ' . esc_html(ABPTB_Function::ticket_name($key)); ?>
                             </div>
                         </div>
@@ -829,17 +788,14 @@
                                     'name' => $prefix . 'item_qty[]',
                                     'price' => $price,
                                     'available' => $available_qty,
-                                    'min_qty' => 1,
+                                    'min_qty' => $min_qty,
                                     'max_qty' => $max_qty,
                                     'collapse_id' => $collapse_id,
                                 ];
                                 ABPTB_Layout::quantity_input($input_info);
-                            } else {
-                                ?>
-                                <input type="hidden" name="<?php echo esc_attr($prefix); ?>item_qty[]" value="<?php echo esc_attr($min_qty); ?>" data-price="<?php echo esc_attr($price); ?>"/>
-                                <?php
-                            }
-                        ?>
+                            } else { ?>
+                                <input type="hidden" name="<?php echo esc_attr($prefix . 'item_qty[]'); ?>" value="<?php echo esc_attr($min_qty); ?>" data-price="<?php echo esc_attr($price); ?>" data-min="<?php echo esc_attr($min_qty); ?>"/>
+                            <?php } ?>
                     </div>
                 <?php } else { ?>
                     <span class="trash abp_tag"><?php esc_html_e('Sold Out !', 'abp-transport-booking'); ?></span>
@@ -895,21 +851,99 @@
                     };
                 }
             }
+            public static function sp($id = '', $sp_info = []): void {
+                if (empty($sp_info)) {
+                    if (!empty($id)) {
+                        $row = ABPTB_Query::get_sp($id);
+                        if (!empty($row)) {
+                            $sp_info = current($row);
+                        }
+                    }
+                }
+                if (!empty($sp_info)) {
+                    $others = json_decode($sp_info['others'] ?? '', true) ?: [];
+                    $cell_width = $others['width'] ?? 50;
+                    $cell_height = $others['height'] ?? 50;
+                    $gap = $others['gap'] ?? 0;
+                    $bg_image = $others['bg_image'] ?? '';
+                    $img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
+                    $bg_color = $others['bg_color'] ?? '#fff';
+                    $radius = $others['radius'] ?? 0;
+                    $layout = json_decode($sp_info['layout_data'] ?? '', true) ?: [];
+                    //$ticket_types= ABPTB_Function::get_option('abptb_ticket');
+                    //echo '<pre>';                print_r(ABPTB_Function::get_option('abptb_decor'));                echo '</pre>';
+                    //echo '<pre>';                print_r($ticket_types);                echo '</pre>';
+                    $cols = intval($others['column'] ?? 10);
+                    $meta_info = json_decode($sp_info['seat_info'] ?? '', true) ?: [];
+                    $hidden_cells = [];
+                    foreach ($layout as $index => $cell) {
+                        $c_span = intval($cell['width_ratio'] ?? 1);
+                        $r_span = intval($cell['height_ratio'] ?? 1);
+                        if ($c_span > 1 || $r_span > 1) {
+                            for ($r = 0; $r < $r_span; $r++) {
+                                for ($c = 0; $c < $c_span; $c++) {
+                                    if ($r === 0 && $c === 0)
+                                        continue;
+                                    $target_idx = $index + ($r * $cols) + $c;
+                                    $hidden_cells[$target_idx] = true;
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                    <div class="sp_canvas sp_section_15_xs" style="grid-template-columns: repeat(<?php echo esc_attr($cols); ?>, 1fr); background-image: url('<?php echo esc_url($img_url); ?>'); background-color: <?php echo esc_attr($bg_color); ?>;gap: <?php echo esc_attr($gap); ?>px;">
+                        <?php foreach ($layout as $index => $cell) {
+                            if (isset($hidden_cells[$index]))
+                                continue;
+                            $type_id = $cell['id'] ?? '';
+                            $c_span = intval($cell['width_ratio'] ?? 1);
+                            $r_span = intval($cell['height_ratio'] ?? 1);
+                            $rotate = intval($cell['rotate'] ?? 0);
+                            $fs = $cell['fs'] ?? 12;
+                            $is_seat = ($cell['type'] === 'seat');
+                            $class = $is_seat ? "sp_cell available" : "sp_decor";
+                            $color = $is_seat ? ABPTB_Function::ticket_color($type_id) : ABPTB_Function::decor_color($type_id);
+                            $icon_image = $is_seat ? ABPTB_Function::ticket_icon($type_id) : ABPTB_Function::decor_icon($type_id);
+                            $width = $cell_width * $c_span;
+                            $height = $cell_height * $r_span;
+                            if ($gap > 0) {
+                                $width = $c_span > 1 ? $width + ($c_span - 1) * $gap : $width;
+                                $height = $r_span > 1 ? $height + ($r_span - 1) * $gap : $height;
+                            }
+                            $style = "color: {$color}; grid-column: span {$c_span}; grid-row: span {$r_span}; width:{$width}px;height:{$height}px; border:1px solid  {$color};font-size:{$fs}px;border-radius:{$radius}px;";
+                            $image = '';
+                            if (!empty($icon_image)) {
+                                if (is_numeric($icon_image)) {
+                                    $image = ABPTB_Function::get_image_url('', $icon_image);
+                                }
+                            }
+                            ?>
+                            <div class="<?php echo esc_attr($class); ?>" style="<?php echo esc_attr($style); ?>" data-name="<?php echo esc_attr($cell['name'] ?? ''); ?>">
+                                <div class="cell_content <?php echo esc_attr($rotate ? "rotate-{$rotate}" : ""); ?>" style="background-image: url('<?php echo esc_url($image); ?>');">
+                                    <?php ABPTB_Layout::image_icon($icon_image); ?>
+                                    <span class="cell_label"><?php echo esc_html($cell['name'] ?? ''); ?></span>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <?php
+                } else {
+                    ABPTB_Layout::layout_warning_info('no_sp_config');
+                }
+            }
             //=============================//
             public static function ticket_info($ticket_infos): void {
                 if (!empty($ticket_infos) && is_array($ticket_infos)) { ?>
                     <ul class=" _abp">
-                        <?php foreach ($ticket_infos as $ticket_info) {
+                        <?php foreach ($ticket_infos as $tic_id => $ticket_info) {
                             if (!empty($ticket_info) && sizeof($ticket_info) > 0) {
-                                $name = $ticket_info['name'] ?? '';
                                 $qty = $ticket_info['qty'] ?? 1;
-                                $price = $ticket_info['price'] ?? '';
-                                if (!empty($name)) { ?>
-                                    <li>
-                                        <strong><?php echo esc_html($name); ?></strong>
-                                        <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('FREE', 'abp-transport-booking')); ?>
-                                    </li>
-                                <?php }
+                                $price = $ticket_info['price'] ?? ''; ?>
+                                <li>
+                                    <strong><?php echo esc_html(ABPTB_Function::ticket_name($tic_id)); ?></strong>
+                                    <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('FREE', 'abp-transport-booking')); ?>
+                                </li>
+                                <?php
                             }
                         } ?>
                     </ul>
@@ -945,13 +979,15 @@
                     <ul class=" _abp">
                         <?php foreach ($passenger_infos as $pas_form) {
                             if (!empty($pas_form) && sizeof($pas_form) > 0) {
-                                $label = $pas_form['label'] ?? '';
-                                $value = $pas_form['value'] ?? '';
-                                if (!empty($label) && !empty($value)) { ?>
-                                    <li>
-                                        <strong><?php echo esc_html($label); ?></strong> : <?php echo esc_html($value); ?>
-                                    </li>
-                                    <?php
+                                foreach ($pas_form as $info) {
+                                    $label = $info['label'] ?? '';
+                                    $value = $info['value'] ?? '';
+                                    if (!empty($label) && !empty($value)) { ?>
+                                        <li>
+                                            <strong><?php echo esc_html($label); ?></strong> : <?php echo esc_html($value); ?>
+                                        </li>
+                                        <?php
+                                    }
                                 }
                             }
                         } ?>
@@ -990,7 +1026,7 @@
                 ?>
                 <div class="_input_item abp_dropdown post_selection">
                     <label>
-                        <span><?php ABPTB_Layout::image_icon($brand_icon); ?><?php echo esc_html($label); ?></span>
+                        <span class="_gap_xxs"><?php ABPTB_Layout::image_icon($brand_icon); ?><?php echo esc_html($label); ?></span>
                         <input type="hidden" name="post_id" value=""/>
                         <input type="text" class="_form_control_w_full" name="" placeholder="<?php echo esc_attr($label); ?>" value=""/>
                     </label>
@@ -1003,7 +1039,7 @@
                                     $category = !empty($category) ? get_term($category)->name : '';
                                     $title = get_the_title($all_post_id);
                                     ?>
-                                    <li data-value="<?php echo esc_attr($all_post_id); ?>" data-text="<?php echo esc_attr($title); ?>">
+                                    <li class="_gap_xxs" data-value="<?php echo esc_attr($all_post_id); ?>" data-text="<?php echo esc_attr($title); ?>">
                                         <?php if (ABPTB_Function::on_off('post_icon')) {
                                             ABPTB_Layout::image_icon(ABPTB_Function::get_post_info($all_post_id, 'post_icon'));
                                         } ?>
@@ -1027,23 +1063,9 @@
                 $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
                 ?>
                 <div class="_input_item">
-                    <label class="_fd_column">
-                        <span>📅 <?php esc_html_e('Booking Date', 'abp-transport-booking') ?></span>
+                    <label>
+                        <span class="_gap_xs"><?php ABPTB_Layout::icon_svg('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transport-booking') ?></span>
                         <input type="hidden" name="start_time" value=""/>
-                        <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
-                        <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
-                    </label>
-                </div>
-                <?php
-            }
-            public static function filter_order_date(): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
-                ?>
-                <div class="_input_item">
-                    <label class="_fd_column">
-                        <span>🗓️ <?php esc_html_e('Order Date', 'abp-transport-booking') ?></span>
-                        <input type="hidden" name="order_date" value=""/>
                         <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
                     </label>
@@ -1055,19 +1077,63 @@
                 $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
                 ?>
                 <div class="_g_input_input_item_fd_column">
-                    <label><span>⏰ <?php esc_html_e('Booking Date Between', 'abp-transport-booking'); ?></span></label>
+                    <label><span class="_gap_xs"><?php ABPTB_Layout::icon_svg('date_2'); ?><?php esc_html_e('Journey Date Between', 'abp-transport-booking'); ?></span></label>
                     <div class="_f_equal">
                         <label>
-                            <input type="hidden" name="booking_time_from" value=""/>
+                            <input type="hidden" name="start_time_from" value=""/>
                             <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                             <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
                         </label>
                         <label>
-                            <input type="hidden" name="booking_time_to" value=""/>
+                            <input type="hidden" name="start_time_to" value=""/>
                             <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                             <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
                         </label>
                     </div>
+                </div>
+                <?php
+            }
+            public static function filter_bp(): void {
+                ?>
+                <div class="abptb_bp _input_item abp_dropdown">
+                    <label>
+                        <span class="_gap_xxs"><i class="fas fa-map-marker-alt"></i><?php esc_html_e('From', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></span>
+                        <input type="hidden" name="_bp" value=""/>
+                        <input type="text" class="_form_control_w_full" name="" placeholder="<?php esc_attr_e('Select Boarding Point', 'abp-wc-transport-manager'); ?>" value=""/>
+                    </label>
+                    <div class="dropdown_list">
+                        <ul class="_abp ">
+                        </ul>
+                    </div>
+                </div>
+                <?php
+            }
+            public static function filter_dp(): void {
+                ?>
+                <div class="abptb_dp _input_item abp_dropdown">
+                    <label>
+                        <span class="_gap_xxs"><i class="fas fa-map-marker-alt"></i><?php esc_html_e('To', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></span>
+                        <input type="hidden" name="_dp" value=""/>
+                        <input type="text" class="_form_control_w_full" name="" placeholder="<?php esc_attr_e('Select Dropping Point', 'abp-wc-transport-manager'); ?>" value=""/>
+                    </label>
+                    <div class="dropdown_list">
+                        <ul class="_abp ">
+                        </ul>
+                    </div>
+                </div>
+                <?php
+            }
+            public static function filter_order_date(): void {
+                $date_format = ABPTB_Function::date_format_php();
+                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                ?>
+                <div class="_input_item">
+                    <label>
+                        <span class="_gap_xs">🗓️ <?php esc_html_e('Order Date', 'abp-transport-booking') ?></span>
+                        <input type="hidden" name="order_date" value=""/>
+                        <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
+                        <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
+                    </label>
                 </div>
                 <?php
             }
@@ -1076,7 +1142,7 @@
                 $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
                 ?>
                 <div class="_g_input_input_item_fd_column" data-collapse="#view_more_filter_option">
-                    <label><span>⏰ <?php esc_html_e('Order Date Between', 'abp-transport-booking'); ?></span></label>
+                    <label class="_mar_b_xxs"><span class="_gap_xs">⏰ <?php esc_html_e('Order Date Between', 'abp-transport-booking'); ?></span></label>
                     <div class="_f_equal">
                         <label>
                             <input type="hidden" name="order_date_from" value=""/>
@@ -1097,9 +1163,9 @@
                     'fields' => array('ID', 'display_name'),
                 ));
                 ?>
-                <div class="_input_item abp_dropdown ">
-                    <label class="_fd_column">
-                        <span>👨‍💼  <?php esc_html_e('User Name', 'abp-transport-booking'); ?></span>
+                <div class="_input_item abp_dropdown " data-collapse="#view_more_filter_option">
+                    <label>
+                        <span class="_gap_xs">👨‍💼  <?php esc_html_e('User Name', 'abp-transport-booking'); ?></span>
                         <input type="hidden" name="user_id" value=""/>
                         <input type="text" class="_form_control_w_full" placeholder="<?php esc_attr_e('User Name', 'abp-transport-booking'); ?>" value=""/>
                     </label>
@@ -1120,8 +1186,8 @@
             public static function filter_order_id(): void {
                 ?>
                 <div class="_input_item " data-collapse="#view_more_filter_option">
-                    <label class="_fd_column">
-                        <span>📦 <?php esc_html_e('Order ID', 'abp-transport-booking'); ?></span>
+                    <label>
+                        <span class="_gap_xs">📦 <?php esc_html_e('Order ID', 'abp-transport-booking'); ?></span>
                         <input type="number" class="_form_control_w_full validation_number" name="order_id" placeholder="<?php esc_attr_e('Order ID', 'abp-transport-booking'); ?>" value=""/>
                     </label>
                 </div>
@@ -1130,8 +1196,8 @@
             public static function filter_bill_name(): void {
                 ?>
                 <div class="_input_item " data-collapse="#view_more_filter_option">
-                    <label class="_fd_column">
-                        <span>👤 <?php esc_html_e('Billing Name', 'abp-transport-booking'); ?></span>
+                    <label>
+                        <span class="_gap_xs">👤 <?php esc_html_e('Billing Name', 'abp-transport-booking'); ?></span>
                         <input type="text" class="_form_control_w_full " name="billing_name" placeholder="<?php esc_attr_e('Billing Name', 'abp-transport-booking'); ?>" value=""/>
                     </label>
                 </div>
@@ -1140,8 +1206,8 @@
             public static function filter_bill_email(): void {
                 ?>
                 <div class="_input_item " data-collapse="#view_more_filter_option">
-                    <label class="_fd_column">
-                        <span>✉️ <?php esc_html_e('Billing Email', 'abp-transport-booking'); ?></span>
+                    <label>
+                        <span class="_gap_xs">✉️ <?php esc_html_e('Billing Email', 'abp-transport-booking'); ?></span>
                         <input type="email" class="_form_control_w_full " name="billing_email" placeholder="<?php esc_attr_e('Billing Email', 'abp-transport-booking'); ?>" value=""/>
                     </label>
                 </div>
@@ -1150,39 +1216,10 @@
             public static function filter_bill_phone(): void {
                 ?>
                 <div class="_input_item " data-collapse="#view_more_filter_option">
-                    <label class="_fd_column">
-                        <span>☎️ <?php esc_html_e('Billing phone', 'abp-transport-booking'); ?></span>
+                    <label>
+                        <span class="_gap_xs">☎️ <?php esc_html_e('Billing phone', 'abp-transport-booking'); ?></span>
                         <input type="text" class="_form_control_w_full " name="billing_phone" placeholder="<?php esc_attr_e('Billing phone', 'abp-transport-booking'); ?>" value=""/>
                     </label>
-                </div>
-                <?php
-            }
-            public static function filter_location(): void {
-                $all_locations = defined('ABPTB_Location') ? ABPTB_Location : [];
-                if (empty($all_locations) || !is_array($all_locations)) {
-                    return;
-                }
-                ?>
-                <div class="_input_item abp_dropdown">
-                    <label class="_fd_column">
-                        <span>📍 <?php esc_html_e('Location', 'abp-transport-booking'); ?></span>
-                        <input type="hidden" name="location" value=""/>
-                        <input type="text" class="_form_control_w_full" placeholder="<?php esc_attr_e('Location', 'abp-transport-booking'); ?>" value=""/>
-                    </label>
-                    <div class="dropdown_list">
-                        <ul class="_abp">
-                            <?php
-                                foreach ($all_locations as $key => $location) {
-                                    $name = is_array($location) ? ($location['name'] ?? '') : '';
-                                    ?>
-                                    <li data-value="<?php echo esc_attr($key); ?>" data-text="<?php echo esc_attr($name); ?>">
-                                        <span class="_fs_label"><?php echo esc_html($name); ?></span>
-                                    </li>
-                                    <?php
-                                }
-                            ?>
-                        </ul>
-                    </div>
                 </div>
                 <?php
             }
@@ -1203,7 +1240,7 @@
                     'display_category' => __('Note : This switch indicate Transport Category . You can also show or hide it on the frontend by turning the switch On or Off.', 'abp-transport-booking'),
                     'related_item' => __('Note: Select related items to display on the details page. Leave this option empty or disabled if you do not want to show related items.', 'abp-transport-booking'),
                     'post_feature' => __('Note: If you want to add feature for this Transport, you can add Here. These feature will be show with this Transport . You may leave this section empty if you do not want to show frontend. ', 'abp-transport-booking'),
-                    'abptb_slider' => __('Note: If you want to add an image gallery for this transport, you can upload images below.  You may leave this section empty if you do not want to show images. ', 'abp-transport-booking'),
+                    'display_slider' => __('Note: If you want to add an image gallery for this transport, you can upload images below.  You may leave this section empty if you do not want to show images. ', 'abp-transport-booking'),
                     //=============================//
                     'route_config' => __('Note: Configure the transport route by selecting the required stops and their types. You can also add new stops while configuring the route. Boarding stops allow passengers to board only, Dropping stops allow passengers to get off only, and Both stops support both boarding and dropping. The first stop must always be Boarding, the last stop must always be Dropping, and the first stop time must be 0 minutes. All remaining stop times represent the travel time in minutes from the first stop and are applied according to your Transport Time Configuration. Enable Multiple Pickup/Drop-off Points to allow passengers to select from multiple pickup and drop-off locations. The available options are based on the configured route stops: Boarding stops become Pickup Points, Dropping stops become Drop-off Points, and Both stops are available for both. If the return journey uses the same transport, enable Same Transport Return to automatically use the same transport configuration for the return trip. ', 'abp-transport-booking'),
                     'seat_type' => __('Note: Please select your Transport seat type . Default is Seat Plan', 'abp-wc-transport-manager'),
@@ -1258,7 +1295,6 @@
                     'specific_off_dates' => __('Note: please add your specific Operation off dates.(optional)', 'abp-transport-booking'),
                     'date_wise_time' => __('Note: Set the transport operation time for specific dates. A date will only be saved if it has at least one operation time. If a date is not saved, the regular day-wise schedule or the default operation time will be applied. You can add multiple operation times for the same date.(optional)', 'abp-transport-booking'),
                     'off_date_range' => __('Note: If you have off days between two dates which can add here.(optional)', 'abp-transport-booking'),
-                    'abptb_dates' => __('Note: Set a global date configuration for your Transport  that can be reused across all posts, with options to import and customize anytime.', 'abp-transport-booking'),
                     //=============================//
                     'qty_reserve_min_max' => __('Note: Set the total stock quantity available for sale. This field is required to save the transport. You can also set reserve, minimum, and maximum quantity limits for customer bookings. Reserve quantity keeps specific items unavailable, minimum quantity defaults to 1, and maximum quantity will follow the available stock if left empty.', 'abp-transport-booking'),
                     //=============================//
@@ -1266,22 +1302,17 @@
                     'enable_tax_msg' => __('Note: Your Woo-commerce Tax setting already disable. If you want to enable tax please enable woo-commerce tax.', 'abp-transport-booking'),
                     //=============================//
                     'display_additional_services' => __('Note: If you want sale additional product/equipment with this  transport then active this button and add additional service. Additional item not depends on  operation time.', 'abp-transport-booking'),
-                    'additional_services' => __('Note: Add extra services for products/equipment with your transport—import or set per Post (also usable globally); stock applies per Post, empty quantity = unlimited, empty max qty = no limit, empty/Zero price = free.', 'abp-transport-booking'),
                     'active_global_additional' => __('Note: Keep this switch ON to apply the global additional settings.Switch it OFF if you want to set special additional rules for this transport.additional configuration options will open when turned OFF. ', 'abp-transport-booking'),
                     //=============================//
                     'attendee_off' => __('Note: Globally, the Attendee Form feature is currently disabled. To add an attendee form for this transport, please enable the feature from the Global Settings, then reload this page.', 'abp-transport-booking'),
                     'client_form_option' => __('Use comma( , ) to separate option.', 'abp-transport-booking'),
                     'display_client_form' => __('Note: If you want to get Client information then active this button and add form/import global form or use global form as a client form', 'abp-transport-booking'),
                     'active_global_form' => __('Note: Keep this switch ON to apply the global Client Form settings.Switch it OFF if you want to set special  Client Form rules for this transport. Client Form configuration options will open when turned OFF. ', 'abp-transport-booking'),
-                    'global_client_forms' => __('Note: This is a flexibility global form system. Once you design the structure here, it serves as a global form. You can effortlessly import this form into any transport or use this setting at any transport,', 'abp-transport-booking'),
                     'display_single_form' => __('If you want to get single traveller/attendee info for multiple ticket  then active this button .Default is on', 'abp-wc-transport-manager'),
                     //=============================//
-                    'abptb_tc' => __('You can set all transport-related Term & Condition here and use them globally across all transport. You can also import these Term & Condition into any individual transport and customize them as needed.', 'abp-transport-booking'),
-                    'tc_item' => __('Use the editor to customize and design your Terms & Conditions as you prefer. The content and formatting you create here will be displayed the same way on the frontend.', 'abp-transport-booking'),
                     'display_tc' => __('Use this switch to control whether the Term & Condition is displayed on the frontend. Turn the switch ON to show the Term & Condition, and OFF to hide it. By default, this option is set to ON.', 'abp-transport-booking'),
                     'active_global_tc' => __('Enable this switch to apply the global Term & Condition to this post. If you want to add custom Term & Condition specifically for this post, turn the switch OFF and add your custom Term & Condition below.You can also use the Import button to bring in global Term & Condition, which you can then edit or delete based on your needs.', 'abp-transport-booking'),
                     //=============================//
-                    'abptb_faqs' => __('You can set all transport-related FAQs here and use them globally across all transports. You can also import these FAQs into any individual transport and customize them as needed.', 'abp-transport-booking'),
                     'faq_item' => __('Both the Title and Description fields are required. If either field is left empty, this FAQ item will not be displayed on the frontend.', 'abp-transport-booking'),
                     'display_faq' => __('Use this switch to control whether the FAQ is displayed on the frontend. Turn the switch ON to show the FAQ, and OFF to hide it. By default, this option is set to ON.', 'abp-transport-booking'),
                     'active_global_faq' => __('Enable this switch to apply the global FAQ to this post. If you want to add custom FAQs specifically for this post, turn the switch OFF and add your custom FAQs below.You can also use the Import button to bring in global FAQs, which you can then edit or delete based on your needs.', 'abp-transport-booking'),
@@ -1296,14 +1327,27 @@
                     //=============================//
                     'no_ticket_type' => __('No Ticket Type Found ! Please add Ticket Type to use Multiple Ticket Type', 'abp-transport-booking'),
                     'no_ticket_config' => __('No ticket configuration is available for this transport. Please contact the administrator.', 'abp-transport-booking'),
+                    'no_sp_config' => __('No Seat Plan configuration is available for this transport. Please contact the administrator.', 'abp-transport-booking'),
                     'ticket_settings' => __('Configure the ticket or seat type with a name, color, prefix, and optional image, icon, or emoji. These settings will be applied automatically to all assigned seats in the Seat Plan and used throughout the booking process for consistent identification.', 'abp-transport-booking'), //=============================//
                     'no_decor_item' => __('No Decor Item Found ! Please add Decor item to use Multiple Decor item', 'abp-transport-booking'),
-                    'decor_image' => __('You can add an image, icon, or emoji for this Decor item. It will be used as the Decor item layout representation in the Seat Plan. Once configured here, all seats assigned to this ticket type will automatically use the same image, icon, or emoji.', 'abp-transport-booking'),
-                    'decor_name' => __('Enter the Decor Item name. This item is used only for designing the Seat Plan layout and is not treated as a bookable seat. Its name will not be displayed anywhere during the booking process or on the Seat Plan. If needed, you can double-click the item in the Seat Plan editor to add custom text for display.', 'abp-transport-booking'),
-                    'decor_color' => __('Choose the background color for this Decor Item. This color is used only in the Seat Plan editor to visually represent the item and does not affect booking, pricing, or seat availability.', 'abp-transport-booking'),
+                    'decor_setting' => __('Note: Choose an image, icon, or emoji to represent this decoration item within the Seat Plan layout. Enter a name to identify the item while designing the layout. Decoration items are used only for creating and organizing the Seat Plan and are not considered bookable seats, so they do not affect pricing, availability, or the booking process. The item name will not be displayed to customers, but you can add custom text, change the font size, or modify individual items directly from the Seat Plan editor by double-clicking on them. You can also choose a background color to make different layout elements easier to identify while designing the seat arrangement. Once configured, the selected settings will automatically be applied wherever this decoration item is used.', 'abp-transport-booking'),
                     //=============================//
                     'must_wc' => __('Transport Booking is entirely dependent on the WooCommerce plugin. Please install and activate the WooCommerce plugin otherwise the plugin will not work. Installing this tool may take some time', 'abp-transport-booking'),
                     //=============================//
+                    'abptb_ticket' => __('Here you can create and manage dynamic ticket types that can be used across all transports. Examples include Economy, Business Class, VIP, Sleeper, Cabin, and more. Each ticket type can have its own price, capacity, color, icon, image, and other configurations. If a seat plan is enabled, you can create seats based on the selected ticket type, and every seat will automatically inherit the corresponding ticket settings. Every ticket type also has a unique ID . You can edit or delete ticket types at any time, but removing a ticket type that is already assigned to a transport may affect the existing configuration.', 'abp-transport-booking'),
+                    'abptb_decor' => __('Note : Here you can create and manage decorative items for the seat plan layout. These items are used only for designing and organizing the seating arrangement and are not considered actual seats. Therefore, they cannot be booked, reserved, or sold. Examples include doors, exits, driver areas, engines, restrooms, food storage, baggage storage, waiting areas, lobbies, walkways, stairs, tables, partitions, and other decorative elements. If needed, you can also add custom text, icons, images, or emojis to create a more realistic seat layout. Every decoration item has its own unique ID and can be reused across multiple seat plans.', 'abp-transport-booking'),
+                    'abptb_sp' => __('Note : Here you can create and manage reusable seat plans that can be assigned to any transport multiple times. Instead of designing the same layout repeatedly, you can create a seat plan once and reuse it whenever needed. The system will automatically calculate the total number of available seats and detect all assigned ticket types from the selected seat plan. If the transport is configured to use a single ticket type, all seats in the selected seat plan will automatically be converted into that ticket type, even if the original layout contains multiple ticket types. You can also use decoration items such as doors, walkways, engines, exits, luggage storage areas, tables, and other custom elements to create a more realistic layout. Every seat plan has a unique ID', 'abp-transport-booking'),
+                    'abptb_sp_design' => __('Note : Here you can design and customize the entire seat layout according to your requirements. You can define the overall layout structure by setting the number of rows and columns, adjusting the background image or background color, and configuring the width, height, and spacing of individual cells. Each cell can occupy one or multiple positions, allowing you to create more complex layouts such as walkways, cabins, tables, lounges, storage areas, and other custom sections.You can select a ticket type and simply click on any cell to automatically assign the selected ticket type along with the corresponding seat number. Likewise, you can select a decoration item and place it anywhere in the layout. Both seat items and decoration items support drag-and-drop functionality, allowing you to move, duplicate, or clone them easily.Every cell can have its own custom text, icon, image, emoji, color, and font size. Double-clicking on a cell allows you to modify its content and appearance individually. You can also resize cells by defining custom width and height values.Advanced selection tools are also available to speed up the design process. Use Ctrl + Click to select individual items and Shift + Click to select multiple cells within a range. Once selected, you can apply changes to all selected items simultaneously.This powerful visual editor makes it easy to create simple or highly detailed layouts for buses, trains, ferries, aircraft, theaters, stadiums, conference halls, and many other seating arrangements. ', 'abp-transport-booking'),
+                    'abptb_dates' => __('Note: Set a global date configuration for your Transport  that can be reused across all posts, with options to import and customize anytime.', 'abp-transport-booking'),
+                    'abptb_additional' => __('Note: Add extra services for products/equipment with your transport—import or set per Post (also usable globally); stock applies per Post, empty quantity = unlimited, empty max qty = no limit, empty/Zero price = free.', 'abp-transport-booking'),
+                    'abptb_form' => __('Note: This is a flexibility global form system. Once you design the structure here, it serves as a global form. You can effortlessly import this form into any transport or use this setting at any transport,', 'abp-transport-booking'),
+                    'abptb_faq' => __('Note: You can set all transport-related FAQs here and use them globally across all transports. You can also import these FAQs into any individual transport and customize them as needed.', 'abp-transport-booking'),
+                    'abptb_tc' => __('Note: You can set all transport-related Term & Condition here and use them globally across all transport. You can also import these Term & Condition into any individual transport and customize them as needed.', 'abp-transport-booking'),
+                    'abptb_location' => __('Note: Here, you can add all of your transport stops, which can then be used across any transport post. You can edit or delete them at any time. However, please note that deleting a stop that is already assigned to a transport may affect the existing configuration. If a stop is not currently assigned anywhere, deleting it will not cause any issues.', 'abp-transport-booking'),
+                    'abptb_category' => __('Note : Here you can create and manage all transport types or categories, such as Bus, Train, Ferry, Shuttle, Taxi, AC, Non Ac, Sleeper and more. You can assign one  categories to each transport while creating or editing a post. Every category has a unique ID, which can also be used in shortcodes to display specific transport types anywhere on your website. You can edit or delete categories at any time, but removing a category that is already assigned to a transport may affect its existing configuration.', 'abp-transport-booking'),
+                    'abptb_organizer' => __('Note: Here you can create and manage transport organizers, operators, or companies. You can assign one organizers to each transport while creating or editing a post. Every organizer has a unique ID that can be used in shortcodes to display transports from a specific organizer anywhere on your website. You can edit or delete organizers at any time, but deleting an organizer that is already assigned to a transport may affect the existing configuration.', 'abp-transport-booking'),
+                    'abptb_brand' => __('Note : Here you can create and manage transport brands, manufacturers, or service providers. You can assign one brand to each transport while creating or editing a post. Every brand has a unique ID that can be used in shortcodes to display transports from a specific brand anywhere on your website. You can edit or delete brands at any time, but deleting a brand that is already assigned to a transport may affect the existing configuration.', 'abp-transport-booking'),
+                    'abptb_feature' => __('Note : Here you can create and manage transport features that help passengers understand the facilities and services available with each transport. Examples include Wi-Fi, air conditioning, charging ports, refreshments, entertainment systems, restrooms, and more. You can assign one or multiple features to each transport while creating or editing a post. Every feature has a unique ID that can be used in shortcodes to display transports with specific features anywhere on your website. You can edit or delete features at any time, but removing a feature that is already assigned to a transport may affect the existing configuration.', 'abp-transport-booking'),
                     //=============================//
                     'sign_up_msg' => __('Please Login your account to Download/View ticket !', 'abp-transport-booking'),
                     'no_permit_msg' => __('You are not permitted to Download/View this ticket !', 'abp-transport-booking'),
@@ -1314,11 +1358,15 @@
                 $des = apply_filters('abptb_info_array_filter', $des);
                 return $des[$key] ?? '';
             }
-            public static function icon_buddy($key): void {
+            public static function icon_svg($key): void {
                 $des = [
                     'user_group_1' => '<svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"  d="M17 20c0-1.657-2.239-3-5-3s-5 1.343-5 3m14-3c0-1.23-1.234-2.287-3-2.75M3 17c0-1.23 1.234-2.287 3-2.75m12-4.014a3 3 0 1 0-4-4.472m-8 4.472a3 3 0 0 1 4-4.472M12 14a3 3 0 1 1 0-6a3 3 0 0 1 0 6Z"/></svg>',
                     'user_group_2' => '<svg  viewBox="0 0 24 24"> <path fill="currentColor" fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-1.5 8a4 4 0 0 0-4 4c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2a4 4 0 0 0-4-4zm6.8-3.1a5.5 5.5 0 0 0-2.8-6.3c.6-.4 1.3-.6 2-.6a3.5 3.5 0 0 1 .8 6.9m2.2 7.1h.5a2 2 0 0 0 2-2a4 4 0 0 0-4-4h-1.1l-.5.8c1.9 1 3.1 3 3.1 5.2M4 7.5a3.5 3.5 0 0 1 5.5-2.9A5.5 5.5 0 0 0 6.7 11A3.5 3.5 0 0 1 4 7.5M7.1 12H6a4 4 0 0 0-4 4c0 1.1.9 2 2 2h.5a6 6 0 0 1 3-5.2z" clip-rule="evenodd"/></svg>',
-                    'plus' => '<svg viewBox="0 0 16 16">    <path fill="currentColor" d="M14 7H9V2H7v5H2v2h5v5h2V9h5V7z"/></svg>',
+                    'plus' => '<svg viewBox="0 0 16 16"><path fill="currentColor" d="M14 7H9V2H7v5H2v2h5v5h2V9h5V7z"/></svg>',
+                    'minus_1' => '<svg viewBox="0 0 16 16"><path fill="currentColor" d="M2 7h12v2H2V7z"/></svg>',
+                    'minus_2' => '<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.707 10.295a2.41 2.41 0 0 0 0 3.41l7.588 7.588a2.41 2.41 0 0 0 3.41 0l7.588-7.588a2.41 2.41 0 0 0 0-3.41l-7.588-7.588a2.41 2.41 0 0 0-3.41 0zM8.5 12h7"/></svg>',
+                    'minus_3' => '<svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.832 3 3 8.832 3 16s5.832 13 13 13s13-5.832 13-13S23.168 3 16 3zm0 2c6.087 0 11 4.913 11 11s-4.913 11-11 11S5 22.087 5 16S9.913 5 16 5zm-6 10v2h12v-2H10z"/></svg>',
+                    'minus_4' => '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M299 213H0v-42h299v42z"/></svg>',
                     'save' => '<svg  viewBox="0 0 100 100.016"><path fill="#23475F" d="M88.555 0H83v.016a2 2 0 0 1-2 2H19a2 2 0 0 1-2-2V0H4a4 4 0 0 0-4 4v92.016a4 4 0 0 0 4 4h92a4 4 0 0 0 4-4V11.525C100.049 11.436 88.564.071 88.555 0z"/><path fill="#1C3C50" d="M81.04 53.016H18.96a2 2 0 0 0-2 2v45h66.08v-45c0-1.106-.895-2-2-2zm-61.957-10h61.834a2 2 0 0 0 2-2V.555A1.993 1.993 0 0 1 81 2.015H19c-.916 0-1.681-.62-1.917-1.46v40.46a2 2 0 0 0 2 2.001z"/><path fill="#EBF0F1" d="M22 55.985h56a2 2 0 0 1 2 2v37.031a2 2 0 0 1-2 2H22c-1.104 0-2-.396-2-1.5V57.985a2 2 0 0 1 2-2z"/><path fill="#BCC4C8" d="M25 77.016h50v1H25v-1zm0 10h50v1H25v-1z"/><path fill="#1C3C50" d="M7 84.016h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm83 0h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z"/><path fill="#BCC4C8" d="M37 1.989v36.026a2 2 0 0 0 2 2h39a2 2 0 0 0 2-2V1.989c0 .007-42.982.007-43 0zm37 29.027a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2V10.989a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v20.027z"/><path fill="#FF9D00" d="M78 55.985H22a2 2 0 0 0-2 2v10.031h60V57.985a2 2 0 0 0-2-2z"/></svg>',
                     'edit' => '<svg  viewBox="0 0 16 16"><path fill="currentColor" d="M15.49 7.3h-1.16v6.35H1.67V3.28H8V2H1.67A1.21 1.21 0 0 0 .5 3.28v10.37a1.21 1.21 0 0 0 1.17 1.25h12.66a1.21 1.21 0 0 0 1.17-1.25z"/><path fill="currentColor" d="M10.56 2.87L6.22 7.22l-.44.44l-.08.08l-1.52 3.16a1.08 1.08 0 0 0 1.45 1.45l3.14-1.53l.53-.53l.43-.43l4.34-4.36l.45-.44l.25-.25a2.18 2.18 0 0 0 0-3.08a2.17 2.17 0 0 0-1.53-.63a2.19 2.19 0 0 0-1.54.63l-.7.69l-.45.44zM5.51 11l1.18-2.43l1.25 1.26zm2-3.36l3.9-3.91l1.3 1.31L8.85 9zm5.68-5.31a.91.91 0 0 1 .65.27a.93.93 0 0 1 0 1.31l-.25.24l-1.3-1.3l.25-.25a.88.88 0 0 1 .69-.25z"/></svg>',
                     'drag' => '<svg  viewBox="0 0 16 16"><path fill="currentColor" d="m15.46 7l-3.2-2.19l-.71 1l2.29 1.57H8.62V2.16l1.57 2.29l1-.71L9 .54a1.25 1.25 0 0 0-2 0l-2.22 3.2l1 .71l1.59-2.29v5.22H2.16l2.29-1.57l-.71-1L.54 7a1.25 1.25 0 0 0 0 2l3.2 2.19l.71-1l-2.29-1.57h5.21v5.22l-1.56-2.29l-1 .71L7 15.46a1.25 1.25 0 0 0 2.06 0l2.19-3.2l-1-.71l-1.63 2.29V8.62h5.22l-2.29 1.57l.71 1L15.46 9a1.25 1.25 0 0 0 0-2z"/></svg>',
@@ -1342,6 +1390,7 @@
                     'view_2' => '<svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21c-5 0-11-5-11-9s6-9 11-9s11 5 11 9s-6 9-11 9Zm0-14a5 5 0 1 0 0 10a5 5 0 0 0 0-10Z"/></svg>',
                     'view_3' => '<svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z"/><path d="M12 13a1 1 0 1 0 0-2a1 1 0 0 0 0 2zm9 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/></g></svg>',
                     'pdf_1' => '<svg  viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M7.45 5.5a2 2 0 0 0-1.95 2v33.1a2 2 0 0 0 2 2h33.1a2 2 0 0 0 2-2V7.45a2 2 0 0 0-2-1.95Z"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M20.09 30V18h2a6 6 0 0 1 6 6h0a6 6 0 0 1-6 6Zm12.39-11.96h5.98m-5.98 5.98h3.9m-3.9-5.98V30M9.54 30V18h4a4 4 0 0 1 0 8h-4"/></svg>',
+                    'property' => '<svg viewBox="0 0 120 125" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><path d="M5 55 L 60 15 L 115 55"/><rect x="18" y="50" width="84" height="70" rx="2"/><rect x="50" y="80" width="24" height="40"/> <rect x="30" y="62" width="16" height="16"/> <rect x="74" y="62" width="16" height="16"/></svg>',
                     '' => '',
                 ];
                 $allowed_svg_tags = [

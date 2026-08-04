@@ -17,6 +17,7 @@
                         <h5 class="_abp"><span class="_mar_r_xs">🔗</span><?php echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('option_feature', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
+                    <?php ABPTB_Layout::info_text('abptb_feature'); ?>
                     <div class="option_feature _ov_auto_mar_t_xs">
                         <?php $this->feature_list(); ?>
                     </div>
@@ -151,13 +152,13 @@
                             $value = $feature['value'] ?? '';
                             if (!empty($label)) { ?>
                                 <div class="_list_item">
-                                    <h6 class="_abp">
+                                    <h6 class="_abp_gap_xs">
                                         <?php ABPTB_Layout::image_icon($feature['icon'] ?? '');
                                             echo esc_html($label . ' ' . (!empty($value) ? '-' . $value : '')); ?>
                                     </h6>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">✍️</button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">❌</button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                     </div>
                                 </div>
                                 <?php

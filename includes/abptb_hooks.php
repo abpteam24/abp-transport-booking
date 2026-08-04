@@ -10,6 +10,7 @@
 				add_action('abptb_post_filter', [$this, 'post_filter'], 10, 2);
 				add_action('abptb_type_head', [$this, 'type_head'], 10, 3);
 				add_action('abptb_ticket_type', [$this, 'ticket_type'], 10, 3);
+				add_action('abptb_sp_type', [$this, 'sp_type'], 10, 3);
 				add_action('abptb_registration', [$this, 'registration'], 10, 2);
 				add_action('abptb_additional', [$this, 'additional'], 10, 2);
 				add_action('abptb_client_form', [$this, 'client_form'], 10, 2);
@@ -43,6 +44,9 @@
 			public function ticket_type($post_infos, $form_data = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/ticket_type.php');
 				do_action('abptb_ticket_type_template', $post_infos, $form_data, $prefix);
+			}public function sp_type($post_infos, $form_data = [], $prefix = ''): void {
+				include_once ABPTB_Function::template_path('layout/sp_type.php');
+				do_action('abptb_sp_type_template', $post_infos, $form_data, $prefix);
 			}
 			public function registration($post_infos = [], $form_data = []): void {
 				include_once ABPTB_Function::template_path('layout/registration.php');

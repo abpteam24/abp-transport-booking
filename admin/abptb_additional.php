@@ -24,8 +24,8 @@
                     ?>
                     <div class="abp_form">
                         <h4 class="_abp_color_theme"><span class="_mar_r_xxs">💰</span><?php esc_html_e('Global Additional services Configuration', 'abp-transport-booking'); ?></h4>
-                        <?php ABPTB_Layout::info_text('additional_services'); ?>
-                        <div class="_divider_xs"></div>
+                        <?php ABPTB_Layout::info_text('abptb_additional'); ?>
+                        <div class="_mar_t_xs"></div>
                         <?php $this->additional_service($additional_services, true); ?>
                     </div>
                     <?php

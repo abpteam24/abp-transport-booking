@@ -341,7 +341,7 @@
                         ),
                         array(
                             'name' => 'display_capacity',
-                            'label' => ABPTB_Function::organizer_label(),
+                            'label' => __('Capacity / Available Qty', 'abp-transport-booking'),
                             'desc' => __('If you do not want to display transport capacity across the entire frontend of your site, turn this switch Off. When enabled, you can control the transport capacity display individually for each transport.', 'abp-transport-booking'),
                             'type' => 'button_switch',
                             'default' => 'on',
@@ -413,13 +413,6 @@
                             'name' => 'min_max',
                             'label' => __('Min & Max qty', 'abp-transport-booking'),
                             'desc' => __('If you do not want to use the Min & Max feature, simply turn this switch OFF. This will completely disable the Transport Min & Max feature for all transports across your website.  You can re-enable the Transport return feature at any time by turning this switch back ON.', 'abp-transport-booking'),
-                            'type' => 'button_switch',
-                            'default' => 'on',
-                        ),
-                        array(
-                            'name' => 'capacity',
-                            'label' => __('Display Capacity', 'abp-transport-booking'),
-                            'desc' => __('Turn off this switch to hide the passenger capacity on the frontend across your entire site. Turn it back on at any time to make the passenger capacity visible again.', 'abp-transport-booking'),
                             'type' => 'button_switch',
                             'default' => 'on',
                         ),
@@ -863,7 +856,7 @@
                 <div class="setting_item <?php echo esc_attr($option['class'] ?? ''); ?>" <?php if (!empty($section_target)) { ?> data-collapse="#<?php echo esc_attr($section_target); ?>"  <?php } ?>>
                     <div class="_f_wrap_fj_between_fa_center">
                         <span class="_abp_label"><?php echo esc_html($option['label'] ?? ''); ?></span>
-                        <div class="custom_radio">
+                        <div class="custom_radio _group_content">
                             <input type="hidden" class="_form_control" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>"/>
                             <?php foreach ($option_data as $key => $data) { ?>
                                 <div class="radio_item">
@@ -918,7 +911,7 @@
                 <div class="setting_item <?php echo esc_attr($option['class'] ?? ''); ?>" <?php if (!empty($section_target)) { ?> data-collapse="#<?php echo esc_attr($section_target); ?>"  <?php } ?>>
                     <div class="_f_wrap_fj_between_fa_center">
                         <span class="_abp_label"><?php echo esc_html($option['label'] ?? ''); ?></span>
-                        <div class="custom_checkbox">
+                        <div class="custom_checkbox _group_content">
                             <input type="hidden" name="<?php echo esc_attr($option['name'] ?? ''); ?>" value="<?php echo esc_attr($value); ?>"/>
                             <?php foreach ($option_data as $key => $label) { ?>
                                 <div class="checkbox_item">

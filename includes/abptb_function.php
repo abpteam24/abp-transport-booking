@@ -90,6 +90,9 @@
 			public static function location_value($id) { return (ABPTB_Location[$id]['name'] ?? null) ?: $id; }
 			public static function ticket_name($id) { return (ABPTB_Ticket[$id]['label'] ?? null) ?: __('Ticket/Seat', 'abp-transport-booking'); }
 			public static function ticket_icon($id) { return (ABPTB_Ticket[$id]['icon'] ?? null) ?: ''; }
+			public static function ticket_color($id) { return (ABPTB_Ticket[$id]['color'] ?? null) ?: 'inherit'; }
+			public static function decor_icon($id) { return (ABPTB_Decor[$id]['icon'] ?? null) ?: ''; }
+			public static function decor_color($id) { return (ABPTB_Decor[$id]['color'] ?? null) ?: 'inherit'; }
 			public static function on_off($key): bool {
 				$value = (ABPTB_On_Off[$key] ?? 'on') ?: 'on';
 				return $value !== 'off';
@@ -326,7 +329,7 @@
 							} else {
 								$date_infos = self::get_post_info($post_id, 'abptb_dates', []);
 							}
-							if (!empty($date_infos) && $global_complete < 2) {
+							if ($global_complete < 2) {
 								$dates = self::date($post_id, $date_infos, $_date);
 								$all_dates = array_merge($all_dates, $dates);
 							}
@@ -748,7 +751,7 @@
 				}
 				return null;
 			}
-			public static function get_additional_price($post_infos=[], $i_d=''): int|string {
+			public static function get_additional_price($post_infos = [], $i_d = ''): int|string {
 				$services = ABPTB_Function::additional_data($post_infos);
 				$price = 0;
 				$post_id = $post_infos['post_id'] ?? '';
@@ -827,9 +830,9 @@
 					if ($display === 'on') {
 						$active_global = $post_infos['active_global_form'] ?? 'on';
 						if ($active_global === 'on') {
-							$data = ABPTB_Function::get_option('abptb_forms');
+							$data = ABPTB_Function::get_option('abptb_form');
 						} else {
-							$data = $post_infos['abptb_forms'] ?? [];
+							$data = $post_infos['abptb_form'] ?? [];
 						}
 					}
 				}

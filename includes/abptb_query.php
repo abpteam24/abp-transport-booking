@@ -90,6 +90,10 @@
 					$conditions[] = "order_status IN ($placeholders)";
 					$params = array_merge($params, $booked_status);
 				}
+				if (!empty($filters['id'])) {
+					$conditions[] = "id = %d";
+					$params[] = intval($filters['id']);
+				}
 				if (!empty($filters['post_id'])) {
 					$conditions[] = "post_id = %d";
 					$params[] = intval($filters['post_id']);
@@ -106,52 +110,69 @@
 					$conditions[] = "order_id = %d";
 					$params[] = intval($filters['order_id']);
 				}
-				if (!empty($filters['property_id'])) {
-					$conditions[] = "JSON_CONTAINS(property_id, %s)";
-					$params[] = wp_json_encode(intval($filters['property_id']));
+				if (!empty($filters['start_point'])) {
+					$conditions[] = "start_point = %d";
+					$params[] = intval($filters['start_point']);
+				}
+				$start_time = !empty($filters['start_time']) ? gmdate('Y-m-d H:i:s', strtotime($filters['start_time'])) : null;
+				if (!empty($start_time)) {
+					$conditions[] = "DATE(start_time) = %s ";
+					$params[] = $start_time;
+				}
+				if (!empty($filters['bp_dp'])) {
+					$conditions[] = "bp_dp = %s";
+					$params[] = $filters['start_point'];
+				}
+				if (!empty($filters['bp'])) {
+					$conditions[] = "bp = %d";
+					$params[] = intval($filters['bp']);
+				}
+				if (!empty($filters['_bp'])) {
+					$conditions[] = "bp = %d";
+					$params[] = intval($filters['_bp']);
+				}
+				if (!empty($filters['dp'])) {
+					$conditions[] = "dp = %d";
+					$params[] = intval($filters['dp']);
+				}
+				if (!empty($filters['_dp'])) {
+					$conditions[] = "dp = %d";
+					$params[] = intval($filters['_dp']);
+				}
+				if (!empty($filters['sp_id'])) {
+					$conditions[] = "sp_id = %d";
+					$params[] = intval($filters['sp_id']);
+				}
+				if (!empty($filters['ticket_id'])) {
+					$conditions[] = "JSON_CONTAINS(ticket_id, %s)";
+					$params[] = wp_json_encode(intval($filters['ticket_id']));
 				}
 				if (!empty($filters['ex_id'])) {
 					$conditions[] = "JSON_CONTAINS(ex_id, %s)";
 					$params[] = wp_json_encode(sanitize_text_field($filters['ex_id']));
 				}
-				if (!empty($filters['location'])) {
-					$conditions[] = "JSON_CONTAINS(location, %s)";
-					$params[] = wp_json_encode(intval($filters['location']));
-				}
-				$start_time = !empty($filters['start_time']) ? gmdate('Y-m-d H:i:s', strtotime($filters['start_time'])) : null;
-				$end_time = !empty($filters['end_time']) ? gmdate('Y-m-d H:i:s', strtotime($filters['end_time'])) : null;
 				$order_date = !empty($filters['order_date']) ? gmdate('Y-m-d', strtotime($filters['order_date'])) : null;
-				$booking_time_from = !empty($filters['booking_time_from']) ? gmdate('Y-m-d', strtotime($filters['booking_time_from'])) : null;
-				$booking_time_to = !empty($filters['booking_time_to']) ? gmdate('Y-m-d', strtotime($filters['booking_time_to'])) : null;
-				$order_time_from = !empty($filters['order_date_from']) ? gmdate('Y-m-d', strtotime($filters['order_date_from'])) : null;
-				$order_time_to = !empty($filters['order_date_to']) ? gmdate('Y-m-d', strtotime($filters['order_date_to'])) : null;
-				$billing_name = !empty($filters['billing_name']) ? '%' . sanitize_text_field($filters['billing_name']) . '%' : null;
-				$billing_email = !empty($filters['billing_email']) ? '%' . sanitize_text_field($filters['billing_email']) . '%' : null;
-				$billing_phone = !empty($filters['billing_phone']) ? '%' . sanitize_text_field($filters['billing_phone']) . '%' : null;
-				if (!empty($start_time) && !empty($end_time)) {
-					$conditions[] = "(book_from < %s AND book_to > %s)";
-					$params[] = $end_time;
-					$params[] = $start_time;
-				} else {
-					if (!empty($start_time)) {
-						$conditions[] = "DATE(start_time) = %s ";
-						$params[] = $start_time;
-					}
-				}
 				if (!empty($order_date)) {
 					$conditions[] = "DATE(created_at) = %s ";
 					$params[] = $order_date;
 				}
+				$booking_time_from = !empty($filters['start_time_from']) ? gmdate('Y-m-d', strtotime($filters['start_time_from'])) : null;
+				$booking_time_to = !empty($filters['start_time_to']) ? gmdate('Y-m-d', strtotime($filters['start_time_to'])) : null;
 				if (!empty($booking_time_from) && !empty($booking_time_to)) {
 					$conditions[] = "DATE(start_time) BETWEEN %s AND %s";
 					$params[] = $booking_time_from;
 					$params[] = $booking_time_to;
 				}
+				$order_time_from = !empty($filters['order_date_from']) ? gmdate('Y-m-d', strtotime($filters['order_date_from'])) : null;
+				$order_time_to = !empty($filters['order_date_to']) ? gmdate('Y-m-d', strtotime($filters['order_date_to'])) : null;
 				if (!empty($order_time_from) && !empty($order_time_to)) {
 					$conditions[] = "DATE(created_at) BETWEEN %s AND %s";
 					$params[] = $order_time_from;
 					$params[] = $order_time_to;
 				}
+				$billing_name = !empty($filters['billing_name']) ? '%' . sanitize_text_field($filters['billing_name']) . '%' : null;
+				$billing_email = !empty($filters['billing_email']) ? '%' . sanitize_text_field($filters['billing_email']) . '%' : null;
+				$billing_phone = !empty($filters['billing_phone']) ? '%' . sanitize_text_field($filters['billing_phone']) . '%' : null;
 				if (!empty($billing_name)) {
 					$conditions[] = "billing_name LIKE %s";
 					$params[] = $billing_name;

@@ -4,8 +4,10 @@
     }
     add_action('abptb_type_head_template', function ($post_infos, $form_data = [], $prefix = '') {
         if (!empty($post_infos)) {
+            $seat_type = $post_infos['seat_type'] ?? 'sp';
+            $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
             //echo '<pre>';        print_r($form_data);        echo '</pre>';
-            $ticket_infos = $post_infos['ticket_infos'] ?? [];
+            $ticket_infos = $post_infos[$seat_type.'_infos'] ?? [];
             if (is_array($ticket_infos) && sizeof($ticket_infos) > 0) {
                 $bp_dp = $form_data['bp_dp'] ?? '';
                 $journey_date = $form_data['journey_date'] ?? '';

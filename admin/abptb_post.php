@@ -37,7 +37,7 @@
                             <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'trash' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTB_Function::build_url('posts', ['status' => 'trash'])); ?>"><?php esc_html_e('Trash', 'abp-transport-booking'); ?> ( <?php echo esc_html($total_trash); ?> )</button>
                         </div>
                         <a class="_btn_navy_blue_xs" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>">
-                            <?php ABPTB_Layout::icon_buddy('plus');
+                            <?php ABPTB_Layout::icon_svg('plus');
                                 esc_html_e('Add New Transport', 'abp-transport-booking'); ?>
                         </a>
                     </div>
@@ -64,11 +64,11 @@
                 $page_number = absint($filter_args['page_number'] ?? 1) ?: 1;
                 $limit = absint(($filter_args['page_item'] ?? 0) ?: ABPTB_Function::get_option('abptb_per_page_item', 20));
                 $count = ($page_number - 1) * $limit + 1;
-                $offset = $count - 1;
                 $cpt = ABPTB_Function::get_cpt();
                 $filters['status'] = $status;
                 $filters['posts_per_page'] = $limit;
-                $filters['paged'] = $offset;
+                $filters['paged'] = $page_number - 1;
+                //echo '<pre>';print_r($filters);echo '</pre>';
                 $post_ids = ABPTB_Query::get_post_id($filters);
                 if (!empty($post_ids) && sizeof($post_ids) > 0) {
                     $total_post = sizeof(ABPTB_Query::get_post_id(['status' => $status]));
@@ -106,9 +106,9 @@
                                     <td>
                                         <div class="_mar_b_xxs">
                                             <?php if ($post_status == 'trash') { ?>
-                                                <h5 class="_abp_color_warning"><?php ABPTB_Layout::title($post_infos); ?></h5>
+                                                <h6 class="_abp_color_warning"><?php ABPTB_Layout::title($post_infos); ?></h6>
                                             <?php } else { ?>
-                                                <a href="<?php echo esc_url($edit_link); ?>" class="_abp_fs_h5_color_theme"><?php ABPTB_Layout::title($post_infos); ?></a>
+                                                <a href="<?php echo esc_url($edit_link); ?>" class="_abp_fs_h6_color_theme"><?php ABPTB_Layout::title($post_infos); ?></a>
                                             <?php } ?>
                                         </div>
                                         <div class="_gap_xxs">
@@ -119,26 +119,26 @@
                                             <span class="abp_tag <?php echo esc_attr($post_status); ?>"><?php echo esc_html($post_status); ?></span>
                                         </div>
                                     </td>
-                                    <th>
+                                    <td>
                                         <div class="_abp_color_active"><?php ABPTB_Layout::route_direction($post_infos); ?></div>
                                         <?php if ($display_return == 'on') { ?>
                                             <div class="_abp_color_burnt_orange">
                                                 <?php ABPTB_Layout::route_direction($post_infos, '', true); ?>
                                             </div>
                                         <?php } ?>
-                                    </th>
-                                    <th><?php echo esc_html(ABPTB_Layout::ticket_type($seat_type) . ' - ' . ABPTB_Function::get_total_qty($post_id, $post_infos)) ?></th>
+                                    </td>
+                                    <th><?php echo esc_html(ABPTB_Layout::ticket_type($seat_type) . ' - ' . ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></th>
                                     <th><code> [abptb-post post_id="<?php echo esc_attr($post_id); ?>"]</code></th>
                                     <th>
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_navy_blue_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_buddy('clone_1'); ?></button>
+                                            <button type="button" class="_btn_light_navy_blue_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('clone_1'); ?></button>
                                             <?php if ($post_status == 'trash') { ?>
                                                 <button type="button" class="_btn_light_success_xxs " onclick="abptb_post_action('restore','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Restore : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>">♻️</button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('permanent_remove','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_buddy('close_2'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('permanent_remove','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('close_2'); ?></button>
                                             <?php } else { ?>
-                                                <button type="button" class="_btn_light_yellow_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_buddy('edit'); ?></button>
-                                                <button type="button" class="_btn_light_theme_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_buddy('view_1'); ?></button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('move_trash','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Move to Trash : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_buddy('close_1'); ?></button>
+                                                <button type="button" class="_btn_light_yellow_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                                <button type="button" class="_btn_light_theme_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('view_1'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('move_trash','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Move to Trash : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                             <?php } ?>
                                         </div>
                                     </th>
@@ -330,7 +330,6 @@
                                 <?php ABPTB_Layout::info_text('display_brand'); ?>
                             </div>
                         <?php } ?>
-
                         <?php if (ABPTB_Function::on_off('related')) { ?>
                             <div class="setting_item related_item">
                                 <div class="_fj_between_fa_center">
@@ -377,7 +376,7 @@
                         <div class="setting_item full_width">
                             <span class="_abp_label"><?php esc_html_e('Gallery', 'abp-transport-booking'); ?></span>
                             <div class="_divider_xxs"></div>
-                            <?php ABPTB_Layout::info_text('abptb_slider'); ?>
+                            <?php ABPTB_Layout::info_text('display_slider'); ?>
                             <div class="_divider_xxs"></div>
                             <?php do_action('abptb_add_image_multiple', 'abptb_slider', ($post_infos['abptb_slider'] ?? '')); ?>
                         </div>
@@ -462,6 +461,7 @@
                     $route_data = [];
                     $route_infos = [];
                     $price_infos = [];
+                    $route_direction = [];
                     $stops = $post_int_array('stop_name');
                     $types = $post_array('stop_type');
                     $display_pd = $post_array('display_pd');
@@ -472,6 +472,7 @@
                                 $route_infos[$stop]['type'] = $types[$key] ?? 'both';
                                 $route_infos[$stop]['time'] = $times[$key] ?? '';
                                 $route_infos[$stop]['pd'] = $display_pd[$key] ?? 'off';
+                                $route_direction[] = $stop;
                             }
                         }
                     }
@@ -545,6 +546,7 @@
                     $return_route_infos = [];
                     $return_price_infos = [];
                     $return_time_info = [];
+                    $return_route_direction = [];
                     if ($display_return == 'on') {
                         $stops = $post_int_array('return_stop_name');
                         $types = $post_array('return_stop_type');
@@ -556,6 +558,7 @@
                                     $return_route_infos[$stop]['type'] = $types[$key] ?? 'both';
                                     $return_route_infos[$stop]['time'] = $times[$key] ?? '';
                                     $return_route_infos[$stop]['pd'] = $display_pd[$key] ?? 'off';
+                                    $return_route_direction[] = $stop;
                                 }
                             }
                         }
@@ -631,10 +634,10 @@
                     $additional_services = ($active_global_additional == 'on' || $display_additional_services == 'off') ? [] : apply_filters('abptb_get_additional_array', []);
                     $display_client_form = $post_val('display_client_form', 'off');
                     $active_global_form = $display_client_form == 'on' ? $post_val('active_global_form', 'on') : 'off';
-                    $abptb_forms = ($active_global_form == 'on' || $display_client_form == 'off') ? [] : apply_filters('abptb_get_form_array', []);
+                    $abptb_form = ($active_global_form == 'on' || $display_client_form == 'off') ? [] : apply_filters('abptb_get_form_array', []);
                     $display_faq = $post_val('display_faq', 'off');
                     $active_global_faq = $display_faq == 'on' ? $post_val('active_global_faq', 'on') : 'off';
-                    $abptb_faqs = ($active_global_faq == 'on' || $display_faq == 'off') ? [] : apply_filters('abptb_get_faq_array', []);
+                    $abptb_faq = ($active_global_faq == 'on' || $display_faq == 'off') ? [] : apply_filters('abptb_get_faq_array', []);
                     $display_tc = $post_val('display_tc', 'off');
                     $active_global_tc = $display_tc == 'on' ? $post_val('active_global_tc', 'on') : 'off';
                     $abptb_tc = ($active_global_tc == 'on' || $display_tc == 'off') ? [] : $post_html('tc_content');
@@ -670,6 +673,9 @@
                         'return_routing_infos' => $return_route_infos,
                         'route_data' => $route_data,
                         //================//
+                        'route_direction' => $route_direction,
+                        'return_route_direction' => $return_route_direction,
+                        //================//
                         'price_infos' => $price_infos,
                         'return_price_infos' => $return_price_infos,
                         'price_data' => array_merge($price_infos, $return_price_infos),
@@ -684,10 +690,10 @@
                         'display_client_form' => $display_client_form,
                         'active_global_form' => $active_global_form,
                         'display_single_form' => $post_val('display_single_form', 'on'),
-                        'abptb_forms' => $abptb_forms,
+                        'abptb_form' => $abptb_form,
                         'display_faq' => $display_faq,
                         'active_global_faq' => $active_global_faq,
-                        'abptb_faqs' => $abptb_faqs,
+                        'abptb_faq' => $abptb_faq,
                         'display_tc' => $display_tc,
                         'active_global_tc' => $active_global_tc,
                         'abptb_tc' => $abptb_tc,
@@ -734,7 +740,7 @@
                         wp_trash_post($link_wc_id);
                     }
                     wp_trash_post($post_id);
-                    wp_send_json_success(['html' => '', 'msg' => $title . ' : ' . __('Moved to trash successfully...... !! ', 'abp-transport-booking'), 'type' => 'warm']);
+                    wp_send_json_success(['html' => '', 'msg' => $title . ' : ' . __('Moved to trash successfully...... !! ', 'abp-transport-booking'), 'type' => 'warn']);
                 }
                 wp_send_json_error(['html' => '', 'msg' => __('Invalid  ID ..... !! ', 'abp-transport-booking'), 'type' => 'warn'], 400);
             }
@@ -769,7 +775,7 @@
                 $this->post_table($filter_args);
                 $table_html = ob_get_clean();
                 wp_send_json_success([
-                    'html' => $table_html,
+                    'html' => $table_html, 'type' => 'success',
                     'msg' => __('Post List Loaded successfully...... !! ', 'abp-transport-booking')
                 ]);
             }

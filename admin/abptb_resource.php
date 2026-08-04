@@ -17,30 +17,34 @@
                 if (ABPTB_Function::on_off('faq')) {
                     ?>
                     <div class="setting_item faq_configuration _mar_b_xs">
-                        <h5 class="_abp"><span class="_mar_r_xxs">❓</span><?php esc_html_e('Global FAQ Configuration', 'abp-transport-booking'); ?></h5>
-                        <div class="faq_config">
-                            <?php $this->faq_config(); ?>
+                        <h5 class="_abp" data-collapse-target="#faq_collapse"><span class="_mar_r_xxs">❓</span><?php esc_html_e('Global FAQ Configuration', 'abp-transport-booking'); ?></h5>
+                        <div class="abp_active" data-collapse="#faq_collapse">
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('abptb_faq'); ?>
+                            <div class="faq_config _mar_t_xs">
+                                <?php $this->faq_config(); ?>
+                            </div>
                         </div>
-                        <div class="_divider_xxs"></div>
-                        <?php ABPTB_Layout::info_text('abptb_faqs'); ?>
                     </div>
                     <?php
                 }
                 if (ABPTB_Function::on_off('tc')) {
                     ?>
                     <div class="setting_item">
-                        <h5 class="_abp_mar_b_xs"><span class="_mar_r_xxs">🤝</span><?php esc_html_e('Global Term & Conditions Configuration', 'abp-transport-booking'); ?></h5>
-                        <div class="_divider_xxs"></div>
-                        <?php ABPTB_Layout::info_text('abptb_tc'); ?>
-                        <div class="tc_config">
-                            <?php $this->tc_config(); ?>
+                        <h5 class="_abp" data-collapse-target="#tc_collapse"><span class="_mar_r_xxs">🤝</span><?php esc_html_e('Global Term & Conditions Configuration', 'abp-transport-booking'); ?></h5>
+                        <div class="abp_active" data-collapse="#tc_collapse">
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('abptb_tc'); ?>
+                            <div class="tc_config _mar_t_xs">
+                                <?php $this->tc_config(); ?>
+                            </div>
                         </div>
                     </div>
                     <?php
                 }
             }
             public function faq_config(): void {
-                $faqs = ABPTB_Function::get_option('abptb_faqs');
+                $faqs = ABPTB_Function::get_option('abptb_faq');
                 ?>
                 <div class="abp_form">
                     <?php $this->faq($faqs, true); ?>
@@ -59,7 +63,6 @@
                             }
                         ?>
                     </div>
-                    <div class="_divider_xs"></div>
                     <div class="_fj_between">
                         <?php ABPTB_Layout::button_add(__('Add New FAQ Item', 'abp-transport-booking'));
                             if ($global) {
@@ -78,7 +81,7 @@
                 $title = $faq['title'] ?? __('NEW', 'abp-transport-booking');
                 $description = $faq['des'] ?? '';
                 $description = $description ? html_entity_decode($description) : '';
-                $editor_id =uniqid('abptb_editor_');
+                $editor_id = uniqid('abptb_editor_');
                 ?>
                 <div class="delete_area faq_item _mar_b_xs <?php echo esc_attr(empty($faq) ? 'active' : ''); ?>">
                     <div class="faq_question">
@@ -118,8 +121,8 @@
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
-                $abptb_faqs = $this->get_faq_array();
-                update_option('abptb_faqs', $abptb_faqs);
+                $abptb_faq = $this->get_faq_array();
+                update_option('abptb_faq', $abptb_faq);
                 ob_start();
                 $this->faq_config();
                 $html = ob_get_clean();
@@ -185,7 +188,7 @@
                     $post_id = absint($post_infos['post_id'] ?? 0);
                     $display = $post_infos['display_faq'] ?? 'on';
                     $active_global_faq = $post_infos['active_global_faq'] ?? 'on';
-                    $faqs = get_post_meta($post_id, 'abptb_faqs', true);
+                    $faqs = get_post_meta($post_id, 'abptb_faq', true);
                     $faqs = is_array($faqs) ? $faqs : [];
                     ?>
                     <h5 class="_abp"><span class="_mar_r_xxs">❓</span><?php esc_html_e('FAQs Configuration', 'abp-transport-booking'); ?></h5>
@@ -299,7 +302,7 @@
                             );
                         ?>
                     </div>
-                    <?php ABPTB_Layout::info_text('tc_item'); ?>
+
                 </div>
                 <?php
             }
@@ -318,7 +321,7 @@
                     'type' => 'success'
                 ]);
             }
-            public function get_faq_array(array $abptb_faqs = []): array {
+            public function get_faq_array(array $abptb_faq = []): array {
                 $has_post_nonce = isset($_POST['abptb_post_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['abptb_post_nonce'])), 'abptb_post_nonce');
                 $has_ajax_nonce = check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false);
                 if (($has_post_nonce || $has_ajax_nonce) && current_user_can('manage_options')) {
@@ -329,7 +332,7 @@
                     if (!empty($titles)) {
                         foreach ($titles as $key => $title) {
                             if ($title && !empty($descriptions[$key])) {
-                                $abptb_faqs[$key] = [
+                                $abptb_faq[$key] = [
                                     'title' => $title,
                                     'des' => $descriptions[$key],
                                 ];
@@ -337,7 +340,7 @@
                         }
                     }
                 }
-                return $abptb_faqs;
+                return $abptb_faq;
             }
             public function import_tc_content(): void {
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
@@ -353,7 +356,7 @@
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
-                $faqs = ABPTB_Function::get_option('abptb_faqs');
+                $faqs = ABPTB_Function::get_option('abptb_faq');
                 $faqs = is_array($faqs) ? $faqs : [];
                 ob_start();
                 $this->faq($faqs);

@@ -14,12 +14,12 @@
             <div id="abptb_area" class="abptb_area default_details_page">
                 <div class="abptb_container">
                     <div class="_abp_row">
-                        <div class="_f_equal_f_wrap_gap _section_15">
+                        <div class="_f_equal_f_wrap_gap_section_15">
                             <div class="_min_500"><?php ABPTB_Layout::image($post_id); ?></div>
                             <div class="_min_500">
-                                <h1 class="_abp_color_theme"><?php ABPTB_Layout::title($post_infos); ?></h1>
+                                <h1 class="_abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
                                 <?php ABPTB_Layout::sub_title($post_infos); ?>
-                                <div class="_section_dot_xs_mar_t_xs">
+                                <div class="_section_21_dot_xs_mar_t_xs">
                                     <div class="_abp_color_active_fs_label"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
                                     <?php if ($display_return == 'on') { ?>
                                         <div class="_abp_color_burnt_orange">
@@ -35,7 +35,7 @@
                                     ?>
                                 </div>
                                 <?php ABPTB_Layout::item_feature($post_infos['post_feature'] ?? '');
-                                    ABPTB_Layout::description($post_infos);                          ?>
+                                    ABPTB_Layout::description($post_infos); ?>
                             </div>
                         </div>
                     </div>

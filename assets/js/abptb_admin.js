@@ -41,21 +41,20 @@ function abptb_color_picker_init(target = abptb_parent) {
     }
 }
 function abptb_wp_editor_init(target = abptb_parent) {
-    let textArea = target.find('textarea.wp-editor-area:not(.abp_hidden *)');
+    let textArea = target.find('textarea.wp-editor-area');
     if (textArea.length > 0) {
-        let existingId = textArea.attr('id');
-        if (existingId && typeof tinymce !== 'undefined' && tinymce.get(existingId)) {
-            return;
-        }
-        let uniqueId = existingId || ('editor_' + Math.random().toString(36).substring(2, 11));
-        if (target.find('.wp-editor-wrap').length > 0) {
-            target.find('.wp-editor-wrap').replaceWith(textArea);
-        }
-        textArea.attr('id', uniqueId).show();
-        setTimeout(function () {
+        textArea.each(function () {
+            let $currentTextarea = jQuery(this);
+            let dynamicId = 'editor_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            $currentTextarea.attr('id', dynamicId);
+            let $wrap = $currentTextarea.closest('.wp-editor-wrap');
+            if ($wrap.length > 0) {
+                $wrap.replaceWith($currentTextarea);
+            }
+            $currentTextarea.show();
             if (typeof wp !== 'undefined' && wp.editor) {
-                wp.editor.remove(uniqueId);
-                wp.editor.initialize(uniqueId, {
+                wp.editor.remove(dynamicId);
+                wp.editor.initialize(dynamicId, {
                     tinymce: {
                         wpautop: true,
                         cleanup: false,
@@ -64,7 +63,7 @@ function abptb_wp_editor_init(target = abptb_parent) {
                         forced_root_block: false,
                         valid_elements: '*[*]',
                         setup: function (editor) {
-                            editor.on('change', function () {
+                            editor.on('change keyup', function () {
                                 editor.save();
                             });
                         }
@@ -73,7 +72,7 @@ function abptb_wp_editor_init(target = abptb_parent) {
                     mediaButtons: true
                 });
             }
-        }, 100);
+        });
     }
 }
 function abptb_location_selection(target = abptb_parent) {
@@ -140,25 +139,6 @@ function abptb_ticket_type_selection(target = abptb_parent) {
         });
     }
 }
-function abptb_load_post_list(parent, filter_args) {
-    let target = parent.find('.post_list');
-    if (target.length > 0) {
-        jQuery.ajax({
-            type: 'POST', url: abptb_admin_data.ajax_url, data: {
-                "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
-            }, beforeSend: function () {
-                abptb_spinner(parent);
-                abptb_toast_msg(abptb_admin_data.msg.post_loading);
-            }, success: function (response) {
-                target.html(response.data.html);
-                abptb_spinner_remove(parent);
-                abptb_toast_msg(response.data.html, 'success');
-            }
-        });
-    } else {
-        parent.find('.post_tab').trigger('click');
-    }
-}
 function abptb_emoji_check(str) {
     return !(/^fa[bsrld]\s/.test(str));
 }
@@ -175,6 +155,9 @@ window.abptb_popup_open_global = function (action, id = '') {
                     "action": 'abptb_add_' + action, 'id': id, 'post_id': post_id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
                     abptb_spinner(parent);
+                    setTimeout(function () {
+                        abptb_color_picker_init(parent);
+                    }, 50);
                     abptb_toast_msg(abptb_admin_data.msg.loading);
                 }, success: function (response) {
                     abptb_spinner_remove(parent);
@@ -234,6 +217,7 @@ window.abptb_save_global = function (action, $_this) {
                         if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                             target.html(response.data.html).promise().done(function () {
                                 abptb_init(target);
+                                abptb_wp_editor_init(target);
                             });
                         }
                         if (response.data.hasOwnProperty('js')) {
@@ -342,7 +326,10 @@ window.abptb_import_global = function (action) {
                     if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                         target.html(response.data.html).promise().done(function () {
                             abptb_init(target);
-                            abptb_wp_editor_init(target);
+                            setTimeout(function () {
+                                abptb_color_picker_init(target);
+                                abptb_wp_editor_init(target);
+                            }, 50);
                         });
                     }
                 }
@@ -380,7 +367,9 @@ window.abptb_wc_config = function (page_type) {
                 abptb_spinner(parent);
                 abptb_toast_msg((abptb_admin_data.msg[page_type] ? abptb_admin_data.msg[page_type] : abptb_admin_data.msg.loading));
             }, success: function (response) {
-                abptb_toast_msg(response.data.msg, response.data.type);
+                if (response.data && response.data.hasOwnProperty('msg')) {
+                    abptb_toast_msg(response.data.msg, response.data.type);
+                }
                 window.location.reload();
             }, error: function (xhr) {
                 abptb_ajx_error(xhr, parent);
@@ -430,24 +419,44 @@ window.abptb_image_selection = function ($this) {
     abptb_media_uploader.current_target = $this.closest('.image_selection');
     abptb_media_uploader.open();
 };
+//==========Post Pagination=================//
+abptb_parent.on('click', '.post_list .pagination_area button[data-page]', function () {
+    let $this = jQuery(this);
+    if (!$this.hasClass('abp_active')) {
+        let parent = $this.closest('.abptb_posts');
+        let target = parent.find('.post_list');
+        let filter_args = {};
+        if (parent.find("[name='select_hidden_post_status']").length > 0) {
+            filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
+        }
+        filter_args['page_number'] = parseInt($this.attr('data-page'));
+        if (parent.find("[name='page_item']").length > 0) {
+            filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
+        }
+        if (target.length > 0) {
+            jQuery.ajax({
+                type: 'POST', url: abptb_admin_data.ajax_url, data: {
+                    "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
+                }, beforeSend: function () {
+                    abptb_spinner(parent);
+                    abptb_toast_msg(abptb_admin_data.msg.post_loading);
+                }, success: function (response) {
+                    if (response.data && response.data.hasOwnProperty('html')) {
+                        target.html(response.data.html);
+                    }
+                    abptb_spinner_remove(parent);
+                    abptb_toast_msg(response.data.msg, response.data.type);
+                }, error: function (xhr) {
+                    abptb_ajx_error(xhr, parent);
+                }
+            });
+        } else {
+            parent.find('.post_tab').trigger('click');
+        }
+    }
+});
 (function ($) {
     "use strict";
-    //==========Post Action=================//
-    $(document).on('click', 'div.abptb_admin .post_list .pagination_area button[data-page]', function () {
-        let $this = $(this);
-        if (!$this.hasClass('abp_active')) {
-            let parent = $(this).closest('.abptb_posts');
-            let filter_args = {};
-            if (parent.find("[name='select_hidden_post_status']").length > 0) {
-                filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
-            }
-            filter_args['page_number'] = parseInt($this.attr('data-page'));
-            if (parent.find("[name='page_item']").length > 0) {
-                filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
-            }
-            abptb_load_post_list(parent, filter_args);
-        }
-    });
     //==========Route , ticket config=================//
     abptb_parent.on('abp_trigger', '.abptb_routing .add_new_hook', function () {
         abptb_location_selection();
@@ -479,7 +488,7 @@ window.abptb_image_selection = function ($this) {
         }
         let total_seat = 0;
         let ticketTypes = abptb_sp_info[sp_id];
-        let html = '<div class="_group_list">';
+        let html = '<div class="_gap_xs_f_wrap">';
         Object.keys(ticketTypes).forEach(function (key) {
             let item = ticketTypes[key];
             let label = item.label || '';
@@ -499,14 +508,14 @@ window.abptb_image_selection = function ($this) {
             let seatCount = parseInt(item.seat, 10) || 0;
             total_seat = total_seat + seatCount;
             if (label !== '') {
-                html += `<div class="_list_item">`;
-                html += `    <h6 class="_abp" style="color: ${color}">`;
+                html += `<div class="abp_tag">`;
+                html += `<span class="_abp_gap_xxs" style="color: ${color}">`;
                 if (icon_emoji !== '') {
                     html += ` ${icon_emoji}`;
                 }
-                html += `        ${label}`;
-                html += `    </h6>`;
-                html += `    <span class="_mar_l_xs_circle_icon_xs">${seatCount}</span>`;
+                html += ` ${label}`;
+                html += `</h6>`;
+                html += `<span class="_color_theme"> ( ${seatCount}</span> ) `;
                 html += `</div>`;
             }
         });
@@ -667,7 +676,7 @@ window.abptb_image_selection = function ($this) {
         });
     }
     //==========Orders list=================//
-    $(document).on('submit', 'div.abptb_admin form.load_order_list', function (e) {
+    abptb_parent.on('submit', 'div.abptb_orders form.abp_search_form', function (e) {
         e.preventDefault();
         let parent = $(this).closest('.abptb_orders');
         let target = parent.find('.order_list');
@@ -695,20 +704,22 @@ window.abptb_image_selection = function ($this) {
                     }
                     abptb_toast_msg(response.data.msg, response.data.type);
                 }
+            },error: function (xhr) {
+                abptb_ajx_error(xhr, parent);
             }
         });
     });
-    $(document).on('click', 'div.abptb_admin .order_status_menu button[data-status]', function () {
+    abptb_parent.on('click', 'div.abptb_orders .order_status_menu button[data-status]', function () {
         let $this = $(this);
         if (!$this.hasClass('abp_active')) {
             $this.closest('.order_status_menu').find('[data-status].abp_active').removeClass('abp_active').promise().done(function () {
                 $this.addClass('abp_active').promise().done(function () {
-                    $this.closest('.abptb_orders').find('form.load_order_list').submit();
+                    $this.closest('.abptb_orders').find('form.abp_search_form').submit();
                 });
             });
         }
     });
-    $(document).on('click', 'div.abptb_admin button.abptb_item_cancel', function () {
+    abptb_parent.on('click', 'div.abptb_orders button.item_cancel', function () {
         let $this = $(this);
         let parent = $(this).closest('.abptb_orders');
         let item_id = $this.attr('data-item_id');
@@ -721,19 +732,23 @@ window.abptb_image_selection = function ($this) {
                     abptb_toast_msg(abptb_admin_data.msg.deleting, 'error');
                 }, success: function (response) {
                     abptb_spinner_remove(parent);
-                    abptb_toast_msg(response.data.msg);
-                    $this.closest('.abptb_orders').find('form.load_order_list').submit();
+                    if (response.data) {
+                        abptb_toast_msg(response.data.msg,response.data.type);
+                    }
+                    $this.closest('.abptb_orders').find('form.abp_search_form').submit();
+                },error: function (xhr) {
+                    abptb_ajx_error(xhr, parent);
                 }
             });
         }
     });
-    $(document).on('click', 'div.abptb_admin .order_list .pagination_area button[data-page]', function () {
+    abptb_parent.on('click', 'div.abptb_orders .order_list .pagination_area button[data-page]', function () {
         let $this = $(this);
         if (!$this.hasClass('abp_active')) {
             let parent = $(this).closest('.order_list');
             parent.find('[data-page].abp_active').removeClass('abp_active').promise().done(function () {
                 $this.addClass('abp_active').promise().done(function () {
-                    $this.closest('.abptb_orders').find('form.load_order_list').submit();
+                    $this.closest('.abptb_orders').find('form.abp_search_form').submit();
                 });
             });
         }
@@ -855,10 +870,10 @@ window.abptb_image_selection = function ($this) {
             item_html = target_element.find('.hidden_content').html();
         }
         let $item = $(item_html);
+        let unique_id = 'abp_' + Date.now();
         if (target_element.attr('data-hidden_id') !== undefined) {
             if (item_html && item_html !== "undefined" && item_html.trim() !== "") {
                 let current_id = $item.find('.hidden_id').val();
-                let unique_id = 'abp_' + Date.now();
                 $item.find('.hidden_id').val(unique_id);
                 $item.find('input, select, textarea').each(function () {
                     let current_name = $(this).attr('name');
@@ -873,12 +888,16 @@ window.abptb_image_selection = function ($this) {
         let $insertable_area = parent.find('.insertable_area').first();
         $insertable_area.append($item);
         let target = $item.hasClass('delete_area') ? $item : $item.find('.delete_area');
-        if (target.length > 0) {
-            target.find('.edit_area').slideDown('fast');
-            parent.find('.hide_on_load').slideDown('fast');
-            abptb_init(target);
-            abptb_wp_editor_init(target);
+        if (target.length === 0) {
+            target = $item;
         }
+        target.find('.edit_area').slideDown('fast');
+        parent.find('.hide_on_load').slideDown('fast');
+        abptb_init(target);
+        setTimeout(function () {
+            abptb_color_picker_init(target);
+            abptb_wp_editor_init(target);
+        }, 50);
         $(this).trigger('abp_trigger');
     });
     abptb_parent.on('click', '.edit_hook', function () {
@@ -1099,11 +1118,11 @@ class ABPTB_Multi_Selection {
             return;
         }
         this.featureListEl.innerHTML = available.map(f => {
-            let icon_text = abptb_emoji_check(f.icon) ? `<span class="_mar_r_xxs">${f.icon}</span>` : `<span class="${f.icon} _mar_r_xxs"></span>`;
+            let icon_text = abptb_emoji_check(f.icon) ? `<span>${f.icon}</span>` : `<span class="${f.icon}"></span>`;
             let label = f.value ? f.label + '-' + f.value : f.label;
             return `
                 <div class="selection_item" data-id="${f.id}">
-                    <div>${icon_text}${label}</div>
+                    <div class="_gap_xxs">${icon_text}${label}</div>
                     <span class="fa-solid fa-plus fs-add"></span>
                 </div>
             `;
@@ -1130,10 +1149,10 @@ class ABPTB_Multi_Selection {
         let div = document.createElement('div');
         div.className = 'selected_item';
         div.setAttribute('data-id', f.id);
-        let icon_text = abptb_emoji_check(f.icon) ? `<span class="_mar_r_xxs">${f.icon}</span>` : `<i class="${f.icon} _mar_r_xxs"></i>`;
+        let icon_text = abptb_emoji_check(f.icon) ? `<span>${f.icon}</span>` : `<i class="${f.icon}"></i>`;
         let label = f.value ? f.label + '-' + f.value : f.label;
         div.innerHTML = `
-            <div class="_fa_center">${icon_text}${label}</div>
+            <div class="_gap_xs">${icon_text}${label}</div>
             <span class="item_remove">❌</span>
         `;
         div.querySelector('.item_remove').addEventListener('click', (e) => {

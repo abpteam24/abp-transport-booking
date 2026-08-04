@@ -20,20 +20,19 @@
             }
             public function form_config(): void {
                 if (ABPTB_Function::on_off('client_info')) {
-                    $abptb_forms = ABPTB_Function::get_option('abptb_forms', ABPTB_Status::static_form());
+                    $forms = ABPTB_Function::get_option('abptb_form', ABPTB_Status::static_form());
                     ?>
                     <div class="abp_form">
                         <h4 class="_abp"><span class="_mar_r_xxs">📋</span> <?php esc_html_e('Global Client Form Configuration', 'abp-transport-booking'); ?></h4>
-                        <?php ABPTB_Layout::info_text('global_client_forms'); ?>
-
-                        <?php $this->passenger_form_settings($abptb_forms, true); ?>
+                        <?php ABPTB_Layout::info_text('abptb_form'); ?>
+                        <?php $this->passenger_form_settings($forms, true); ?>
                     </div>
                     <?php
                 }
             }
             public function post_client_form($post_infos): void {
                 if (ABPTB_Function::on_off('client_info')) {
-                    $client_forms = $post_infos['abptb_forms'] ?? [];
+                    $client_forms = $post_infos['abptb_form'] ?? [];
                     $display = $post_infos['display_client_form'] ?? 'off';
                     $active_global_form = $post_infos['active_global_form'] ?? 'on';
                     $display_single_form = $post_infos['display_single_form'] ?? 'on';
@@ -248,7 +247,7 @@
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
                 $form_infos = $this->get_form_array();
-                update_option('abptb_forms', $form_infos);
+                update_option('abptb_form', $form_infos);
                 wp_send_json_success(['msg' => __('Client Form Configuration Saved Successfully..... !! ', 'abp-transport-booking'), 'type' => 'success']);
             }
             public function import_client_form_content(): void {
@@ -256,7 +255,7 @@
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
                 $default_form = ABPTB_Status::static_form();
-                $forms = ABPTB_Function::get_option('abptb_forms', $default_form) ?? [];
+                $forms = ABPTB_Function::get_option('abptb_form', $default_form) ?? [];
                 $forms = is_array($forms) ? $forms : [];
                 ob_start();
                 $this->passenger_form_settings($forms);

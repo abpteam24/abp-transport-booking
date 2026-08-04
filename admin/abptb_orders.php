@@ -11,20 +11,21 @@
             }
             public function load_orders(): void {
                 ?>
-                <div class="abptb_orders _section_card_w_full">
-                    <h4 class="_abp"><span class="_mar_r_xxs">📋</span> <?php esc_html_e('Order Filter', 'abp-transport-booking'); ?></h4>
+                <div class="abptb_orders _section_card">
+                    <h4 class="_abp_title_gap_xs"><span>📋</span> <?php esc_html_e('Order Filter', 'abp-transport-booking'); ?></h4>
                     <div class="_ov_initial_mar_t_xs">
-                        <form class="load_order_list" method="post" action="">
+                        <form class="abp_search_form" method="post" action="">
                             <div class="_form_inline">
                                 <?php
                                     ABPTB_Layout::filter_post_list();
-                                    ABPTB_Layout::filter_booking_date_between();
                                     ABPTB_Layout::filter_booking_date();
+                                    ABPTB_Layout::filter_booking_date_between();
+                                    ABPTB_Layout::filter_bp();
+                                    ABPTB_Layout::filter_dp();
                                     ABPTB_Layout::filter_order_date();
-                                    ABPTB_Layout::filter_user_id();
-                                    ABPTB_Layout::filter_location();
-                                    ABPTB_Layout::filter_order_id();
                                     ABPTB_Layout::filter_order_date_between();
+                                    ABPTB_Layout::filter_user_id();
+                                    ABPTB_Layout::filter_order_id();
                                     ABPTB_Layout::filter_bill_name();
                                     ABPTB_Layout::filter_bill_email();
                                     ABPTB_Layout::filter_bill_phone();
@@ -56,7 +57,6 @@
             public function order_lists($filter_args = []): void {
                 $page_number = isset($filter_args['page_number']) && is_numeric($filter_args['page_number']) ? (int)$filter_args['page_number'] : 1;
                 $limit = isset($filter_args['page_item']) && is_numeric($filter_args['page_item']) ? (int)$filter_args['page_item'] : ABPTB_Function::get_option('abptb_per_page_item', 20);
-                $post_id = isset($filter_args['post_id']) && is_numeric($filter_args['post_id']) ? (int)$filter_args['post_id'] : 0;
                 $data_status = !empty($filter_args['status']) ? sanitize_text_field($filter_args['status']) : '';
                 $si = ($page_number - 1) * $limit + 1;
                 $offset = $si - 1;
@@ -68,13 +68,11 @@
                 $booked_status = ABPTB_Function::booking_status();
                 $booked_status = $booked_status ? explode(',', $booked_status) : [];
                 $_filter_args = $filter_args;
-                $total_rent = 0;
                 $total_additional = 0;
-                $total_deposit = 0;
                 $total_sale = 0;
-                //echo '<pre>';print_r($filter_args);echo '</pre>';
-                $count_foot_left_col = 5;
-                $count_foot_right_col = 3;
+                // echo '<pre>';                print_r($booking_lists);                echo '</pre>';
+                $count_foot_left_col = 0;
+                $count_foot_right_col = 0;
                 ?>
                 <div class="_ov_auto_fj_between _mar_b_xs">
                     <div class="_group_content order_status_menu">
@@ -109,107 +107,73 @@
                     <table class=" _abp">
                         <thead>
                         <tr>
-                            <th><?php esc_html_e('Action', 'abp-transport-booking'); ?></th>
-                            <th><?php esc_html_e('Order ID/ Date', 'abp-transport-booking'); ?></th>
-                            <?php if ($post_id === 0) { ?>
-                                <th><?php ABPTB_Layout::image_icon($brand_icon); ?><?php echo esc_html($label); ?></th>
-                            <?php } else {
-                                $count_foot_left_col--;
-                            } ?>
-                            <th class="_min_150"><?php esc_html_e('Rent Time', 'abp-transport-booking'); ?></th>
-                            <?php
-                                $count_foot_left_col++; ?>
-                            <th><?php echo esc_html(ABPTB_Function::location_label()); ?></th>
-                            <th><?php esc_html_e('Property Info', 'abp-transport-booking'); ?></th>
-                            <?php if (ABPTB_Function::on_off('additional_info')) {
-                                $count_foot_left_col++; ?>
-                                <th><?php esc_html_e('Additional Info', 'abp-transport-booking'); ?></th>
+                            <th><?php esc_html_e('Action', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></th>
+                            <th><?php esc_html_e('Order ID/ Date', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></th>
+                            <th><?php ABPTB_Layout::image_icon($brand_icon); ?><?php echo esc_html($label); ?><?php $count_foot_left_col++; ?></th>
+                            <th><span class="_gap_xxs"><span class="fas fa-route"></span><?php esc_html_e('From - To', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></span></th>
+                            <th><?php esc_html_e('Ticket Info', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></th>
+                            <?php if (ABPTB_Function::on_off('additional_info')) { ?>
+                                <th><?php esc_html_e('Additional Info', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></th>
                             <?php } ?>
-                            <th><?php esc_html_e('Rent ', 'abp-transport-booking'); ?></th>
+                            <th><?php esc_html_e('Price ', 'abp-transport-booking'); ?></th>
                             <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                 <th><?php esc_html_e('Additional ', 'abp-transport-booking'); ?></th>
                             <?php } ?>
-                            <?php if (ABPTB_Function::on_off('deposit')) { ?>
-                                <th><?php esc_html_e('Deposit ', 'abp-transport-booking'); ?></th>
-                            <?php } ?>
                             <th><?php esc_html_e('Total ', 'abp-transport-booking'); ?></th>
-                            <th><?php esc_html_e('Status', 'abp-transport-booking'); ?></th>
-                            <th><?php esc_html_e('Payment Method', 'abp-transport-booking'); ?></th>
-                            <th><?php esc_html_e('Billing Info', 'abp-transport-booking'); ?></th>
-                            <?php if (ABPTB_Function::on_off('client_info')) {
-                                $count_foot_right_col++; ?>
-                                <th><?php esc_html_e('Client Info', 'abp-transport-booking'); ?></th>
+                            <th><?php esc_html_e('Status', 'abp-transport-booking'); ?><?php $count_foot_right_col++; ?></th>
+                            <th><?php esc_html_e('Payment Method', 'abp-transport-booking'); ?><?php $count_foot_right_col++; ?></th>
+                            <th><?php esc_html_e('Billing Info', 'abp-transport-booking'); ?><?php $count_foot_right_col++; ?></th>
+                            <?php if (ABPTB_Function::on_off('client_info')) { ?>
+                                <th><?php esc_html_e('Passenger Info', 'abp-transport-booking'); ?><?php $count_foot_right_col++; ?></th>
                             <?php } ?>
                         </tr>
                         </thead>
                         <tbody>
                         <?php foreach ($booking_lists as $booking_list) {
-                            $item_id = $booking_list['item_id'] ?? '';
-                            $_post_id = $booking_list['post_id'] ?? '';
-                            $order_id = $booking_list['order_id'] ?? '';
-                            $status = $booking_list['order_status'] ?? '';
-                            $order_time = $booking_list['created_at'] ?? '';
-                            $price_info = json_decode($booking_list['price_info'] ?? '', true) ?: [];
-                            $total_price = $price_info['item_total'] ?? 0;
-                            $rent = $price_info['rent'] ?? 0;
-                            $ex_price = $price_info['ex_price'] ?? 0;
-                            $deposit = $price_info['deposit'] ?? 0;
+                            $post_infos['post_id'] = $booking_list['post_id'] ?? '';
+                            $order_status = $booking_list['order_status'] ?? '';
+                            $total_price = $booking_list['total'] ?? 0;
                             $total_sale = $total_sale + (int)($total_price);
-                            $total_rent = $total_rent + (int)($rent);
+                            $price = $booking_list['price'] ?? 0;
+                            $ex_price = $booking_list['ex_price'] ?? 0;
                             $total_additional = $total_additional + (int)($ex_price);
-                            $total_deposit = $total_deposit + (int)($deposit);
-                            $ticket_infos = json_decode($booking_list['property_info'] ?? '', true) ?: [];
+                            $ticket_infos = json_decode($booking_list['ticket_info'] ?? '', true) ?: [];
                             $passenger_infos = json_decode($booking_list['pass_info'] ?? '', true) ?: [];
                             $additional_infos = json_decode($booking_list['ex_info'] ?? '', true) ?: [];
                             $others = json_decode($booking_list['others'] ?? '', true) ?: [];
-                            $start_time = $booking_list['start_time'] ?? '';
-                            $start_date = !empty($start_time) ? gmdate('Y-m-d', strtotime($start_time)) : '';
-                            $end_time = $booking_list['end_time'] ?? '';
-                            $end_date = !empty($end_time) ? gmdate('Y-m-d', strtotime($end_time)) : '';
-                            $end_time_format = strtotime($start_date) === strtotime($end_date) ? 'time' : 'full';
-                            $post_infos['post_id'] = $post_id;
                             ?>
                             <tr>
                                 <th>
                                     <div class="_group_content">
-                                        <?php do_action('abptb_order_action', $item_id);
-                                            if (in_array($status, $booked_status, true)) { ?>
-                                                <button class="_btn_light_danger_xxs abptb_item_cancel" data-item_id="<?php echo esc_attr($item_id); ?>" title="<?php esc_attr_e('Rent Cancel', 'abp-transport-booking'); ?>" type="button"><span class="fas fa-times"></span></button>
+                                        <?php do_action('abptb_order_action', ($booking_list['id'] ?? ''));
+                                            if (in_array($order_status, $booked_status, true)) { ?>
+                                                <button class="_btn_light_danger_xxs item_cancel" data-item_id="<?php echo esc_attr($booking_list['id'] ?? ''); ?>" title="<?php esc_attr_e('Ticket Cancel', 'abp-transport-booking'); ?>" type="button"><?php ABPTB_Layout::icon_svg('close_2'); ?></button>
                                             <?php } ?>
                                     </div>
                                 </th>
                                 <th class="_text_left">
-                                    <p class="_abp"><?php echo esc_html($si . '. #' . $order_id); ?></p>
-                                    <p class="_abp_fs_label_color_theme"><?php echo esc_html(ABPTB_Function::date_format($order_time)); ?></p>
+                                    <p class="_abp"><?php echo esc_html($si . '. #' . ($booking_list['order_id'] ?? '')); ?></p>
+                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['created_at'] ?? '')); ?></p>
                                 </th>
-                                <?php if ($post_id === 0) { ?>
-                                    <th class="_text_left"><?php ABPTB_Layout::title($post_infos); ?></th>
-                                <?php } ?>
+                                <th class="_text_left">
+                                    <div class="_gap_xxs"><?php ABPTB_Layout::title($post_infos); ?></div>
+                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['start_time'] ?? '')); ?></p>
+                                </th>
                                 <td>
-                                    <?php echo esc_html(ABPTB_Function::date_format($start_time, 'full') . '-' . ABPTB_Function::date_format($end_time, $end_time_format)); ?>
-                                    <p class="_abp_fs_label_color_theme"><?php echo esc_html($others['duration'] ?? ''); ?></p>
+                                    <?php ABPTB_Layout::route_direction($post_infos, ($booking_list['bp_dp'] ?? ''), false, false); ?>
+                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['bp_time'] ?? '')); ?></p>
                                 </td>
-                                <td><?php echo esc_html(ABPTB_Function::location_value($booking_list['location'] ?? '')); ?></td>
                                 <th><?php ABPTB_Layout::ticket_info($ticket_infos); ?></th>
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                     <td><?php ABPTB_Layout::additional_info($additional_infos); ?></td>
                                 <?php } ?>
-                                <th><?php echo $rent > 0 ? wp_kses_post(wc_price($rent)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                <th><?php echo $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                     <th><?php echo $ex_price > 0 ? wp_kses_post(wc_price($ex_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <?php } ?>
-                                <?php if (ABPTB_Function::on_off('deposit')) { ?>
-                                    <th><?php echo $deposit > 0 ? wp_kses_post(wc_price($deposit)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
-                                <?php } ?>
                                 <th><?php echo $total_price > 0 ? wp_kses_post(wc_price($total_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
-                                <th class="_text_capitalize">
-                                    <p class="_abp <?php echo esc_attr(ABPTB_Layout::status_text($status)); ?>"> <?php echo esc_html(ABPTB_Layout::status_text($status)); ?></p>
-                                    <p class="_abp <?php echo esc_attr($booking_list['book_status'] ?? ''); ?>">
-                                        <?php
-                                            $book_status = $booking_list['book_status'] ?? '';
-                                            $book_status = ABPTB_Layout::get_book_status($order_id, $start_time, $end_time, $book_status);
-                                            echo esc_html(ABPTB_Layout::book_status_text($book_status)); ?>
-                                    </p>
+                                <th>
+                                    <span class="abp_tag _text_capitalize <?php echo esc_attr($order_status); ?>"> <?php echo esc_html(ABPTB_Layout::status_text($order_status)); ?></span>
                                 </th>
                                 <th class="_text_capitalize"><?php echo esc_html($booking_list['payment_method'] ?? ''); ?></th>
                                 <td>
@@ -235,12 +199,9 @@
                         <tfoot>
                         <tr>
                             <th colspan="<?php echo esc_attr($count_foot_left_col); ?>"><?php esc_html_e('Total Summary', 'abp-transport-booking'); ?></th>
-                            <th><?php echo (!empty($total_rent) && $total_rent > 0) ? wp_kses_post(wc_price($total_rent)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                            <th><?php echo (!empty($total_price) && $total_price > 0) ? wp_kses_post(wc_price($total_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                             <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                 <th><?php echo (!empty($total_additional) && $total_additional > 0) ? wp_kses_post(wc_price($total_additional)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
-                            <?php } ?>
-                            <?php if (ABPTB_Function::on_off('deposit')) { ?>
-                                <th><?php echo (!empty($total_deposit) && $total_deposit > 0) ? wp_kses_post(wc_price($total_deposit)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                             <?php } ?>
                             <th><?php echo (!empty($total_sale) && $total_sale > 0) ? wp_kses_post(wc_price($total_sale)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                             <th colspan="<?php echo esc_attr($count_foot_right_col); ?>"></th>
@@ -277,7 +238,7 @@
                 if (!empty($item_id)) {
                     global $wpdb;
                     $table_name = $wpdb->prefix . 'abptb_orders';
-                    $booking_lists = ABPTB_Query::get_booking_query(['item_id' => $item_id]);
+                    $booking_lists = ABPTB_Query::get_booking_query(['id' => $item_id]);
                     if (!empty($booking_lists) && is_array($booking_lists)) {
                         $value = current($booking_lists);
                         $others = $value['others'] ?? '';
@@ -287,11 +248,10 @@
                             $others['cancel_by'] = $user_id;
                             $data = [
                                 'others' => wp_json_encode($others),
-                                'book_status' => 5,
                                 'order_status' => 'wc-cancelled',
                                 'updated_at' => current_time('Y-m-d H:i:s')
                             ];
-                            $where = ['item_id' => (int)$item_id];
+                            $where = ['id' => (int)$item_id];
                             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             $wpdb->update($table_name, $data, $where, ['%s', '%s', '%s'], ['%d']);
                         }

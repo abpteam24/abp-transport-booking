@@ -31,7 +31,7 @@
                                 ?>
                                 <div class="ticket_item _section_card_xs_w_full">
                                     <div class="_fj_between">
-                                        <h5 class="_abp"><?php ABPTB_Layout::image_icon(ABPTB_Function::ticket_icon($key)); ?><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></h5>
+                                        <h5 class="_abp_gap_xxs"><?php ABPTB_Layout::image_icon(ABPTB_Function::ticket_icon($key)); ?><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></h5>
                                         <?php if (!empty($price) && !empty($bp_dp)) { ?>
                                             <div class="abp_tag price_value">
                                                 <?php echo ($price > 0) ? wp_kses_post(wc_price($price)) : esc_html__('Free', 'abp-transport-booking'); ?>

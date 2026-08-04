@@ -10,6 +10,7 @@ function abptb_init(target = abptb_parent) {
     if (typeof abptb_admin_init === 'function') {
         abptb_admin_init(target);
     }
+    return true;
 }
 function abptb_load_tabs(parent = abptb_parent) {
     if (parent.find('.abp_tabs').length === 0) return;
@@ -200,7 +201,6 @@ function abptb_get_form_data(form_area) {
             }
         }
     });
-
     return formData;
 }
 function abptb_ajx_error(xhr, target) {

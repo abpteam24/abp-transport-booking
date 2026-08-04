@@ -14,11 +14,13 @@
             public function global_category(): void {
                 if (ABPTB_Function::on_off('category')) {
                     $label = ABPTB_Function::category_label(); ?>
-                    <div class="_fj_between _mar_b_xs">
-                        <h5 class="_abp"><span class="_mar_r_xs">🏘️</span><?php echo esc_html($label); ?></h5>
+                    <div class="_fj_between_mar_b_xs">
+                        <h5 class="_abp_gap_xs"><?php ABPTB_Layout::icon_svg('category');
+                                echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('tax_category', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
-                    <div class="tax_category _ov_auto">
+                    <?php ABPTB_Layout::info_text('abptb_category'); ?>
+                    <div class="tax_category _ov_auto_mar_t_xs">
                         <?php $this->category_list(); ?>
                     </div>
                     <?php
@@ -46,7 +48,7 @@
                 }
                 ?>
                 <div class="abp_form">
-                    <h5 class="_abp"><span class="_mar_r_xs">🏘️</span><?php echo esc_html($title); ?></h5>
+                    <h5 class="_abp"><?php ABPTB_Layout::icon_svg('category'); echo esc_html($title); ?></h5>
                     <div class="_divider_xs"></div>
                     <input type="hidden" name="id" value="<?php echo esc_attr($term_id); ?>"/>
                     <div class="group_setting">
@@ -174,12 +176,12 @@
                     <table class="_abp">
                         <thead>
                         <tr>
-                            <th><?php esc_html_e('SI', 'abp-transport-booking'); ?></th>
-                            <th class="_min_150"><?php echo esc_html(ABPTB_Function::category_label()); ?></th>
-                            <th><?php esc_html_e('ID', 'abp-transport-booking'); ?></th>
-                            <th class="_min_150"><?php esc_html_e('Description', 'abp-transport-booking'); ?></th>
-                            <th class="_w_250"><?php esc_html_e('Shortcode', 'abp-transport-booking'); ?></th>
-                            <th class="_w_100"><?php esc_html_e('Action', 'abp-transport-booking'); ?></th>
+                            <th class="_w_75"><?php esc_html_e('SI', 'abp-transport-booking'); ?></th>
+                            <th><?php echo esc_html(ABPTB_Function::category_label()); ?></th>
+                            <th class="_w_75"><?php esc_html_e('ID', 'abp-transport-booking'); ?></th>
+                            <th class="_text_center"><?php esc_html_e('Description', 'abp-transport-booking'); ?></th>
+                            <th class="_w_250_text_center"><?php esc_html_e('Shortcode', 'abp-transport-booking'); ?></th>
+                            <th class="_w_100_text_center"><?php esc_html_e('Action', 'abp-transport-booking'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -194,8 +196,8 @@
                                 <th>
                                     <div class="_fj_center">
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">✍️</button>
-                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>">❌</button>
+                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                         </div>
                                     </div>
                                 </th>

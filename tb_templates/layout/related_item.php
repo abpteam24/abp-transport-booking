@@ -14,7 +14,7 @@
 			?>
             <div class="_abp_panel related_item_area">
                 <div class="_panel_head _fj_between">
-                    <h4 class="_abp"><?php ABPTB_Layout::image_icon($brand_icon);  ?><?php esc_html_e( 'Related', 'abp-transport-booking' ); ?></h4>
+                    <h4 class="_abp"><?php ABPTB_Layout::image_icon($brand_icon);  ?><?php esc_html_e( 'Related Transport', 'abp-transport-booking' ); ?></h4>
                     <div class="_group_content">
                         <h3 class="related_prev">🔙</h3>
                         <h3 class="related_next">🔜</h3>

@@ -27,7 +27,7 @@
                 $time_format = $date_infos['time_format'] ?? ABPTB_Time_Format;
                 ?>
                 <div class="abp_form">
-                    <h4 class="_abp"><span class="_mar_r_xxs">🗓️</span> <?php esc_html_e('Global Dates Configuration', 'abp-transport-booking'); ?></h4>
+                    <h4 class="_abp_gap_xs"><?php ABPTB_Layout::icon_svg('date_2'); esc_html_e('Global Dates Configuration', 'abp-transport-booking'); ?></h4>
                     <?php ABPTB_Layout::info_text('abptb_dates'); ?>
                     <div class="group_setting _mar_t_xs">
                         <div class="setting_item">
@@ -87,7 +87,7 @@
                 $display_return = $post_infos['display_return'] ?? 'off';
                 $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
                // echo '<pre>';print_r($time_infos);echo '</pre>';
-               // echo '<pre>';print_r($time_infos);echo '</pre>';
+               //echo '<pre>';print_r($time_infos);echo '</pre>';
                 ?>
                 <div class="tab_item date_configuration" data-tabs="#abptb_dates">
                     <h4 class="_abp_color_theme"><span class=" _mar_r_xxs">🗓️</span> <?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
@@ -320,7 +320,7 @@
                     <div class="setting_item">
                         <div class=" _fj_between">
                             <span class="_abp_label"><?php esc_html_e('Operational Date Type', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
-                            <div class="custom_radio">
+                            <div class="custom_radio _group_content">
                                 <input type="hidden" class="_form_control" name="date_type" value="<?php echo esc_attr($date_type); ?>"/>
                                 <div class="radio_item">
                                     <button type="button" class="_btn_light_info_xs <?php echo esc_attr($date_type == 'specific_date' ? 'abp_active' : ''); ?>" data-close-target="#specific_date" data-radio="specific_date" data-open-icon="far fa-check-circle" data-close-icon="far fa-circle">
@@ -409,7 +409,7 @@
                                     <?php foreach ($date_rules as $key => $rule) { ?>
                                         <div class="checkbox_item _min_100">
                                             <button type="button" class="_btn_light_info_xs <?php echo esc_attr(in_array($key, $date_rule_array, true) ? 'abp_active' : ''); ?>" data-collapse-target="#<?php echo esc_attr($key); ?>" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                                <span data-icon class="_mar_r_xs far <?php echo esc_attr(in_array($key, $date_rule_array, true) ? 'far fa-check-square' : 'fa-square'); ?>"></span><?php echo esc_html($rule); ?>
+                                                <span data-icon class="far <?php echo esc_attr(in_array($key, $date_rule_array, true) ? 'far fa-check-square' : 'fa-square'); ?>"></span><?php echo esc_html($rule); ?>
                                             </button>
                                         </div>
                                     <?php } ?>
@@ -426,7 +426,7 @@
                                     <?php foreach ($days as $key => $day) { ?>
                                         <div class="checkbox_item _min_100">
                                             <button type="button" class="_btn_light_info_xs <?php echo esc_attr(in_array($key, $weekend_array) ? 'abp_active' : ''); ?>" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
-                                                <span data-icon class="_mar_r_xs <?php echo esc_attr(in_array($key, $weekend_array) ? 'far fa-check-square' : 'far fa-square'); ?>"></span><?php echo esc_html($day); ?>
+                                                <span data-icon class="<?php echo esc_attr(in_array($key, $weekend_array) ? 'far fa-check-square' : 'far fa-square'); ?>"></span><?php echo esc_html($day); ?>
                                             </button>
                                         </div>
                                     <?php } ?>
@@ -440,9 +440,10 @@
                                 <span class="_abp_label"><?php esc_html_e('Specific Off Dates(optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Specific Off Date', 'abp-transport-booking')); ?>
                             </div>
-                            <?php ABPTB_Layout::info_text('specific_off_dates'); ?>
                             <div class="_divider_xs"></div>
-                            <div class="insertable_area sortable_area _f_wrap_gap_xs">
+                            <?php ABPTB_Layout::info_text('specific_off_dates'); ?>
+
+                            <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $specific_off_dates = $date_infos['specific_off_dates'] ?? [];
                                     if (sizeof($specific_off_dates)) {
                                         foreach ($specific_off_dates as $specific_date) {
@@ -464,9 +465,10 @@
                                 <span class="_abp_label"><?php esc_html_e('Special On Dates (optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Special On Dates', 'abp-transport-booking')); ?>
                             </div>
-                            <?php ABPTB_Layout::info_text('special_on_dates'); ?>
                             <div class="_divider_xs"></div>
-                            <div class="insertable_area sortable_area _f_wrap_gap_xs">
+                            <?php ABPTB_Layout::info_text('special_on_dates'); ?>
+
+                            <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $special_dates = $date_infos['special_on_dates'] ?? [];
                                     if (sizeof($special_dates)) {
                                         foreach ($special_dates as $specific_date) {
@@ -488,9 +490,10 @@
                                 <span class="_abp_label"><?php esc_html_e('Off Date Range(optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Off Date Range', 'abp-transport-booking')); ?>
                             </div>
-                            <?php ABPTB_Layout::info_text('off_date_range'); ?>
                             <div class="_divider_xs"></div>
-                            <div class="insertable_area sortable_area _f_wrap_gap_xs">
+                            <?php ABPTB_Layout::info_text('off_date_range'); ?>
+
+                            <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $off_date_range = $date_infos['off_date_range'] ?? [];
                                     if (sizeof($off_date_range)) {
                                         foreach ($off_date_range as $specific_date) {
@@ -522,7 +525,7 @@
                             <?php foreach ($days as $key => $day) { ?>
                                 <div class="checkbox_item">
                                     <button type="button" class="_btn_light_info_xs <?php echo esc_attr(array_key_exists($key, $day_times) ? 'abp_active' : ''); ?>" data-collapse-target="#<?php echo esc_attr($prefix . $key); ?>" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                        <span data-icon class="_mar_r_xs far <?php echo esc_attr(array_key_exists($key, $day_times) ? 'far fa-check-square' : 'fa-square'); ?>"></span><?php echo esc_html($day); ?>
+                                        <span data-icon class="far <?php echo esc_attr(array_key_exists($key, $day_times) ? 'far fa-check-square' : 'fa-square'); ?>"></span><?php echo esc_html($day); ?>
                                     </button>
                                 </div>
                             <?php } ?>

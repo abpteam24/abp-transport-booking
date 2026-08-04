@@ -12,6 +12,9 @@
                 add_action('wp_ajax_abptb_save_sp', [$this, 'save_sp']);
                 add_action('wp_ajax_abptb_delete_sp', [$this, 'delete_sp']);
                 /************************************/
+                add_action('wp_ajax_abptb_add_color_control', array($this, 'add_color_control'));
+                add_action('wp_ajax_abptb_save_color_control', array($this, 'save_color_control'));
+                /************************************/
                 add_action('wp_ajax_abptb_add_ticket_type', array($this, 'add_ticket_type'));
                 add_action('wp_ajax_abptb_save_ticket_type', array($this, 'save_ticket_type'));
                 add_action('wp_ajax_abptb_delete_ticket_type', array($this, 'delete_ticket_type'));
@@ -22,7 +25,7 @@
             }
             public function load_sp(): void {
                 ?>
-                <div class="_section_1">
+                <div class="_section_card">
                     <div class="group_setting">
                         <div class="ticket_configuration setting_item">
                             <div class="_fj_between_fa_center">
@@ -32,7 +35,8 @@
                                 } ?>
                             </div>
                             <div class="_divider_xxs"></div>
-                            <div class="ticket_type">
+                            <?php ABPTB_Layout::info_text('abptb_ticket'); ?>
+                            <div class="ticket_type _mar_t_xs">
                                 <?php $this->ticket_list(); ?>
                             </div>
                         </div>
@@ -43,7 +47,8 @@
                                     <?php ABPTB_Layout::button_global_popup('decor_item', __('Add New Decor Item', 'abp-transport-booking')); ?>
                                 </div>
                                 <div class="_divider_xxs"></div>
-                                <div class="decor_item">
+                                <?php ABPTB_Layout::info_text('abptb_decor'); ?>
+                                <div class="decor_item _mar_t_xs">
                                     <?php $this->decor_list(); ?>
                                 </div>
                             </div>
@@ -63,17 +68,21 @@
             /************************************/
             public function sp_list(): void {
                 $sp_infos = ABPTB_Query::get_sp();
+                //echo '<pre>';                print_r($sp_infos);                echo '</pre>';
                 $options = ABPTB_Function::get_option('abptb_ticket');
                 ?>
-                <div class="_fj_between">
-                    <h5 class="_abp_d_flex_text_nowrap sp_title">💺 <?php esc_html_e('Seat Plan', 'abp-transport-booking'); ?><sup class="_mar_l_xs_circle_icon_xs"><?php echo esc_html(ABPTB_Query::get_sp('', true)); ?></sup></h5>
+                <div class="_fj_between_mar_b_xxs">
+                    <h5 class="_abp_text_nowrap_gap_xs">💺 <?php esc_html_e('Seat Plan', 'abp-transport-booking'); ?><sup class="_circle_icon_xs"><?php echo esc_html(ABPTB_Query::get_sp('', true)); ?></sup></h5>
+                    <div class="color_control"><?php $this->color_control(); ?></div>
                     <button class="_btn_light_active_xs" onclick="abptb_sp_add()">
-                        <span class="_mar_r_xxs">➕</span><?php esc_html_e('Add New Seat Plan', 'abp-transport-booking'); ?>
+                        <?php ABPTB_Layout::icon_svg('plus');
+                            esc_html_e('Add New Seat Plan', 'abp-transport-booking'); ?>
                     </button>
                 </div>
-                <div class="_divider_xs"></div>
+                <div class="_divider_xxs"></div>
+                <?php ABPTB_Layout::info_text('abptb_sp'); ?>
                 <?php if (!empty($sp_infos)) { ?>
-                    <table class="_abp">
+                    <table class="_abp_mar_t_xs">
                         <thead>
                         <tr>
                             <th><?php esc_html_e('ID', 'abp-transport-booking'); ?></th>
@@ -88,24 +97,28 @@
                         </thead>
                         <tbody>
                         <?php foreach ($sp_infos as $sp_info) {
-                            $meta_info = json_decode($sp_info['seat_info'] ?? '', true) ?: []; ?>
+                            $meta_info = json_decode($sp_info['seat_info'] ?? '', true) ?: [];
+                            $others = json_decode($sp_info['others'] ?? '', true) ?: [];
+                            ?>
                             <tr>
                                 <td><?php echo esc_html($sp_info['id'] ?? ''); ?></td>
-                                <th><?php $bg_image = $sp_info['bg_image'] ?? '';
+                                <th><?php
+                                        // echo '<pre>';                print_r($meta_info);                echo '</pre>';
+                                        $bg_image = $others['bg_image'] ?? '';
                                         if (!empty($bg_image) && $bg_image > 0) {
                                             ABPTB_Layout::image('', $bg_image, '', '_max_100');
                                         } ?></th>
                                 <th><?php echo esc_html($sp_info['name'] ?? ''); ?></th>
                                 <th><?php self::sp_seat_list($options, $meta_info) ?> </th>
                                 <th><?php echo esc_html($sp_info['total_seats'] ?? 0); ?></th>
-                                <th><?php echo esc_html(($sp_info['rows_count'] ?? 0) . ' X ' . ($sp_info['cols_count'] ?? 0)); ?></th>
-                                <th><?php echo esc_html(($sp_info['cell_width'] ?? 50) . ' X ' . ($sp_info['cell_height'] ?? 50) . ' X ' . ($sp_info['gap'] ?? 0)); ?></th>
+                                <th><?php echo esc_html(($others['row'] ?? 0) . ' X ' . ($others['column'] ?? 0)); ?></th>
+                                <th><?php echo esc_html(($others['width'] ?? 50) . ' X ' . ($others['height'] ?? 50) . ' X ' . ($others['gap'] ?? 0)); ?></th>
                                 <td>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_theme_xxs" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('View : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>">👁️</button>
-                                        <button type="button" class="_btn_light_navy_blue_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>','1')" title="<?php echo esc_attr__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>">🔁</button>
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>">✍️</button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_sp_delete('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>">❌</button>
+                                        <button type="button" class="_btn_light_theme_xxs" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('View : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('view_1'); ?></button>
+                                        <button type="button" class="_btn_light_navy_blue_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>','1')" title="<?php echo esc_attr__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('clone_1'); ?></button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_sp_delete('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                     </div>
                                 </td>
                             </tr>
@@ -133,10 +146,14 @@
                 }
                 $id = !empty($clone) && $clone > 0 ? '' : $id;
                 //echo '<pre>';print_r($sp);echo '</pre>';
-                $bg_image = $sp_info['bg_image'] ?? '';
+                $others = json_decode($sp_info['others'] ?? '', true) ?: [];
+                $bg_image = $others['bg_image'] ?? '';
+                $bg_color = $others['bg_color'] ?? '#fff';
                 $img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
                 ?>
                 <div class="sp_section_card_xs _p_relative">
+                    <?php ABPTB_Layout::info_text('abptb_sp_design'); ?>
+                    <div class="_divider_xxs"></div>
                     <div class="info_text ">
                         🖱 <strong class="_abp"><?php esc_html_e('Drag Cells', 'abp-transport-booking'); ?></strong>→
                         <?php esc_html_e('to Clone/Copy & range select', 'abp-transport-booking'); ?>
@@ -151,8 +168,8 @@
                         <?php esc_html_e('To any range select', 'abp-transport-booking'); ?>
                     </div>
                 </div>
-                <div class="_d_flex_gap_xs">
-                    <div class="_max_350">
+                <div class="_gap_mar_t_xs">
+                    <div class="_max_350_fd_column_gap_xs">
                         <div class="sp_section_card_xs _p_relative">
                             <label class="_f_equal">
                                 <span class="_abp_label"><?php esc_html_e('Plan Name', 'abp-transport-booking'); ?></span>
@@ -167,7 +184,7 @@
                             <div class="_fj_between">
                                 <span class="_abp_label"><?php esc_html_e('Bg Color', 'abp-transport-booking'); ?></span>
                                 <label>
-                                    <input type="text" name="bg_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($sp_info['color'] ?? ''); ?>" data-default-color="#fff"/>
+                                    <input type="text" name="bg_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($bg_color); ?>" data-default-color="#fff"/>
                                 </label>
                             </div>
                         </div>
@@ -175,8 +192,8 @@
                             <div class="_fd_column">
                                 <span class="_abp_label_mar_b_xxs_text_center_color_burnt_orange"><?php esc_html_e('Dimension (Rows X Columns)', 'abp-transport-booking'); ?></span>
                                 <div class="_group_content">
-                                    <label><input type="number" class="_form_control_min_auto validation_number sp_rows" value="<?php echo esc_attr($sp_info['rows_count'] ?? 10); ?>" onchange="abptb_sp_row_column()"></label>
-                                    <label><input type="number" class="_form_control_min_auto validation_number sp_cols" value="<?php echo esc_attr($sp_info['cols_count'] ?? 10); ?>" onchange="abptb_sp_row_column()"></label>
+                                    <label><input type="number" class="_form_control_min_auto validation_number sp_rows" value="<?php echo esc_attr($others['row'] ?? 10); ?>" onchange="abptb_sp_row_column()"></label>
+                                    <label><input type="number" class="_form_control_min_auto validation_number sp_cols" value="<?php echo esc_attr($others['column'] ?? 10); ?>" onchange="abptb_sp_row_column()"></label>
                                 </div>
                             </div>
                             <div class="_divider_xxs"></div>
@@ -186,11 +203,12 @@
                             </div>
                         </div>
                         <div class="sp_section_card_xs">
-                            <span class="_abp_label_mar_b_xxs_text_center_color_burnt_orange"><?php esc_html_e('Cell Dimension Width X Height X Gap in px', 'abp-transport-booking'); ?></span>
+                            <span class="_abp_label_mar_b_xxs_text_center_color_burnt_orange"><?php esc_html_e('Cell Width X Height X Gap X Radius in px', 'abp-transport-booking'); ?></span>
                             <div class="_group_content">
-                                <label><input type="number" class="_form_control_min_auto validation_number sp_width" min="20" value="<?php echo esc_attr($sp_info['cell_width'] ?? 50); ?>"></label>
-                                <label><input type="number" class="_form_control_min_auto validation_number sp_height" min="20" value="<?php echo esc_attr($sp_info['cell_height'] ?? 50); ?>"></label>
-                                <label><input type="number" class="_form_control_min_auto validation_number sp_gap" min="0" value="<?php echo esc_attr($sp_info['gap'] ?? 0); ?>"></label>
+                                <label><input type="number" class="_form_control_min_auto validation_number sp_width" min="20" value="<?php echo esc_attr($others['width'] ?? 50); ?>"></label>
+                                <label><input type="number" class="_form_control_min_auto validation_number sp_height" min="20" value="<?php echo esc_attr($others['height'] ?? 50); ?>"></label>
+                                <label><input type="number" class="_form_control_min_auto validation_number sp_gap" min="0" value="<?php echo esc_attr($others['gap'] ?? 0); ?>"></label>
+                                <label><input type="number" class="_form_control_min_auto validation_number sp_radius" min="0" value="<?php echo esc_attr($others['radius'] ?? 0); ?>"></label>
                                 <button type="button" class="_btn_green_pale_xs" onclick="abptb_sp_cell_wh()"><?php esc_html_e('Apply', 'abp-transport-booking'); ?></button>
                             </div>
                             <div class="span_control">
@@ -207,23 +225,25 @@
                         </div>
                         <div class="sp_section_card_xs">
                             <div class="_group_content_f_equal _w_full">
-                                <button type="button" class="sp_tab _btn_light_active_xs abp_active" data-tab="sp_tab_seats"><?php esc_html_e('Seats', 'abp-transport-booking'); ?> (<strong class="total_seat">0</strong>)</button>
-                                <button type="button" class="sp_tab _btn_light_active_xs" data-tab="sp_tab_others"><?php esc_html_e('Others / Decor', 'abp-transport-booking'); ?> (<strong class="total_others">0</strong>)</button>
+                                <button type="button" class="sp_tab _btn_light_active_xs abp_active" data-tab="sp_tab_seat"><?php esc_html_e('Seats', 'abp-transport-booking'); ?> (<strong class="total_seat">0</strong>)</button>
+                                <button type="button" class="sp_tab _btn_light_active_xs" data-tab="sp_tab_other"><?php esc_html_e('Others / Decor', 'abp-transport-booking'); ?> (<strong class="total_others">0</strong>)</button>
                             </div>
-                            <div id="sp_tab_seats" class="sp_tab_content abp_active">
+                            <div id="sp_tab_seat" class="sp_tab_content abp_active">
                                 <div class="sp_group_seats"></div>
                             </div>
-                            <div id="sp_tab_others" class="sp_tab_content">
+                            <div id="sp_tab_other" class="sp_tab_content">
                                 <div class="sp_group_others"></div>
                             </div>
                         </div>
                         <div class="sp_section_card_xs _group_content_f_equal">
-                            <button type="button" class="_btn_active_xs" onclick="abptb_sp_save()"><span class="_mar_r_xxs">💾</span><?php esc_html_e('Save Seat Plan', 'abp-transport-booking'); ?></button>
-                            <button type="button" class="_btn_warning_xs" onclick="abptb_sp_clear()"><span class="_mar_r_xxs">❌</span><?php esc_html_e('Clear Layout', 'abp-transport-booking'); ?></button>
+                            <button type="button" class="_btn_active_xs" onclick="abptb_sp_save()"><?php ABPTB_Layout::icon_svg('save');
+                                    esc_html_e('Save Seat Plan', 'abp-transport-booking'); ?></button>
+                            <button type="button" class="_btn_warning_xs" onclick="abptb_sp_clear()"><?php ABPTB_Layout::icon_svg('close_1');
+                                    esc_html_e('Clear Layout', 'abp-transport-booking'); ?></button>
                         </div>
                     </div>
                     <div class="sp_builder">
-                        <div class="sp_canvas" style="background-image: url('<?php echo esc_url($img_url); ?>'); background-color: url('<?php echo esc_url($sp_info['color'] ?? 'transparent'); ?>');gap: <?php echo esc_attr($sp_info['gap'] ?? 0); ?>px;"></div>
+                        <div class="sp_canvas" style="background-image: url('<?php echo esc_url($img_url); ?>'); background-color: url('<?php echo esc_url($sp_info['color'] ?? 'transparent'); ?>');gap: <?php echo esc_attr($others['gap'] ?? 0); ?>px;"></div>
                     </div>
                 </div>
                 <div id="sp_saved_data" data-id="<?php echo esc_attr($id); ?>" data-layout="<?php echo esc_attr($sp_info['layout_data'] ?? '{}'); ?>" data-meta="<?php echo esc_attr($sp_info['seat_info'] ?? '{}'); ?>" style="display:none;"></div>
@@ -244,15 +264,12 @@
                         $sp_info = current($row);
                     }
                 }
-                $cell_width = $sp_info['cell_width'] ?? 50;
-                $cell_height = $sp_info['cell_height'] ?? 50;
-                $gap = $sp_info['gap'] ?? 0;
-                $bg_image = $sp_info['bg_image'] ?? '';
-                $img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
-                $bg_color = $sp_info['color'] ?? '';
+                $others = json_decode($sp_info['others'] ?? '', true) ?: [];
+                $bg_image = $others['bg_image'] ?? '';
+                $bg_color = $others['bg_color'] ?? '#fff';
                 $layout = json_decode($sp_info['layout_data'] ?? '', true) ?: [];
-                // echo '<pre>';                print_r($layout);                echo '</pre>';
-                $cols = intval($sp_info['cols_count'] ?? 10);
+                //echo '<pre>';                print_r($ticket_types);                echo '</pre>';
+                $cols = intval($others['column'] ?? 10);
                 $meta_info = json_decode($sp_info['seat_info'] ?? '', true) ?: [];
                 $hidden_cells = [];
                 foreach ($layout as $index => $cell) {
@@ -296,22 +313,22 @@
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between">
                         <span class="_abp_label"><?php esc_html_e('Dimension Rows', 'abp-transport-booking'); ?></span>
-                        <span class="_abp_label"><?php echo esc_attr($sp_info['rows_count'] ?? ''); ?></span>
+                        <span class="_abp_label"><?php echo esc_attr($others['row'] ?? ''); ?></span>
                     </div>
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between">
                         <span class="_abp_label"><?php esc_html_e('Dimension Columns', 'abp-transport-booking'); ?></span>
-                        <span class="_abp_label"><?php echo esc_attr($sp_info['cols_count'] ?? ''); ?></span>
+                        <span class="_abp_label"><?php echo esc_attr($others['column'] ?? ''); ?></span>
                     </div>
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between">
                         <span class="_abp_label"><?php esc_html_e('Cell Width', 'abp-transport-booking'); ?></span>
-                        <span class="_abp_label"><?php echo esc_attr($sp_info['cell_width'] ?? 50); ?>PX</span>
+                        <span class="_abp_label"><?php echo esc_attr($others['width'] ?? 50); ?>PX</span>
                     </div>
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between">
                         <span class="_abp_label"><?php esc_html_e('Cell Height', 'abp-transport-booking'); ?></span>
-                        <span class="_abp_label"><?php echo esc_attr($sp_info['cell_height'] ?? 50); ?>PX</span>
+                        <span class="_abp_label"><?php echo esc_attr($others['height'] ?? 50); ?>PX</span>
                     </div>
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between">
@@ -322,39 +339,8 @@
                     <?php $options = ABPTB_Function::get_option('abptb_ticket');
                         self::sp_seat_list($options, $meta_info); ?>
                 </div>
-                <div class="sp_builder_area sp_section_card_xs">
-                    <div class="sp_builder_grid" style="grid-template-columns: repeat(<?php echo esc_attr($cols); ?>, 1fr); background-image: url('<?php echo esc_url($img_url); ?>'); background-color: <?php echo esc_attr($bg_color); ?>;gap: <?php echo esc_attr($gap); ?>px;">
-                        <?php foreach ($layout as $index => $cell) {
-                            if (isset($hidden_cells[$index]))
-                                continue;
-                            $c_span = intval($cell['width_ratio'] ?? 1);
-                            $r_span = intval($cell['height_ratio'] ?? 1);
-                            $rotate = intval($cell['rotate'] ?? 0);
-                            $color = $cell['color'] ?? '';
-                            $fs = $cell['fs'] ?? 12;
-                            $is_seat = ($cell['type'] === 'seat');
-                            $class = $is_seat ? "sp_cell available" : "sp_decor";
-                            $style = "background: {$cell['color']}; grid-column: span {$c_span}; grid-row: span {$r_span}; min-width:{$cell_width}px;min-height:{$cell_height}px; border:1px solid  {$color};font-size:{$fs}px;";
-                            $icon_image = $cell['icon'] ?? '';
-                            $image = '';
-                            if (!empty($icon_image)) {
-                                if (is_numeric($icon_image)) {
-                                    $image = ABPTB_Function::get_image_url('', $icon_image);
-                                }
-                            }
-                            ?>
-                            <div class="<?php echo esc_attr($class); ?>" style="<?php echo esc_attr($style); ?>" data-name="<?php echo esc_attr($cell['name'] ?? ''); ?>">
-                                <div class="cell_content <?php echo esc_attr($rotate ? "rotate-{$rotate}" : ""); ?>" style="background-image: url('<?php echo esc_url($image); ?>'); background-color: <?php echo esc_attr($color); ?>; ">
-                                    <?php if (!empty($image)) { ?>
-                                        <span style="color: <?php echo esc_attr($color); ?>"><?php echo esc_html($cell['name'] ?? ''); ?></span>
-                                    <?php } else { ?>
-                                        <?php ABPTB_Layout::image_icon(($cell['icon'] ?? ''), ''); ?>
-                                        <span><?php echo esc_html($cell['name'] ?? ''); ?></span>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
+                <div class="sp_builder_area">
+                    <?php ABPTB_Layout::sp('',$sp_info); ?>
                 </div>
                 <?php
                 $html = ob_get_clean();
@@ -392,27 +378,30 @@
                 $ticket_info['type'] = $seat_info;
                 $ticket_info['total'] = $total_seats;
                 $ticket_infos = ABPTB_Function::get_option('abptb_ticket_sp');
+                $others['bg_image'] = $post_val('bg_image', '');
+                $others['bg_color'] = $post_val('bg_color', '');
+                $others['row'] = $post_int('rows', 10);
+                $others['column'] = $post_int('cols', 10);
+                $others['width'] = $post_int('width', 50);
+                $others['height'] = $post_int('width', 50);
+                $others['gap'] = $post_int('gap', 5);
+                $others['radius'] = $post_int('radius', 5);
                 $data = [
                     'name' => $post_val('name', uniqid('sp_')),
-                    'rows_count' => $post_int('rows', 10),
-                    'cols_count' => $post_int('cols', 10),
-                    'cell_width' => $post_int('width', 50),
-                    'cell_height' => $post_int('height', 50),
-                    'gap' => $post_int('gap', 0),
                     'total_seats' => $total_seats,
+                    'others' => wp_json_encode($others),
                     'layout_data' => wp_json_encode($layout_data),
                     'seat_info' => wp_json_encode($seat_info),
-                    'bg_image' => $post_val('bg_image', ''),
-                    'color' => $post_val('color', '')
                 ];
+                //echo '<pre>';                print_r($data);                echo '</pre>';die();
                 if ($id > 0) {
                     $wpdb->update($table_name, $data, ['id' => $id]);
                     $ticket_infos[$id] = $ticket_info;
                     update_option('abptb_ticket_sp', $ticket_infos);
                     wp_send_json_success(['msg' => __('Seat Plan Updated Successfully.....!', 'abp-transport-booking'), 'type' => 'success']);
                 } else {
-                    $id = $wpdb->insert($table_name, $data);
-                    $ticket_infos[$id] = $ticket_info;
+                    $wpdb->insert($table_name, $data);
+                    $ticket_infos[$wpdb->insert_id] = $ticket_info;
                     update_option('abptb_ticket_sp', $ticket_infos);
                     wp_send_json_success(['msg' => __('Seat Plan Saved Successfully...!', 'abp-transport-booking'), 'type' => 'success']);
                 }
@@ -437,16 +426,16 @@
             }
             public static function sp_seat_list($options, $meta_info): void {
                 if (ABPTB_Function::on_off('ticket_type') && sizeof($options) > 0) { ?>
-                    <div class="_group_list">
+                    <div class="_gap_xs_f_wrap">
                         <?php foreach ($options as $key => $item) {
                             $label = $item['label'] ?? '';
                             if (!empty($label) && array_key_exists($key, $meta_info)) { ?>
-                                <div class="_list_item">
-                                    <h6 class="_abp" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>">
+                                <div class="abp_tag">
+                                    <span class="_abp_gap_xxs" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>">
                                         <?php ABPTB_Layout::image_icon($item['icon'] ?? '');
                                             echo esc_html($label); ?>
-                                    </h6>
-                                    <span class="_mar_l_xs_circle_icon_xs"><?php echo esc_html($meta_info[$key]); ?></span>
+                                    </span>
+                                    <span class="_color_theme">( <?php echo esc_html($meta_info[$key]); ?> )</span>
                                 </div>
                                 <?php
                             }
@@ -483,13 +472,115 @@
                                     }
                                     $icon = $type['icon'] ?? '';
                                     $image = (!empty($icon) && is_numeric($icon)) ? ABPTB_Function::get_image_url('', $icon) : '';
-                                    $data[$id][$key] = ['id' => ($sp_info['id'] ?? ''), 'icon' => $icon, 'img' => $image, 'label' => ($type['label'] ?? ''), 'color' => ($type['color'] ?? '#333'), 'seat' => $item];
+                                    $data[$id][$key] = ['id' => ($sp_info['id'] ?? ''), 'icon' => $icon, 'img' => $image, 'label' => ($type['label'] ?? ''), 'color' => ($type['color'] ?? ''), 'seat' => $item];
                                 }
                             }
                         }
                     }
                 }
                 return $data;
+            }
+            /************************************/
+            public function color_control(): void {
+                $colors = ABPTB_Function::get_option('abptb_color');
+                //echo '<pre>';                print_r($colors);                echo '</pre>';
+                $available = !empty($colors['available']) ? $colors['available'] : "#D4EDDA";
+                $sold = !empty($colors['sold']) ? $colors['sold'] : "#F8D7DA";
+                $booked = !empty($colors['booked']) ? $colors['booked'] : "#6C757D";
+                $selected = !empty($colors['selected']) ? $colors['selected'] : "#007BFF";
+                ?>
+                <div class="_group_content">
+                    <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($available) ?>"></span><?php esc_html_e('Available', 'abp-transport-booking'); ?></button>
+                    <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($sold) ?>"></span><?php esc_html_e('Sold', 'abp-transport-booking'); ?></button>
+                    <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($booked) ?>"></span><?php esc_html_e('Booked', 'abp-transport-booking'); ?></button>
+                    <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($selected) ?>"></span><?php esc_html_e('Selected', 'abp-transport-booking'); ?></button>
+                    <button type="button" class="_btn_light_default_xs" onclick="abptb_popup_open_global('color_control')"><?php ABPTB_Layout::icon_svg('edit'); ?><?php esc_html_e('Edit/Modify', 'abp-transport-booking'); ?></button>
+                </div>
+                <?php
+            }
+            public function add_color_control(): void {
+                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+                }
+                ob_start();
+                $colors = ABPTB_Function::get_option('abptb_color');
+                $available = !empty($colors['available']) ? $colors['available'] : "#D4EDDA";
+                $sold = !empty($colors['sold']) ? $colors['sold'] : "#F8D7DA";
+                $booked = !empty($colors['booked']) ? $colors['booked'] : "#6C757D";
+                $selected = !empty($colors['selected']) ? $colors['selected'] : "#007BFF";
+                ?>
+                <div class="abp_form">
+                    <div class="_fa_center_fj_between">
+                        <h5 class="_abp"><?php esc_html_e('Modify / Edit Seat Plan Seat Color Combination', 'abp-transport-booking'); ?></h5>
+                        <?php ABPTB_Layout::button_global_save('color_control', __('Save Color Combination', 'abp-transport-booking')); ?>
+                    </div>
+                    <div class="_divider_xxs"></div>
+                    <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                    <div class="group_setting _mar_t_xs">
+                        <div class="setting_item">
+                            <div class="_fj_between">
+                                <span class="_abp_label"><?php esc_html_e('Available Color', 'abp-transport-booking'); ?></span>
+                                <label>
+                                    <input type="text" name="available_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($available); ?>" data-default-color="#D4EDDA"/>
+                                </label>
+                            </div>
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                        </div>
+                        <div class="setting_item">
+                            <div class="_fj_between">
+                                <span class="_abp_label"><?php esc_html_e('Sold Color', 'abp-transport-booking'); ?></span>
+                                <label>
+                                    <input type="text" name="sold_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($sold); ?>" data-default-color="#F8D7DA"/>
+                                </label>
+                            </div>
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                        </div>
+                        <div class="setting_item">
+                            <div class="_fj_between">
+                                <span class="_abp_label"><?php esc_html_e('Booked Color', 'abp-transport-booking'); ?></span>
+                                <label>
+                                    <input type="text" name="booked_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($booked); ?>" data-default-color="#6C757D"/>
+                                </label>
+                            </div>
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                        </div>
+                        <div class="setting_item">
+                            <div class="_fj_between">
+                                <span class="_abp_label"><?php esc_html_e('Selected Color', 'abp-transport-booking'); ?></span>
+                                <label>
+                                    <input type="text" name="selected_color" disabled class="_form_control abp_color_picker" value="<?php echo esc_attr($selected); ?>" data-default-color="#007BFF"/>
+                                </label>
+                            </div>
+                            <div class="_divider_xxs"></div>
+                            <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $html = ob_get_clean();
+                wp_send_json_success(['html' => $html, 'type' => 'success', 'msg' => __('Color Combination Form Loaded Successfully .....! ', 'abp-transport-booking')]);
+            }
+            public function save_color_control(): void {
+                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+                }
+                $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
+                $options['available'] = $post_val('available_color');
+                $options['sold'] = $post_val('sold_color');
+                $options['booked'] = $post_val('booked_color');
+                $options['selected'] = $post_val('selected_color');
+                update_option('abptb_color', $options);
+                ob_start();
+                $this->color_control();
+                $html = ob_get_clean();
+                wp_send_json_success([
+                    'html' => $html,
+                    'msg' => __('Color Combination Saved Successfully..........!!', 'abp-transport-booking'),
+                    'type' => 'success'
+                ]);
             }
             /************************************/
             public function ticket_list(): void {
@@ -505,13 +596,13 @@
                                     $prefix = $item['prefix'] ?? '';
                                     if (!empty($label)) { ?>
                                         <div class="_list_item">
-                                            <h6 class="_abp" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>">
+                                            <h6 class="_abp_gap_xxs" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>">
                                                 <?php ABPTB_Layout::image_icon($item['icon'] ?? '');
                                                     echo esc_html($label . ' ' . (!empty($prefix) ? '(' . $prefix . ')' : '')); ?>
                                             </h6>
                                             <div class="_group_content">
-                                                <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">✍️</button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">❌</button>
+                                                <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                             </div>
                                         </div>
                                         <?php
@@ -535,9 +626,9 @@
                 ?>
                 <div class="abp_form">
                     <h5 class="_abp"><?php esc_html_e('ADD / Edit Ticket Type', 'abp-transport-booking'); ?></h5>
-                    <?php ABPTB_Layout::info_text('ticket_settings'); ?>
                     <div class="_divider_xxs"></div>
-                    <div class="configuration_content">
+                    <?php ABPTB_Layout::info_text('ticket_settings'); ?>
+                    <div class="configuration_content _mar_t_xs">
                         <table class="_abp ">
                             <thead>
                             <tr>
@@ -695,11 +786,11 @@
                             $label = $item['label'] ?? '';
                             if (!empty($label)) { ?>
                                 <div class="_list_item">
-                                    <h6 class="_abp" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>"><?php ABPTB_Layout::image_icon($item['icon'] ?? '');
+                                    <h6 class="_abp_gap_xxs" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>"><?php ABPTB_Layout::image_icon($item['icon'] ?? '');
                                             echo esc_html($label); ?></h6>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('decor_item','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">✍️</button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('decor_item','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>">❌</button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('decor_item')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('decor_item','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
                                     </div>
                                 </div>
                             <?php }
@@ -714,17 +805,12 @@
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
                 ob_start();
-                $id = isset($_POST['id']) ? absint(wp_unslash($_POST['id'])) : '';
-                $options = ABPTB_Function::get_option('abptb_decor');
-                $options = is_array($options) ? $options : [];
-                $item = $options[$id] ?? []; ?>
+                $options = ABPTB_Function::get_option('abptb_decor'); ?>
                 <div class="abp_form">
                     <h5 class="_abp"><?php esc_html_e('Decoration Item List', 'abp-transport-booking'); ?></h5>
-                    <?php ABPTB_Layout::info_text('decor_image');
-                        ABPTB_Layout::info_text('decor_name');
-                        ABPTB_Layout::info_text('decor_color'); ?>
                     <div class="_divider_xxs"></div>
-                    <div class="configuration_content">
+                    <?php ABPTB_Layout::info_text('decor_setting'); ?>
+                    <div class="configuration_content _mar_t_xs">
                         <table class="_abp ">
                             <thead>
                             <tr>
@@ -735,7 +821,15 @@
                             </tr>
                             </thead>
                             <tbody class="insertable_area sortable_area">
-                            <?php self::form_decor($item, $id); ?>
+                            <?php
+                                if (!empty($options)) {
+                                    foreach ($options as $id => $ticket) {
+                                        self::form_decor($ticket, $id);
+                                    }
+                                } else {
+                                    self::form_decor();
+                                }
+                            ?>
                             </tbody>
                         </table>
                         <div class="_divider_xs"></div>
@@ -761,8 +855,7 @@
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
                 $post_array = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? array_map('sanitize_text_field', wp_unslash($_POST[$key])) : [];
-                $options = ABPTB_Function::get_option('abptb_decor');
-                $options = is_array($options) ? $options : [];
+                $options = [];
                 $ids = $post_array('id');
                 $names = $post_array('name');
                 $icon = $post_array('icon');
@@ -770,15 +863,8 @@
                 if (!empty($names)) {
                     foreach ($names as $key => $name) {
                         if ($name !== '') {
-                            $old_id = isset($ids[$key]) && $ids[$key] !== '' ? (int)$ids[$key] : '';
-                            if ($old_id !== '' && isset($options[$old_id])) {
-                                $id = $old_id;
-                            } else {
-                                $id = 1;
-                                while (isset($options[$id])) {
-                                    $id++;
-                                }
-                            }
+                            $id = $ids[$key] ?? '';
+                            $id = empty($id) ? uniqid() : $id;
                             $options[$id] = [
                                 'label' => $name,
                                 'icon' => $icon[$key] ?? '',
@@ -787,12 +873,14 @@
                         }
                     }
                 }
+                if (empty($options)) {
+                    $options[uniqid()]['label'] = 'Ticket/Seat';
+                }
                 if (!array_key_exists(1, $options)) {
                     $options[1]['label'] = 'Blank';
                 }
                 $options[1]['icon'] = '';
                 $options[1]['color'] = '';
-                ksort($options);
                 update_option('abptb_decor', $options);
                 ob_start();
                 $this->decor_list();

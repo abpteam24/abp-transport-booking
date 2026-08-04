@@ -135,6 +135,12 @@
 						'date_format' => ABPTB_JS_Date_Format,
 					]);
 				}
+				$colors = ABPTB_Function::get_option('abptb_color');
+				//echo '<pre>';                print_r($colors);                echo '</pre>';
+				$available = !empty($colors['available']) ? $colors['available'] : "#D4EDDA";
+				$sold = !empty($colors['sold']) ? $colors['sold'] : "#F8D7DA";
+				$booked = !empty($colors['booked']) ? $colors['booked'] : "#6C757D";
+				$selected = !empty($colors['selected']) ? $colors['selected'] : "#007BFF";
 				$abptb_css_var = ABPTB_Function::get_option('abptb_css_var');
 				$default_color = ($abptb_css_var['color_default'] ?? null) ?: '#303030';
 				$color_theme = ($abptb_css_var['color_theme'] ?? null) ?: '#95951c';
@@ -163,31 +169,35 @@
 				$on = esc_html__('ON', 'abp-transport-booking');
 				$abptb_var =
 					":root {
-						--tf_br: {$default_br};						
-						--tf_br_xl: {$br_xl};						
-						--tf_text_off:'{$off}';
-						--tf_text_on: '{$on}';
-						--tf_fs: {$default_fs};				
-						--tf_fs_label: {$fs_label};
-						--tf_fs_h6: {$fs_h6};
-						--tf_fs_h5: {$fs_h5};
-						--tf_fs_h4: {$fs_h4};
-						--tf_fs_h3: {$fs_h3};
-						--tf_fs_h2: {$fs_h2};
-						--tf_fs_h1: {$fs_h1};						
-						--tf_button_bg: {$bg_button};
-						--tf_button_color: {$color_button};
-						--tf_button_fs: {$button_fs};						
-						--tf_color_default: {$default_color};						
-						--tf_color_section: {$bg_section};
-						--tf_color_theme: {$color_theme};
-						--tf_color_theme_ee: {$color_theme_ee};
-						--tf_color_theme_cc: {$color_theme_cc};
-						--tf_color_theme_aa: {$color_theme_aa};
-						--tf_color_theme_88: {$color_theme_88};
-						--tf_color_theme_77: {$color_theme_77};
-						--tf_color_theme_alter: {$alternate_color};
-						--tf_color_warning:{$color_warning};						
+						--tb_br: {$default_br};						
+						--tb_br_xl: {$br_xl};						
+						--tb_text_off:'{$off}';
+						--tb_text_on: '{$on}';
+						--tb_fs: {$default_fs};				
+						--tb_fs_label: {$fs_label};
+						--tb_fs_h6: {$fs_h6};
+						--tb_fs_h5: {$fs_h5};
+						--tb_fs_h4: {$fs_h4};
+						--tb_fs_h3: {$fs_h3};
+						--tb_fs_h2: {$fs_h2};
+						--tb_fs_h1: {$fs_h1};						
+						--tb_button_bg: {$bg_button};
+						--tb_button_color: {$color_button};
+						--tb_button_fs: {$button_fs};						
+						--tb_color_default: {$default_color};						
+						--tb_color_section: {$bg_section};
+						--tb_color_theme: {$color_theme};
+						--tb_color_theme_ee: {$color_theme_ee};
+						--tb_color_theme_cc: {$color_theme_cc};
+						--tb_color_theme_aa: {$color_theme_aa};
+						--tb_color_theme_88: {$color_theme_88};
+						--tb_color_theme_77: {$color_theme_77};
+						--tb_color_theme_alter: {$alternate_color};
+						--tb_color_warning:{$color_warning};						
+						--tb_color_available:{$available};						
+						--tb_color_sold:{$sold};						
+						--tb_color_booked:{$booked};						
+						--tb_color_seclected:{$selected};						
 					}";
 				wp_add_inline_style('abptb_lib', wp_kses_post($abptb_var));
 				wp_enqueue_style('abptb', ABPTB_URL . 'assets/css/abptb.css', array(), time());
@@ -384,23 +394,30 @@
 					        item_id bigint(20) unsigned NOT NULL,
 					        post_id bigint(20) unsigned NOT NULL,
 					        user_id bigint(20) unsigned NOT NULL,
-					        start_point varchar(100) DEFAULT NULL,
+					        start_point bigint(20) DEFAULT NULL,
 					        start_time datetime DEFAULT NULL,
 					        bp_dp varchar(100) DEFAULT NULL,
+					        bp bigint(20) DEFAULT NULL,
+					        dp bigint(20) DEFAULT NULL,
 					        bp_time datetime DEFAULT NULL,
 					        dp_time datetime DEFAULT NULL,        
 					        pick_up varchar(100) DEFAULT NULL,
-					        drop_off varchar(100) DEFAULT NULL,       
-					        price_info text NOT NULL,
-					        ticket text NOT NULL,
-					        qty int(5) NOT NULL DEFAULT 1,
+					        pick_up_time datetime DEFAULT NULL,
+					        drop_off varchar(100) DEFAULT NULL,      
+					        drop_off_time datetime DEFAULT NULL, 
 					        ticket_info text NOT NULL,
+					        ticket_id varchar(255) NOT NULL,
+					        sp_id bigint(20) NOT NULL,
+					        qty int(5) NOT NULL DEFAULT 1,
+					        price varchar(100) DEFAULT NULL,					        
+					        ex_info text NOT NULL,				        					        
 					        ex_id varchar(255) NOT NULL,
-					        ex_info text NOT NULL,
-					        pass_info text NOT NULL,
-					        checkin tinyint(1) NOT NULL DEFAULT 0,
-					        female tinyint(1) NOT NULL DEFAULT 0,
-					        book_type int(5) NOT NULL DEFAULT 1,
+					        ex_price varchar(100) DEFAULT NULL,
+					        total varchar(100) DEFAULT NULL,					        
+					        pass_info text NOT NULL,					        
+					        checkin tinyint(1) NOT NULL DEFAULT 0,					        
+					        female tinyint(1) NOT NULL DEFAULT 0,					        
+					        book_type int(5) NOT NULL DEFAULT 0,
 					        order_status varchar(20) NOT NULL,
 					        payment_method varchar(100) DEFAULT NULL,
 					        billing_name varchar(100) DEFAULT NULL,
@@ -419,17 +436,10 @@
 				$sp = "CREATE TABLE $sp_table (
 					        id mediumint unsigned NOT NULL AUTO_INCREMENT,
 					        name varchar(100) DEFAULT NULL,
-					        rows_count mediumint NOT NULL DEFAULT 0,
-					        cols_count mediumint NOT NULL DEFAULT 0,
-					        cell_width smallint NOT NULL DEFAULT 50,
-					        cell_height smallint NOT NULL DEFAULT 50,
-					        gap smallint NOT NULL DEFAULT 10,
 					        total_seats mediumint NOT NULL DEFAULT 0,
 					        layout_data longtext DEFAULT NULL,
 					        seat_info longtext DEFAULT NULL,
-					        bg_image mediumint DEFAULT NULL,
-					        color varchar(50) DEFAULT NULL,
-					        others text DEFAULT NULL,
+					        others longtext DEFAULT NULL,
 					        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 					        updated_at datetime DEFAULT NULL,
 					        PRIMARY KEY  (id)

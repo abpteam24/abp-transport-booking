@@ -71,6 +71,7 @@
                         <?php } ?>
                         <div class="ticket_configuration configuration_content setting_item full_width">
                             <?php
+
                                 if ($seat_type == 'sp') {
                                     $this->seat_type($post_infos);
                                 } else {
@@ -106,7 +107,7 @@
                 $display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
                 $sp_data = ABPTB_Query::get_sp();
                 $post_id = $post_infos['post_id'] ?? '';
-                //echo '<pre>';print_r(ABPTB_Ticket_SP);echo '</pre>';
+                //echo '<pre>';print_r($sp_infos);echo '</pre>';
                 ?>
                 <div class="_fj_between">
                     <h5 class="_abp"><?php esc_html_e('Seat Plan Configuration', 'abp-wc-transport-manager'); ?></h5>
@@ -298,7 +299,7 @@
                     <td>
                         <div class="_all_center">
                             <div class="_group_content">
-                                <button type="button" class="_btn_light_theme_xxs sp_id_change" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($id); ?>')" title="<?php esc_attr_e('View : Seat Plan', 'abp-transport-booking'); ?>">👁️</button>
+                                <button type="button" class="_btn_light_theme_xxs sp_id_change" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($id); ?>')" title="<?php esc_attr_e('View : Seat Plan', 'abp-transport-booking'); ?>"><?php ABPTB_Layout::icon_svg('view_1'); ?></button>
                                 <?php
                                     ABPTB_Layout::button_sort();
                                     ABPTB_Layout::button_delete();

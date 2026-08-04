@@ -35,14 +35,14 @@
                 //echo '<pre>';                print_r($ticket_infos);                echo '</pre>';
                 // echo '<pre>';                print_r($price_infos);                echo '</pre>';
                 ?>
-                <div class="_f_wrap _f_equal _gap_xs">
+                <div class="_f_wrap_gap_xs_f_equal">
                     <div class="price_infos">
                         <?php if ( $display_return == 'on') { ?>
                             <h6 class="_abp_color_theme_mar_b_xxs "><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Forward Price', 'abp-transport-booking'); ?></h6>
                             <div class="_divider_xxs"></div>
                         <?php } ?>
                         <div class="_ov_auto">
-                            <table class="_abp_fixed">
+                            <table class="_abp">
                                 <thead>
                                 <tr>
                                     <th class="_w_50"></th>
@@ -98,7 +98,7 @@
                             <h6 class="_abp_color_theme_mar_b_xxs "><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Return Price', 'abp-transport-booking'); ?></h6>
                             <div class="_divider_xxs"></div>
                             <div class="_ov_auto">
-                                <table class="_abp_fixed">
+                                <table class="_abp">
                                     <thead>
                                     <tr>
                                         <th class="_w_50"></th>
