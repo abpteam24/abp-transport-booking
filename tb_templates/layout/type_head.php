@@ -20,16 +20,16 @@
                     <h3 class="_abp"><?php esc_html_e('Available Ticket', 'abp-transport-booking'); ?></h3>
                     <?php } ?>
                     <?php if (!empty($bp_dp)) { ?>
-                        <h5 class="_abp _d_flex_fa_center ">
+                        <h6 class="_abp _d_flex_fa_center ">
                             <?php ABPTB_Layout::route_direction($post_infos, $bp_dp,'',$double_route); ?>
-                        </h5>
+                        </h6>
                         <?php
                         if ($journey_date && empty($bp_times)) {
                             ABPTB_Layout::layout_warning_info_xs('', __('No time available : ', 'abp-transport-booking') . ' ' . ABPTB_Function::date_format($journey_date, 'date'));
                         }
                         ?>
                         <label class="_text_nowrap">
-                            <span class=" _mar_r_xxs">⏰</span><span class="_abp_label"> <?php esc_html_e('Time :', 'abp-transport-booking'); ?></span>
+                            <span class="_gap_xxs">⏰ <?php esc_html_e('Time :', 'abp-transport-booking'); ?></span>
                             <?php if (!empty($bp_times) && sizeof($bp_times) > 1) { ?>
                                 <select class="_form_control" name="<?php echo esc_attr($prefix); ?>journey_time">
                                     <?php foreach ($bp_times as $bp_time) { ?>

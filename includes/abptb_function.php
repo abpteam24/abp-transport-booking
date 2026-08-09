@@ -93,6 +93,19 @@
 			public static function ticket_color($id) { return (ABPTB_Ticket[$id]['color'] ?? null) ?: 'inherit'; }
 			public static function decor_icon($id) { return (ABPTB_Decor[$id]['icon'] ?? null) ?: ''; }
 			public static function decor_color($id) { return (ABPTB_Decor[$id]['color'] ?? null) ?: 'inherit'; }
+			public static function sp_label($post_id, $id) {
+				if (!empty($post_id) && $post_id > 0 && !empty($id)) {
+					$sp_infos = self::get_post_info($post_id, 'sp_infos', []);
+					if (!empty($sp_infos) && sizeof($sp_infos) > 1) {
+						foreach ($sp_infos as $sp_info) {
+							if ($sp_info['id'] == $id) {
+								return $sp_info['name'] ?? $id;
+							}
+						}
+					}
+				}
+				return $id;
+			}
 			public static function on_off($key): bool {
 				$value = (ABPTB_On_Off[$key] ?? 'on') ?: 'on';
 				return $value !== 'off';
@@ -226,6 +239,93 @@
 				return file_exists($file_path) ? $file_path : $default_dir;
 			}
 			//============== Transport Function===============//
+			public static function checkout_validation($booking_infos) {
+				if (empty($booking_infos)) {
+					return false;
+				}
+				$booking_info = $booking_infos['booking_infos'] ?? [];
+				$post_id = $booking_infos['post_id'] ?? '';
+				// Validate post existence and post type.
+				if (empty($booking_info) || empty($post_id) || get_post_type($post_id) !== ABPTB_Function::get_cpt()) {
+					return false;
+				}
+				$post_infos = ABPTB_Function::get_all_meta($post_id);
+				$sale_continue = $post_infos['sale_continue'] ?? 'on';
+				if ('on' !== $sale_continue) {
+					return false;
+				}
+				$all_dates = self::date($post_id);
+				$display_ticket_type = $post_infos['display_ticket_type'] ?? 'on';
+				$display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
+				foreach ($booking_info as $bp_dp => $cart_item) {
+					if (empty($cart_item)) {
+						continue;
+					}
+					$start_time = !empty($cart_item['start_time']) ? gmdate('Y-m-d H:i', strtotime($cart_item['start_time'])) : '';
+					$journey_date = !empty($start_time) ? gmdate('Y-m-d', strtotime($start_time)) : '';
+					$journey_time = !empty($cart_item['journey_time']) ? gmdate('Y-m-d H:i', strtotime($cart_item['journey_time'])) : '';
+					$seat_type = $cart_item['seat_type'] ?? '';
+					$all_start_time = ABPTB_Function::time_route($post_infos, $bp_dp, $journey_date);
+					$bp_times = ABPTB_Function::time_bp($post_infos, $bp_dp, $journey_date, $all_start_time);
+					$ticket_infos = $cart_item['info'] ?? [];
+					// Early return if schedule or date validation fails.
+					if (empty($ticket_infos) || !in_array($journey_date, $all_dates, true) || !in_array($start_time, $all_start_time, true) || !in_array($journey_time, $bp_times, true)) {
+						return false;
+					}
+					$form_data = [
+						'post_id' => $post_id,
+						'start_time' => $start_time,
+						'bp_dp' => $bp_dp,
+					];
+					// Specific Seat ('sp') Validation Branch.
+					if ('sp' === $seat_type) {
+						$sp_id = $cart_item['sp_id'] ?? '';
+						if (empty($sp_id)) {
+							return false;
+						}
+						$form_data['sp_id'] = $sp_id;
+						$sold_seat = ABPTB_Query::get_sold_seat($form_data);
+						$all_seat = self::get_sp_seat($sp_id);
+						foreach ($ticket_infos as $ticket_info) {
+							$name = $ticket_info['name'] ?? '';
+							if (empty($name) || !in_array($name, $all_seat, true) || in_array($name, $sold_seat, true)) {
+								return false;
+							}
+						}
+						continue;
+					}
+					// Standard Ticket Validation Branch.
+					$_ticket_infos = $post_infos['ticket_infos'] ?? [];
+					if (empty($_ticket_infos) || !is_array($_ticket_infos)) {
+						return false;
+					}
+					if ('off' === $display_ticket_type) {
+						$key = array_key_first($_ticket_infos);
+						$ticket_infos = [$key => $_ticket_infos[$key]];
+					} else {
+						$ticket_infos = $_ticket_infos;
+					}
+					$sold_infos = ABPTB_Query::get_sold_ticket($form_data);
+					foreach ($ticket_infos as $tic_id => $ticket_info) {
+						if (!isset($_ticket_infos[$tic_id])) {
+							continue;
+						}
+						$_ticket_info = $_ticket_infos[$tic_id];
+						$qty = intval($ticket_info['qty'] ?? 0);
+						$sold = $sold_infos[$tic_id] ?? 0;
+						$reserve = intval($_ticket_info['reserve'] ?? 0);
+						$total_qty = intval($_ticket_info['qty'] ?? 0);
+						$max_qty_raw = $_ticket_info['max_qty'] ?? '';
+						$available_qty = $total_qty - $sold - $reserve;
+						$max_qty = ('' !== $max_qty_raw && intval($max_qty_raw) <= $available_qty) ? intval($max_qty_raw) : $available_qty;
+						$min_qty = intval($_ticket_info['min_qty'] ?? 1);
+						if ($qty < $min_qty || $qty > $max_qty) {
+							return false;
+						}
+					}
+				}
+				return true;
+			}
 			public static function get_route_info(): array {
 				$_post_id = get_the_ID();
 				$post_ids = (!empty($_post_id) && $_post_id > 0 && get_post_type($_post_id) == ABPTB_Function::get_cpt()) ? [$_post_id] : ABPTB_ids;
@@ -273,48 +373,6 @@
 				return $start_point;
 			}
 			//============= Date function================//
-			public static function check_date_exit($post_infos = []): bool {
-				$post_id = absint($post_infos['post_id'] ?? 0);
-				$start_date_time = $post_infos['start_time'] ?? '';
-				$end_date_time = $post_infos['end_time'] ?? '';
-				$rent_rule = $post_infos['rent_rule'] ?? self::get_post_info($post_id, 'rent_rule');
-				if ($post_id <= 0 || empty($start_date_time) || empty($end_date_time) || empty($rent_rule)) {
-					return false;
-				}
-				$start = gmdate('Y-m-d', strtotime($start_date_time));
-				$end = gmdate('Y-m-d', strtotime($end_date_time));
-				$all_dates = self::date($post_id);
-				$all_end_dates = ($rent_rule === 'hourly') ? $all_dates : self::date($post_id);
-				if (!in_array($start, $all_dates, true) || !in_array($end, $all_end_dates, true)) {
-					return false;
-				}
-				if ($rent_rule !== 'hourly' && $rent_rule !== 'multi_day') {
-					return true;
-				}
-				$time_list = self::get_time($post_id);
-				if (empty($time_list)) {
-					return false;
-				}
-				$start_time = gmdate('H:i', strtotime($start_date_time));
-				$end_time = gmdate('H:i', strtotime($end_date_time));
-				$start_day_name = strtolower(gmdate('l', strtotime($start)));
-				$time_slots = $time_list[$start] ?? $time_list[$start_day_name] ?? $time_list['slot'] ?? '';
-				if (empty($time_slots)) {
-					return false;
-				}
-				if ($rent_rule === 'hourly') {
-					return self::check_time_slot_exit($time_slots, $start_time) && self::check_time_slot_exit($time_slots, $end_time);
-				}
-				if (!self::check_time_slot_exit($time_slots, $start_time)) {
-					return false;
-				}
-				$end_day_name = strtolower(gmdate('l', strtotime($end)));
-				$end_time_slots = $time_list[$end] ?? $time_list[$end_day_name] ?? $time_list['slot'] ?? '';
-				if (!empty($end_time_slots) && self::check_time_slot_exit($end_time_slots, $end_time)) {
-					return true;
-				}
-				return false;
-			}
 			public static function date_all($post_ids = [], $_date = ''): array {
 				$all_dates = [];
 				$post_ids = !empty($post_ids) ? $post_ids : ABPTB_ids;
@@ -505,7 +563,7 @@
 				if (!empty($time_info[$journey_date])) {
 					return $time_info[$journey_date];
 				}
-				$day_name = strtolower(date('l', strtotime($journey_date)));
+				$day_name = strtolower(gmdate('l', strtotime($journey_date)));
 				if (!empty($time_info[$day_name])) {
 					return $time_info[$day_name];
 				}
@@ -821,6 +879,25 @@
 					}
 				}
 				return $count ? $total : array_values(array_unique($tickets));
+			}
+			public static function get_sp_seat($sp_id = ''): array {
+				$all_seat = [];
+				if (!empty($sp_id) && $sp_id > 0) {
+					$row = ABPTB_Query::get_sp($sp_id);
+					$sp_info = [];
+					if (!empty($row)) {
+						$sp_info = current($row);
+					}
+					if (!empty($sp_info)) {
+						$layout = json_decode($sp_info['layout_data'] ?? '', true) ?: [];
+						foreach ($layout as $cell) {
+							if (($cell['type'] ?? '') == 'seat') {
+								$all_seat[] = $cell['name'] ?? '';
+							}
+						}
+					}
+				}
+				return $all_seat;
 			}
 			//=============================//
 			public static function client_data($post_infos = []) {

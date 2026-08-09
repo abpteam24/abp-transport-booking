@@ -1,286 +1,438 @@
 === ABP Transport Booking ===
 Contributors: abpteam
-Tags: transport booking , bus plugin , WooCommerce transport plugin , WordPress transport plugin, Seat Reservation ,
+Tags: transport booking, bus booking, seat reservation, ticket booking, passenger transport
 Requires at least: 6.2
-Stable tag: 1.0.0
 Tested up to: 7.0
 Requires PHP: 7.4
+Stable tag: 1.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-ABP Transport Booking extends WooCommerce into a complete transportation ticketing platform for managing routes, reservations, and ticket sales.
+WooCommerce transport booking for bus, ferry, shuttle and coach services with seat plans, ticket types, routes, schedules and return trips.
 
 == Description ==
 
-ABP Transport Booking is a WooCommerce-powered transportation booking and ticket management solution for WordPress. Built on top of WooCommerce, it allows transport operators to sell tickets online while leveraging WooCommerce's payment gateways, order management, customer accounts, coupons, and reporting features.
+ABP Transport Booking Plugin transforms WooCommerce into a complete transportation ticketing platform, enabling businesses to manage routes, reservations, and online ticket sales efficiently from a single dashboard.
 
-Whether you operate bus services, ferry routes, shuttle transportation, or other passenger transport businesses, Transport Booking provides a complete booking experience with flexible route management, seat reservations, and automated ticket sales.
+Designed for bus, ferry, launch, shuttle, coach, van, minibus, and other passenger transport services, the plugin provides a flexible booking system with customizable ticket types, reusable seat plans, route and schedule management, passenger information forms, additional services, and booking.
 
-=== 🔑 Key Features ===
+Customers can search available transport services, select travel dates, choose ticket types and seats, provide passenger information, and complete bookings through WooCommerce checkout.
 
-* Route & Schedule Management
-* Vehicle & Seat Layout Configuration
-* Online Ticket Booking System
-* Real-Time Seat Availability
-* Dynamic Pricing & Fare Management
-* Passenger Information Collection
-* Booking & Reservation Management
-* Location-Based Route Support
-* WooCommerce-Based Booking System
-* Online Ticket Sales Through WooCommerce Checkout
-* Customizable Booking Forms
-* Developer Friendly
-* Multi-Currency Support
-* Mobile-Friendly Booking Interface
+ABP Transport Booking supports both one-way and return trip bookings. Customers can book an outbound journey and a return journey using the same transport when return travel is configured and available.
 
-=== ❓ Why Choose ABP Transport Booking?===
+Seat plans are highly customizable and can be created with drag-and-drop controls, automatic numbering, dynamic ticket type assignment, custom cells, flexible layouts, and multiple design options. The same seat plan can be reused across multiple transports and assigned multiple times within the same transport for multi-layer seating arrangements.
 
-- Built on the trusted WooCommerce ecosystem
-- Compatible with most WooCommerce payment gateways
-- Easy order management through WooCommerce
-- Flexible and scalable for growing transport businesses
-- User-friendly booking experience for customers
+Administrators can create reusable global ticket types, seat plans, stops, categories, organizers, brands, features, additional services, passenger forms, FAQs, and Terms & Conditions, then use them across multiple transports.
 
-===🚌 Recommended For===
+== Key Features ==
 
-- Bus Operators
-- Transport Agencies
-- Launch/Ferry Services
-- Train Ticket Providers
-- Travel & Tour Companies
-- Online Transportation Marketplaces
-- Shuttle Service Providers
-- Airport Transfer Services
-- Corporate Transportation Companies
-- School & College Transport Services
-- Employee Transport Management
-- Tourist Transport Operators
-- Van & Minibus Operators
-- Intercity Transport Companies
-- Local Transit Services
-- Charter Bus Companies
-- Logistics & Passenger Transport Businesses
-- Event Transportation Providers
-- Pilgrimage & Group Travel Operators
-- Taxi & Ride Booking Services
-- Tourism & Excursion Operators
-- Private Transportation Networks
-- Multi-Route Ticketing Platforms
+* Passenger transport booking
+* One-way trip booking
+* Return trip booking
+* Return booking using the same transport
+* Bus, ferry, launch, shuttle, coach, van, and minibus support
+* Route and schedule management
+* Transport management dashboard
+* Transport list with pagination
+* Transport edit, clone, view, and delete options
+* Filterable booking and order list
+* Order pagination and cancellation
+* Detailed booking and order information
+* Flexible ticket type management
+* Reusable global ticket types
+* Custom and reusable seat plans
+* Multi-layer seat plan support
+* Drag-and-drop seat plan design
+* Automatic seat numbering
+* Custom seat labels and prefixes
+* Dynamic ticket type assignment
+* Custom seat cells and layout options
+* Real-time seat availability
+* Date and schedule configuration
+* Boarding and drop-off stop management
+* Passenger information forms
+* Additional services
+* FAQ management
+* Terms & Conditions management
+* Global and transport-specific configuration
+* Global stops, categories, organizers, brands, and features
+* Global feature enable/disable controls
+* Related transport display
+* Dynamic pricing and quantity controls
+* WooCommerce checkout and payment integration
+* Responsive frontend booking interface
+* Translation-ready
 
-## 🚍 All-in-One Transportation Ticketing & Seat Reservation Solution
+== Return Trip Booking ==
 
-Built by ABP-TEAM, ABP Transport Booking is a powerful WooCommerce-based transportation booking and ticket management solution designed to simplify online ticket sales, seat reservations, and route operations for transport businesses of all sizes.
+ABP Transport Booking supports return journey booking for passenger transport services.
 
-Whether you manage a small local transport service or a large-scale transportation network, Transport Booking provides the tools needed to create a seamless booking experience while efficiently managing routes, schedules, passengers, and reservations from a single platform.
+Customers can book an outbound journey and a return journey when return travel is configured for the transport.
 
-Leveraging the flexibility of WooCommerce, ABP Transport Booking enables transport operators to sell tickets online, manage seat availability, automate bookings, and streamline daily operations. From route planning and passenger management to secure checkout and order tracking, Transport Booking delivers a modern and scalable solution for today's transportation industry.
+Return booking can be used when passengers need to travel to a destination and return later using the same transport service.
 
-Designed with performance, flexibility, and ease of use in mind, ABP Transport Booking helps businesses reduce administrative workload, improve booking efficiency, and provide a professional ticketing experience for customers.
+This can be useful for:
 
-## 🚍 Let's Discover What ABP Transport Booking Offers
+* Bus return journeys
+* Ferry and launch return trips
+* Shuttle return services
+* Tourist transportation
+* Event transportation
+* Scheduled passenger return journeys
 
-### 🔍 Advanced Route Search & Filtering
+== Global Data & Reusable Configuration ==
 
-Allow customers to quickly find available transport services by selecting their preferred origin, destination, travel date, and schedule. Smart filtering options help users locate the most suitable trips with ease.
+ABP Transport Booking allows administrators to create common transport data globally and reuse it across multiple transports.
 
-### 🎫 Interactive Seat Selection
+Global data includes:
 
-Provide a seamless booking experience with an intuitive seat selection system. Customers can view available seats in real time and choose their preferred seating arrangement before checkout.
+* Ticket Types
+* Seat Plans
+* Stops
+* Categories
+* Organizers
+* Brands
+* Features
+* Additional Services
+* Passenger Forms
+* FAQs
+* Terms & Conditions
 
-### 💳 Secure Online Ticket Booking
+Global data helps reduce repetitive configuration when managing multiple transports.
 
-Enable customers to reserve tickets and complete payments directly on your website. Fully powered by WooCommerce, supporting a wide range of payment gateways for secure and reliable transactions.
+Supported global configurations can be imported and customized for individual transports when required.
 
-### 🚌 Route & Schedule Management
+== Global Ticket Types ==
 
-Easily create and manage transportation routes, schedules, pickup points, drop-off locations, and travel availability from a centralized dashboard.
+Create ticket types once and reuse them across multiple transports.
 
-### 👥 Passenger Information Management
+Ticket types can be assigned while designing seat plans, allowing different seats or seating areas to use different ticket categories.
 
-Collect and manage passenger details efficiently during the booking process to ensure smooth transportation operations.
+Global ticket types are managed independently from individual transports, making them easier to maintain and reuse.
+
+== Global Seat Plans ==
+
+Create a seat plan once and assign it to multiple transports.
+
+The same seat plan can also be assigned multiple times to the same transport, allowing multi-layer seating arrangements.
+
+Seat plan design supports:
+
+* Drag-and-drop seat positioning
+* Automatic numbering
+* Dynamic ticket type assignment
+* Custom seat names and prefixes
+* Custom cells and text
+* Flexible rows and columns
+* Adjustable cell dimensions
+* Adjustable spacing and gaps
+* Multiple layout configurations
+* Background and visual customization
+* Multi-layer seat arrangements
+* Clone Seat plan
+* Edit Seat plan
+* Delete Seat plan
+* View Seat plan
+
+== Transport Management ==
+
+Manage transports from a dedicated WordPress dashboard.
+
+* Create transports
+* Edit transports
+* Clone transports
+* View transport details
+* Delete transports
+* Manage routes
+* Manage schedules
+* Configure ticket types
+* Configure seat plans
+* Configure pricing
+* Configure dates and availability
+* Manage frontend display settings
+* Display related transports
+
+== Booking and Order Management ==
+
+Manage transport bookings and WooCommerce orders from the dashboard.
+
+* Filter bookings and orders
+* Paginate order results
+* View complete order details
+* View passenger information
+* View ticket and seat information
+* View booking information
+* Cancel orders
+* WooCommerce order integration
+
+== Route, Stop & Schedule Management ==
+
+Create and manage transportation routes and their stops.
+
+* Global stop management
+* Boarding stops
+* Drop-off stops
+* Boarding and drop-off stops
+* Multiple pickup points
+* Multiple drop-off points
+* Route direction configuration
+* Date-wise schedules
+* Travel time configuration
+* Special date configuration
+* Availability controls
+
+== Seat Reservation & Ticket Types ==
+
+Customers can select available seats during booking when a seat plan is enabled.
+
+The seat system supports:
+
+* Custom seat layouts
+* Ticket-type based seating
+* Seat name prefixes
+* Automatic seat numbering
+* Custom seat labels
+* Multiple seat layers
+* Reusable seat plans
+* Real-time seat availability
+* Flexible visual seat design
+
+== Pricing & Quantity Control ==
+
+Configure booking quantity and pricing according to transport requirements.
+
+* Minimum quantity
+* Maximum quantity
+* Reserved quantity
+* Dynamic price calculation
+* Multiple pricing configurations
+* Ticket and seat based pricing options
+
+== Availability Management ==
+
+Control when a transport can be booked.
+
+* Date-wise availability
+* Weekend availability controls
+* Special date configuration
+* Off-date configuration
+* Availability overrides
+* Schedule and time configuration
+
+== Passenger Information ==
+
+Collect passenger information during the booking process using configurable passenger forms.
+
+* Global passenger forms
+* Transport-specific passenger forms
+* Custom passenger fields
+* Passenger information management
+
+== Additional Services ==
+
+Offer optional services during booking.
+
+* Global additional services
+* Transport-specific services
+* Optional service selection
+* Service pricing
+
+== FAQ & Terms and Conditions ==
+
+Create reusable customer information globally or customize it for individual transports.
+
+* Global FAQ configuration
+* Transport-specific FAQ configuration
+* Global Terms & Conditions
+* Transport-specific Terms & Conditions
+* Import global configuration
+* Customize imported configuration for a transport
+
+== Feature Controls ==
+
+Major plugin features can be enabled or disabled globally from the configuration panel.
+
+This allows administrators to keep the dashboard and frontend focused on the features required for their transportation business.
+
+== Frontend Booking Experience ==
+
+The frontend booking experience can include:
+
+* Transport listing pages
+* Search and filtering
+* Transport details
+* Related transports
+* Route and stop information
+* Schedule information
+* Travel date selection
+* Return date selection
+* Ticket type selection
+* Seat selection
+* Passenger information forms
+* Additional services
+* Dynamic pricing
+* WooCommerce checkout
+* Responsive booking interface
+
+== WooCommerce Integration ==
+
+ABP Transport Booking uses WooCommerce for checkout and payment processing.
+
+Customers can complete transport bookings through WooCommerce checkout and use payment gateways supported by WooCommerce.
+
+WooCommerce handles payment processing, taxes, coupons, customer accounts, and order management according to the site's WooCommerce configuration.
+
+== Recommended For ==
+
+* Bus operators
+* Ferry and launch services
+* Shuttle services
+* Coach operators
+* Van and minibus operators
+* Intercity transport services
+* Local passenger transport
+* Airport transfer services
+* Corporate transportation
+* School and college transportation
+* Tourist transportation
+* Event transportation
+* Group travel transportation
+* Passenger transport agencies
+* Multi-route transport businesses
+
+== Requirements ==
+
+* WordPress 6.2 or later
+* PHP 7.4 or later
+* WooCommerce
+
+== Shortcodes ==
+
+Use these shortcodes to display transport content on your website:
+
+[abptb-booking] — Display transport listings and booking functionality.
+
+[abptb-post] — Display transport listings.
+
+[abptb-gallery] — Display transport images and galleries.
+
+== Installation ==
+
+= Automatic Installation =
+
+1. Install and activate WooCommerce.
+2. Go to Plugins → Add New in your WordPress dashboard.
+3. Search for "ABP Transport Booking".
+4. Install and activate the plugin.
+5. Open Transport Booking from the WordPress admin menu.
+6. Configure the global settings.
+7. Create global ticket types, seat plans, stops, and other reusable data as required.
+8. Create a transport and configure its route, schedule, ticket types, seat plan, pricing, and availability.
+9. Configure return trip options when required.
+10. Add the booking shortcode to a page.
+
+= Manual Installation =
+
+1. Download the plugin ZIP file.
+2. Go to Plugins → Add New → Upload Plugin.
+3. Upload the plugin ZIP file.
+4. Activate the plugin.
+5. Install and activate WooCommerce if it is not already installed.
+6. Open Transport Booking from the WordPress admin menu and complete the configuration.
+
+== Frequently Asked Questions ==
+
+= What types of passenger transport can I manage? =
+
+ABP Transport Booking is designed for passenger transport services such as buses, ferries, launches, shuttles, coaches, vans, minibuses, and similar ticket-based transportation services.
+
+= Can I create one-way and return bookings? =
+
+Yes. The plugin supports one-way and return trip bookings when return travel is configured for the transport.
+
+= Can customers book a return trip using the same transport? =
+
+Yes. Customers can book an outbound journey and a return journey using the same transport when return travel is configured and available.
+
+= Can I create reusable ticket types? =
+
+Yes. Ticket types can be created globally and reused across multiple transports and seat plans.
+
+= Can I reuse a seat plan on multiple transports? =
+
+Yes. A global seat plan can be assigned to multiple transports.
+
+= Can I use the same seat plan multiple times in one transport? =
+
+Yes. The same seat plan can be assigned multiple times to the same transport, which can be useful for multi-layer seating arrangements.
+
+= Can I create a custom seat layout? =
+
+Yes. The seat plan designer provides drag-and-drop controls, automatic numbering, dynamic ticket type assignment, custom cells, and multiple layout options.
+
+= Can I manage common transport data globally? =
+
+Yes. Ticket types, seat plans, stops, categories, organizers, brands, features, additional services, passenger forms, FAQs, and Terms & Conditions can be created globally and reused across transports.
+
+= Can I customize global settings for an individual transport? =
+
+Yes. Where supported, global configurations can be imported and customized for an individual transport.
+
+= Can I enable or disable plugin features? =
+
+Yes. Major features can be enabled or disabled globally from the configuration settings.
+
+= Does the plugin use WooCommerce payment gateways? =
+
+Yes. Payments are handled through WooCommerce and its supported payment gateways.
+
+= Can I manage bookings and orders from the dashboard? =
+
+Yes. The plugin provides a filterable order list with pagination, order cancellation, and detailed booking and order information.
+
+= Is the plugin translation-ready? =
+
+Yes. ABP Transport Booking is translation-ready and compatible with standard WordPress localization tools.
+
+= Can I use the plugin in a local development environment? =
+
+Yes. The plugin can be used in local WordPress development environments such as XAMPP and LocalWP.
 
 
-### 🛒 WooCommerce Integration
-
-Built on WooCommerce for maximum flexibility. Utilize WooCommerce orders, taxes, reports, and payment gateways without additional configuration.
-
-### 📱 Mobile-Friendly Booking Experience
-
-Optimized for desktops, tablets, and mobile devices, ensuring customers can book tickets conveniently from any device.
-
-### 🎨 Flexible Customization Options
-
-Customize booking layouts, forms, colors, and display settings to match your brand identity and business requirements.
-
-
-## 📦 Quantity Control
-
-* Minimum quantity support (optional)
-* Maximum quantity support (optional)
-* Reserved quantity management
-* Flexible booking limitations
-
-
-## 📅 Availability Management
-
-* Multiple time slots per day
-* Weekend availability control
-* Off-date range management
-* Special date enable/disable system
-* Availability override options when required
-
-
-## 🖥 Frontend Experience
-
-* Dynamic price calculation system
-* Modern and user-friendly booking interface
-* Shortcode-based transport listing system
-* Responsive booking forms
-* Real-time booking updates
-
-
-## ➕ Additional Services
-
-* Global Additional Services management
-* Custom Additional Services per transport
-* Optional service add-ons during booking
-* Flexible pricing for extra services
-
-
-## 🧾 Client Information Form
-
-* Global client form configuration
-* Custom per-transport form builder
-* Additional passenger information fields
-* Flexible form customization options
-
-## ❓ FAQ & Terms Support
-
-* Global FAQ management system
-* Custom FAQ support per transport
-* Editable Terms & Conditions system
-
-
-###  Support and Suggestions:
+== Need help or have suggestions? ==
 If you need any further assistance or support, do contact us at this [🎫 support form](https://abp-team.com/support-desk/). We are very open to your suggestions. So do feel free to tell us if there is anything we can do to improve the plugin.
-Need help or have suggestions?
 
-🌐 [Live Demo](https://transportforge.abp-team.com/)
-📖 [Documentation](https://transportforge.abp-team.com/documentation/)
+🌐 [Live Demo](https://transport-booking.abp-team.com/)
+📖 [Documentation](https://transport-booking.abp-team.com/documentation/)
 💬 [Support Forum](https://wordpress.org/support/plugin/abp-transport-booking/)
 🐛 [Bug Reports](https://github.com/abpteam24/abp-transport-booking/issues)
 📧 Email: support@abp-team.com
 
-If you find Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review on WordPress.org — it really helps!
+If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review on WordPress.org — it really helps!
 
-== Shortcodes ==
-
-Use these shortcodes anywhere on your site:
-
-[abptb-booking]      — Display all Transport listings and booking
-[abptb-post]      — Display all Transport listings
-[abptb-gallery]  — Display all Transport image
-
-== Payment Gateways ==
-
-Transport Booking does not include a separate payment system. All payments are fully managed by WooCommerce and its supported payment gateways.
-
-== Theme Compatibility ==
-
-Transport Booking is compatible with any well-coded and standards-compliant WordPress theme. It includes responsive frontend templates that adapt to different layouts.
-
-== Installation ==
-
-= Automatic Installation (Recommended) =
-
-1. Go to Plugins → Add New in your WordPress dashboard.
-2. Search for "Transport Booking".
-3. Click Install Now and then Activate.
-
-= Manual Installation via Upload =
-
-1. Upload the abp-transport-booking.zip file to the /wp-content/plugins/ directory.
-2. Activate the plugin from the Plugins menu in WordPress.
-3. Access the "Transport Booking" menu from the admin sidebar to start configuration.
-
-= Installation via FTP =
-
-1. Download the abp-transport-booking.zip file.
-2. Extract the abp-transport-booking folder on your computer.
-3. Upload the folder to /wp-content/plugins/ via FTP.
-4. Activate the plugin from the WordPress Plugins dashboard.
-
-== Usage ==
-
-1. Go to Transport Booking → Settings and complete the initial setup.
-2. Add your first Transport under Transport Booking  → Add New.
-3. Configure title, description, and images.
-4. Set pricing (at least one pricing type is required).
-5. Use the shortcode below to display listings on any page:
-
-   [abptb-post]
-
-== Frequently Asked Questions ==
-
-= Can I use multiple pricing types? =
-Yes. You can enable multiple pricing options.
-
-= What is the default minimum quantity? =
-If not set, the default minimum quantity is 1.
-
-= Can I override unavailable days or weekends? =
-Yes. Special date settings allow you to override default availability rules.
-.
-
-= Does the plugin work with any WordPress theme? =
-Yes. Transport Booking is designed to work with any well-coded WordPress theme and includes responsive frontend templates.
-
-= Which payment gateways are supported? =
-Transport Booking uses WooCommerce for payments, so all WooCommerce-supported gateways are available.
-
-= Can I manage multiple Transport? =
-Yes. You can create unlimited Transport, each with individual pricing, availability, and settings.
-
-
-= Is it translation ready? =
-Yes. The plugin is fully translation-ready and compatible with standard WordPress localization tools.
-
-= Does it work in local environments like XAMPP? =
-Yes. Transport Booking works perfectly in local development environments such as XAMPP or LocalWP.
-
-= Where can I get support? =
-You can ask questions in the WordPress support forum:
-https://wordpress.org/support/plugin/abp-transport-booking/
-Our team typically responds within 24–48 hours.
-
-= Do you offer customization services? =
-
-Absolutely! If you require custom features, design modifications, integrations, or any additional functionality for ABP Transport Booking, we'd be happy to discuss your requirements.
-
-Simply email us at support@abp-team.com, and our team will review your request and respond as soon as possible.
 
 == Screenshots ==
 
-1. Transport Booking Post List Page(Grid View) — Overview of all posts-Clean and filterable grid layout.
-2. Transport Booking Post List Page(List View)  — Overview of all posts-Clean and structured list layout.
-3. Order List Page — Overview of all orders.
-4. Global Data Configuration — Clean and flexible global settings panel.
-5. Configuration Panel — Centralized and flexible configuration options.
-6. Pricing Configuration Panel — Manage all route/price/ticket/seat and options.
-
-
-
-== Privacy Policy ==
-
-This plugin uses Appsero SDK for optional telemetry data collection. No data is collected without user consent. Data collection starts only after user approval from the admin notice.
-
-[Learn more]( https://appsero.com/privacy-policy/)
-
+1. Transport list page with grid view and transport management options.
+2. Transport list page with list view and management controls.
+3. Order list page with filtering and pagination.
+4. Global data configuration panel for reusable transport data.
+5. Global configuration and feature controls.
+6. Ticket type and pricing configuration.
+7. Seat plan designer with dynamic ticket type assignment.
+8. Custom seat plan layout and design options.
+9. Transport route, stop, and schedule configuration.
+10. Frontend transport booking and seat selection interface.
+11. Return trip booking configuration.
+12. Frontend return trip booking.
 
 == Changelog ==
+
 = 1.0.0 =
-*Initial Release*
+
+* Initial release.
 
 == Upgrade Notice ==
+
 = 1.0.0 =
-*Initial Release*
+Initial release.

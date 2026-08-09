@@ -25,7 +25,7 @@
 		get_header();
 		the_post();
 	}
-	printf('%s',  do_shortcode( "[abptb-property brand_id='".esc_attr(get_queried_object()->term_id)."']" ));
+	printf('%s',  do_shortcode( "[abptb-post brand_id='".esc_attr(get_queried_object()->term_id)."']" ));
 	if ( wp_is_block_theme() ) {
 		?>
 		<footer class="wp-block-template-part">

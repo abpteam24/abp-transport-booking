@@ -152,36 +152,38 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         let target = parent.find('.return_date');
         if (target.length > 0) {
             let date = parent.find('[name="journey_date"]').val();
-            let post_id = parent.find('[name="post_id"]').val();
-            let formData = new FormData();
-            formData.append('post_id', post_id);
-            formData.append('journey_date', date);
-            formData.append('action', 'abptb_load_return_date');
-            formData.append('nonce', abptb_infos.nonce);
-            $.ajax({
-                type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
-                beforeSend: function () {
-                    abptb_spinner(target);
-                    abptb_toast_msg(abptb_infos.msg.end_date_loading);
-                },
-                success: function (response) {
-                    abptb_spinner_remove(target);
-                    if (response.data && response.data.hasOwnProperty('html')) {
-                        target.html(response.data.html).promise().done(function () {
-                            if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
-                                abptb_init_dynamic_date_pickers(response.data.selector, response.data.picker_config);
-                            } else {
-                                abptb_load_datepicker(target);
-                            }
-                        });
-                        abptb_toast_msg(response.data.msg, response.data.type);
-                    } else {
-                        abptb_toast_msg(response.data.msg, response.data.type);
+            let post_id = parseInt(parent.find('[name="post_id"]').val());
+            if (post_id && post_id > 0) {
+                let formData = new FormData();
+                formData.append('post_id', post_id);
+                formData.append('journey_date', date);
+                formData.append('action', 'abptb_load_return_date');
+                formData.append('nonce', abptb_infos.nonce);
+                $.ajax({
+                    type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
+                    beforeSend: function () {
+                        abptb_spinner(target);
+                        abptb_toast_msg(abptb_infos.msg.end_date_loading);
+                    },
+                    success: function (response) {
+                        abptb_spinner_remove(target);
+                        if (response.data && response.data.hasOwnProperty('html')) {
+                            target.html(response.data.html).promise().done(function () {
+                                if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
+                                    abptb_init_dynamic_date_pickers(response.data.selector, response.data.picker_config);
+                                } else {
+                                    abptb_load_datepicker(target);
+                                }
+                            });
+                            abptb_toast_msg(response.data.msg, response.data.type);
+                        } else {
+                            abptb_toast_msg(response.data.msg, response.data.type);
+                        }
+                    }, error: function (xhr) {
+                        abptb_ajx_error(xhr, target);
                     }
-                }, error: function (xhr) {
-                    abptb_ajx_error(xhr, target);
-                }
-            });
+                });
+            }
         }
     });
     abptb_parent.on('submit', '#abptb_search_area form.abp_search_form', function (e) {
@@ -239,11 +241,14 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         });
     });
     //==============//
-    abptb_booking.on('change', "[name='journey_time']", function (e) {
+    abptb_booking.on('change', "[name='journey_time'] , [name='return_journey_time'] , [name='sp_id'] , [name='return_sp_id']", function (e) {
         e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         let target = $(this).closest(".booking_area");
-        let parent = $(this).closest("form");
-        let formData = abptb_get_form_data(target);
+        let parent = target.closest("form");
+        let target_html = target.find('.ticket_content');
+        let formData = abptb_get_form_data(target_html);
         formData.append('post_id', parent.find('[name="post_id"]').val());
         formData.append('double_route', parent.find('[name="double_route"]').val());
         formData.append('action', 'abptb_load_transport_data');
@@ -256,10 +261,12 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             },
             success: function (response) {
                 abptb_spinner_remove(target);
+                //console.log(response);
                 abptb_toast_msg(response.data.msg, response.data.type);
-                if (response.data && response.data.hasOwnProperty('html')) {
-                    target.html(response.data.html).promise().done(function () {
-                        abptb_init(target);
+                if (response.data && response.data.hasOwnProperty('html') && target_html.length > 0) {
+                    target_html.html(response.data.html).promise().done(function () {
+                        abptb_init(target_html);
+                        all_management(target_html);
                     });
                 }
             }, error: function (xhr) {
@@ -269,19 +276,23 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
     });
     abptb_booking.on('abp_trigger', "[name='item_check[]'],[name='return_item_check[]']", function (e) {
         e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         let $this = $(this);
         let parent = $this.closest(".booking_area");
         let form = $this.closest("form");
+        let seat_type = $.trim(form.find('[name="seat_type"]').val());
         let max_qty = parseInt(form.find('[name="max_qty"]').val());
         let r = parent.hasClass('return');
+        let prefix = r ? 'return_' : '';
         let data_id = $this.attr('data-id');
         let target = parent.find('[data-collapse="' + data_id + '"]');
         let item_parent = $this.closest('.ticket_item');
         if (!item_parent.hasClass('abp_active')) {
-            item_parent.find('[name="return_item_qty[]"]').val(parseInt(item_parent.find('[name="return_item_qty[]"]').attr('data-min')));
-            item_parent.find('[name="item_qty[]"]').val(parseInt(item_parent.find('[name="item_qty[]"]').attr('data-min')));
+            let min_qty = parseInt(item_parent.find(`[name="${prefix}item_qty[]"]`).attr('data-min'), 10) || 0;
+            item_parent.find(`[name="${prefix}item_qty[]"]`).val(min_qty);
         }
-        let qty = r ? get_quantity_return(parent) : get_quantity(parent);
+        let qty = get_quantity(parent, seat_type, prefix);
         if (max_qty > 0 && qty > max_qty) {
             item_parent.find('[data-checked]').trigger('abp_role_back');
             abptb_toast_msg(form.find('[name="max_qty"]').attr('data-msg'), 'warn');
@@ -291,37 +302,46 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                 item_parent.toggleClass('abp_active');
             }
         }
-        if (r) {
-            item_parent.find('[name="return_item_qty[]"]').trigger('change');
-        } else {
-            item_parent.find('[name="item_qty[]"]').trigger('change');
-        }
+        item_parent.find(`[name="${prefix}item_qty[]"]`).trigger('change');
     });
     abptb_booking.on('change', '[name="item_qty[]"],[name="return_item_qty[]"]', function (e) {
         e.preventDefault();
         let $this = $(this);
         let parent = $this.closest(".booking_area");
         let form = $this.closest("form");
+        let seat_type = $.trim(form.find('[name="seat_type"]').val());
         let max_qty = parseInt(form.find('[name="max_qty"]').val());
         let r = parent.hasClass('return');
-        let qty = r ? get_quantity_return(parent) : get_quantity(parent);
+        let prefix = r ? 'return_' : '';
+        let qty = get_quantity(parent, seat_type, prefix);
         if (max_qty > 0 && qty > max_qty) {
             $this.val(parseInt($this.val()) - 1);
-            abptb_toast_msg(parent.find('[name="max_qty"]').attr('data-msg'), 'warn');
+            abptb_toast_msg(form.find('[name="max_qty"]').attr('data-msg'), 'warn');
         }
         all_management($this);
     })
-    abptb_booking.on('change', '.ex_price_calculate', function () {
+    abptb_booking.on('change', '.ex_price_calculate', function (e) {
+        e.preventDefault();
         all_management($(this));
+    });
+    abptb_booking.on('click', '.sp_cell.available', function (e) {
+        e.preventDefault();
+        let current = $(this);
+        current.toggleClass('selected').promise().done(function () {
+            all_management(current);
+        });
     });
     abptb_booking.on('click', '.book_continue', function (e) {
         e.preventDefault();
         let current = $(this);
-        let parent = current.closest('div.abptb_booking');
-        if (get_quantity(parent) > 0) {
+        let form = current.closest("form");
+        let parent = form.find('.booking_area:not(.booking_area.return)');
+        let return_parent = form.find('.booking_area.return');
+        let seat_type = $.trim(form.find('[name="seat_type"]').val());
+        if (get_quantity(parent, seat_type) > 0 || get_quantity(return_parent, seat_type, 'return_') > 0) {
             if (submit_validation(current) < 1) {
-                parent.find("[name='add-to-cart']").trigger('click');
-                parent.find("[name='add-admin-order']").trigger('click');
+                form.find("[name='add-to-cart']").trigger('click');
+                form.find("[name='add-admin-order']").trigger('click');
             }
         } else {
             abptb_alert(current);
@@ -331,9 +351,10 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         let form = $this.closest("form");
         let parent = form.find('.booking_area:not(.booking_area.return)');
         let return_parent = form.find('.booking_area.return');
+        let seat_type = $.trim(form.find('[name="seat_type"]').val());
         let total = 0;
-        let qty = get_quantity(parent);
-        let return_qty = get_quantity_return(return_parent);
+        let qty = get_quantity(parent, seat_type);
+        let return_qty = get_quantity(return_parent, seat_type, 'return_');
         let total_qty = qty + return_qty;
         let price = 0;
         let return_price = 0;
@@ -341,35 +362,40 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         let return_ex_price = 0;
         if (total_qty > 0) {
             if (qty > 0) {
-                price = get_price(parent);
+                price = get_price(parent, seat_type);
                 ex_price = get_additional_price(parent);
                 form.find('.total_continue_area .price_up').slideDown('fast');
-                form.find('.additional_service_area:not(.booking_area.return .additional_service_area)').slideDown('fast');
+                parent.find('.additional_service_area').slideDown('fast');
+                parent.find('.seat_selection').slideDown('fast');
             } else {
                 form.find('.total_continue_area .price_up').slideUp('fast');
                 form.find('.total_continue_area .ex_price_up').slideUp('fast')
-                form.find('.additional_service_area:not(.booking_area.return .additional_service_area)').slideUp('fast');
+                parent.find('.additional_service_area').slideUp('fast');
+                parent.find('.seat_selection').slideUp('fast').find('.insert_item').html('');
             }
             if (return_qty > 0) {
-                return_price = get_price_return(return_parent);
+                return_price = get_price(return_parent, seat_type, 'return_');
                 return_ex_price = get_additional_price(return_parent, true);
                 form.find('.total_continue_area .price_down').slideDown('fast');
-                form.find('.booking_area.return .additional_service_area').slideDown('fast');
+                return_parent.find('.additional_service_area').slideDown('fast');
+                return_parent.find('.seat_selection').slideDown('fast');
             } else {
                 form.find('.total_continue_area .price_down').slideUp('fast');
                 form.find('.total_continue_area .ex_price_down').slideUp('fast')
-                form.find('.booking_area.return .additional_service_area').slideUp('fast');
+                return_parent.find('.additional_service_area').slideUp('fast');
+                return_parent.find('.seat_selection').slideUp('fast').find('.insert_item').html('');
             }
             form.find('.price_up .item_total').html(price > 0 ? abptb_wc_price_format(price) : abptb_infos.msg.free);
             form.find('.price_down .item_total').html(return_price > 0 ? abptb_wc_price_format(return_price) : abptb_infos.msg.free);
-            attendee_management(parent, qty);
-            attendee_management(return_parent, return_qty);
             total = price + ex_price + return_price + return_ex_price;
             form.find('.total_continue_area').slideDown('fast');
         } else {
             form.find('.additional_service_area').slideUp('fast');
             form.find('.total_continue_area').slideUp('fast');
+            form.find('.seat_selection').slideUp('fast').find('.insert_item').html('');
         }
+        attendee_management(parent, qty);
+        attendee_management(return_parent, return_qty);
         total = total > 0 ? abptb_wc_price_format(total) : abptb_infos.msg.free;
         form.find('.abptb_total').html(total);
         //abptb_load_image();
@@ -400,57 +426,65 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                     item.not(':first').remove();
                 }
             }
-        }else{
+        } else {
             item.not(':first').remove();
         }
     }
-    function get_quantity(parent) {
+    function get_quantity(parent, seat_type, prefix = '') {
         let qty = 0;
-        parent.find('.item_select').each(function () {
-            let current = $(this);
-            let active_property = $.trim(current.find('[name="item_check[]"]').val());
-            if (active_property) {
-                qty = qty + parseInt($.trim(current.find('[name="item_qty[]"]').val()));
-            }
-        });
-        return qty;
-    }
-    function get_quantity_return(parent) {
-        let qty = 0;
-        parent.find('.item_select').each(function () {
-            let current = $(this);
-            let active_property = $.trim(current.find('[name="return_item_check[]"]').val());
-            if (active_property) {
-                qty = qty + parseInt($.trim(current.find('[name="return_item_qty[]"]').val()));
-            }
-        });
-        return qty;
-    }
-    function get_price(parent) {
-        let total = 0;
-        parent.find('.item_select').each(function () {
-            let current = $(this);
-            let active_property = $.trim(current.find('[name="item_check[]"]').val());
-            if (active_property) {
-                let target = current.find('[name="item_qty[]"]');
-                let price = parseFloat($.trim(target.attr('data-price')));
-                price = price && price >= 0 ? price : 0;
-                total = total + price * parseInt($.trim(target.val()));
-            }
-        });
-        return total;
-    }
-    function get_price_return(parent) {
-        let total = 0;
-        if (parent.length > 0) {
+        if (seat_type === 'sp') {
+            qty = parent.find('.sp_cell.available.selected').length;
+        } else {
             parent.find('.item_select').each(function () {
                 let current = $(this);
-                let active_property = $.trim(current.find('[name="return_item_check[]"]').val());
-                if (active_property) {
-                    let target = current.find('[name="return_item_qty[]"]');
-                    let price = parseFloat($.trim(target.attr('data-price')));
-                    price = price && price >= 0 ? price : 0;
-                    total = total + price * parseInt($.trim(target.val()));
+                let active_property = $.trim(current.find(`[name="${prefix}item_check[]"]`).val());
+                let item_qty = parseInt($.trim(current.find(`[name="${prefix}item_qty[]"]`).val()), 10) || 0;
+                if (active_property && item_qty > 0) {
+                    qty += item_qty;
+                }
+            });
+        }
+        return qty;
+    }
+    function get_price(parent, seat_type, prefix = '') {
+        let total = 0;
+        if (seat_type === 'sp') {
+            let seat_names = [];
+            let type_ids = [];
+            let selection_target = parent.find('.seat_selection');
+            let hidden_target = selection_target.find('.abp_hidden .delete_area');
+            let target = selection_target.find('.insert_item');
+            target.html('');
+            parent.find('.seat_selection .insert_item').html('');
+            parent.find('.sp_cell.available.selected').each(function () {
+                let $this = $(this);
+                let name = $.trim($this.attr('data-name'));
+                let id = $.trim($this.attr('data-id'));
+                if (name && id) {
+                    let price = parseFloat($.trim($this.attr('data-price'))) || 0;
+                    total += price;
+                    seat_names.push(name);
+                    type_ids.push(id);
+                    let item_clone = hidden_target.clone();
+                    item_clone.find('.seat_name').html(name);
+                    item_clone.find('.seat_price').html(abptb_wc_price_format(price));
+                    target.append(item_clone);
+                }
+            });
+            selection_target.find('.sub_total').html(abptb_wc_price_format(total));
+            parent.find(`[name="${prefix}sp_selected_seat"]`).val(seat_names.join(','));
+            parent.find(`[name="${prefix}sp_selected_seat_id"]`).val(type_ids.join(','));
+        } else {
+            parent.find('.item_select').each(function () {
+                let current = $(this);
+                let target_qty = current.find(`[name="${prefix}item_qty[]"]`);
+                let active_property = $.trim(current.find(`[name="${prefix}item_check[]"]`).val());
+                let item_qty = parseInt($.trim(target_qty.val()), 10) || 0;
+                if (active_property && item_qty > 0) {
+                    let price = parseFloat($.trim(target_qty.attr('data-price'))) || 0;
+                    if (price > 0) {
+                        total += price * item_qty;
+                    }
                 }
             });
         }

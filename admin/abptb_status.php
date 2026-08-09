@@ -11,20 +11,19 @@
                 add_action('wp_ajax_abptb_import_dummy', array($this, 'import_dummy'));
             }
             public function load_status(): void {
-                // echo '<pre>';print_r(ABPTB_Function::get_option( 'abptb_ticket_sp' ));echo '</pre>';
                 ?>
                 <div class="_abp_panel_max_1200_mar_auto abp_status">
                     <div class="_panel_head">
-                        <h3 class="_abp"><span class="_mar_r_xxs">🛡️</span> <?php esc_html_e('Status  & Information', 'abp-transport-booking'); ?></h3>
+                        <h3 class="_abp_gap_xs"><span>🛡️</span> <?php esc_html_e('Status  & Information', 'abp-transport-booking'); ?></h3>
                     </div>
-                    <div class="_panel_body _fd_column_gap_xs">
+                    <div class="_panel_body_fd_column_gap_xs">
                         <?php
                             if (ABPTB_WC < 2) {
                                 ABPTB_Layout::layout_warning_info_xs('must_wc');
                                 if (ABPTB_WC == 1) { ?>
-                                    <button class="_btn_navy_blue_mar_t" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
+                                    <button class="_btn_navy_blue_xs" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
                                 <?php } else { ?>
-                                    <button class="_btn_navy_blue_mar_t _mar_t" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
+                                    <button class="_btn_navy_blue_xs" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
                                 <?php }
                             }
                             $this->version();
@@ -45,7 +44,7 @@
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Transport Booking Version', 'abp-transport-booking') ?> </h6>
-                        <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(ABPTB_VERSION); ?></button>
+                        <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html(ABPTB_VERSION); ?></button>
                     </div>
                 </div>
                 <?php
@@ -57,9 +56,9 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('WordPress Version', 'abp-transport-booking'); ?> </h6>
                         <?php if ($version > 5.5) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle"></span><?php echo esc_html($version); ?></button>
                         <?php } ?>
                     </div>
                 </div>
@@ -72,9 +71,9 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Php Version', 'abp-transport-booking'); ?> </h6>
                         <?php if ($version > 7.4) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html($version); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle"></span><?php echo esc_html($version); ?></button>
                         <?php } ?>
                     </div>
                 </div>
@@ -90,11 +89,11 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php echo esc_html($title); ?></h6>
                         <?php if (ABPTB_WC == 2) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } elseif (ABPTB_WC == 1) { ?>
-                            <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks _mar_r_xxs"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download _mar_r_xxs"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
@@ -102,9 +101,9 @@
                         <div class="_fa_center_fj_between">
                             <h6 class="_abp"><?php esc_html_e('WooCommerce Version', 'abp-transport-booking'); ?></h6>
                             <?php if (version_compare(WC_VERSION, '8.0', '>')) { ?>
-                                <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
+                                <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html(WC_VERSION); ?></button>
                             <?php } else { ?>
-                                <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php echo esc_html(WC_VERSION); ?></button>
+                                <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle"></span><?php echo esc_html(WC_VERSION); ?></button>
                             <?php } ?>
                         </div>
                         <?php if (!empty($name)) { ?>
@@ -122,7 +121,7 @@
                             </div>
                         <?php } ?>
                     <?php } else { ?>
-                        <div class="_color_warning"><span class="_mar_r_xxs  fas fa-exclamation-triangle"></span><?php echo esc_html(ABPTB_Layout::array_info('must_wc')); ?></div>
+                        <div class="_color_warning"><span class="_mar_r_xxs  fas fa-exclamation-triangle"></span><?php echo esc_html(ABPTB_Static::array_info('must_wc')); ?></div>
                     <?php } ?>
                 </div>
                 <?php
@@ -135,42 +134,42 @@
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Booking Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_booking')) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs " onclick="abptb_create_page('tf_booking')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add Transport Booking Booking Page', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_warning_xs " onclick="abptb_create_page('tf_booking')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add Transport Booking Booking Page', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Post List Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_post')) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs " onclick="abptb_create_page('tf_post')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add Transport Booking List Page', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_warning_xs " onclick="abptb_create_page('tf_post')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add Transport Booking List Page', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"><?php esc_html_e('Gallery Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_gallery')) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_warning_xs" onclick="abptb_create_page('tf_gallery')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add Gallery Page', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_warning_xs" onclick="abptb_create_page('tf_gallery')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add Gallery Page', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Number of Post', 'abp-transport-booking'); ?> </h6>
                         <?php if ($total > 0) { ?>
-                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check _mar_r_xxs"></span><?php echo esc_html($total); ?></button>
+                            <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($total); ?></button>
                         <?php } else { ?>
-                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle _mar_r_xxs"></span><?php esc_html_e('Can Not Find Post', 'abp-transport-booking'); ?></button>
+                            <button class="_btn_light_warning_xs" type="button"><span class="fas fa-exclamation-triangle"></span><?php esc_html_e('Can Not Find Post', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="_abp"> <?php esc_html_e('Dummy Import', 'abp-transport-booking'); ?> </h6>
-                        <button class="<?php echo esc_attr($total > 0 ? '_btn_light_success_xs' : '_btn_warning_xs'); ?>" onclick="abptb_import_global('dummy')" type="button"><span class="fas fa-plus _mar_r_xxs"></span><?php esc_html_e('Add New Dummy Post', 'abp-transport-booking'); ?></button>
+                        <button class="<?php echo esc_attr($total > 0 ? '_btn_light_success_xs' : '_btn_warning_xs'); ?>" onclick="abptb_import_global('dummy')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add New Dummy Post', 'abp-transport-booking'); ?></button>
                     </div>
                 </div>
                 <?php
@@ -266,7 +265,7 @@
                             wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Failed to create page.', 'abp-transport-booking')]);
                         }
                         flush_rewrite_rules();
-                        /* translators: %s: Custom rental item type label (e.g., Vehicle, Equipment, Property) */
+                        /* translators: %s: Trnasport Label */
                         $translated_format = esc_html__('%s Page Created successfully.....', 'abp-transport-booking');
                         $msg = sprintf($translated_format, $label);
                         wp_send_json_success(['type' => 'success', 'msg' => $msg]);
@@ -280,61 +279,54 @@
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                 }
-                try {
-                    $dummy_infos = $this->dummy_data();
-                    if (isset($dummy_infos['taxonomy'])) {
-                        foreach ($dummy_infos['taxonomy'] as $tax => $taxonomy_option) {
-                            if (taxonomy_exists($tax)) {
-                                $check_terms = get_terms(array('taxonomy' => $tax, 'hide_empty' => false));
-                                if (is_string($check_terms) || sizeof($check_terms) == 0) {
-                                    foreach ($taxonomy_option as $taxonomy_data) {
-                                        unset($term);
-                                        $term = wp_insert_term($taxonomy_data['name'], $tax);
-                                    }
-                                }
-                            }
-                        }
-                        do_action('abptb_location_update');
-                        do_action('abptb_category_update');
-                        do_action('abptb_organizer_update');
-                        do_action('abptb_brand_update');
-                    }
-                    if (isset($dummy_infos['options'])) {
-                        foreach ($dummy_infos['options'] as $option => $dummy_option) {
-                            $option_data = get_option($option);
-                            if (empty($option_data)) {
-                                update_option($option, $dummy_option);
-                            }
-                        }
-                    }
-                    if (isset($dummy_infos['custom_post'])) {
-                        foreach ($dummy_infos['custom_post'] as $custom_post => $dummy_post) {
-                            foreach ($dummy_post as $dummy_data) {
-                                $args = array();
-                                if (isset($dummy_data['name'])) {
-                                    $args['post_title'] = $dummy_data['name'];
-                                }
-                                $args['post_status'] = 'publish';
-                                $args['post_type'] = $custom_post;
-                                $post_id = wp_insert_post($args);
-                                $post_data = $dummy_data['post_data'] ?? [];
-                                if (!empty($post_data)) {
-                                    foreach ($post_data as $meta_key => $data) {
-                                        update_post_meta($post_id, $meta_key, $data);
-                                    }
+                $dummy_infos = $this->dummy_data();
+                if (isset($dummy_infos['taxonomy'])) {
+                    foreach ($dummy_infos['taxonomy'] as $tax => $taxonomy_option) {
+                        if (taxonomy_exists($tax)) {
+                            $check_terms = get_terms(array('taxonomy' => $tax, 'hide_empty' => false));
+                            if (is_string($check_terms) || sizeof($check_terms) == 0) {
+                                foreach ($taxonomy_option as $taxonomy_data) {
+                                    unset($term);
+                                    $term = wp_insert_term($taxonomy_data['name'], $tax);
                                 }
                             }
                         }
                     }
-                    flush_rewrite_rules();
-                    wp_send_json_success([
-                        'msg' => esc_html__('Dummy data imported successfully!', 'abp-transport-booking')
-                    ]);
-                } catch (Exception) {
-                    wp_send_json_error([
-                        'msg' => esc_html__('An error occurred during data import.', 'abp-transport-booking')
-                    ]);
+                    do_action('abptb_location_update');
+                    do_action('abptb_category_update');
+                    do_action('abptb_organizer_update');
+                    do_action('abptb_brand_update');
                 }
+                if (isset($dummy_infos['options'])) {
+                    foreach ($dummy_infos['options'] as $option => $dummy_option) {
+                        $option_data = get_option($option);
+                        if (empty($option_data)) {
+                            update_option($option, $dummy_option);
+                        }
+                    }
+                }
+                if (isset($dummy_infos['custom_post'])) {
+                    $dummy_posts = $this->dummy();
+                    foreach ($dummy_posts as $dummy_data) {
+                        $args = array();
+                        if (isset($dummy_data['name'])) {
+                            $args['post_title'] = $dummy_data['name'];
+                        }
+                        $args['post_status'] = 'publish';
+                        $args['post_type'] = ABPTB_Function::get_cpt();
+                        $post_id = wp_insert_post($args);
+                        $post_data = $dummy_data['post_data'] ?? [];
+                        if (!empty($post_data)) {
+                            foreach ($post_data as $meta_key => $data) {
+                                update_post_meta($post_id, $meta_key, $data);
+                            }
+                        }
+                    }
+                }
+                flush_rewrite_rules();
+                wp_send_json_success([
+                    'msg' => esc_html__('Dummy data imported successfully!', 'abp-transport-booking')
+                ]);
             }
             public function dummy_data(): array {
                 return [
@@ -353,9 +345,7 @@
                         'abptb_tc' => self::static_tc(),
                         'abptb_feature' => self::static_feature(),
                     ],
-                    'custom_post' => [
-                        'abptb_post' => $this->dummy()
-                    ]
+                    'custom_post' => []
                 ];
             }
             public function static_sp(): void {
@@ -392,18 +382,22 @@
                         'seat_info' => '{"4":"15"}'
                     ];
                     $ticket_infos = ABPTB_Function::get_option('abptb_ticket_sp');
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($table_name, $bus_plan_data_1);
                     $id_1 = $wpdb->insert_id;
                     $ticket_infos[$id_1]['type'] = json_decode($bus_plan_data_1['seat_info'], true);
                     $ticket_infos[$id_1]['total'] = 41;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($table_name, $bus_plan_data_2);
                     $id_2 = $wpdb->insert_id;
                     $ticket_infos[$id_2]['type'] = json_decode($bus_plan_data_2['seat_info'], true);
                     $ticket_infos[$id_2]['total'] = 40;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($table_name, $bus_plan_data_3);
                     $id_3 = $wpdb->insert_id;
                     $ticket_infos[$id_3]['type'] = json_decode($bus_plan_data_3['seat_info'], true);
                     $ticket_infos[$id_3]['total'] = 30;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($table_name, $bus_plan_data_4);
                     $id_4 = $wpdb->insert_id;
                     $ticket_infos[$id_4]['type'] = json_decode($bus_plan_data_4['seat_info'], true);
@@ -431,29 +425,29 @@
                     $all_data[$i]['name'] = $names[$i];
                     $all_data[$i]['post_data'] = [
                         'sale_continue' => 'on',
-                        'abptb_template' => $template[rand(0, 1)],
+                        'abptb_template' => $template[wp_rand(0, 1)],
                         'display_sku' => 'on',
                         'post_sku' => wp_rand(100, 999),
-                        'post_icon' => $icon[rand(0, 5)],
+                        'post_icon' => $icon[wp_rand(0, 5)],
                         'sub_title' => 'Travel comfortably with modern vehicles and professional drivers.',
                         'post_description' => 'Experience hassle-free transportation with well-maintained vehicles, affordable fares, and excellent customer support. Whether traveling for business or leisure, our services ensure comfort, punctuality, and convenience from departure to arrival.',
-                        'display_organizer' => $on_off[rand(0, 1)],
+                        'display_organizer' => $on_off[wp_rand(0, 1)],
                         'abptb_organizer' => $this->get_id($all_organizer, $organizer[$i]),
-                        'display_brand' => $on_off[rand(0, 1)],
+                        'display_brand' => $on_off[wp_rand(0, 1)],
                         'abptb_brand' => $this->get_id($all_brands, $band[$i]),
-                        'display_capacity' => $on_off[rand(0, 1)],
-                        'display_category' => $on_off[rand(0, 1)],
+                        'display_capacity' => $on_off[wp_rand(0, 1)],
+                        'display_category' => $on_off[wp_rand(0, 1)],
                         'abptb_category' => $this->get_id($all_categories, $categories[$i]),
                         'post_feature' => implode(',', array_rand($features, 5)),
                         'abptb_slider' => '10,20,30,40,50,100,60,70,80,90',
                         'active_global_dates' => 'on',
-                        'time_infos' => ['time'=>array_map(fn($key) => $times[$key], array_rand($times, 2))],
-                        'return_time_infos' => ['time'=>array_map(fn($key) => $times[$key], array_rand($times, 2))],
+                        'time_infos' => ['time' => array_map(fn($key) => $times[$key], array_rand($times, 2))],
+                        'return_time_infos' => ['time' => array_map(fn($key) => $times[$key], array_rand($times, 2))],
                         'display_additional_services' => 'on',
                         'active_global_additional' => 'on',
                         'display_client_form' => 'on',
                         'active_global_form' => 'on',
-                        'display_single_form' => $on_off[rand(0, 1)],
+                        'display_single_form' => $on_off[wp_rand(0, 1)],
                         'display_faq' => 'on',
                         'active_global_faq' => 'on',
                         'display_tc' => 'on',
@@ -483,7 +477,7 @@
                 $this->static_sp();
                 $options = ABPTB_Function::get_option('abptb_location');
                 $ticket_options = ABPTB_Function::get_option('abptb_ticket');
-                $random_num=sizeof($ticket_options)>4?3:sizeof($ticket_options);
+                $random_num = sizeof($ticket_options) > 4 ? 3 : sizeof($ticket_options);
                 $all_ticket_type = array_rand($ticket_options, $random_num);
                 $routes = self::route_data();
                 $all_sp_ticket = ABPTB_Function::get_option('abptb_ticket_sp');

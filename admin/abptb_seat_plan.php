@@ -75,7 +75,7 @@
                     <h5 class="_abp_text_nowrap_gap_xs">💺 <?php esc_html_e('Seat Plan', 'abp-transport-booking'); ?><sup class="_circle_icon_xs"><?php echo esc_html(ABPTB_Query::get_sp('', true)); ?></sup></h5>
                     <div class="color_control"><?php $this->color_control(); ?></div>
                     <button class="_btn_light_active_xs" onclick="abptb_sp_add()">
-                        <?php ABPTB_Layout::icon_svg('plus');
+                        <?php ABPTB_Static::icon_svg('plus');
                             esc_html_e('Add New Seat Plan', 'abp-transport-booking'); ?>
                     </button>
                 </div>
@@ -115,10 +115,10 @@
                                 <th><?php echo esc_html(($others['width'] ?? 50) . ' X ' . ($others['height'] ?? 50) . ' X ' . ($others['gap'] ?? 0)); ?></th>
                                 <td>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_theme_xxs" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('View : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('view_1'); ?></button>
-                                        <button type="button" class="_btn_light_navy_blue_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>','1')" title="<?php echo esc_attr__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('clone_1'); ?></button>
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_sp_delete('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
+                                        <button type="button" class="_btn_light_theme_xxs" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('View : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Static::icon_svg('view_1'); ?></button>
+                                        <button type="button" class="_btn_light_navy_blue_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>','1')" title="<?php echo esc_attr__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Static::icon_svg('clone_1'); ?></button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_sp_add('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_sp_delete('<?php echo esc_attr($sp_info['id'] ?? ''); ?>')" title="<?php echo esc_attr__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_attr($sp_info['name'] ?? ''); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
                                     </div>
                                 </td>
                             </tr>
@@ -236,9 +236,9 @@
                             </div>
                         </div>
                         <div class="sp_section_card_xs _group_content_f_equal">
-                            <button type="button" class="_btn_active_xs" onclick="abptb_sp_save()"><?php ABPTB_Layout::icon_svg('save');
+                            <button type="button" class="_btn_active_xs" onclick="abptb_sp_save()"><?php ABPTB_Static::icon_svg('save');
                                     esc_html_e('Save Seat Plan', 'abp-transport-booking'); ?></button>
-                            <button type="button" class="_btn_warning_xs" onclick="abptb_sp_clear()"><?php ABPTB_Layout::icon_svg('close_1');
+                            <button type="button" class="_btn_warning_xs" onclick="abptb_sp_clear()"><?php ABPTB_Static::icon_svg('close_1');
                                     esc_html_e('Clear Layout', 'abp-transport-booking'); ?></button>
                         </div>
                     </div>
@@ -340,7 +340,7 @@
                         self::sp_seat_list($options, $meta_info); ?>
                 </div>
                 <div class="sp_builder_area">
-                    <?php ABPTB_Layout::sp('',$sp_info); ?>
+                    <?php ABPTB_Layout::sp('', $sp_info); ?>
                 </div>
                 <?php
                 $html = ob_get_clean();
@@ -355,16 +355,19 @@
                 $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
                 $post_int = fn($key, $default = 0) => isset($_POST[$key]) ? absint($_POST[$key]) : $default;
                 $post_json = function ($key) {
-                    if (!isset($_POST[$key])) {
-                        return array();
+                    if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                        wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                     }
-                    $raw_data = json_decode(wp_unslash($_POST[$key]), true);
-                    if (!is_array($raw_data)) {
-                        return array();
+                    if (isset($_POST[$key])) {
+                        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via map_deep.
+                        $raw_input = wp_unslash($_POST[$key]);
+                        $raw_data = json_decode($raw_input, true);
+                        if (!is_array($raw_data)) {
+                            return array();
+                        }
+                        return map_deep($raw_data, 'sanitize_text_field');
                     }
-                    return array_map(function ($item) {
-                        return is_array($item) ? array_map('sanitize_text_field', $item) : sanitize_text_field($item);
-                    }, $raw_data);
+                    return [];
                 };
                 $id = $post_int('id');
                 $layout_data = $post_json('layout_data');
@@ -395,11 +398,13 @@
                 ];
                 //echo '<pre>';                print_r($data);                echo '</pre>';die();
                 if ($id > 0) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->update($table_name, $data, ['id' => $id]);
                     $ticket_infos[$id] = $ticket_info;
                     update_option('abptb_ticket_sp', $ticket_infos);
                     wp_send_json_success(['msg' => __('Seat Plan Updated Successfully.....!', 'abp-transport-booking'), 'type' => 'success']);
                 } else {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->insert($table_name, $data);
                     $ticket_infos[$wpdb->insert_id] = $ticket_info;
                     update_option('abptb_ticket_sp', $ticket_infos);
@@ -494,7 +499,7 @@
                     <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($sold) ?>"></span><?php esc_html_e('Sold', 'abp-transport-booking'); ?></button>
                     <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($booked) ?>"></span><?php esc_html_e('Booked', 'abp-transport-booking'); ?></button>
                     <button type="button" class="_btn_light_default_xs"><span class="color_badge" style="background-color: <?php echo esc_attr($selected) ?>"></span><?php esc_html_e('Selected', 'abp-transport-booking'); ?></button>
-                    <button type="button" class="_btn_light_default_xs" onclick="abptb_popup_open_global('color_control')"><?php ABPTB_Layout::icon_svg('edit'); ?><?php esc_html_e('Edit/Modify', 'abp-transport-booking'); ?></button>
+                    <button type="button" class="_btn_light_default_xs" onclick="abptb_popup_open_global('color_control')"><?php ABPTB_Static::icon_svg('edit'); ?><?php esc_html_e('Edit/Modify', 'abp-transport-booking'); ?></button>
                 </div>
                 <?php
             }
@@ -601,8 +606,8 @@
                                                     echo esc_html($label . ' ' . (!empty($prefix) ? '(' . $prefix . ')' : '')); ?>
                                             </h6>
                                             <div class="_group_content">
-                                                <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
+                                                <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('ticket_type','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
                                             </div>
                                         </div>
                                         <?php
@@ -789,8 +794,8 @@
                                     <h6 class="_abp_gap_xxs" style="color:<?php echo esc_attr($item['color'] ?? ''); ?>"><?php ABPTB_Layout::image_icon($item['icon'] ?? '');
                                             echo esc_html($label); ?></h6>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('decor_item')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('decor_item','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('decor_item')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('decor_item','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
                                     </div>
                                 </div>
                             <?php }

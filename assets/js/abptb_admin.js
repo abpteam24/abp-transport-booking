@@ -704,7 +704,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
                     }
                     abptb_toast_msg(response.data.msg, response.data.type);
                 }
-            },error: function (xhr) {
+            }, error: function (xhr) {
                 abptb_ajx_error(xhr, parent);
             }
         });
@@ -733,10 +733,10 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
                 }, success: function (response) {
                     abptb_spinner_remove(parent);
                     if (response.data) {
-                        abptb_toast_msg(response.data.msg,response.data.type);
+                        abptb_toast_msg(response.data.msg, response.data.type);
                     }
                     $this.closest('.abptb_orders').find('form.abp_search_form').submit();
-                },error: function (xhr) {
+                }, error: function (xhr) {
                     abptb_ajx_error(xhr, parent);
                 }
             });

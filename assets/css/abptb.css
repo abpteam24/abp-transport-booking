@@ -1,21 +1,24 @@
 @charset "utf-8";
 /******************************************************************** Registration, Form  details************************************************/
 @media only screen and (min-width: 10px) {
+	div.abptb_area .global_form{margin: var(--tb_gap) 0 0 0;}
 	#abptb_search_area {background: var(--tb_color_white); border-radius: var(--tb_br); padding: var(--tb_gap); box-shadow: var(--tb_shadow_29); display: -webkit-flex;display: flex; gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
-	#abptb_search_area form {max-width: 100%;}
+	#abptb_search_area form {max-width: 100%;gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;}
 	/**********************************/
-	div.abptb_booking form {margin: var(--tb_gap) 0;}
+	div.abptb_booking form {display: -webkit-flex;display: flex;}
 	div.abptb_booking form.double_route {display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap; gap: var(--tb_gap);}
 	div.abptb_booking .booking_area {display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap; gap: var(--tb_gap);-webkit-flex-grow: 1;flex-grow: 1; -webkit-flex-shrink: 1; flex-shrink: 1; -webkit-flex-basis: 45%; flex-basis: 45%;min-width: 600px;}
 	div.abptb_booking .booking_item {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	div.abptb_booking .booking_content {display: -webkit-flex;display: flex; gap: var(--tb_gap);-webkit-flex-grow: 1;flex-grow: 1; -webkit-flex-shrink: 1; flex-shrink: 1; -webkit-flex-basis: 45%; flex-basis: 45%;min-width: 600px;}
 	div.abptb_booking .booking_content .ticket_item {margin: 0;}
 	div.abptb_booking form.double_route .booking_content {-webkit-flex-direction: column;flex-direction: column;width: 100%;}
-	div.abptb_booking .booking_area .post_top_filter {margin: 0;}
-	div.abptb_booking .booking_area .ticket_content {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;min-width: 550px;}
+	div.abptb_booking .booking_area .ticket_left {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;min-width: 550px;}
 	div.abptb_booking .booking_area .ticket_right {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;min-width: 400px;}
+	div.abptb_booking .booking_area .ticket_content {display: -webkit-flex;display: flex; gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
+	div.abptb_booking .seat_selection,
 	div.abptb_booking .total_continue_area,
 	div.abptb_booking .additional_service_area {width: 100%;display: none; }
+	div.abptb_booking .client_info_area {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%; }
 	div.additional_service_area .additional_service { padding: var(--tb_gap);}
 	div.abptb_booking .total_continue {display: -webkit-flex;display: flex;-webkit-justify-content: space-between;justify-content: space-between;-webkit-align-items: center;align-items: center;padding: var(--tb_gap);;}
 	div.client_info_area div.attendee_item {position: relative;display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap;-webkit-justify-content: space-between; justify-content: space-between; padding: var(--tb_gap);}
@@ -27,7 +30,7 @@
 }
 /******************************************************************** List Grid Property item ************************************************/
 @media only screen and (min-width: 10px) {
-	.abptb_area .post_top_filter {border-radius: var(--tb_br);display: -webkit-flex;display: flex;flex-wrap: wrap;-webkit-justify-content: space-between;justify-content: space-between; -webkit-align-items: center;align-items: center; margin: var(--tb_gap) 0;padding: var(--tb_gap_xs); background: var(--tb_color_4);}
+	.abptb_area .post_top_filter {border-radius: var(--tb_br);display: -webkit-flex;display: flex;flex-wrap: wrap;-webkit-justify-content: space-between;justify-content: space-between; -webkit-align-items: center;align-items: center;padding: var(--tb_gap_xs); background: var(--tb_color_4);gap: var(--tb_gap_xs);}
 	/*********************************/
 	.abptb_area .item_head {background: var(--tb_color_4); padding: var(--tb_gap_xs); text-align: center; position: relative;width: 100%;min-height: auto;display: -webkit-flex;display: flex;-webkit-justify-content: center;justify-content: center;-webkit-align-items: center;align-items: center;line-height: 1;}
 	.abptb_area .item_head i {font-size: 75px;padding: var(--tb_gap);min-height: 150px;display: -webkit-flex;display: flex;-webkit-align-items: center;align-items: center;-webkit-justify-content: center;justify-content: center;}
@@ -37,7 +40,7 @@
 	/*********************************************/
 	.abptb_area .item_body {padding: var(--tb_gap_xs);display: -webkit-flex;display: flex; -webkit-flex-direction: column;flex-direction: column;}
 	div.abptb_area .item_spec { margin: var(--tb_gap_xxs) 0;}
-	.abptb_area .pricing_box { background: var(--tb_color_light); padding: var(--tb_gap_xs); border-radius: var(--tb_br)}
+	.abptb_area .pricing_box { background: var(--tb_color_light); padding: var(--tb_gap_xs); border-radius: var(--tb_br);}
 	.abptb_area .price_row {display: flex; justify-content: space-between; align-items: center; font-size: var(--tb_fs_h6); color: #6B7280;}
 	div.abptb_area .price_value {font-weight: 500; color: var(--tb_color_theme);font-size: var(--tb_fs_h5); }
 	.abptb_area .item_condition {font-size: var(--tb_fs); color: #6B7280;margin-top: var(--tb_gap_xs);}
@@ -56,15 +59,15 @@
 	/*********************************************/
 	div.abptb_area .abptb_grid {border-radius: var(--tb_br_xl); display: grid; gap: var(--tb_gap);column-gap: var(--tb_gap);}
 	div.abptb_area .abptb_grid .item_box_1 {break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; display: -webkit-flex;display: flex;-webkit-flex-direction: column;flex-direction: column;}
-	div.abptb_area .abptb_grid .item_head {padding: 0;height: auto;}
+	div.abptb_area .abptb_grid .item_head {padding: 0;height: auto;border-radius: var(--tb_br) var(--tb_br) 0 0;}
 	div.abptb_area .abptb_grid .item_body {-webkit-justify-content: space-between;justify-content: space-between;height: 100%;}
-	div.abptb_area .abptb_grid .list_title {padding: 0;color: var(--tb_color_rose_dusty);font-size: var(--tb_fs_h4);}
+	div.abptb_area .abptb_grid .list_title {padding: 0;color: var(--tb_color_rose_dusty);font-size: var(--tb_fs_h6);}
 	div.abptb_area .abptb_grid .item_body .price_value {font-size: var(--tb_fs_h6); font-weight: 500;}
 	div.abptb_area .abptb_grid .list_title img.emoji {height: var(--tb_fs_h4) !important;}
 	/**************************************/
 	div.abptb_area .abptb_lists {position: relative;display: -webkit-flex;display: flex; -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	div.abptb_area .abptb_lists .item_box_1 {position: relative;display: -webkit-flex;display: flex; width: 100%;margin: 0 0 var(--tb_gap) 0;overflow: hidden;}
-	div.abptb_area .abptb_lists .item_head {padding: 0;width: 400px;min-width: 200px;max-width: 40%;overflow: hidden;}
+	div.abptb_area .abptb_lists .item_head {padding: 0;width: 400px;min-width: 200px;max-width: 40%;overflow: hidden;border-radius: var(--tb_br) 0 0 var(--tb_br);}
 	div.abptb_area .abptb_lists .item_body {-webkit-justify-content: space-between;justify-content: space-between;padding: var(--tb_gap_xs);width: 100%;height: auto;}
 	div.abptb_area .abptb_lists .list_title {padding: 0;color: var(--tb_color_rose_dusty);font-size: var(--tb_fs_h4);}
 	div.abptb_area .abptb_lists .item_body .price_value {font-size: var(--tb_fs_h5); font-weight: 500;}

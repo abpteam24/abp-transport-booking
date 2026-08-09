@@ -747,9 +747,9 @@ function abptb_live_pagination(parent) {
     let is_filter_active = parent.find('.pagination_item.abp_on, .pagination_item.abp_off').length > 0;
     let total_filtered_match = parent.find('.pagination_item.abp_on').length;
     if (is_filter_active && total_filtered_match === 0) {
-        parent.find('.tf_no_results').fadeIn();
+        parent.find('.not_found').fadeIn();
     } else {
-        parent.find('.tf_no_results').hide();
+        parent.find('.not_found').hide();
     }
     parent.find('.pagination_item').each(function () {
         let item = jQuery(this);
@@ -798,24 +798,24 @@ function abptb_pagination_item(parent) {
 }
 (function ($) {
     "use strict";
-    $(document).on('change', 'div.abptb_area .tf_pagination [name="cat_id"]', function () {
-        let parent = $(this).closest('div.tf_pagination');
+    abptb_parent.on('change', '.abp_pagination [name="cat_id"]', function () {
+        let parent = $(this).closest('.abp_pagination');
         abptb_filter(parent);
     });
-    $(document).on('abp_trigger', 'div.abptb_area .tf_pagination [name="cat_id"]', function () {
-        let parent = $(this).closest('div.tf_pagination');
+    abptb_parent.on('abp_trigger', '.abp_pagination [name="cat_id"]', function () {
+        let parent = $(this).closest('.abp_pagination');
         abptb_filter(parent);
     });
-    $(document).on('change', 'div.abptb_area .tf_pagination [name="loc_id"]', function () {
-        let parent = $(this).closest('div.tf_pagination');
+    abptb_parent.on('change', '.abp_pagination [name="loc_id"]', function () {
+        let parent = $(this).closest('.abp_pagination');
         abptb_filter(parent);
     });
-    $(document).on('abp_trigger', 'div.abptb_area .tf_pagination [name="loc_id"]', function () {
-        let parent = $(this).closest('div.tf_pagination');
+    abptb_parent.on('abp_trigger', '.abp_pagination [name="loc_id"]', function () {
+        let parent = $(this).closest('.abp_pagination');
         abptb_filter(parent);
     });
-    $(document).on('click', 'div.abptb_area  .grid_view', function () {
-        let parent = $(this).closest('div.abptb_area');
+    abptb_parent.on('click', '.grid_view', function () {
+        let parent = $(this).closest('.abp_pagination');
         let container = parent.find('.abptb_lists');
         if (container) {
             container.addClass('view-switching');
@@ -828,8 +828,8 @@ function abptb_pagination_item(parent) {
         $(this).addClass('abp_active');
         abptb_load_more();
     });
-    $(document).on('click', 'div.abptb_area  .list_view', function () {
-        let parent = $(this).closest('div.abptb_area');
+    abptb_parent.on('click', '.list_view', function () {
+        let parent = $(this).closest('.abp_pagination');
         let container = parent.find('.abptb_grid');
         if (container) {
             container.addClass('view-switching');
@@ -842,8 +842,8 @@ function abptb_pagination_item(parent) {
         parent.find('.grid_view').removeClass('abp_active');
         $(this).addClass('abp_active');
     });
-    $(document).on('click', 'div.abptb_area .tf_pagination .live_pagination', function () {
-        let parent = $(this).closest('div.tf_pagination');
+    abptb_parent.on('click', '.abp_pagination .live_pagination', function () {
+        let parent = $(this).closest('.abp_pagination');
         abptb_spinner(parent);
         let pagination_page = parseInt($(this).attr('data-load-more')) + 1;
         $(this).attr('data-load-more', pagination_page);

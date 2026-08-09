@@ -15,7 +15,7 @@
                 if (ABPTB_Function::on_off('category')) {
                     $label = ABPTB_Function::category_label(); ?>
                     <div class="_fj_between_mar_b_xs">
-                        <h5 class="_abp_gap_xs"><?php ABPTB_Layout::icon_svg('category');
+                        <h5 class="_abp_gap_xs"><?php ABPTB_Static::icon_svg('category');
                                 echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('tax_category', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
@@ -48,7 +48,7 @@
                 }
                 ?>
                 <div class="abp_form">
-                    <h5 class="_abp"><?php ABPTB_Layout::icon_svg('category'); echo esc_html($title); ?></h5>
+                    <h5 class="_abp"><?php ABPTB_Static::icon_svg('category'); echo esc_html($title); ?></h5>
                     <div class="_divider_xs"></div>
                     <input type="hidden" name="id" value="<?php echo esc_attr($term_id); ?>"/>
                     <div class="group_setting">
@@ -196,8 +196,8 @@
                                 <th>
                                     <div class="_fj_center">
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
-                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
+                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
+                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_category','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
                                         </div>
                                     </div>
                                 </th>

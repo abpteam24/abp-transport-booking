@@ -32,24 +32,22 @@
                         <div class="item_head">
                             <?php
                                 ABPTB_Layout::image($post_id);
-                                ABPTB_Layout::category($post_infos,'ribbon');
+                                ABPTB_Layout::category($post_infos, 'ribbon');
+                                ABPTB_Layout::capacity($post_infos, 'ribbon publish');
                             ?>
-                            <div class="ribbon publish _ab_bottom_right_xs"><?php ABPTB_Layout::route_direction($post_infos,$bp_dp); ?></div>
+                            <div class="ribbon publish _ab_bottom_right_xs"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
                         </div>
                         <div class="item_body">
-                            <div>
+                            <div class="">
                                 <a class="_abp list_title" href="<?php echo esc_url($url); ?>" target="_blank">
-                                    <?php ABPTB_Layout::title($post_infos);?>
+                                    <?php ABPTB_Layout::title($post_infos); ?>
                                 </a>
                                 <div class="_divider_xxs"></div>
-                                <?php ABPTB_Layout::capacity($post_infos ,'ribbon publish');
-                                 ABPTB_Layout::brand($post_infos ,'publish');
-                                 ABPTB_Layout::organizer($post_infos ,'publish');
-
-
-
+                                <?php
+                                    ABPTB_Layout::brand($post_infos, 'publish');
+                                    ABPTB_Layout::organizer($post_infos, 'publish');
                                     ABPTB_Layout::item_feature($post_infos['post_feature'] ?? '');
-                                    ABPTB_Layout::description($post_infos);?>
+                                    ABPTB_Layout::description($post_infos); ?>
                             </div>
                             <div>
                                 <div class="_divider_xxs"></div>

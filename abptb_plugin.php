@@ -1,7 +1,7 @@
 <?php
 	/**
 	 * Plugin Name: ABP Transport Booking
-	 * Description: ABP Transport Booking Plugin transforms WooCommerce into a complete transportation ticketing platform, enabling businesses to manage routes, reservations, and online ticket sales efficiently from a single dashboard.
+	 * Description: WooCommerce transport booking for bus, ferry, shuttle and coach services with seat plans, ticket types, routes, schedules and return trips.
 	 * Version: 1.0.0
 	 * Author: abpteam
 	 * Author URI: https://abp-team.com
@@ -25,6 +25,18 @@
 						require_once ABSPATH . 'wp-admin/includes/plugin.php';
 					}
 				} );
+				add_action(
+					'before_woocommerce_init', // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+					function () {
+						if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+							\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+								'custom_order_tables',
+								__FILE__,
+								true
+							);
+						}
+					}
+				);
 				$this->load_plugin();
 			}
 

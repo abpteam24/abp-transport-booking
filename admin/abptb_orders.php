@@ -69,7 +69,7 @@
                 $booked_status = $booked_status ? explode(',', $booked_status) : [];
                 $_filter_args = $filter_args;
                 $total_additional = 0;
-                $total_sale = 0;
+                $total_sale =$total_price= 0;
                 // echo '<pre>';                print_r($booking_lists);                echo '</pre>';
                 $count_foot_left_col = 0;
                 $count_foot_right_col = 0;
@@ -130,13 +130,15 @@
                         </thead>
                         <tbody>
                         <?php foreach ($booking_lists as $booking_list) {
-                            $post_infos['post_id'] = $booking_list['post_id'] ?? '';
+                            $post_id=$booking_list['post_id'] ?? '';
+                            $post_infos['post_id'] =$post_id;
                             $order_status = $booking_list['order_status'] ?? '';
-                            $total_price = $booking_list['total'] ?? 0;
-                            $total_sale = $total_sale + (int)($total_price);
+                            $item_total=$booking_list['total'] ?? 0;
+                            $total_price = $total_price+($booking_list['price'] ?? 0);
+                            $total_sale = $total_sale + $item_total;
                             $price = $booking_list['price'] ?? 0;
                             $ex_price = $booking_list['ex_price'] ?? 0;
-                            $total_additional = $total_additional + (int)($ex_price);
+                            $total_additional = $total_additional + $ex_price;
                             $ticket_infos = json_decode($booking_list['ticket_info'] ?? '', true) ?: [];
                             $passenger_infos = json_decode($booking_list['pass_info'] ?? '', true) ?: [];
                             $additional_infos = json_decode($booking_list['ex_info'] ?? '', true) ?: [];
@@ -147,7 +149,7 @@
                                     <div class="_group_content">
                                         <?php do_action('abptb_order_action', ($booking_list['id'] ?? ''));
                                             if (in_array($order_status, $booked_status, true)) { ?>
-                                                <button class="_btn_light_danger_xxs item_cancel" data-item_id="<?php echo esc_attr($booking_list['id'] ?? ''); ?>" title="<?php esc_attr_e('Ticket Cancel', 'abp-transport-booking'); ?>" type="button"><?php ABPTB_Layout::icon_svg('close_2'); ?></button>
+                                                <button class="_btn_light_danger_xxs item_cancel" data-item_id="<?php echo esc_attr($booking_list['id'] ?? ''); ?>" title="<?php esc_attr_e('Ticket Cancel', 'abp-transport-booking'); ?>" type="button"><?php ABPTB_Static::icon_svg('close_2'); ?></button>
                                             <?php } ?>
                                     </div>
                                 </th>
@@ -163,7 +165,7 @@
                                     <?php ABPTB_Layout::route_direction($post_infos, ($booking_list['bp_dp'] ?? ''), false, false); ?>
                                     <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['bp_time'] ?? '')); ?></p>
                                 </td>
-                                <th><?php ABPTB_Layout::ticket_info($ticket_infos); ?></th>
+                                <th><?php ABPTB_Layout::ticket_info($ticket_infos,$post_id); ?></th>
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                     <td><?php ABPTB_Layout::additional_info($additional_infos); ?></td>
                                 <?php } ?>
@@ -171,7 +173,7 @@
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                     <th><?php echo $ex_price > 0 ? wp_kses_post(wc_price($ex_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <?php } ?>
-                                <th><?php echo $total_price > 0 ? wp_kses_post(wc_price($total_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                <th><?php echo $item_total > 0 ? wp_kses_post(wc_price($item_total)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <th>
                                     <span class="abp_tag _text_capitalize <?php echo esc_attr($order_status); ?>"> <?php echo esc_html(ABPTB_Layout::status_text($order_status)); ?></span>
                                 </th>

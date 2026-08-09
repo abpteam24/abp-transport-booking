@@ -19,14 +19,15 @@
                 } else {
                     $params['all_post'] = ABPTB_Query::get_post_id($params);
                     $params['global_order'] = 'yes';
-                    $style = ($params['style'] ?? 'grid') ?: 'grid';
-                    $file = ABPTB_Function::template_path('list/' . $style . '.php');
+                    $style = sanitize_key(($params['style'] ?? 'grid') ?: 'grid');
+                    $templates = ['grid' => 'list/grid.php', 'missionary' => 'list/missionary.php',];
+                    $file = ABPTB_Function::template_path($templates[$style] ?? $templates['grid']);
                     ?>
                     <div class="abptb_area">
-                        <div class="abptb_container">
+                        <div class="abp_container">
                             <div class="global_form"><?php do_action('abptb_search_form', $params); ?></div>
-                            <div class="tf_pagination">
-                                <div class="abptb_booking">
+                            <div class="abptb_booking  _gap_fd_column">
+                                <div class="abp_pagination _gap_fd_column">
                                     <?php
                                         do_action('abptb_post_filter', $params);
                                         if (is_file($file)) {
@@ -36,9 +37,9 @@
                                             include_once ABPTB_Function::template_path('list/default.php');
                                             do_action('abptb_default_template', $params);
                                         } ?>
-                                </div>
-                                <div class="tf_no_results _d_none">
-                                    <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
+                                    <div class="not_found">
+                                        <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -57,12 +58,13 @@
                     do_action('abptb_load_details_template', $post_id);
                 } else {
                     $params['all_post'] = ABPTB_Query::get_post_id($params);
-                    $style = ($params['style'] ?? 'grid') ?: 'grid';
-                    $file = ABPTB_Function::template_path('list/' . $style . '.php');
+                    $style = sanitize_key(($params['style'] ?? 'grid') ?: 'grid');
+                    $templates = ['grid' => 'list/grid.php', 'missionary' => 'list/missionary.php',];
+                    $file = ABPTB_Function::template_path($templates[$style] ?? $templates['grid']);
                     ?>
                     <div class="abptb_area">
-                        <div class="abptb_container tf_pagination">
-                            <div class="abptb_booking">
+                        <div class="abp_container abptb_booking">
+                            <div class="abp_pagination _gap_fd_column">
                                 <?php
                                     do_action('abptb_post_filter', $params);
                                     if (is_file($file)) {
@@ -72,9 +74,9 @@
                                         include_once ABPTB_Function::template_path('list/default.php');
                                         do_action('abptb_default_template', $params);
                                     } ?>
-                            </div>
-                            <div class="tf_no_results _d_none">
-                                <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
+                                <div class="not_found">
+                                    <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -89,18 +91,20 @@
                 ob_start();
                 ?>
                 <div class="abptb_area">
-                    <div class="abptb_container global_slider tf_pagination">
+                    <div class="abp_container global_slider abp_pagination">
                         <?php
                             if (!empty($post_id)) {
                                 $img_infos = ABPTB_Function::get_post_info($post_id, 'abptb_slider', []);
                                 do_action('abptb_slider', $img_infos, $params);
                             } else {
                                 $post_ids = ABPTB_Query::get_post_id($params);
-                                $img_infos = [];
+                                $img_infos = '';
                                 if (!empty($post_ids) && sizeof($post_ids) > 0) {
                                     foreach ($post_ids as $post_id) {
                                         $info = ABPTB_Function::get_post_info($post_id, 'abptb_slider', []);
-                                        $img_infos = array_merge($img_infos, $info);
+                                        if (!empty($info)) {
+                                            $img_infos = $img_infos ? $img_infos . ',' . $info : $info;
+                                        }
                                     }
                                     do_action('abptb_slider', $img_infos, $params);
                                 }
@@ -117,7 +121,6 @@
                     "cat_id" => '',
                     "loc_id" => '',
                     "brand_id" => '',
-                    "rent_rule" => '',
                     "style" => 'grid',
                     "slider_style" => 'gallery',
                     "show" => '',

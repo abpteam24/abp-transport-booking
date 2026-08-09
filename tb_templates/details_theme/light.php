@@ -3,16 +3,17 @@
         exit; // Exit if accessed directly
     }
     add_action('abptb_details_light_template', function ($post_id,$form_data = []) {
-        if ($post_id > 0) {
+        if (!empty($post_id) && $post_id > 0 && get_post_type( $post_id ) == ABPTB_Function::get_cpt() && (get_post_status($post_id)=='publish' || is_admin()) ) {
             $post_infos = ABPTB_Function::get_all_meta($post_id);
             $form_data['form'] = 'inline';
             $display_return = $post_infos['display_return'] ?? 'off';
             $bp_dp = $form_data['bp_dp'] ?? '';
             $display_return=ABPTB_Function::on_off('return')?$display_return:'off';
+            $content = get_post_field('post_content', $post_id);
             //echo '<pre>';print_r(ABPTB_Function::get_route_info());echo '</pre>';
             ?>
             <div id="abptb_area" class="abptb_area default_details_page">
-                <div class="abptb_container">
+                <div class="abp_container">
                     <div class="_abp_row">
                         <div class="_f_equal_f_wrap_gap_section_15">
                             <div class="_min_500">
@@ -41,18 +42,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="_abp_row">
-                        <div class="_col_12">
-                            <?php do_action('abptb_content', $post_id); ?>
+                    <?php if (!empty($content)) { ?>
+                        <div class="_abp_row">
+                            <div class="_col_12">
+                                <div class="the_post_content">
+                                    <?php the_content(); ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    <?php } ?>
                     <div class="_abp_row">
                         <div class="_col_12 abptb_booking">
                             <?php do_action('abptb_registration', $post_infos, $form_data); ?>
                         </div>
                     </div>
                     <div class="_abp_row">
-                        <div class="_f_equal_f_wrap_gap _w_full_mar_t">
+                        <div class="_f_equal_f_wrap_gap_w_full">
                             <div class="_min_500 _fd_column_gap_xs">
                                 <?php do_action('abptb_faq', $post_infos); ?>
                                 <?php do_action('abptb_slider', ($post_infos['abptb_slider'] ?? [])); ?>
@@ -63,7 +68,7 @@
                         </div>
                     </div>
                     <div class="_abp_row">
-                        <div class="_col_12_mar_t"> <?php do_action('abptb_related_item', ($post_infos['related_item'] ?? '')); ?></div>
+                        <div class="_col_12"> <?php do_action('abptb_related_item', ($post_infos['related_item'] ?? '')); ?></div>
                     </div>
                 </div>
             </div>

@@ -36,13 +36,13 @@
                                     <thead>
                                     <tr>
                                         <th class="_w_50"></th>
-                                        <th><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Stops Name', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
-                                        <th><?php esc_html_e('Stops Type', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
-                                        <th><?php esc_html_e('Time(in min)', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
+                                        <th><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Stops Name', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
+                                        <th><?php esc_html_e('Stops Type', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
+                                        <th><?php esc_html_e('Time(in min)', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
                                         <?php if (ABPTB_Function::on_off('pickup')) { ?>
-                                            <th><?php esc_html_e('Pickup/Drop', 'abp-wc-transport-manager'); ?></th>
+                                            <th><?php esc_html_e('Pickup/Drop', 'abp-transport-booking'); ?></th>
                                         <?php } ?>
-                                        <th class="_w_75"><?php esc_html_e('Action', 'abp-wc-transport-manager'); ?></th>
+                                        <th class="_w_75"><?php esc_html_e('Action', 'abp-transport-booking'); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody class="insertable_area sortable_area route_configuration">
@@ -57,7 +57,7 @@
                                 </table>
                             </div>
                             <div class="_divider_xs"></div>
-                            <?php ABPTB_Layout::button_add(__('Add New Route', 'abp-wc-transport-manager')); ?>
+                            <?php ABPTB_Layout::button_add(__('Add New Route', 'abp-transport-booking')); ?>
                             <div class="abp_hidden">
                                 <table class="_abp">
                                     <tbody class="hidden_content">
@@ -74,13 +74,13 @@
                                         <thead>
                                         <tr>
                                             <th class="_w_50"></th>
-                                            <th><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Stops Name', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
-                                            <th><?php esc_html_e('Stops Type', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
-                                            <th><?php esc_html_e('Time(in min)', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
+                                            <th><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Stops Name', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
+                                            <th><?php esc_html_e('Stops Type', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
+                                            <th><?php esc_html_e('Time(in min)', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
                                             <?php if (ABPTB_Function::on_off('pickup')) { ?>
-                                                <th><?php esc_html_e('Pickup/Drop', 'abp-wc-transport-manager'); ?></th>
+                                                <th><?php esc_html_e('Pickup/Drop', 'abp-transport-booking'); ?></th>
                                             <?php } ?>
-                                            <th class="_w_75"><?php esc_html_e('Action', 'abp-wc-transport-manager'); ?></th>
+                                            <th class="_w_75"><?php esc_html_e('Action', 'abp-transport-booking'); ?></th>
                                         </tr>
                                         </thead>
                                         <tbody class="insertable_area sortable_area return_route_configuration">
@@ -95,11 +95,11 @@
                                     </table>
                                 </div>
                                 <div class="_divider_xs"></div>
-                                <?php ABPTB_Layout::button_add(__('Add New Return Route', 'abp-wc-transport-manager')); ?>
+                                <?php ABPTB_Layout::button_add(__('Add New Return Route', 'abp-transport-booking')); ?>
                                 <div class="abp_hidden">
                                     <table class="_abp">
                                         <tbody class="hidden_content">
-                                        <?php $this->stop_item([], 'return_'); ?> ?>
+                                        <?php $this->stop_item([], '','return_'); ?> ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -117,7 +117,7 @@
                     <td>
                         <label>
                             <select name="<?php echo esc_attr($prefix);?>stop_name[]" class='_form_control'>
-                                <option value="" selected><?php esc_html_e('Select Stops.', 'abp-wc-transport-manager'); ?></option>
+                                <option value="" selected><?php esc_html_e('Select Stops.', 'abp-transport-booking'); ?></option>
                                 <?php if (!empty(ABPTB_Location)) {
                                     foreach (ABPTB_Location as $key => $location) { ?>
                                         <option value="<?php echo esc_attr($key); ?>" <?php echo esc_attr($key == $stop ? 'selected' : ''); ?>><?php echo esc_html($location['name'] ?? ''); ?></option>
@@ -130,9 +130,9 @@
                     <th>
                         <label>
                             <select name="<?php echo esc_attr($prefix);?>stop_type[]" class='_form_control'>
-                                <option value="bp" <?php echo esc_attr($type == 'bp' ? 'selected' : ''); ?>><?php esc_html_e('Boarding', 'abp-wc-transport-manager'); ?></option>
-                                <option value="dp" <?php echo esc_attr($type == 'dp' ? 'selected' : ''); ?>><?php esc_html_e('Dropping', 'abp-wc-transport-manager'); ?></option>
-                                <option value="both" <?php echo esc_attr($type == 'both' ? 'selected' : ''); ?>><?php esc_html_e('Both', 'abp-wc-transport-manager'); ?></option>
+                                <option value="bp" <?php echo esc_attr($type == 'bp' ? 'selected' : ''); ?>><?php esc_html_e('Boarding', 'abp-transport-booking'); ?></option>
+                                <option value="dp" <?php echo esc_attr($type == 'dp' ? 'selected' : ''); ?>><?php esc_html_e('Dropping', 'abp-transport-booking'); ?></option>
+                                <option value="both" <?php echo esc_attr($type == 'both' ? 'selected' : ''); ?>><?php esc_html_e('Both', 'abp-transport-booking'); ?></option>
                             </select>
                         </label>
                     </th>

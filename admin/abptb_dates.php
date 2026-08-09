@@ -27,7 +27,8 @@
                 $time_format = $date_infos['time_format'] ?? ABPTB_Time_Format;
                 ?>
                 <div class="abp_form">
-                    <h4 class="_abp_gap_xs"><?php ABPTB_Layout::icon_svg('date_2'); esc_html_e('Global Dates Configuration', 'abp-transport-booking'); ?></h4>
+                    <h4 class="_abp_gap_xs"><?php ABPTB_Static::icon_svg('date_2');
+                            esc_html_e('Global Dates Configuration', 'abp-transport-booking'); ?></h4>
                     <?php ABPTB_Layout::info_text('abptb_dates'); ?>
                     <div class="group_setting _mar_t_xs">
                         <div class="setting_item">
@@ -82,12 +83,10 @@
                 $operation_times = $time_infos['time'] ?? [];
                 $day_times = $time_infos['day_time'] ?? [];
                 $date_times = $time_infos['date_times'] ?? [];
-                $opt_time = !empty($day_times) ? 'day_wise_time' : '';
-                $opt_time = !empty($date_times) ? $opt_time .',date_wise_time' : $opt_time;
                 $display_return = $post_infos['display_return'] ?? 'off';
                 $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
-               // echo '<pre>';print_r($time_infos);echo '</pre>';
-               //echo '<pre>';print_r($time_infos);echo '</pre>';
+                // echo '<pre>';print_r($time_infos);echo '</pre>';
+                //echo '<pre>';print_r($time_infos);echo '</pre>';
                 ?>
                 <div class="tab_item date_configuration" data-tabs="#abptb_dates">
                     <h4 class="_abp_color_theme"><span class=" _mar_r_xxs">🗓️</span> <?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
@@ -117,22 +116,9 @@
                     <div class="group_setting">
                         <div class="setting_item full_width">
                             <div class=" configuration_content">
-                                <div class="_f_wrap_fj_between_fa_center">
+                                <div class="_f_wrap_fj_between_fa_center_mar_b_xxs">
                                     <span class="_abp_label"><?php esc_html_e('Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
-                                    <div class="_group_content custom_checkbox">
-                                        <input type="hidden" name="operation_time_optional" value="<?php echo esc_attr($opt_time); ?>"/>
-                                        <div class="checkbox_item">
-                                            <button type="button" class="_btn_light_info_xs <?php echo esc_attr(!empty($day_times) ? 'abp_active' : ''); ?>" data-collapse-target="#day_wise_time" data-checked="day_wise_time" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                                <span data-icon class="_mar_r_xs far <?php echo esc_attr(!empty($day_times) ? 'fa-check-square' : 'fa-square'); ?>"></span><?php esc_html_e('Day Wise Time', 'abp-transport-booking'); ?>
-                                            </button>
-                                        </div>
-                                        <div class="checkbox_item">
-                                            <button type="button" class="_btn_light_info_xs <?php echo esc_attr(!empty($date_times) ? 'abp_active' : ''); ?>" data-collapse-target="#date_wise_time" data-checked="date_wise_time" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                                <span data-icon class="_mar_r_xs far <?php echo esc_attr(!empty($date_times) ? 'fa-check-square' : 'fa-square'); ?>"></span><?php esc_html_e('Date Wise Time', 'abp-transport-booking'); ?>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <?php ABPTB_Layout::button_add(__('Add Operation Time', 'abp-transport-booking')); ?>
+                                    <?php do_action('abptb_multi_times', $post_infos); ?>
                                 </div>
                                 <?php ABPTB_Layout::info_text('operation_time'); ?>
                                 <div class="_divider_xs"></div>
@@ -168,28 +154,12 @@
                             $return_operation_times = $return_time_infos['time'] ?? [];
                             $return_day_times = $return_time_infos['day_time'] ?? [];
                             $return_date_times = $return_time_infos['date_times'] ?? [];
-                            $return_opt_time = !empty($return_day_times) ? 'return_day_wise_time' : '';
-                            $return_opt_time = !empty($return_date_times) ? $return_opt_time . ',return_date_wise_time' : $return_opt_time;
-                             //echo '<pre>';print_r($return_time_infos);echo '</pre>';
+                            //echo '<pre>';print_r($return_time_infos);echo '</pre>';
                             ?>
                             <div class="setting_item full_width <?php echo esc_attr($display_return == 'on' ? 'abp_active' : ''); ?>" data-collapse="#display_return">
                                 <div class=" configuration_content">
-                                    <div class="_f_wrap_fj_between_fa_center">
+                                    <div class="_f_wrap_fj_between_fa_center_mar_b_xxs">
                                         <span class="_abp_label"><?php esc_html_e('Return Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
-                                        <div class="_group_content custom_checkbox">
-                                            <input type="hidden" name="return_operation_time_optional" value="<?php echo esc_attr($return_opt_time); ?>"/>
-                                            <div class="checkbox_item">
-                                                <button type="button" class="_btn_light_info_xs <?php echo esc_attr(!empty($return_day_times) ? 'abp_active' : ''); ?>" data-collapse-target="#return_day_wise_time" data-checked="return_day_wise_time" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                                    <span data-icon class="_mar_r_xs far <?php echo esc_attr(!empty($return_day_times) ? 'fa-check-square' : 'fa-square'); ?>"></span><?php esc_html_e('Return Day Wise Time', 'abp-transport-booking'); ?>
-                                                </button>
-                                            </div>
-                                            <div class="checkbox_item">
-                                                <button type="button" class="_btn_light_info_xs <?php echo esc_attr(!empty($return_date_times) ? 'abp_active' : ''); ?>" data-collapse-target="#return_date_wise_time" data-checked="return_date_wise_time" data-open-icon="fa-check-square" data-close-icon="fa-square">
-                                                    <span data-icon class="_mar_r_xs far <?php echo esc_attr(!empty($return_date_times) ? 'fa-check-square' : 'fa-square'); ?>"></span><?php esc_html_e('Return Date Wise Time', 'abp-transport-booking'); ?>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <?php ABPTB_Layout::button_add(__('Add Return Operation Time', 'abp-transport-booking')); ?>
                                     </div>
                                     <?php ABPTB_Layout::info_text('return_operation_time'); ?>
                                     <div class="_divider_xs"></div>
@@ -442,7 +412,6 @@
                             </div>
                             <div class="_divider_xs"></div>
                             <?php ABPTB_Layout::info_text('specific_off_dates'); ?>
-
                             <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $specific_off_dates = $date_infos['specific_off_dates'] ?? [];
                                     if (sizeof($specific_off_dates)) {
@@ -467,7 +436,6 @@
                             </div>
                             <div class="_divider_xs"></div>
                             <?php ABPTB_Layout::info_text('special_on_dates'); ?>
-
                             <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $special_dates = $date_infos['special_on_dates'] ?? [];
                                     if (sizeof($special_dates)) {
@@ -492,7 +460,6 @@
                             </div>
                             <div class="_divider_xs"></div>
                             <?php ABPTB_Layout::info_text('off_date_range'); ?>
-
                             <div class="insertable_area sortable_area _f_wrap_gap_xs_mar_t_xs">
                                 <?php $off_date_range = $date_infos['off_date_range'] ?? [];
                                     if (sizeof($off_date_range)) {
@@ -577,7 +544,7 @@
                     </div>
                     <div class="abp_hidden" data-hidden_id>
                         <div class="hidden_content">
-                            <?php $this->date_wise_time_item([], uniqid('abp_') , $prefix); ?>
+                            <?php $this->date_wise_time_item([], uniqid('abp_'), $prefix); ?>
                         </div>
                     </div>
                 </div>
@@ -645,7 +612,7 @@
                     </div>
                     <div class="abp_hidden">
                         <div class="hidden_content">
-                            <?php $this->time_item($prefix . 'date_wise_time[' .$key . '][]'); ?>
+                            <?php $this->time_item($prefix . 'date_wise_time[' . $key . '][]'); ?>
                         </div>
                     </div>
                 </div>

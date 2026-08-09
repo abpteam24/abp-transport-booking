@@ -12,10 +12,10 @@
 				add_action('abptb_ticket_type', [$this, 'ticket_type'], 10, 3);
 				add_action('abptb_sp_type', [$this, 'sp_type'], 10, 3);
 				add_action('abptb_registration', [$this, 'registration'], 10, 2);
+				add_action('abptb_registration_item', [$this, 'registration_item'], 10, 3);
 				add_action('abptb_additional', [$this, 'additional'], 10, 2);
 				add_action('abptb_client_form', [$this, 'client_form'], 10, 2);
-				add_action('abptb_total_price', [$this, 'total_price'],10,2);
-				add_action('abptb_content', [$this, 'the_content']);
+				add_action('abptb_total_price', [$this, 'total_price'], 10, 2);
 				add_action('abptb_pagination', [$this, 'pagination']);
 				add_action('abptb_display_cart_item', [$this, 'display_cart_item']);
 				add_action('abptb_faq', [$this, 'faq'], 10, 2);
@@ -31,7 +31,7 @@
 			}
 			public function search_form($post_infos = []): void {
 				include_once ABPTB_Function::template_path('layout/search_form.php');
-				do_action('search_form_template', $post_infos);
+				do_action('abptb_search_form_template', $post_infos);
 			}
 			public function post_filter($params = []): void {
 				include_once ABPTB_Function::template_path('layout/post_filter.php');
@@ -44,13 +44,51 @@
 			public function ticket_type($post_infos, $form_data = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/ticket_type.php');
 				do_action('abptb_ticket_type_template', $post_infos, $form_data, $prefix);
-			}public function sp_type($post_infos, $form_data = [], $prefix = ''): void {
+			}
+			public function sp_type($post_infos, $form_data = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/sp_type.php');
 				do_action('abptb_sp_type_template', $post_infos, $form_data, $prefix);
 			}
 			public function registration($post_infos = [], $form_data = []): void {
-				include_once ABPTB_Function::template_path('layout/registration.php');
-				do_action('abptb_registration_template', $post_infos, $form_data);
+				if (!empty($post_infos)) {
+					$sale_continue = $post_infos['sale_continue'] ?? 'on';
+					$seat_type = $post_infos['seat_type'] ?? 'sp';
+					$seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
+					$post_id = absint($post_infos['post_id'] ?? 0);
+					$form_data_down = $form_data['down'] ??[];
+					$form_data_up = $form_data['up'] ?? [];
+                    $double_route = $form_data_down['double_route'] ?? '';
+					if ($sale_continue == 'on') { ?>
+                        <form action="" method="post" class="<?php echo esc_attr($double_route); ?>" enctype="multipart/form-data">
+                            <input type="hidden" name="double_route" value="<?php echo esc_attr($double_route); ?>">
+                            <input type="hidden" name="post_id" value="<?php echo esc_attr($post_id); ?>">
+                            <input type="hidden" name="seat_type" value="<?php echo esc_attr($seat_type); ?>">
+                            <input type="hidden" name="same_attendee" value="<?php echo esc_attr($post_infos['display_single_form'] ?? 'on'); ?>">
+                            <input type="hidden" name="min_qty" value="<?php echo esc_attr($post_infos['min_qty'] ?? 1); ?>">
+                            <input type="hidden" name="max_qty" value="<?php echo esc_attr($post_infos['max_qty'] ?? ''); ?>" data-msg="<?php echo esc_attr__('You can buy max ticket :', 'abp-transport-booking') . ' ' . esc_attr(($post_infos['max_qty'] ?? '')); ?>">
+							<?php wp_nonce_field('abptb_registration_nonce');
+								do_action('abptb_admin_order', $post_id); ?>
+                            <div class="booking_area">
+								<?php do_action('abptb_registration_item', $post_infos, $form_data_down); ?>
+                            </div>
+							<?php if (!empty($form_data_up) && !empty($double_route)) { ?>
+                                <div class="booking_area return">
+									<?php do_action('abptb_registration_item', $post_infos, $form_data_up,'return_'); ?>
+                                </div>
+							<?php }
+								if (!empty($double_route)) {
+									do_action('abptb_total_price', $post_infos, $form_data_up);
+								} ?>
+                        </form>
+						<?php
+					} else {
+						ABPTB_Layout::layout_warning_info('sale_close_msg');
+					}
+				}
+			}
+			public function registration_item($post_infos = [], $form_data = [], $prefix = ''): void {
+				include_once ABPTB_Function::template_path('layout/registration_item.php');
+				do_action('abptb_registration_item_template', $post_infos, $form_data, $prefix);
 			}
 			public function additional($post_infos = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/additional_services.php');
@@ -62,12 +100,9 @@
 			}
 			public function total_price($post_infos = [], $form_data = []): void {
 				include_once ABPTB_Function::template_path('layout/total_price.php');
-				do_action('abptb_total_price_template', $post_infos,$form_data);
+				do_action('abptb_total_price_template', $post_infos, $form_data);
 			}
-			public function the_content($post_id): void {
-				include_once ABPTB_Function::template_path('layout/the_content.php');
-				do_action('abptb_content_template', $post_id);
-			}
+
 			public function pagination($args): void {
 				include_once ABPTB_Function::template_path('layout/pagination.php');
 				do_action('abptb_pagination_template', $args);

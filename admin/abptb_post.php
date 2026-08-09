@@ -37,7 +37,7 @@
                             <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'trash' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTB_Function::build_url('posts', ['status' => 'trash'])); ?>"><?php esc_html_e('Trash', 'abp-transport-booking'); ?> ( <?php echo esc_html($total_trash); ?> )</button>
                         </div>
                         <a class="_btn_navy_blue_xs" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>">
-                            <?php ABPTB_Layout::icon_svg('plus');
+                            <?php ABPTB_Static::icon_svg('plus');
                                 esc_html_e('Add New Transport', 'abp-transport-booking'); ?>
                         </a>
                     </div>
@@ -131,14 +131,14 @@
                                     <th><code> [abptb-post post_id="<?php echo esc_attr($post_id); ?>"]</code></th>
                                     <th>
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_navy_blue_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('clone_1'); ?></button>
+                                            <button type="button" class="_btn_light_navy_blue_xxs" data-href="<?php echo esc_url($new_post_url); ?>" data-blank="_blank" title="<?php echo esc_html__('Copy/Clone : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Static::icon_svg('clone_1'); ?></button>
                                             <?php if ($post_status == 'trash') { ?>
                                                 <button type="button" class="_btn_light_success_xxs " onclick="abptb_post_action('restore','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Restore : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>">♻️</button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('permanent_remove','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('close_2'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('permanent_remove','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Permanent Remove : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Static::icon_svg('close_2'); ?></button>
                                             <?php } else { ?>
-                                                <button type="button" class="_btn_light_yellow_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('edit'); ?></button>
-                                                <button type="button" class="_btn_light_theme_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('view_1'); ?></button>
-                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('move_trash','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Move to Trash : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Layout::icon_svg('close_1'); ?></button>
+                                                <button type="button" class="_btn_light_yellow_xxs" data-href="<?php echo esc_url($edit_link); ?>" data-blank="_blank" title="<?php echo esc_html__('Edit : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
+                                                <button type="button" class="_btn_light_theme_xxs" data-href="<?php echo esc_url(get_permalink($post_id)); ?>" data-blank="_blank" title="<?php echo esc_html__('View : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Static::icon_svg('view_1'); ?></button>
+                                                <button type="button" class="_btn_light_danger_xxs" onclick="abptb_post_action('move_trash','<?php echo esc_attr($post_id); ?>')" title="<?php echo esc_html__('Move to Trash : ', 'abp-transport-booking') . ' ' . esc_html($title); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
                                             <?php } ?>
                                         </div>
                                     </th>

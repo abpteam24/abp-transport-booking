@@ -2,7 +2,7 @@
     if (!defined('ABSPATH')) {
         exit; // Exit if accessed directly
     }
-    add_action('search_form_template', function ($post_infos = [], $form_data = []) {
+    add_action('abptb_search_form_template', function ($post_infos = [], $form_data = []) {
         $admin_order = $post_infos['admin_order'] ?? '';
         $global_order = $post_infos['global_order'] ?? '';
         $post_id = absint($post_infos['post_id'] ?? 0);
@@ -34,11 +34,9 @@
                 <?php } else {
                     ABPTB_Layout::filter_post_list();
                 }
-                ABPTB_Layout::filter_bp();
-                ABPTB_Layout::filter_dp();
+                    ABPTB_Layout::filter_bp();
+                    ABPTB_Layout::filter_dp();
                 ?>
-
-
                 <div class="journey_date _input_item">
                     <?php ABPTB_Layout::journey_date($all_dates, $upcoming_date); ?>
                 </div>

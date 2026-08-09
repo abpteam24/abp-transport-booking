@@ -9,6 +9,7 @@
 	div.abptb_admin .abptb_orders{position: relative;}
 	div.abptb_admin .abptb_orders table[class*="_abp"] tbody th,
 	div.abptb_admin .abptb_orders table[class*="_abp"] tbody td {vertical-align: top;text-wrap: nowrap;padding: var(--tb_gap_xxs);}
+	div.abptb_admin .abptb_orders .order_list{overflow: auto;}
 	/*=============================*/
 	div.abptb_admin .info_text {background: var(--tb_color_white); padding: var(--tb_gap_xxs) var(--tb_gap_xs); border-left: 4px solid var(--tb_color_navy_blue);}
 	/*=============================*/

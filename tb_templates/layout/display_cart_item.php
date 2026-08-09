@@ -4,11 +4,13 @@
     }
     add_action('abptb_display_cart_item_template', function ($booking_infos = []) {
         $booking_info = $booking_infos['booking_infos'] ?? [];
-        if (!empty($booking_info) && sizeof($booking_info) > 0) {
+        $post_id = $booking_infos['post_id'] ?? '';
+        if (!empty($booking_info) && sizeof($booking_info) > 0 && !empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt()) {
             $return = '';
             foreach ($booking_info as $bp_dp => $cart_item) {
                 if (!empty($cart_item)) {
                     $ticket_infos = $cart_item['info'] ?? [];
+                    $seat_type = $cart_item['seat_type'] ?? '';
                     if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
                         $journey_time = $cart_item['journey_time'] ?? '';
                         [$bp, $dp] = array_map('intval', explode('_', $bp_dp));
@@ -37,20 +39,23 @@
                                 </div>
                                 <div class="cart_ticket_info _w_full">
                                     <h6 class="_abp _color_theme"><?php esc_html_e('Ticket Information : ', 'abp-transport-booking'); ?></h6>
-                                    <?php foreach ($ticket_infos as $key => $ticket_info) {
-                                        if (!is_array($ticket_info)) {
-                                            continue;
-                                        }
-                                        $price = $ticket_info['price'] ?? 0;
-                                        $price_html = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
-                                        ?>
-                                        <div class="_divider_xxs"></div>
-                                        <ul class="_abp cart_list">
-                                            <li><span class="_fs_label"><?php esc_html_e('Ticket Name : ', 'abp-transport-booking'); ?></span><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></li>
-                                            <li><span class="_fs_label"><?php esc_html_e('Quantity : ', 'abp-transport-booking'); ?></span><?php echo esc_html($ticket_info['qty'] ?? 1); ?></li>
-                                            <li><span class="_fs_label"><?php esc_html_e('Price : ', 'abp-transport-booking'); ?></span><?php echo wp_kses_post($price_html); ?></li>
-                                        </ul>
-                                    <?php } ?>
+                                    <div class="_divider_xxs"></div>
+                                    <ul class="_abp cart_list">
+                                        <?php foreach ($ticket_infos as $ticket_info) {
+                                            $price = $ticket_info['price'] ?? 0;
+                                            $qty = $ticket_info['qty'] ?? 1;
+                                            $price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
+                                            $price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
+                                            $name = $ticket_info['name'] ?? '';
+                                            if ($seat_type == 'sp') {
+                                                $name = $name . ' - ' . ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
+                                            } ?>
+                                            <li class="_gap_xxs">
+                                                <?php echo esc_html($name . __(' : ', 'abp-transport-booking')); ?>
+                                                <?php echo wp_kses_post($price_text) . ' X ' . esc_html($qty) . ' = ' . wp_kses_post($price); ?>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
                                 </div>
                                 <?php if (ABPTB_Function::on_off('additional_info') && !empty($additional_info) && is_array($additional_info)) { ?>
                                     <div class="cart_additional _w_full">

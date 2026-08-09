@@ -224,6 +224,7 @@
 				do_action('abptb_global_script');
 			}
 			private function load_file(): void {
+				require_once ABPTB_DIR . 'includes/abptb_static.php';
 				require_once ABPTB_DIR . 'includes/abptb_function.php';
 				require_once ABPTB_DIR . 'includes/abptb_query.php';
 				require_once ABPTB_DIR . 'includes/abptb_layout.php';
@@ -233,7 +234,6 @@
 					require_once ABPTB_DIR . 'admin/abptb_routing.php';
 					require_once ABPTB_DIR . 'admin/abptb_ticket.php';
 					require_once ABPTB_DIR . 'admin/abptb_price.php';
-					require_once ABPTB_DIR . 'admin/abptb_dashboard.php';
 					require_once ABPTB_DIR . 'admin/abptb_orders.php';
 					require_once ABPTB_DIR . 'admin/abptb_dates.php';
 					require_once ABPTB_DIR . 'admin/abptb_additional.php';
@@ -396,6 +396,7 @@
 					        user_id bigint(20) unsigned NOT NULL,
 					        start_point bigint(20) DEFAULT NULL,
 					        start_time datetime DEFAULT NULL,
+					        seat_type varchar(100) DEFAULT NULL,
 					        bp_dp varchar(100) DEFAULT NULL,
 					        bp bigint(20) DEFAULT NULL,
 					        dp bigint(20) DEFAULT NULL,

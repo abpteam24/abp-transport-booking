@@ -37,7 +37,7 @@
                 ?>
                 <div class="_f_wrap_gap_xs_f_equal">
                     <div class="price_infos">
-                        <?php if ( $display_return == 'on') { ?>
+                        <?php if ($display_return == 'on') { ?>
                             <h6 class="_abp_color_theme_mar_b_xxs "><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Forward Price', 'abp-transport-booking'); ?></h6>
                             <div class="_divider_xxs"></div>
                         <?php } ?>
@@ -46,10 +46,10 @@
                                 <thead>
                                 <tr>
                                     <th class="_w_50"></th>
-                                    <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('From', 'abp-wc-transport-manager'); ?></th>
-                                    <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('To', 'abp-wc-transport-manager'); ?></th>
+                                    <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('From', 'abp-transport-booking'); ?></th>
+                                    <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('To', 'abp-transport-booking'); ?></th>
                                     <?php if ($display_ticket_type == 'off' || empty($ticket_infos)) { ?>
-                                        <th><?php esc_html_e('Price', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
+                                        <th><?php esc_html_e('Price', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
                                     <?php } else {
                                         foreach ($ticket_infos as $key) { ?>
                                             <th><?php echo esc_html($types[$key]['label'] ?? $key); ?></th>
@@ -78,7 +78,7 @@
                                                         ?>
                                                         <th>
                                                             <label>
-                                                                <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? 0); ?>" name="<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-wc-transport-manager') ?>">
+                                                                <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? 0); ?>" name="<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-transport-booking') ?>">
                                                             </label>
                                                         </th>
                                                     <?php } ?>
@@ -93,7 +93,7 @@
                             </table>
                         </div>
                     </div>
-                    <?php if ( $display_return == 'on') { ?>
+                    <?php if ($display_return == 'on') { ?>
                         <div class="return_price_infos">
                             <h6 class="_abp_color_theme_mar_b_xxs "><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Return Price', 'abp-transport-booking'); ?></h6>
                             <div class="_divider_xxs"></div>
@@ -102,10 +102,10 @@
                                     <thead>
                                     <tr>
                                         <th class="_w_50"></th>
-                                        <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('From', 'abp-wc-transport-manager'); ?></th>
-                                        <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('To', 'abp-wc-transport-manager'); ?></th>
+                                        <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('From', 'abp-transport-booking'); ?></th>
+                                        <th><span class="fas fa-route _mar_r_xxs"></span><?php esc_html_e('To', 'abp-transport-booking'); ?></th>
                                         <?php if ($display_ticket_type == 'off' || empty($ticket_infos)) { ?>
-                                            <th><?php esc_html_e('Price', 'abp-wc-transport-manager'); ?><sup class="_color_required">*</sup></th>
+                                            <th><?php esc_html_e('Price', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
                                         <?php } else {
                                             foreach ($ticket_infos as $key) { ?>
                                                 <th><?php echo esc_html($types[$key]['label'] ?? $key); ?></th>
@@ -134,7 +134,7 @@
                                                             ?>
                                                             <th>
                                                                 <label>
-                                                                    <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? 0); ?>" name="return_<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-wc-transport-manager') ?>">
+                                                                    <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? 0); ?>" name="return_<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-transport-booking') ?>">
                                                                 </label>
                                                             </th>
                                                         <?php } ?>
@@ -160,16 +160,19 @@
                 $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
                 $post_int = fn($key, $default = 0) => isset($_POST[$key]) ? absint($_POST[$key]) : $default;
                 $post_json = function ($key) {
-                    if (!isset($_POST[$key])) {
-                        return array();
+                    if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                        wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
                     }
-                    $raw_data = json_decode(wp_unslash($_POST[$key]), true);
-                    if (!is_array($raw_data)) {
-                        return array();
+                    if (isset($_POST[$key])) {
+                        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via map_deep.
+                        $raw_input = wp_unslash($_POST[$key]);
+                        $raw_data = json_decode($raw_input, true);
+                        if (!is_array($raw_data)) {
+                            return array();
+                        }
+                        return map_deep($raw_data, 'sanitize_text_field');
                     }
-                    return array_map(function ($item) {
-                        return is_array($item) ? array_map('sanitize_text_field', $item) : sanitize_text_field($item);
-                    }, $raw_data);
+                    return [];
                 };
                 ob_start();
                 $route = $post_json('routing_infos');
