@@ -278,6 +278,12 @@
                         }
                     }
                     $date_infos['off_date_range'] = $off_schedules;
+
+                    /****************/
+                    $specific_dates = $post_array('specific_dates');
+                    $specific_dates = !empty($specific_dates) ? array_values(array_unique(array_filter($specific_dates))) : [];
+                    sort($specific_dates);
+                    $date_infos['specific_dates'] = $specific_dates;
                 }
                 return $date_infos;
             }

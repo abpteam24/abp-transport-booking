@@ -794,13 +794,7 @@
                     ?>
                     <label class="_input_item">
                         <?php ABPTB_Layout::input_title($label, $required); ?>
-                        <input type="<?php echo esc_attr($type); ?>"
-                               name="<?php echo esc_attr($name); ?>"
-                               value="<?php echo esc_attr($d_value); ?>"
-                               class="_form_control <?php echo esc_attr($validation_class); ?>"
-                               placeholder="<?php echo esc_attr($label); ?>"
-                               title="<?php echo esc_attr($label); ?>"
-                            <?php echo esc_attr($required); ?> />
+                        <input type="<?php echo esc_attr($type); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($d_value); ?>" class="_form_control <?php echo esc_attr($validation_class); ?>" placeholder="<?php echo esc_attr($label); ?>" title="<?php echo esc_attr($label); ?>" <?php echo esc_attr($required); ?> />
                     </label>
                     <?php
                     return;

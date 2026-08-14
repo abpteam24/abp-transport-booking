@@ -316,6 +316,29 @@ Use these shortcodes to display transport content on your website:
 
 [abptb-gallery] — Display transport images and galleries.
 
+
+== Pro Features ==
+
+ABP Transport Booking Pro provides additional features for advanced transport booking and management requirements.
+
+Pro features may include:
+
+✅ Same day multiple trip
+✅ Day Wise multiple trip
+✅Date Wise multiple trip
+✅ PDF ticket and invoice generation
+✅ Booking list export
+✅ PDF booking export
+✅ CSV booking export
+✅ QR Code
+✅ Email notifications with PDF attachments
+✅ Seasonal pricing and discounts
+✅ Early booking discounts
+✅ Advanced booking management
+✅ Additional administrative tools
+✅ Premium Support
+✅ Priority Updates & New Features
+
 == Installation ==
 
 = Automatic Installation =
@@ -413,18 +436,32 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Screenshots ==
 
-1. Transport list page with grid view and transport management options.
-2. Transport list page with list view and management controls.
-3. Order list page with filtering and pagination.
-4. Global data configuration panel for reusable transport data.
-5. Global configuration and feature controls.
-6. Ticket type and pricing configuration.
-7. Seat plan designer with dynamic ticket type assignment.
-8. Custom seat plan layout and design options.
-9. Transport route, stop, and schedule configuration.
-10. Frontend transport booking and seat selection interface.
-11. Return trip booking configuration.
-12. Frontend return trip booking.
+1. Transport List Page – Grid View
+2. Transport List Page – List View
+3. All Transport Bookings – Grid View
+4. Transport Details – Default Template with Ticket Types
+5. Transport Details – Default Template with Return Transport
+6. Transport Details – Light Template with Seat Plan and Single Attendee Information
+7. Transport Details – Light Template with Seat Plan, Single Attendee Information, and Return Transport
+8. Related Transport
+9. Transport List – Admin View
+10. Order List and Filter – Admin View
+11. Global Ticket Type and Seat Plan Configuration
+12. Global Reusable Date Configuration
+13. Global Reusable Additional Service Configuration
+14. Global Reusable Passenger Form Configuration
+15. Global Reusable Stops and Location Configuration
+16. Transport Type / Category Configuration
+17. Transport Feature Configuration
+18. Transport Global Configuration
+19. Global Feature Controls
+20. Transport General Configuration
+21. Multi-Layer Seat Plan Configuration for Transport
+22. Transport Ticket Type Configuration
+23. Transport Route Configuration with Return Route
+24. Transport Price Configuration with Return Route
+25. Transport Time Configuration with Return Route
+
 
 == Changelog ==
 

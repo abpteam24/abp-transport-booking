@@ -10,7 +10,7 @@
 				add_filter('woocommerce_cart_item_thumbnail', array($this, 'cart_item_thumbnail'), 90, 3);
 				add_filter('woocommerce_get_item_data', array($this, 'get_item_data'), 90, 2);
 				//=============================//
-				add_action('woocommerce_after_checkout_validation', array($this, 'after_checkout_validation'));
+				//add_action('woocommerce_after_checkout_validation', array($this, 'after_checkout_validation'));
 				add_action('woocommerce_checkout_create_order_line_item', array($this, 'checkout_create_order_line_item'), 90, 4);
 				add_action('woocommerce_checkout_order_processed', array($this, 'checkout_order_processed'));
 				add_action('woocommerce_store_api_checkout_order_processed', array($this, 'api_checkout_order_processed'));

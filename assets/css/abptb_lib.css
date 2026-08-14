@@ -1263,7 +1263,7 @@
 /********************************************************************Seat plan ************************************************/
 @media only screen and (min-width: 10px) {
 	div.abptb_area .sp_builder_area { max-width: 100%;}
-	div.abptb_area .sp_canvas { font-size: var(--tb_fs);font-weight: 500;display: grid; position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #FFF; width: max-content; border-radius: var(--tb_br);padding: var(--tb_gap_xs);}
+	div.abptb_area .sp_canvas { font-size: var(--tb_fs);font-weight: 500;display: grid; position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #FFF; width: max-content;max-width: 100%;overflow: auto; border-radius: var(--tb_br);padding: var(--tb_gap_xs);}
 	div.abptb_area .sp_canvas .sp_cell {position: relative; transition: all 0.1s ease;}
 	div.abptb_area .sp_canvas .sp_cell,
 	div.abptb_area .sp_canvas .sp_decor { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; border-radius: var(--tb_br); cursor: pointer; overflow: hidden;}

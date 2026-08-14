@@ -112,7 +112,7 @@
                     <h5 class="_abp"><?php esc_html_e('Seat Plan Configuration', 'abp-transport-booking'); ?></h5>
                     <button type="button" class="_btn_light_active_xs">
                         <?php esc_html_e('Total Seat :', 'abp-transport-booking'); ?>
-                        <span class="_abp_color_theme _mar_l_xs transport_total"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
+                        <span class="_abp_color_theme _mar_l_xs total_ticket"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
                     </button>
                     <div class="_group_content">
                         <?php ABPTB_Layout::button_add(__('Add New Seat Label', 'abp-transport-booking')); ?>

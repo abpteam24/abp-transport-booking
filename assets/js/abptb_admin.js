@@ -1,4 +1,6 @@
-window.abptb_parent = window.abptb_parent || jQuery('div.abptb_admin');
+if (!window.abptb_parent || !window.abptb_parent.length) {
+    window.abptb_parent = jQuery('div.abptb_area');
+}
 let abptb_feature_data = JSON.parse(abptb_admin_data.feature_data);
 let abptb_related_info = JSON.parse(abptb_admin_data.related_info);
 let abptb_sp_info = JSON.parse(abptb_admin_data.sp_data);
@@ -419,64 +421,68 @@ window.abptb_image_selection = function ($this) {
     abptb_media_uploader.current_target = $this.closest('.image_selection');
     abptb_media_uploader.open();
 };
-//==========Post Pagination=================//
-abptb_parent.on('click', '.post_list .pagination_area button[data-page]', function () {
-    let $this = jQuery(this);
-    if (!$this.hasClass('abp_active')) {
-        let parent = $this.closest('.abptb_posts');
-        let target = parent.find('.post_list');
-        let filter_args = {};
-        if (parent.find("[name='select_hidden_post_status']").length > 0) {
-            filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
-        }
-        filter_args['page_number'] = parseInt($this.attr('data-page'));
-        if (parent.find("[name='page_item']").length > 0) {
-            filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
-        }
-        if (target.length > 0) {
-            jQuery.ajax({
-                type: 'POST', url: abptb_admin_data.ajax_url, data: {
-                    "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
-                }, beforeSend: function () {
-                    abptb_spinner(parent);
-                    abptb_toast_msg(abptb_admin_data.msg.post_loading);
-                }, success: function (response) {
-                    if (response.data && response.data.hasOwnProperty('html')) {
-                        target.html(response.data.html);
-                    }
-                    abptb_spinner_remove(parent);
-                    abptb_toast_msg(response.data.msg, response.data.type);
-                }, error: function (xhr) {
-                    abptb_ajx_error(xhr, parent);
-                }
-            });
-        } else {
-            parent.find('.post_tab').trigger('click');
-        }
-    }
-});
+
 (function ($) {
     "use strict";
+    //==========Post Pagination=================//
+    $(document).on('click', 'div.abptb_admin .post_list .pagination_area button[data-page]', function () {
+        let $this = jQuery(this);
+        if (!$this.hasClass('abp_active')) {
+            let parent = $this.closest('.abptb_posts');
+            let target = parent.find('.post_list');
+            let filter_args = {};
+            if (parent.find("[name='select_hidden_post_status']").length > 0) {
+                filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
+            }
+            filter_args['page_number'] = parseInt($this.attr('data-page'));
+            if (parent.find("[name='page_item']").length > 0) {
+                filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
+            }
+            if (target.length > 0) {
+                jQuery.ajax({
+                    type: 'POST', url: abptb_admin_data.ajax_url, data: {
+                        "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
+                    }, beforeSend: function () {
+                        abptb_spinner(parent);
+                        abptb_toast_msg(abptb_admin_data.msg.post_loading);
+                    }, success: function (response) {
+                        if (response.data && response.data.hasOwnProperty('html')) {
+                            target.html(response.data.html);
+                        }
+                        abptb_spinner_remove(parent);
+                        abptb_toast_msg(response.data.msg, response.data.type);
+                    }, error: function (xhr) {
+                        abptb_ajx_error(xhr, parent);
+                    }
+                });
+            } else {
+                parent.find('.post_tab').trigger('click');
+            }
+        }
+    });
     //==========Route , ticket config=================//
-    abptb_parent.on('abp_trigger', '.abptb_routing .add_new_hook', function () {
+    $(document).on('abp_trigger', 'div.abptb_admin .abptb_routing .add_new_hook', function () {
         abptb_location_selection();
     });
-    abptb_parent.on('change', '.abptb_routing [name="stop_name[]"] , .abptb_routing [name="return_stop_name[]"]', function () {
+    $(document).on('abp_trigger', 'div.abptb_admin .ticket_configuration.configuration_content', function () {
+        load_total($(this));
+    });
+    $(document).on('change', 'div.abptb_admin .abptb_routing [name="stop_name[]"] ,div.abptb_admin  .abptb_routing [name="return_stop_name[]"]', function () {
         abptb_location_selection();
     });
-    abptb_parent.on('abp_trigger', '.ticket_configuration .add_new_hook', function () {
+    $(document).on('abp_trigger', 'div.abptb_admin .ticket_configuration .add_new_hook', function () {
         abptb_ticket_type_selection();
     });
-    abptb_parent.on('change', '.ticket_configuration [name="ticket_name[]"] ', function () {
+    $(document).on('change', 'div.abptb_admin .ticket_configuration [name="ticket_name[]"] ', function () {
         abptb_ticket_type_selection();
     });
-    abptb_parent.on('change', '.abptb_ticket [name="seat_type"]', function () {
+    $(document).on('change', 'div.abptb_admin .abptb_ticket [name="seat_type"]', function () {
         load_ticket_type($(this));
     });
-    abptb_parent.on('abp_trigger', '.abptb_ticket [name="display_ticket_type"]', function () {
+    $(document).on('abp_trigger', 'div.abptb_admin .abptb_ticket [name="display_ticket_type"]', function () {
         load_ticket_type($(this));
     });
-    abptb_parent.on('change', '.sp_selection_area [name="sp_id[]"]', function () {
+    $(document).on('change', 'div.abptb_admin .sp_selection_area [name="sp_id[]"]', function () {
         let sp_id = $(this).val();
         let parent = $(this).closest('tr');
         let grand_parent = $(this).closest('.ticket_configuration');
@@ -521,15 +527,18 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
         });
         html += '</div>';
         parent.find('.row_total').html(total_seat);
+        parent.find('.sp_id_change').attr('onclick', "abptb_popup_open_global('view_sp','" + sp_id + "')");
+        $targetContainer.html(html);
+        load_total(grand_parent);
+    });
+    function load_total(grand_parent) {
         let total_seat_count = 0;
         grand_parent.find('.row_total').each(function () {
             total_seat_count = total_seat_count + parseInt($(this).html(), 0);
         }).promise().done(function () {
-            grand_parent.find('.transport_total').html(total_seat_count);
+            grand_parent.find('.total_ticket').html(total_seat_count);
         });
-        parent.find('.sp_id_change').attr('onclick', "abptb_popup_open_global('view_sp','" + sp_id + "')");
-        $targetContainer.html(html);
-    });
+    }
     window.abptb_price_load = function () {
         let target = abptb_parent.find('div.abptb_price');
         let formData = new FormData();
@@ -676,7 +685,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
         });
     }
     //==========Orders list=================//
-    abptb_parent.on('submit', 'div.abptb_orders form.abp_search_form', function (e) {
+    $(document).on('submit', 'div.abptb_admin  div.abptb_orders form.abp_search_form', function (e) {
         e.preventDefault();
         let parent = $(this).closest('.abptb_orders');
         let target = parent.find('.order_list');
@@ -709,7 +718,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
             }
         });
     });
-    abptb_parent.on('click', 'div.abptb_orders .order_status_menu button[data-status]', function () {
+    $(document).on('click', 'div.abptb_admin  div.abptb_orders .order_status_menu button[data-status]', function () {
         let $this = $(this);
         if (!$this.hasClass('abp_active')) {
             $this.closest('.order_status_menu').find('[data-status].abp_active').removeClass('abp_active').promise().done(function () {
@@ -719,7 +728,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
             });
         }
     });
-    abptb_parent.on('click', 'div.abptb_orders button.item_cancel', function () {
+    $(document).on('click', 'div.abptb_admin  div.abptb_orders button.item_cancel', function () {
         let $this = $(this);
         let parent = $(this).closest('.abptb_orders');
         let item_id = $this.attr('data-item_id');
@@ -742,7 +751,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
             });
         }
     });
-    abptb_parent.on('click', 'div.abptb_orders .order_list .pagination_area button[data-page]', function () {
+    $(document).on('click', 'div.abptb_admin  div.abptb_orders .order_list .pagination_area button[data-page]', function () {
         let $this = $(this);
         if (!$this.hasClass('abp_active')) {
             let parent = $(this).closest('.order_list');
@@ -839,7 +848,7 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
         parent.find('.image_icon_select_area').slideDown('fast');
     });
     //=========add_new_delete ==============//
-    abptb_parent.on('click', '.delete_hook', function () {
+    $(document).on('click', 'div.abptb_admin .delete_hook', function () {
         if (confirm(abptb_admin_data.msg.confirm_delete + ' \n\n' + abptb_admin_data.msg.confirm_ok + ' \n ' + abptb_admin_data.msg.confirm_cancel)) {
             let deleteArea = $(this).closest('.delete_area');
             let parent = $(this).closest('.configuration_content');
@@ -848,11 +857,12 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
                 if (parent.find('.insertable_area .delete_area').length === 0) {
                     parent.find('.hide_on_load').slideUp(250);
                 }
+                abptb_toast_msg(abptb_admin_data.msg.delete_success);
+                parent.trigger('abp_trigger');
             });
-            abptb_toast_msg(abptb_admin_data.msg.delete_success);
         }
     });
-    abptb_parent.on('click', '.add_new_hook', function (e) {
+    $(document).on('click', 'div.abptb_admin.add_new_hook', function (e) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -900,11 +910,11 @@ abptb_parent.on('click', '.post_list .pagination_area button[data-page]', functi
         }, 50);
         $(this).trigger('abp_trigger');
     });
-    abptb_parent.on('click', '.edit_hook', function () {
+    $(document).on('click', 'div.abptb_admin .edit_hook', function () {
         $(this).closest('.delete_area').toggleClass('active').find('.edit_area').slideToggle('fast');
         //$(this).closest('.delete_area').find('.edit_area').slideToggle('fast');
     });
-    abptb_parent.on('keyup change', '[data-pass]', function () {
+    $(document).on('keyup change', 'div.abptb_admin [data-pass]', function () {
         let input_value = $(this).val();
         let input_id = $(this).attr('data-pass');
         $(this).closest('.delete_area').find("[data-paste='" + input_id + "']").each(function () {

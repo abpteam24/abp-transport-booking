@@ -72,7 +72,7 @@
 			}
 			public static function booking_status() { return (ABPTB_Configuration['booked_status'] ?? null) ?: 'wc-processing,wc-completed'; }
 			public static function label() { return (ABPTB_Configuration['label'] ?? null) ?: __('Transport', 'abp-transport-booking'); }
-			public static function slug() { return (ABPTB_Configuration['slug'] ?? null) ?: 'transport-forge'; }
+			public static function slug() { return (ABPTB_Configuration['slug'] ?? null) ?: 'transport-booking'; }
 			public static function icon_wp() { return (ABPTB_Configuration['icon'] ?? null) ?: 'dashicons-tickets'; }
 			public static function icon() { return (ABPTB_Configuration['brand_icon'] ?? null) ?: '🚐'; }
 			public static function feature_label() { return (ABPTB_Configuration['feature_label'] ?? null) ?: __('Feature', 'abp-transport-booking'); }

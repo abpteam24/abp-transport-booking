@@ -150,7 +150,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         initialLayout = sp_parent.find('#sp_saved_data').data('layout') || [];
         activeGroup = '';
         lastClickedIndex = null;
-        isCloningMode=false;
+        isCloningMode = false;
         renderSidebarGroups();
         generateGrid();
     };
@@ -230,7 +230,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         let id = $(this).data('id');
         let type = $(this).data('type');
         activeGroup = (type === 'seat') ? abptb_ticket_type.find(g => String(g.id) === String(id)) : abptb_decor_item.find(g => String(g.id) === String(id));
-       // console.log(activeGroup);
+        // console.log(activeGroup);
         highlightActiveGroup();
     });
     sp_parent.on('click', '.sp_builder', function (e) {
@@ -241,7 +241,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         sp_parent.find('.sp_tab_content .selected').removeClass('selected');
         activeGroup = '';
         lastClickedIndex = null;
-        isCloningMode=false;
+        isCloningMode = false;
     });
     sp_parent.on('click', '.sp_tab', function () {
         sp_parent.find('.sp_tab, .sp_tab_content').removeClass('abp_active');
@@ -370,7 +370,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         sp_parent.find('.custom_font_size').val(activeCellForSpan.attr('data-fs') || 12);
         sp_parent.find('.custom_label').val(activeCellForSpan.find('.cell_label').text().trim() || '');
         sp_parent.find('.span_control').slideDown();
-        isCloningMode=false;
+        isCloningMode = false;
     });
     /**********************************/
     function cell_data(type, id, key = 'icon') {

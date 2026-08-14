@@ -2,9 +2,8 @@ let abptb_route_info = JSON.parse(abptb_infos.route_info);
 let abptb_location_info = JSON.parse(abptb_infos.location_info);
 (function ($) {
     "use strict";
-    let abptb_booking = abptb_parent.find('div.abptb_booking');
     $(document).ready(function () {
-        abptb_parent.find('.abp_search_form').each(function () {
+        $(document).find('div.abptb_area .abp_search_form').each(function () {
             load_bp($(this));
         })
     });
@@ -83,7 +82,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         }).join('');
         parent.find('.abptb_dp ul').html(optionsHtml);
     }
-    abptb_parent.on('click', '.pagination_item .select_post', function (e) {
+    $(document).on('click', 'div.abptb_booking .pagination_item .select_post', function (e) {
         e.preventDefault();
         let post_id = parseInt($(this).attr('data-post_id'));
         let target = $(this).closest('div.abptb_area').find('#abptb_search_area .post_selection .dropdown_list li');
@@ -94,7 +93,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             }
         });
     });
-    abptb_parent.on('abp_trigger', '.abp_search_form [name="post_id"]', function () {
+    $(document).on('abp_trigger', 'div.abptb_area .abp_search_form [name="post_id"]', function () {
         let parent = $(this).closest(".abp_search_form");
         let target_return = parent.find('.return_date');
         let target_journey = parent.find('.journey_date');
@@ -143,10 +142,10 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             }
         });
     });
-    abptb_parent.on('abp_trigger', '.abp_search_form [name="_bp"]', function () {
+    $(document).on('abp_trigger', 'div.abptb_area .abp_search_form [name="_bp"]', function () {
         load_dp($(this).closest('.abp_search_form'));
     });
-    abptb_parent.on('change', ".abp_search_form [name='journey_date']", function (e) {
+    $(document).on('change', "div.abptb_area .abp_search_form [name='journey_date']", function (e) {
         e.preventDefault();
         let parent = $(this).closest(".abp_search_form");
         let target = parent.find('.return_date');
@@ -186,7 +185,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             }
         }
     });
-    abptb_parent.on('submit', '#abptb_search_area form.abp_search_form', function (e) {
+    $(document).on('submit', 'div.abptb_area #abptb_search_area form.abp_search_form', function (e) {
         e.preventDefault();
         let form_area = $(this).closest('#abptb_search_area');
         if ($.trim(form_area.find('[name="_bp"]').val()).length === 0) {
@@ -213,7 +212,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                 return;
             }
         }
-        let target = abptb_parent.find('.abptb_booking');
+        let target =  $(this).closest('div.abptb_area').find('.abptb_booking');
         let formData = new FormData(this);
         formData.append('action', 'abptb_global_booking');
         formData.append('nonce', abptb_infos.nonce);
@@ -241,7 +240,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         });
     });
     //==============//
-    abptb_booking.on('change', "[name='journey_time'] , [name='return_journey_time'] , [name='sp_id'] , [name='return_sp_id']", function (e) {
+    $(document).on('change', "div.abptb_booking [name='journey_time'] ,div.abptb_booking [name='return_journey_time'] ,div.abptb_booking [name='sp_id'] ,div.abptb_booking [name='return_sp_id']", function (e) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -274,7 +273,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             }
         });
     });
-    abptb_booking.on('abp_trigger', "[name='item_check[]'],[name='return_item_check[]']", function (e) {
+    $(document).on('abp_trigger', "div.abptb_booking [name='item_check[]'],div.abptb_booking [name='return_item_check[]']", function (e) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -304,7 +303,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         }
         item_parent.find(`[name="${prefix}item_qty[]"]`).trigger('change');
     });
-    abptb_booking.on('change', '[name="item_qty[]"],[name="return_item_qty[]"]', function (e) {
+    $(document).on('change', 'div.abptb_booking [name="item_qty[]"],div.abptb_booking [name="return_item_qty[]"]', function (e) {
         e.preventDefault();
         let $this = $(this);
         let parent = $this.closest(".booking_area");
@@ -320,18 +319,18 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         }
         all_management($this);
     })
-    abptb_booking.on('change', '.ex_price_calculate', function (e) {
+    $(document).on('change', 'div.abptb_booking .ex_price_calculate', function (e) {
         e.preventDefault();
         all_management($(this));
     });
-    abptb_booking.on('click', '.sp_cell.available', function (e) {
+    $(document).on('click', 'div.abptb_booking .sp_cell.available', function (e) {
         e.preventDefault();
         let current = $(this);
         current.toggleClass('selected').promise().done(function () {
             all_management(current);
         });
     });
-    abptb_booking.on('click', '.book_continue', function (e) {
+    $(document).on('click', 'div.abptb_booking .book_continue', function (e) {
         e.preventDefault();
         let current = $(this);
         let form = current.closest("form");

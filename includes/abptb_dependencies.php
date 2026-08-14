@@ -17,7 +17,7 @@
 			public function admin_enqueue($hook): void {
 				$screen = get_current_screen();
 				$post_type = $screen ? $screen->post_type : '';
-				if (!str_contains($hook, 'transport-forge') && $post_type !== 'abptb_post') {
+				if (!str_contains($hook, ABPTB_Function::slug()) && $post_type !== ABPTB_Function::get_cpt()) {
 					return;
 				}
 				$label = ABPTB_Function::label();

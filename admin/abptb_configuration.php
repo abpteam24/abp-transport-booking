@@ -204,7 +204,7 @@
                                 '<strong class="_abp_color_theme">' . __('Settings → Permalinks', 'abp-transport-booking') . '</strong>'
                             ),
                             'type' => 'text',
-                            'default' => 'transport-forge'
+                            'default' => 'transport-booking'
                         ),
                         array(
                             'name' => 'icon',
