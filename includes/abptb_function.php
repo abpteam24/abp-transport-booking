@@ -100,12 +100,12 @@
 					if (!empty($sp_infos) && sizeof($sp_infos) > 1) {
 						foreach ($sp_infos as $sp_info) {
 							if ($sp_info['id'] == $id) {
-								return $sp_info['name'] ?? $id;
+								return $sp_info['name'] ?? '';
 							}
 						}
 					}
 				}
-				return $id;
+				return null;
 			}
 			public static function on_off($key): bool {
 				$value = (ABPTB_On_Off[$key] ?? 'on') ?: 'on';
@@ -240,13 +240,13 @@
 				return file_exists($file_path) ? $file_path : $default_dir;
 			}
 			//============== Transport Function===============//
-			public static function checkout_validation($booking_infos) {
-				if (empty($booking_infos)) {
+			public static function checkout_validation($booking_infos): bool {
+				if (empty($booking_infos) || !is_array($booking_infos)) {
 					return false;
 				}
 				$booking_info = $booking_infos['booking_infos'] ?? [];
 				$post_id = $booking_infos['post_id'] ?? '';
-				// Validate post existence and post type.
+				// Validate post existence and post type
 				if (empty($booking_info) || empty($post_id) || get_post_type($post_id) !== ABPTB_Function::get_cpt()) {
 					return false;
 				}
@@ -259,18 +259,25 @@
 				$display_ticket_type = $post_infos['display_ticket_type'] ?? 'on';
 				$display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
 				foreach ($booking_info as $bp_dp => $cart_item) {
-					if (empty($cart_item)) {
+					if (empty($cart_item) || !is_array($cart_item)) {
 						continue;
 					}
-					$start_time = !empty($cart_item['start_time']) ? gmdate('Y-m-d H:i', strtotime($cart_item['start_time'])) : '';
-					$journey_date = !empty($start_time) ? gmdate('Y-m-d', strtotime($start_time)) : '';
-					$bp_time = !empty($cart_item['bp_time']) ? gmdate('Y-m-d H:i', strtotime($cart_item['bp_time'])) : '';
+					// Safe Date & Time Conversion
+					$raw_start_time = !empty($cart_item['start_time']) ? strtotime($cart_item['start_time']) : false;
+					$raw_bp_time = !empty($cart_item['bp_time']) ? strtotime($cart_item['bp_time']) : false;
+					if (!$raw_start_time || !$raw_bp_time) {
+						return false;
+					}
+					$start_time = gmdate('Y-m-d H:i', $raw_start_time);
+					$start_time_only = gmdate('H:i', $raw_start_time);
+					$journey_date = gmdate('Y-m-d', $raw_start_time);
+					$bp_time = gmdate('Y-m-d H:i', $raw_bp_time);
 					$seat_type = $cart_item['seat_type'] ?? '';
 					$all_start_time = ABPTB_Function::time_operation_start($post_infos, $bp_dp, $journey_date);
 					$bp_times = ABPTB_Function::time_bp($post_infos, $bp_dp, $journey_date, $all_start_time);
-					$ticket_infos = $cart_item['info'] ?? [];
-					// Early return if schedule or date validation fails.
-					if (empty($ticket_infos) || !in_array($journey_date, $all_dates, true) || !in_array($start_time, $all_start_time, true) || !in_array($bp_time, $bp_times, true)) {
+					$cart_tickets = $cart_item['info'] ?? [];
+					// Early return if schedule or date validation fails
+					if (empty($cart_tickets) || !in_array($journey_date, $all_dates, true) || !in_array($start_time_only, $all_start_time, true) || !in_array($bp_time, $bp_times, true)) {
 						return false;
 					}
 					$form_data = [
@@ -278,8 +285,8 @@
 						'start_time' => $start_time,
 						'bp_dp' => $bp_dp,
 					];
-					// Specific Seat ('sp') Validation Branch.
-					if ('sp' === $seat_type) {
+					// Specific Seat ('sp') Validation Branch
+					if ('sp' == $seat_type) {
 						$sp_id = $cart_item['sp_id'] ?? '';
 						if (empty($sp_id)) {
 							return false;
@@ -287,7 +294,7 @@
 						$form_data['sp_id'] = $sp_id;
 						$sold_seat = ABPTB_Query::get_sold_seat($form_data);
 						$all_seat = self::get_sp_seat($sp_id);
-						foreach ($ticket_infos as $ticket_info) {
+						foreach ($cart_tickets as $ticket_info) {
 							$name = $ticket_info['name'] ?? '';
 							if (empty($name) || !in_array($name, $all_seat, true) || in_array($name, $sold_seat, true)) {
 								return false;
@@ -295,30 +302,29 @@
 						}
 						continue;
 					}
-					// Standard Ticket Validation Branch.
+					// Standard Ticket Validation Branch
 					$_ticket_infos = $post_infos['ticket_infos'] ?? [];
 					if (empty($_ticket_infos) || !is_array($_ticket_infos)) {
 						return false;
 					}
-					if ('off' === $display_ticket_type) {
-						$key = array_key_first($_ticket_infos);
-						$ticket_infos = [$key => $_ticket_infos[$key]];
-					} else {
-						$ticket_infos = $_ticket_infos;
-					}
+					// Filter valid tickets based on display setting
+					$allowed_ticket_keys = ('off' === $display_ticket_type) ? [array_key_first($_ticket_infos)] : array_keys($_ticket_infos);
 					$sold_infos = ABPTB_Query::get_sold_ticket($form_data);
-					foreach ($ticket_infos as $tic_id => $ticket_info) {
-						if (!isset($_ticket_infos[$tic_id])) {
-							continue;
+					foreach ($cart_tickets as $tic_id => $ticket_info) {
+						// Ensure ticket ID exists in configured allowed tickets
+						if (!in_array($tic_id, $allowed_ticket_keys, true) || !isset($_ticket_infos[$tic_id])) {
+							return false;
 						}
 						$_ticket_info = $_ticket_infos[$tic_id];
 						$qty = intval($ticket_info['qty'] ?? 0);
-						$sold = $sold_infos[$tic_id] ?? 0;
+						$sold = intval($sold_infos[$tic_id] ?? 0);
 						$reserve = intval($_ticket_info['reserve'] ?? 0);
 						$total_qty = intval($_ticket_info['qty'] ?? 0);
 						$max_qty_raw = $_ticket_info['max_qty'] ?? '';
 						$available_qty = $total_qty - $sold - $reserve;
-						$max_qty = ('' !== $max_qty_raw && intval($max_qty_raw) <= $available_qty) ? intval($max_qty_raw) : $available_qty;
+						$max_qty = ('' !== $max_qty_raw && intval($max_qty_raw) <= $available_qty)
+							? intval($max_qty_raw)
+							: $available_qty;
 						$min_qty = intval($_ticket_info['min_qty'] ?? 1);
 						if ($qty < $min_qty || $qty > $max_qty) {
 							return false;
@@ -373,27 +379,26 @@
 				}
 				return $start_point;
 			}
-			public static function get_pd_info($stop,$bp_time): array {
-				$all_info[$stop]['name']=ABPTB_Function::location_value($stop);
-				$all_info[$stop]['time']=$bp_time;
-				$infos=ABPTB_Location[$stop]['pd_info']?? [];
+			public static function get_pd_info($stop, $bp_time): array {
+				$all_info[$stop]['name'] = ABPTB_Function::location_value($stop);
+				$all_info[$stop]['time'] = $bp_time;
+				$infos = ABPTB_Location[$stop]['pd_info'] ?? [];
 				if (!empty($infos)) {
-					foreach ($infos as $key=>$info) {
+					foreach ($infos as $key => $info) {
 						$min = $info['time'] ?? 0;
-						$all_info[$key]['name']=$info['name']??'';
-						if($min>=0) {
+						$all_info[$key]['name'] = $info['name'] ?? '';
+						if ($min >= 0) {
 							$all_info[$key]['time'] = gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($bp_time)));
-						}else{
+						} else {
 							$all_info[$key]['time'] = gmdate('Y-m-d H:i', strtotime("-{$min} minutes", strtotime($bp_time)));
 						}
 					}
 				}
 				return $all_info;
 			}
-			public static function get_pd_time($stop,$bp_time,$pd) {
-				$pf_infos=self::get_pd_info($stop,$bp_time);
-
-				return $pf_infos[$pd]['time']??'';
+			public static function get_pd_time($stop, $bp_time, $pd) {
+				$pf_infos = self::get_pd_info($stop, $bp_time);
+				return $pf_infos[$pd]['time'] ?? '';
 			}
 			//============= Date function================//
 			public static function date_all($post_ids = [], $_date = ''): array {
@@ -623,8 +628,8 @@
 					$is_return = self::return_check($post_infos, $bp_dp);
 					$key = $is_return ? 'return_routing_infos' : 'routing_infos';
 					$route_infos = $post_infos[$key] ?? [];
-					if (!empty($route_infos) ) {
-						foreach ($route_infos as $stop=> $info) {
+					if (!empty($route_infos)) {
+						foreach ($route_infos as $stop => $info) {
 							$min = $info['time'] ?? 0;
 							$time_info[$stop] = gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($start_time)));
 						}
@@ -633,7 +638,7 @@
 				return $time_info;
 			}
 			public static function time_dp($post_infos, $bp_dp, $start_time): string {
-				$time ='';
+				$time = '';
 				if (!empty($post_infos) && !empty($bp_dp) && !empty($start_time)) {
 					$is_return = self::return_check($post_infos, $bp_dp);
 					$key = $is_return ? 'return_routing_infos' : 'routing_infos';
@@ -642,8 +647,7 @@
 					$info = $route_infos[$dp] ?? '';
 					if (!empty($bp) && !empty($dp) && !empty($info)) {
 						$min = $info['time'] ?? 0;
-						$time=gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($start_time)));
-
+						$time = gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($start_time)));
 					}
 				}
 				return $time;

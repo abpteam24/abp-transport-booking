@@ -348,6 +348,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             if (submit_validation(current) < 1) {
                 form.find("[name='add-to-cart']").trigger('click');
                 form.find("[name='add-admin-order']").trigger('click');
+                form.closest('div.abptb_area').find('form.abp_search_form').submit();
             }
         } else {
             abptb_alert(current);
@@ -423,8 +424,8 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                             newItem.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
                             newItem.find('select').prop('selectedIndex', 0);
                             target.append(newItem);
-                            abptb_load_datepicker(target);
                         }
+                        abptb_load_datepicker(target);
                     } else if (count > qty) {
                         item.slice(qty).remove();
                     }
@@ -434,6 +435,12 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             }
         } else {
             item.not(':first').remove();
+        }
+        let reqFields = target.find('[data_req], [data-req]');
+        if (qty > 0) {
+            reqFields.prop('required', true);
+        } else {
+            reqFields.prop('required', false);
         }
     }
     function get_quantity(parent, seat_type, prefix = '') {

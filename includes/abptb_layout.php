@@ -544,32 +544,51 @@
                     }
                 }
             }
-            public static function capacity($post_infos = [], $class = 'publish'): void {
+            public static function capacity($post_infos = [], $class = 'publish',$list=false): void {
                 $post_id = absint($post_infos['post_id'] ?? 0);
                 if (ABPTB_Function::on_off('display_capacity') && $post_id > 0) {
                     $display = $post_infos['display_capacity'] ?? ABPTB_Function::get_post_info($post_id, 'display_capacity', 'on');
                     $capacity = $post_infos['capacity'] ?? ABPTB_Function::get_total_qty($post_id, $post_infos);
-                    if (!empty($capacity) && $display === 'on') { ?>
+                    if (!empty($capacity) && $display === 'on') {
+                        if($list){
+                            ?>
+                            <div class="<?php echo esc_attr($class); ?> abp_gap_xxs">
+                                <?php ABPTB_Static::svg('user_group_2');
+                                    echo esc_html(__('Capacity : ', 'abp-transport-booking').' '.$capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
+                            </div>
+                            <?php
+                        }else{
+                        ?>
                         <div class="abp_tag <?php echo esc_attr($class); ?>">
                             <?php ABPTB_Static::svg('user_group_2');
                                 echo esc_html($capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
                         </div>
                         <?php
+                        }
                     }
                 }
             }
-            public static function category($post_infos = [], $class = ''): void {
+            public static function category($post_infos = [], $class = '',$list=false): void {
                 $post_id = absint($post_infos['post_id'] ?? 0);
                 if (ABPTB_Function::on_off('category') && $post_id > 0) {
                     $display = $post_infos['display_category'] ?? ABPTB_Function::get_post_info($post_id, 'display_category', 'on');
                     $value = $post_infos['abptb_category'] ?? ABPTB_Function::get_post_info($post_id, 'abptb_category');
                     if (!empty($value) && $display === 'on') {
-                        $value = ABPTB_Function::category_value($value); ?>
+                        $value = ABPTB_Function::category_value($value);
+                        if($list){
+                            ?>
+                            <div class="<?php echo esc_attr($class); ?> abp_gap_xxs">
+                                <?php ABPTB_Static::svg('category');
+                                    echo esc_html(ABPTB_Function::category_label().' '.$value ); ?>
+                            </div>
+                            <?php
+                        }else{?>
                         <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::category_label() . ' : ' . $value); ?>">
                             <?php ABPTB_Static::svg('category');
                                 echo esc_html($value); ?>
                         </div>
                         <?php
+                        }
                     }
                 }
             }
@@ -782,7 +801,7 @@
                 }
                 $name = is_string($name) ? $prefix . $name . '[]' : '';
                 $type = $form['type'] ?? '';
-                $required = (($form['required'] ?? '') === 'on') ? 'required' : '';
+                $required = (($form['required'] ?? '') === 'on') ? 'data-req' : '';
                 $label = $form['label'] ?? '';
                 $d_value = $form['d_value'] ?? '';
                 if ($type === 'text' || $type === 'number' || $type === 'email') {

@@ -114,5 +114,24 @@
                 <?php } ?>
             </div>
             <?php
+        } else {
+            $display_return = $post_infos['display_return'] ?? 'off';
+            $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
+            ?>
+            <div class="_section_15">
+                <h6 class="abp_color_active_mar_b_xs"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></h6>
+                <?php if ($display_return == 'on') { ?>
+                    <h6 class="abp_color_burnt_orange_mar_b_xs">
+                        <?php ABPTB_Layout::route_direction($post_infos, '', true); ?>
+                    </h6>
+                <?php } ?>
+                <h6 class="abp_color_green_pale_mar_b_xs">
+                    <?php ABPTB_Layout::capacity($post_infos, '', true); ?>
+                </h6>
+                <h6 class="abp_color_gray">
+                    <?php ABPTB_Layout::category($post_infos, '', true); ?>
+                </h6>
+            </div>
+            <?php
         }
     }, 10, 3);

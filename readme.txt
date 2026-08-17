@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -465,11 +465,23 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Improved Pickup Point and Drop-off Point management.
+* Updated checkout validation for better booking reliability.
+* Fixed various design and UI issues.
+* Improved overall user experience and interface consistency.
+
+Released: August 17, 2026
+
 = 1.0.0 =
 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Released: August 17, 2026
 
 = 1.0.0 =
 Initial release.

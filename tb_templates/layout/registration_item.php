@@ -60,6 +60,7 @@
                         <?php do_action('abptb_additional', $post_infos, $prefix); ?>
                     </div>
                     <div class="ticket_right">
+
                         <?php do_action('abptb_selection_details', $post_infos, $form_data, $prefix);
                             do_action('abptb_client_form', $post_infos, $prefix);
                             if (empty($double_route)) {

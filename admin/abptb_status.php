@@ -18,7 +18,6 @@
                     </div>
                     <div class="_panel_body_fd_column_gap_xs">
                         <?php
-
                             $this->version();
                             $this->wordpress();
                             $this->php();
@@ -451,17 +450,17 @@
                         'display_return' => 'on',
                         'min_qty' => wp_rand(1, 2),
                         'max_qty' => wp_rand(3, 10),
-                        'ticket_infos' => $all_route_info[$i]['ticket_infos'],
-                        'sp_infos' => $all_route_info[$i]['sp_infos'],
-                        'all_ticket_type' => $all_route_info[$i]['all_ticket_type'],
-                        'routing_infos' => $all_route_info[$i]['routing_infos'],
-                        'return_routing_infos' => $all_route_info[$i]['return_routing_infos'],
-                        'route_data' => $all_route_info[$i]['route_data'],
-                        'route_direction' => $all_route_info[$i]['route_direction'],
-                        'return_route_direction' => $all_route_info[$i]['return_route_direction'],
-                        'price_infos' => $all_route_info[$i]['price_infos'],
-                        'return_price_infos' => $all_route_info[$i]['return_price_infos'],
-                        'price_data' => $all_route_info[$i]['price_data'],
+                        'ticket_infos' => $all_route_info[$i]['ticket_infos'] ?? [],
+                        'sp_infos' => $all_route_info[$i]['sp_infos'] ?? [],
+                        'all_ticket_type' => $all_route_info[$i]['all_ticket_type'] ?? [],
+                        'routing_infos' => $all_route_info[$i]['routing_infos'] ?? [],
+                        'return_routing_infos' => $all_route_info[$i]['return_routing_infos'] ?? [],
+                        'route_data' => $all_route_info[$i]['route_data'] ?? [],
+                        'route_direction' => $all_route_info[$i]['route_direction'] ?? [],
+                        'return_route_direction' => $all_route_info[$i]['return_route_direction'] ?? [],
+                        'price_infos' => $all_route_info[$i]['price_infos'] ?? [],
+                        'return_price_infos' => $all_route_info[$i]['return_price_infos'] ?? [],
+                        'price_data' => $all_route_info[$i]['price_data'] ?? [],
                     ];
                 }
                 return $all_data;

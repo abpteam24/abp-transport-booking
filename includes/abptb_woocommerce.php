@@ -10,11 +10,13 @@
 				add_filter('woocommerce_cart_item_thumbnail', array($this, 'cart_item_thumbnail'), 90, 3);
 				add_filter('woocommerce_get_item_data', array($this, 'get_item_data'), 90, 2);
 				//=============================//
-				//add_action('woocommerce_after_checkout_validation', array($this, 'after_checkout_validation'));
 				add_action('woocommerce_checkout_create_order_line_item', array($this, 'checkout_create_order_line_item'), 90, 4);
 				add_action('woocommerce_checkout_order_processed', array($this, 'checkout_order_processed'));
 				add_action('woocommerce_store_api_checkout_order_processed', array($this, 'api_checkout_order_processed'));
 				add_filter('woocommerce_order_status_changed', array($this, 'order_status_changed'), 90, 4);
+				add_action( 'woocommerce_checkout_process', [$this,'checkout_process_validation'] );
+				add_action( 'woocommerce_after_checkout_validation', [$this,'checkout_process_validation'] );
+				add_action( 'woocommerce_check_cart_items', [$this,'checkout_process_validation'] );
 			}
 			public function add_cart_item_data($cart_item, $product_id) {
 				$linked_id = ABPTB_Function::get_post_info($product_id, 'abptb_link_id', $product_id);
@@ -275,9 +277,12 @@
 									$price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
 									$name = $ticket_info['name'] ?? '';
 									if ($seat_type == 'sp') {
-										$name = $name . ' - ' . ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
+										$sp_label=ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
+										if($sp_label) {
+											$name = $name . ' - ' . $sp_label;
+										}
 									}
-									$item_data[] = array('name' => $name, 'value' => $price_text . ' X ' . $qty . '  = ' . $price . '<br />');
+									$item_data[] = array('name' => __('Ticket', 'abp-transport-booking'), 'value' => '('.$name.')'.$price_text . ' X ' . $qty . '  = ' . $price . '<br />');
 								}
 								$additional_info = $cart_item['additional_info'] ?? [];
 								if (ABPTB_Function::on_off('additional_info') && !empty($additional_info) && sizeof($additional_info) > 0) {
@@ -315,16 +320,27 @@
 				return $item_data;
 			}
 			//=============================//
-			public function after_checkout_validation(): void {
-				global $woocommerce;
-				$cart_items = $woocommerce->cart->get_cart();
-				foreach ($cart_items as $booking_infos) {
-					if (!ABPTB_Function::checkout_validation($booking_infos)) {
-						$woocommerce->cart->empty_cart();
-						wc_add_notice(__("Oh ! We are Sorry, Something Wrong. please Try another Time.", 'abp-transport-booking'), 'error');
+			public function checkout_process_validation(): void {
+				$cart_items = WC()->cart->get_cart();
+				if(!empty($cart_items)) {
+					foreach ($cart_items as $cart_item) {
+						$post_id = $cart_item['post_id'] ?? '';
+						if (!empty($cart_item) && !empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt()) {
+							if (!ABPTB_Function::checkout_validation($cart_item)) {
+								WC()->cart->empty_cart();
+								wc_add_notice(
+									__('Oh! We are sorry, something went wrong. Please try again later.', 'abp-transport-booking'),
+									'error'
+								);
+								wp_safe_redirect(wc_get_page_permalink('cart'));
+								exit;
+							}
+						}
 					}
 				}
+
 			}
+
 			public function checkout_create_order_line_item($item, $_key, $booking_infos): void {
 				$booking_info = $booking_infos['booking_infos'] ?? [];
 				$post_id = $booking_infos['post_id'] ?? 0;
@@ -362,7 +378,10 @@
 									$price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
 									$name = $ticket_info['name'] ?? '';
 									if ($seat_type == 'sp') {
-										$name = $name . ' - ' . ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
+										$sp_label=ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
+										if($sp_label) {
+											$name = $name . ' - ' . $sp_label;
+										}
 									}
 									$item->add_meta_data($name, ($price_text . ' X ' . $qty . '  = ' . $price));
 								}
@@ -457,7 +476,7 @@
 															$ex_id[] = $key;
 														}
 													}
-													$others = [];
+													$others['duration'] = $item_info['duration'] ?? '';
 													$_order_status = 'wc-' . $order_status;
 													$data = [
 														'order_id' => intval($order_id),

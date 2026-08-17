@@ -20,7 +20,6 @@
                         $pick_up = $cart_item['pick_up'] ?? '';
                         $drop_off = $cart_item['drop_off'] ?? '';
                         $start_point = $cart_item['start_point'] ?? '';
-                        //echo '<pre>';                    print_r($bp);                    echo '</pre>';
                         //echo '<pre>';                    print_r($start_point);                    echo '</pre>';
                         ?>
                         <div class="abptb_area">
