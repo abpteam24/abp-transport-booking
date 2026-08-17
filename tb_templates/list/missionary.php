@@ -33,7 +33,7 @@
 										echo esc_html( $title ); ?>
                                 </button>
 							<?php } else { ?>
-                                <a class="_abp list_title" href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>" target="_blank"><?php echo esc_html( $title ); ?></a>
+                                <a class="abp list_title" href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>" target="_blank"><?php echo esc_html( $title ); ?></a>
 							<?php } ?>
                         </div>
                     </div>

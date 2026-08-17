@@ -14,16 +14,16 @@
             ?>
             <div id="abptb_area" class="abptb_area default_details_page">
                 <div class="abp_container">
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_f_equal_f_wrap_gap_section_15">
                             <div class="_min_500"><?php ABPTB_Layout::image($post_id); ?></div>
                             <div class="_min_500">
-                                <h1 class="_abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
+                                <h1 class="abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
                                 <?php ABPTB_Layout::sub_title($post_infos); ?>
                                 <div class="_section_21_dot_xs_mar_t_xs">
-                                    <div class="_abp_color_active_fs_label"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
+                                    <div class="abp_color_active_fs_label"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
                                     <?php if ($display_return == 'on') { ?>
-                                        <div class="_abp_color_burnt_orange">
+                                        <div class="abp_color_burnt_orange">
                                             <?php ABPTB_Layout::route_direction($post_infos, '', true); ?>
                                         </div>
                                     <?php } ?>
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <?php if (!empty($content)) { ?>
-                        <div class="_abp_row">
+                        <div class="abp_row">
                             <div class="_col_12">
                                 <div class="the_post_content">
                                     <?php the_content(); ?>
@@ -49,17 +49,17 @@
                             </div>
                         </div>
                     <?php } ?>
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_col_12">
                             <?php do_action('abptb_search_form', $post_infos, $form_data); ?>
                         </div>
                     </div>
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_col_12 abptb_booking">
                             <?php do_action('abptb_registration', $post_infos, $form_data); ?>
                         </div>
                     </div>
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_f_equal_f_wrap_gap_w_full">
                             <div class="_min_500">
                                 <?php do_action('abptb_faq', $post_infos); ?>
@@ -69,10 +69,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_col_12"><?php do_action('abptb_slider', ($post_infos['abptb_slider'] ?? [])); ?></div>
                     </div>
-                    <div class="_abp_row">
+                    <div class="abp_row">
                         <div class="_col_12"> <?php do_action('abptb_related_item', ($post_infos['related_item'] ?? '')); ?></div>
                     </div>
                 </div>

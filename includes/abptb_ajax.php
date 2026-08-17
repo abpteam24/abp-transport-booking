@@ -42,19 +42,23 @@
                         $post_infos = ABPTB_Function::get_all_meta($post_id);
                         $sale_continue = $post_infos['sale_continue'] ?? 'on';
                         if ($sale_continue == 'on') {
-                            $all_start_time = ABPTB_Function::time_route($post_infos, $bp_dp, $journey_date);
+                            $all_start_time = ABPTB_Function::time_operation_start($post_infos, $bp_dp, $journey_date);
+                            //echo '<pre>';                print_r($all_start_time);                echo '</pre>';
                             $bp_times = ABPTB_Function::time_bp($post_infos, $bp_dp, $journey_date, $all_start_time);
-                            $journey_time = !empty($bp_times) ? current($bp_times) : '';
-                            $journey_time = !empty($journey_time) ? gmdate('Y-m-d H:i', strtotime($journey_time)) : '';
+                            $bp_time = !empty($bp_times) ? current($bp_times) : '';
+                            $bp_time = !empty($bp_time) ? gmdate('Y-m-d H:i', strtotime($bp_time)) : '';
                             $start_time = '';
-                            if (!empty($journey_time)) {
-                                $_start_time = array_search($journey_time, $bp_times);
+                            if (!empty($bp_time)) {
+                                $_start_time = array_search($bp_time, $bp_times);
                                 $_start_time = $_start_time ? $journey_date . ' ' . $_start_time : '';
                                 $start_time = $_start_time ? gmdate('Y-m-d H:i', strtotime($_start_time)) : '';
                             }
+                            //$all_stop_time=ABPTB_Function::time_all_stop($post_infos, $bp_dp, $start_time);
+                            //echo '<pre>';                print_r($all_stop_time);                echo '</pre>';
                             $form_data['down']['start_point'] = ABPTB_Function::start_point($post_infos, $bp_dp);
                             $form_data['down']['bp_times'] = $bp_times;
-                            $form_data['down']['journey_time'] = $journey_time;
+                            $form_data['down']['bp_time'] = $bp_time;
+                            $form_data['down']['dp_time'] = ABPTB_Function::time_dp($post_infos, $bp_dp, $start_time);
                             $form_data['down']['start_time'] = $start_time;
                             $display_return = $post_infos['display_return'] ?? 'off';
                             $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
@@ -63,20 +67,21 @@
                                 $key = ABPTB_Function::return_check($post_infos, $bp_dp) ? 'return_price_infos' : 'price_infos';
                                 $price_infos = $post_infos[$key] ?? ABPTB_Function::get_post_info($post_id, $key, []);
                                 if (array_key_exists($bp_dp, $price_infos)) {
-                                    $all_start_time = ABPTB_Function::time_route($post_infos, $bp_dp, $return_date);
+                                    $all_start_time = ABPTB_Function::time_operation_start($post_infos, $bp_dp, $return_date);
                                     $bp_times = ABPTB_Function::time_bp($post_infos, $bp_dp, $return_date, $all_start_time);
-                                    $journey_time = !empty($bp_times) ? current($bp_times) : '';
-                                    $journey_time = !empty($journey_time) ? gmdate('Y-m-d H:i', strtotime($journey_time)) : '';
+                                    $bp_time = !empty($bp_times) ? current($bp_times) : '';
+                                    $bp_time = !empty($bp_time) ? gmdate('Y-m-d H:i', strtotime($bp_time)) : '';
                                     $start_time = '';
-                                    if (!empty($journey_time)) {
-                                        $_start_time = array_search($journey_time, $bp_times);
+                                    if (!empty($bp_time)) {
+                                        $_start_time = array_search($bp_time, $bp_times);
                                         $_start_time = $_start_time ? $return_date . ' ' . $_start_time : '';
                                         $start_time = $_start_time ? gmdate('Y-m-d H:i', strtotime($_start_time)) : '';
                                     }
                                     $form_data['up']['start_point'] = ABPTB_Function::start_point($post_infos, $bp_dp);
                                     $form_data['up']['bp_times'] = $bp_times;
-                                    $form_data['up']['journey_time'] = $journey_time;
+                                    $form_data['up']['bp_time'] = $bp_time;
                                     $form_data['up']['start_time'] = $start_time;
+                                    $form_data['up']['dp_time'] = ABPTB_Function::time_dp($post_infos, $bp_dp, $start_time);
                                     $form_data['up']['post_id'] = $post_id;
                                     $form_data['up']['double_route'] = 'double_route';
                                     $form_data['down']['double_route'] = 'double_route';
@@ -151,11 +156,11 @@
                         $bp_dp = $post_val($prefix . 'bp_dp');
                         $start_time = $post_val($prefix . 'start_time');
                         $journey_date = !empty($start_time) ? gmdate('Y-m-d', strtotime($start_time)) : '';
-                        $all_start_time = ABPTB_Function::time_route($post_infos, $bp_dp, $journey_date);
+                        $all_start_time = ABPTB_Function::time_operation_start($post_infos, $bp_dp, $journey_date);
                         $bp_times = ABPTB_Function::time_bp($post_infos, $bp_dp, $journey_date, $all_start_time);
-                        $journey_time = $post_val($prefix . 'journey_time');
-                        if (!empty($journey_time)) {
-                            $_start_time = array_search($journey_time, $bp_times);
+                        $bp_time = $post_val($prefix . 'bp_time');
+                        if (!empty($bp_time)) {
+                            $_start_time = array_search($bp_time, $bp_times);
                             $_start_time = $_start_time ? $journey_date . ' ' . $_start_time : '';
                             $start_time = $_start_time ? gmdate('Y-m-d H:i', strtotime($_start_time)) : '';
                         }
@@ -163,17 +168,12 @@
                         $form_data['bp_dp'] = $bp_dp;
                         $form_data['start_point'] = $post_val($prefix . 'start_point');
                         $form_data['bp_times'] = $bp_times;
-                        $form_data['journey_time'] = $journey_time;
+                        $form_data['bp_time'] = $bp_time;
                         $form_data['sp_id'] = $post_val($prefix . 'sp_id');
                         $form_data['double_route'] = $post_val('double_route');
                         $form_data['start_time'] = $start_time;
-                        $seat_type = $post_infos['seat_type'] ?? 'sp';
-                        $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
-                        if ($seat_type === 'ticket') {
-                            do_action('abptb_ticket_type', $post_infos, $form_data, $prefix);
-                        } else {
-                            do_action('abptb_sp_type', $post_infos, $form_data, $prefix);
-                        }
+                        $form_data['dp_time'] = ABPTB_Function::time_dp($post_infos, $bp_dp, $start_time);
+                        do_action('abptb_registration_item', $post_infos, $form_data,$prefix);
                     } else {
                         ABPTB_Layout::layout_warning_info('sale_close_msg');
                     }

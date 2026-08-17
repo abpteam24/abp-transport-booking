@@ -139,7 +139,7 @@
 				$des = apply_filters('abptb_info_array_filter', $des);
 				return $des[$key] ?? '';
 			}
-			public static function icon_svg($key): void {
+			public static function svg($key): void {
 				$des = [
 					'user_group_1' => '<svg  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"  d="M17 20c0-1.657-2.239-3-5-3s-5 1.343-5 3m14-3c0-1.23-1.234-2.287-3-2.75M3 17c0-1.23 1.234-2.287 3-2.75m12-4.014a3 3 0 1 0-4-4.472m-8 4.472a3 3 0 0 1 4-4.472M12 14a3 3 0 1 1 0-6a3 3 0 0 1 0 6Z"/></svg>',
 					'user_group_2' => '<svg  viewBox="0 0 24 24"> <path fill="currentColor" fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-1.5 8a4 4 0 0 0-4 4c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2a4 4 0 0 0-4-4zm6.8-3.1a5.5 5.5 0 0 0-2.8-6.3c.6-.4 1.3-.6 2-.6a3.5 3.5 0 0 1 .8 6.9m2.2 7.1h.5a2 2 0 0 0 2-2a4 4 0 0 0-4-4h-1.1l-.5.8c1.9 1 3.1 3 3.1 5.2M4 7.5a3.5 3.5 0 0 1 5.5-2.9A5.5 5.5 0 0 0 6.7 11A3.5 3.5 0 0 1 4 7.5M7.1 12H6a4 4 0 0 0-4 4c0 1.1.9 2 2 2h.5a6 6 0 0 1 3-5.2z" clip-rule="evenodd"/></svg>',
@@ -157,7 +157,7 @@
 					'setting' => '<svg viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="currentColor" d="M16 15c1.306 0 2.418.835 2.83 2H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2h9.17A3.001 3.001 0 0 1 16 15Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2ZM8 9a3 3 0 0 1 2.762 1.828l.067.172H20a1 1 0 0 1 .117 1.993L20 13h-9.17a3.001 3.001 0 0 1-5.592.172L5.17 13H4a1 1 0 0 1-.117-1.993L4 11h1.17A3.001 3.001 0 0 1 8 9Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2Zm8-8c1.306 0 2.418.835 2.83 2H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 0 1 0-2h9.17A3.001 3.001 0 0 1 16 3Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2Z"/></g></svg>',
 					'status' => '<svg  viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.001 5.2q-.262.385-.445.82a7 7 0 0 0-.157.405c-.165.461-.27.881-.373 1.303l-.005.019c-.132.533-.264 1.067-.525 1.687a5 5 0 0 1-.48.88l-.006.006l-.002.004c2.325.684 4.925-.224 5.868-2.452c.58-1.368.257-3.08-1.052-3.672c-1.054-.476-2.088-.086-2.822 1M3.184 12.023q.147-.447.38-.854q.111-.194.224-.37c.264-.408.532-.742.8-1.076l.026-.031c.335-.42.672-.84.998-1.414q.234-.407.386-.854l.006-.019l.018-.058c1.897 1.55 2.71 4.266 1.52 6.362c-.729 1.289-2.258 2.021-3.487 1.268c-.99-.605-1.29-1.702-.871-2.954M21 17.251c-2.51 0-4.544-2.108-4.544-4.708h-2.654C13.802 16.662 17.025 20 21 20zm-8.663-4.708c0 4.119-3.223 7.457-7.198 7.457v-2.75c2.51 0 4.544-2.107 4.544-4.707zm0 0l-.002-8.324H9.68l.002 8.324z" clip-rule="evenodd"/></svg>',
 					'category' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/>  <path d="M3 9h18"/>  <path d="M7 16v2"/>  <path d="M17 16v2"/><circle cx="7" cy="18.5" r="0.5" fill="currentColor" stroke="none"/>  <circle cx="17" cy="18.5" r="0.5" fill="currentColor" stroke="none"/></svg>',
-					'category_1'   => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none">  <rect x="4" y="7" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/>  <line x1="4" y1="11" x2="20" y2="11" stroke="currentColor" stroke-width="2"/>  <line x1="8" y1="4" x2="8" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>  <line x1="16" y1="4" x2="16" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>  <circle cx="8.5" cy="15" r="1.3" fill="currentColor"/></svg>',
+					'category_1' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none">  <rect x="4" y="7" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/>  <line x1="4" y1="11" x2="20" y2="11" stroke="currentColor" stroke-width="2"/>  <line x1="8" y1="4" x2="8" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>  <line x1="16" y1="4" x2="16" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>  <circle cx="8.5" cy="15" r="1.3" fill="currentColor"/></svg>',
 					'brand_1' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 5-3 8.5-7 11-4-2.5-7-6-7-11V5z"/>  <path d="M9 12l2 2 4-4"/></svg>',
 					'brand_2' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="8" y1="7" x2="8" y2="7.01"/><line x1="12" y1="7" x2="12" y2="7.01"/><line x1="16" y1="7" x2="16" y2="7.01"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><path d="M9 21v-4h6v4"/></svg>',
 					'organizer_1' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/>  <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/>  <path d="M17.5 4.5l1 1 2-2"/></svg>',
@@ -183,6 +183,302 @@
 				];
 				$icons = $des[$key] ?? '';
 				echo !empty($icons) ? wp_kses($icons, $allowed_svg_tags) : '';
+			}
+			public static function static_additional(): array {
+				return [
+					'as_1' => ['icon' => 'fas fa-suitcase-rolling', 'name' => 'Free Luggage', 'qty' => 50, 'max_qty' => 1, 'price' => 0, 'description' => '5 kg · 20×10×10 cm (Maximum one)', 'returnable' => 'no',],
+					'as_2' => ['icon' => 'fas fa-suitcase-rolling', 'name' => 'Additional luggage', 'qty' => 50, 'max_qty' => 2, 'price' => 4.99, 'description' => '20 kg · 80×50×30 cm', 'returnable' => 'no',],
+					'as_3' => ['icon' => 'fas fa-suitcase', 'name' => 'Bulky baggage', 'qty' => 30, 'max_qty' => 3, 'price' => 7.99, 'description' => '50 kg · 80×50×30 cm', 'returnable' => 'yes',],
+					'as_4' => ['icon' => 'fas fa-coffee', 'name' => 'Coffee', 'qty' => 100, 'price' => 2.00, 'description' => 'Price for a cup of coffee', 'returnable' => 'no',]
+				];
+			}
+			public static function static_form($key = ''): array {
+				$form['pass_name'] = ['type' => 'text', 'required' => 'on', 'label' => __('First Name', 'abp-transport-booking')];
+				$form['pass_name_2'] = ['type' => 'text', 'required' => 'on', 'label' => __('Last Name', 'abp-transport-booking')];
+				$form['pass_email'] = ['type' => 'email', 'required' => 'on', 'label' => __('E-Mail', 'abp-transport-booking')];
+				$form['pass_phone'] = ['type' => 'text', 'required' => 'on', 'label' => __('Phone', 'abp-transport-booking')];
+				$form['pass_gender'] = ['type' => 'select', 'required' => 'off', 'label' => __('Gender', 'abp-transport-booking'), 'option' => 'male,female'];
+				$form['pass_date'] = ['type' => 'date', 'required' => 'off', 'label' => __('Date of Birth', 'abp-transport-booking')];
+				if (!is_string($key) && !is_int($key)) {
+					return $form;
+				}
+				if ($key === '') {
+					return $form;
+				}
+				return is_array($form[$key] ?? null) ? $form[$key] : [];
+			}
+			public static function static_location(): array {
+				return [
+					0 => ['name' => 'New York City'],
+					1 => ['name' => 'Los Angeles'],
+					2 => ['name' => 'Chicago'],
+					3 => ['name' => 'Houston'],
+					4 => ['name' => 'Phoenix'],
+					5 => ['name' => 'Philadelphia'],
+					6 => ['name' => 'San Antonio'],
+					7 => ['name' => 'San Diego'],
+					8 => ['name' => 'Dallas'],
+					9 => ['name' => 'San Jose'],
+					10 => ['name' => 'Austin'],
+					11 => ['name' => 'Jacksonville'],
+					12 => ['name' => 'Fort Worth'],
+					13 => ['name' => 'Columbus'],
+					14 => ['name' => 'Charlotte'],
+					15 => ['name' => 'Indianapolis'],
+					16 => ['name' => 'Seattle'],
+					17 => ['name' => 'Denver'],
+					18 => ['name' => 'Washington, D.C.'],
+					19 => ['name' => 'Boston'],
+					20 => ['name' => 'Nashville'],
+					21 => ['name' => 'Detroit'],
+					22 => ['name' => 'Portland'],
+					23 => ['name' => 'Las Vegas'],
+					24 => ['name' => 'Memphis'],
+					25 => ['name' => 'Baltimore'],
+					26 => ['name' => 'Milwaukee'],
+					27 => ['name' => 'Albuquerque'],
+					28 => ['name' => 'Tucson'],
+					29 => ['name' => 'Fresno'],
+					30 => ['name' => 'Sacramento'],
+					31 => ['name' => 'Kansas City'],
+					32 => ['name' => 'Atlanta'],
+					33 => ['name' => 'Miami'],
+					34 => ['name' => 'Orlando'],
+					35 => ['name' => 'Tampa'],
+					36 => ['name' => 'New Orleans'],
+					37 => ['name' => 'Cleveland'],
+					38 => ['name' => 'Pittsburgh'],
+					39 => ['name' => 'Cincinnati'],
+					40 => ['name' => 'Minneapolis'],
+					41 => ['name' => 'St. Louis'],
+					42 => ['name' => 'Salt Lake City'],
+					43 => ['name' => 'Raleigh'],
+					44 => ['name' => 'Richmond'],
+					45 => ['name' => 'Buffalo'],
+					46 => ['name' => 'Providence'],
+					47 => ['name' => 'Honolulu'],
+					48 => ['name' => 'Anchorage'],
+					49 => ['name' => 'Charleston'],
+					50 => ['name' => 'Tacoma'],
+					51 => ['name' => 'Olympia'],
+					52 => ['name' => 'Bakersfield'],
+					53 => ['name' => 'South Bend'],
+					54 => ['name' => 'Toledo'],
+					55 => ['name' => 'New Haven'],
+					56 => ['name' => 'Corsicana'],
+					57 => ['name' => 'Huntsville'],
+					58 => ['name' => 'San Francisco'],
+				];
+			}
+			public static function static_category(): array {
+				return [
+					0 => ['name' => 'AC'],
+					1 => ['name' => 'Non AC'],
+					2 => ['name' => 'Economy'],
+					3 => ['name' => 'Business'],
+					4 => ['name' => 'VIP'],
+					5 => ['name' => 'Sleeper'],
+					6 => ['name' => 'Express'],
+					7 => ['name' => 'Local'],
+					8 => ['name' => 'Luxury'],
+					9 => ['name' => 'Shuttle'],
+				];
+			}
+			public static function static_organizer(): array {
+				return [
+					0 => ['name' => 'Global Transit Group'],
+					1 => ['name' => 'Express Travel Network'],
+					2 => ['name' => 'Premium Coach Services'],
+					3 => ['name' => 'InterCity Transport'],
+					4 => ['name' => 'Continental Bus Lines'],
+					5 => ['name' => 'Smart Mobility Solutions'],
+				];
+			}
+			public static function static_brand(): array {
+				return [
+					0 => ['name' => 'Mercedes-Benz'],
+					1 => ['name' => 'Volvo'],
+					2 => ['name' => 'Scania'],
+					3 => ['name' => 'MAN'],
+					4 => ['name' => 'IVECO'],
+					5 => ['name' => 'Setra'],
+					6 => ['name' => 'Yutong'],
+					7 => ['name' => 'King Long'],
+					8 => ['name' => 'Alexander Dennis'],
+					9 => ['name' => 'VDL Bus & Coach'],
+				];
+			}
+			public static function static_ticket(): array {
+				return [
+					1 => ['label' => 'Ticket', 'color' => '', 'prefix' => '', 'icon' => '🎟️', 'type' => 'seat',],
+					2 => ['label' => 'VIP', 'color' => '#A78BFA', 'prefix' => 'VIP-', 'icon' => '👑', 'type' => 'seat',],
+					3 => ['label' => 'Business Class', 'color' => '#0EA5E9', 'prefix' => 'B-', 'icon' => '🛋️', 'type' => 'seat',],
+					4 => ['label' => 'Special', 'color' => '#6366F1', 'prefix' => 'S-', 'icon' => 'fas fa-couch', 'type' => 'seat',],
+					5 => ['label' => 'Couple', 'color' => '#C026D3', 'prefix' => 'C-', 'icon' => '💑', 'type' => 'seat',],
+					6 => ['label' => 'Female', 'color' => '#F472B6', 'prefix' => 'F-', 'icon' => '👩', 'type' => 'seat',],
+					7 => ['label' => 'Adult', 'color' => '#78350F', 'prefix' => 'AD-', 'icon' => 'fas fa-chair', 'type' => 'seat',],
+					8 => ['label' => 'Child', 'color' => '#F59E0B', 'prefix' => 'CH-', 'icon' => '🪑', 'type' => 'seat',],
+					9 => ['label' => 'Economy', 'color' => '#84CC16', 'prefix' => 'E-', 'icon' => '💺', 'type' => 'seat',],
+				];
+			}
+			public static function static_decoration(): array {
+				return [
+					1 => ['label' => 'Blank Space', 'color' => '', 'icon' => '', 'type' => 'other'],
+					2 => ['label' => 'Driver Seat', 'color' => '#1E293B', 'icon' => '👨‍✈️', 'type' => 'other'],
+					3 => ['label' => 'Door Entry', 'color' => '#EAB308', 'icon' => '🚪', 'type' => 'other'],
+					4 => ['label' => 'Stairs', 'color' => '#64748B', 'icon' => '🪜', 'type' => 'other'],
+					5 => ['label' => 'Aisle/Walkway', 'color' => '#94A3B8', 'icon' => '↔', 'type' => 'other'],
+					6 => ['label' => 'Window', 'color' => '#38BDF8', 'icon' => '🪟', 'type' => 'other'],
+					7 => ['label' => 'Engine Box', 'color' => '#475569', 'icon' => '⚙️', 'type' => 'other'],
+					8 => ['label' => 'Toilet', 'color' => '#06B6D4', 'icon' => '🚽', 'type' => 'other'],
+					9 => ['label' => 'Luggage Rack', 'color' => '#F97316', 'icon' => '🧳', 'type' => 'other'],
+					10 => ['label' => 'Food/Snacks', 'color' => '#10B981', 'icon' => '🍔', 'type' => 'other'],
+					11 => ['label' => 'Emergency Exit', 'color' => '#EF4444', 'icon' => '🚨', 'type' => 'other'],
+				];
+			}
+			public static function static_feature(): array {
+				return [
+					1 => ['icon' => '🚍', 'label' => 'Coach Bus'],
+					2 => ['icon' => '🚐', 'label' => 'Minibus'],
+					3 => ['icon' => '🏫', 'label' => 'School Bus'],
+					4 => ['icon' => '🏙️', 'label' => 'City Bus'],
+					5 => ['icon' => '🏨', 'label' => 'Shuttle Bus'],
+					6 => ['icon' => '🚇', 'label' => 'Metro'],
+					7 => ['icon' => '🚉', 'label' => 'Subway'],
+					8 => ['icon' => '🚝', 'label' => 'Monorail'],
+					9 => ['icon' => '🚈', 'label' => 'Light Rail'],
+					10 => ['icon' => '🚄', 'label' => 'High Speed Train'],
+					11 => ['icon' => '🚅', 'label' => 'Bullet Train'],
+					12 => ['icon' => '🚞', 'label' => 'Mountain Railway'],
+					13 => ['icon' => '🚠', 'label' => 'Cable Car'],
+					15 => ['icon' => '🏠', 'label' => 'Domestic Flight'],
+					16 => ['icon' => '🌍', 'label' => 'International Flight'],
+					17 => ['icon' => '🛩️', 'label' => 'Air Charter'],
+					18 => ['icon' => '🚢', 'label' => 'Passenger Ship'],
+					19 => ['icon' => '🛳️', 'label' => 'Cruise Ship'],
+					21 => ['icon' => '🚤', 'label' => 'Speed Boat'],
+					22 => ['icon' => '🛶', 'label' => 'River Boat'],
+					23 => ['icon' => '🚕', 'label' => 'Cab Service'],
+					24 => ['icon' => '🚘', 'label' => 'Ride Sharing'],
+					25 => ['icon' => '🚗', 'label' => 'Car Rental'],
+					26 => ['icon' => '🏍️', 'label' => 'Motorbike Taxi'],
+					27 => ['icon' => '🚲', 'label' => 'Bicycle Rental'],
+					28 => ['icon' => '🛺', 'label' => 'Auto Rickshaw'],
+					29 => ['icon' => '🚜', 'label' => 'Van Service'],
+					31 => ['icon' => '🎟️', 'label' => 'E-Ticket'],
+					32 => ['icon' => '📱', 'label' => 'Mobile Ticket'],
+					33 => ['icon' => '🔳', 'label' => 'QR Code Ticket'],
+					34 => ['icon' => '💺', 'label' => 'Seat Reservation'],
+					36 => ['icon' => '⭐', 'label' => 'VIP Seat'],
+					37 => ['icon' => '🛏️', 'label' => 'Sleeper Seat'],
+					38 => ['icon' => '👨‍👩‍👧‍👦', 'label' => 'Family Seat'],
+					40 => ['icon' => '🔄', 'label' => 'Round Trip Booking'],
+					41 => ['icon' => '🌐', 'label' => 'Multi City Booking'],
+					42 => ['icon' => '⚡', 'label' => 'Instant Booking'],
+					43 => ['icon' => '❌', 'label' => 'Ticket Cancellation'],
+					44 => ['icon' => '💰', 'label' => 'Ticket Refund'],
+					45 => ['icon' => '📍', 'label' => 'Route Tracking'],
+					46 => ['icon' => '🛰️', 'label' => 'GPS Tracking'],
+					47 => ['icon' => '📡', 'label' => 'Live Location'],
+					50 => ['icon' => '🌙', 'label' => 'Night Service'],
+					51 => ['icon' => '🚀', 'label' => 'Express Service'],
+					52 => ['icon' => '🌎', 'label' => 'International Routes'],
+					53 => ['icon' => '💳', 'label' => 'Online Payment'],
+					54 => ['icon' => '💵', 'label' => 'Cash Payment'],
+					55 => ['icon' => '💳', 'label' => 'Card Payment'],
+					56 => ['icon' => '📲', 'label' => 'Mobile Banking'],
+					57 => ['icon' => '🧾', 'label' => 'Invoice Support'],
+					58 => ['icon' => '❄️', 'label' => 'Air Conditioning'],
+					59 => ['icon' => '📶', 'label' => 'WiFi'],
+					60 => ['icon' => '🔌', 'label' => 'USB Charging'],
+					61 => ['icon' => '🔋', 'label' => 'Power Outlet'],
+					62 => ['icon' => '🪑', 'label' => 'Reclining Seats'],
+					63 => ['icon' => '🎬', 'label' => 'Entertainment System'],
+					64 => ['icon' => '💡', 'label' => 'Reading Light'],
+					66 => ['icon' => '🚻', 'label' => 'Toilet Facility'],
+					67 => ['icon' => '🧳', 'label' => 'Luggage Storage'],
+					68 => ['icon' => '♿', 'label' => 'Wheelchair Access'],
+					69 => ['icon' => '👴', 'label' => 'Priority Seating'],
+					70 => ['icon' => '👶', 'label' => 'Child Friendly'],
+					71 => ['icon' => '🐕', 'label' => 'Pet Friendly'],
+					72 => ['icon' => '🎥', 'label' => 'CCTV Security'],
+					73 => ['icon' => '🚪', 'label' => 'Emergency Exit'],
+					74 => ['icon' => '⛑️', 'label' => 'First Aid Kit'],
+				];
+			}
+			public static function static_faq(): array {
+				return [
+					1 => [
+						'title' => 'How do I book a ticket?',
+						'des' => '<p>You can book a ticket by selecting your route, travel date, departure time, and preferred seat. Complete the payment process to confirm your booking.</p>',
+					],
+					2 => [
+						'title' => 'Can I cancel my booking?',
+						'des' => '<p>Yes, you can cancel your booking according to the cancellation policy set by the transport operator. Refund eligibility may vary depending on the booking conditions.</p>',
+					],
+					3 => [
+						'title' => 'Can I change my travel date?',
+						'des' => '<p>Travel dates can be modified only if the transport operator allows schedule changes and seats are available for the selected date.</p>',
+					],
+					4 => [
+						'title' => 'When should I arrive at the boarding point?',
+						'des' => '<p>Passengers are advised to arrive at least 15 to 30 minutes before the scheduled departure time to avoid missing the journey.</p>',
+					],
+					5 => [
+						'title' => 'Will I receive a booking confirmation?',
+						'des' => '<p>Yes, a booking confirmation will be sent after a successful payment. You can also review your booking details from your account dashboard.</p>',
+					],
+					6 => [
+						'title' => 'What payment methods are supported?',
+						'des' => '<p>Available payment methods depend on the payment gateways configured by the website administrator.</p>',
+					],
+					7 => [
+						'title' => 'Can I select my preferred seat?',
+						'des' => '<p>Yes, if seat selection is enabled by the operator, you will be able to choose your preferred seat during the booking process.</p>',
+					],
+					8 => [
+						'title' => 'What happens if the trip is delayed?',
+						'des' => '<p>Departure times may change due to weather conditions, traffic congestion, maintenance requirements, or other unforeseen circumstances.</p>',
+					],
+					9 => [
+						'title' => 'Are children allowed to travel?',
+						'des' => '<p>Yes, children are allowed to travel. Additional requirements and ticket policies may vary depending on the transport operator.</p>',
+					],
+					10 => [
+						'title' => 'Who should I contact for assistance?',
+						'des' => '<p>If you need assistance, please contact the transport operator using the contact information provided on the website.</p>',
+					],
+				];
+			}
+			public static function static_tc(): false|string {
+				ob_start(); ?>
+                <h6>1. Acceptance of Terms</h6>
+                By using our transport booking service, you agree to comply with these terms and conditions. If you do not agree with any part of these terms, please do not use this service.
+                <h6>2. Booking Confirmation</h6>
+                A booking is considered confirmed only after successful payment and receipt of a booking confirmation. The customer is responsible for providing accurate information during the booking process.
+                <h6>3. Passenger Information</h6>
+                Passengers must provide valid information, including their name, contact details, and any other required information. Incorrect information may result in booking cancellation without notice.
+                <h6>4. Seat Availability</h6>
+                All bookings are subject to seat availability. The operator reserves the right to change or reassign seats when necessary due to operational requirements.
+                <h6>5. Boarding and Arrival</h6>
+                Passengers are advised to arrive at the designated boarding point at least 15 to 30 minutes before departure. Failure to arrive on time may result in the loss of the booking without any refund.
+                <h6>6. Cancellation and Refund Policy</h6>
+                Cancellation and refund eligibility may vary depending on the operator's policy. Any applicable processing fees, taxes, or service charges may be deducted from the refund amount.
+                <h6>7. Schedule Changes</h6>
+                Departure times, routes, and stops may be modified because of weather conditions, traffic, technical issues, government regulations, or other unforeseen circumstances.
+                <h6>8. Passenger Conduct</h6>
+                Passengers must behave appropriately during the journey. Any unlawful, abusive, or disruptive behavior may result in immediate removal from the service without compensation.
+                <h6>9. Luggage Policy</h6>
+                Passengers are responsible for their belongings. The transport operator will not be liable for any loss, damage, or theft of personal items.
+                <h6>10. Limitation of Liability</h6>
+                The transport operator shall not be held responsible for delays, cancellations, accidents, natural disasters, or circumstances beyond reasonable control.
+                <h6>11. Privacy Policy</h6>
+                Personal information collected during the booking process will be used only to provide and improve the service in accordance with the applicable privacy policy.
+                <h6>12. Changes to Terms</h6>
+                These terms and conditions may be updated at any time without prior notice. Continued use of the service indicates acceptance of the revised terms and conditions.
+                <h6>13. Contact Information</h6>
+                If you have any questions regarding these terms and conditions, please contact the transport operator directly.
+				<?php return ob_get_clean();
 			}
 		}
 	}

@@ -12,20 +12,13 @@
             }
             public function load_status(): void {
                 ?>
-                <div class="_abp_panel_max_1200_mar_auto abp_status">
+                <div class="abp_panel_max_1200_mar_auto abp_status">
                     <div class="_panel_head">
-                        <h3 class="_abp_gap_xs"><span>🛡️</span> <?php esc_html_e('Status  & Information', 'abp-transport-booking'); ?></h3>
+                        <h3 class="abp_gap_xs"><span>🛡️</span> <?php esc_html_e('Status  & Information', 'abp-transport-booking'); ?></h3>
                     </div>
                     <div class="_panel_body_fd_column_gap_xs">
                         <?php
-                            if (ABPTB_WC < 2) {
-                                ABPTB_Layout::layout_warning_info_xs('must_wc');
-                                if (ABPTB_WC == 1) { ?>
-                                    <button class="_btn_navy_blue_xs" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
-                                <?php } else { ?>
-                                    <button class="_btn_navy_blue_xs" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
-                                <?php }
-                            }
+
                             $this->version();
                             $this->wordpress();
                             $this->php();
@@ -43,7 +36,7 @@
                 ?>
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php esc_html_e('Transport Booking Version', 'abp-transport-booking') ?> </h6>
+                        <h6 class="abp"> <?php esc_html_e('Transport Booking Version', 'abp-transport-booking') ?> </h6>
                         <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html(ABPTB_VERSION); ?></button>
                     </div>
                 </div>
@@ -54,7 +47,7 @@
                 ?>
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php esc_html_e('WordPress Version', 'abp-transport-booking'); ?> </h6>
+                        <h6 class="abp"> <?php esc_html_e('WordPress Version', 'abp-transport-booking'); ?> </h6>
                         <?php if ($version > 5.5) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
@@ -69,7 +62,7 @@
                 ?>
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php esc_html_e('Php Version', 'abp-transport-booking'); ?> </h6>
+                        <h6 class="abp"> <?php esc_html_e('Php Version', 'abp-transport-booking'); ?> </h6>
                         <?php if ($version > 7.4) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($version); ?></button>
                         <?php } else { ?>
@@ -85,9 +78,9 @@
                 $name = get_option('woocommerce_email_from_name');
                 $email = get_option('woocommerce_email_from_address');
                 ?>
-                <div class="_section_xs">
-                    <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php echo esc_html($title); ?></h6>
+                <div class="_section_xs ">
+                    <div class="_fa_center_fj_between abp_notice">
+                        <h6 class="abp"> <?php echo esc_html($title); ?></h6>
                         <?php if (ABPTB_WC == 2) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } elseif (ABPTB_WC == 1) { ?>
@@ -99,7 +92,7 @@
                     <div class="_divider_xs"></div>
                     <?php if (ABPTB_WC == 2 && defined('WC_VERSION')) { ?>
                         <div class="_fa_center_fj_between">
-                            <h6 class="_abp"><?php esc_html_e('WooCommerce Version', 'abp-transport-booking'); ?></h6>
+                            <h6 class="abp"><?php esc_html_e('WooCommerce Version', 'abp-transport-booking'); ?></h6>
                             <?php if (version_compare(WC_VERSION, '8.0', '>')) { ?>
                                 <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html(WC_VERSION); ?></button>
                             <?php } else { ?>
@@ -109,14 +102,14 @@
                         <?php if (!empty($name)) { ?>
                             <div class="_divider_xs"></div>
                             <div class="_fa_center_fj_between">
-                                <h6 class="_abp"><?php esc_html_e('Name', 'abp-transport-booking'); ?></h6>
+                                <h6 class="abp"><?php esc_html_e('Name', 'abp-transport-booking'); ?></h6>
                                 <button class="_btn_light_success_xs" type="button"><?php echo esc_html($name); ?></button>
                             </div>
                         <?php } ?>
                         <?php if (!empty($email)) { ?>
                             <div class="_divider_xs"></div>
                             <div class="_fa_center_fj_between">
-                                <h6 class="_abp"><?php esc_html_e('Email Address', 'abp-transport-booking'); ?></h6>
+                                <h6 class="abp"><?php esc_html_e('Email Address', 'abp-transport-booking'); ?></h6>
                                 <button class="_btn_light_success_xs_text_inherit" type="button"><?php echo esc_html($email); ?></button>
                             </div>
                         <?php } ?>
@@ -132,7 +125,7 @@
                 ?>
                 <div class="_section_xs">
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Booking Page', 'abp-transport-booking'); ?></h6>
+                        <h6 class="abp"><?php echo esc_html($label) . ' ' . esc_html__('Booking Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_booking')) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
@@ -141,7 +134,7 @@
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"><?php echo esc_html($label) . ' ' . esc_html__('Post List Page', 'abp-transport-booking'); ?></h6>
+                        <h6 class="abp"><?php echo esc_html($label) . ' ' . esc_html__('Post List Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_post')) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
@@ -150,7 +143,7 @@
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"><?php esc_html_e('Gallery Page', 'abp-transport-booking'); ?></h6>
+                        <h6 class="abp"><?php esc_html_e('Gallery Page', 'abp-transport-booking'); ?></h6>
                         <?php if (ABPTB_Function::get_page_by_slug('tf_gallery')) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php esc_html_e('Activated', 'abp-transport-booking'); ?></button>
                         <?php } else { ?>
@@ -159,7 +152,7 @@
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php esc_html_e('Number of Post', 'abp-transport-booking'); ?> </h6>
+                        <h6 class="abp"> <?php esc_html_e('Number of Post', 'abp-transport-booking'); ?> </h6>
                         <?php if ($total > 0) { ?>
                             <button class="_btn_light_success_xs" type="button"><span class="fas fa-check"></span><?php echo esc_html($total); ?></button>
                         <?php } else { ?>
@@ -168,7 +161,7 @@
                     </div>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
-                        <h6 class="_abp"> <?php esc_html_e('Dummy Import', 'abp-transport-booking'); ?> </h6>
+                        <h6 class="abp"> <?php esc_html_e('Dummy Import', 'abp-transport-booking'); ?> </h6>
                         <button class="<?php echo esc_attr($total > 0 ? '_btn_light_success_xs' : '_btn_warning_xs'); ?>" onclick="abptb_import_global('dummy')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add New Dummy Post', 'abp-transport-booking'); ?></button>
                     </div>
                 </div>
@@ -331,19 +324,19 @@
             public function dummy_data(): array {
                 return [
                     'taxonomy' => [
-                        'abptb_location' => self::static_location(),
-                        'abptb_category' => self::static_category(),
-                        'abptb_organizer' => self::static_organizer(),
-                        'abptb_brand' => self::static_brand(),
+                        'abptb_location' => ABPTB_Static::static_location(),
+                        'abptb_category' => ABPTB_Static::static_category(),
+                        'abptb_organizer' => ABPTB_Static::static_organizer(),
+                        'abptb_brand' => ABPTB_Static::static_brand(),
                     ],
                     'options' => [
-                        'abptb_ticket' => self::static_ticket(),
-                        'abptb_decor' => self::static_decoration(),
-                        'abptb_additional' => self::static_additional(),
-                        'abptb_form' => self::static_form(),
-                        'abptb_faq' => self::static_faq(),
-                        'abptb_tc' => self::static_tc(),
-                        'abptb_feature' => self::static_feature(),
+                        'abptb_ticket' => ABPTB_Static::static_ticket(),
+                        'abptb_decor' => ABPTB_Static::static_decoration(),
+                        'abptb_additional' => ABPTB_Static::static_additional(),
+                        'abptb_form' => ABPTB_Static::static_form(),
+                        'abptb_faq' => ABPTB_Static::static_faq(),
+                        'abptb_tc' => ABPTB_Static::static_tc(),
+                        'abptb_feature' => ABPTB_Static::static_feature(),
                     ],
                     'custom_post' => []
                 ];
@@ -753,302 +746,6 @@
                         ]
                     ],
                 ];
-            }
-            public static function static_additional(): array {
-                return [
-                    'as_1' => ['icon' => 'fas fa-suitcase-rolling', 'name' => 'Free Luggage', 'qty' => 50, 'max_qty' => 1, 'price' => 0, 'description' => '5 kg · 20×10×10 cm (Maximum one)', 'returnable' => 'no',],
-                    'as_2' => ['icon' => 'fas fa-suitcase-rolling', 'name' => 'Additional luggage', 'qty' => 50, 'max_qty' => 2, 'price' => 4.99, 'description' => '20 kg · 80×50×30 cm', 'returnable' => 'no',],
-                    'as_3' => ['icon' => 'fas fa-suitcase', 'name' => 'Bulky baggage', 'qty' => 30, 'max_qty' => 3, 'price' => 7.99, 'description' => '50 kg · 80×50×30 cm', 'returnable' => 'yes',],
-                    'as_4' => ['icon' => 'fas fa-coffee', 'name' => 'Coffee', 'qty' => 100, 'price' => 2.00, 'description' => 'Price for a cup of coffee', 'returnable' => 'no',]
-                ];
-            }
-            public static function static_form($key = ''): array {
-                $form['pass_name'] = ['type' => 'text', 'required' => 'on', 'label' => __('First Name', 'abp-transport-booking')];
-                $form['pass_name_2'] = ['type' => 'text', 'required' => 'on', 'label' => __('Last Name', 'abp-transport-booking')];
-                $form['pass_email'] = ['type' => 'email', 'required' => 'on', 'label' => __('E-Mail', 'abp-transport-booking')];
-                $form['pass_phone'] = ['type' => 'text', 'required' => 'on', 'label' => __('Phone', 'abp-transport-booking')];
-                $form['pass_gender'] = ['type' => 'select', 'required' => 'off', 'label' => __('Gender', 'abp-transport-booking'), 'option' => 'male,female'];
-                $form['pass_date'] = ['type' => 'date', 'required' => 'off', 'label' => __('Date of Birth', 'abp-transport-booking')];
-                if (!is_string($key) && !is_int($key)) {
-                    return $form;
-                }
-                if ($key === '') {
-                    return $form;
-                }
-                return is_array($form[$key] ?? null) ? $form[$key] : [];
-            }
-            public static function static_location(): array {
-                return [
-                    0 => ['name' => 'New York City'],
-                    1 => ['name' => 'Los Angeles'],
-                    2 => ['name' => 'Chicago'],
-                    3 => ['name' => 'Houston'],
-                    4 => ['name' => 'Phoenix'],
-                    5 => ['name' => 'Philadelphia'],
-                    6 => ['name' => 'San Antonio'],
-                    7 => ['name' => 'San Diego'],
-                    8 => ['name' => 'Dallas'],
-                    9 => ['name' => 'San Jose'],
-                    10 => ['name' => 'Austin'],
-                    11 => ['name' => 'Jacksonville'],
-                    12 => ['name' => 'Fort Worth'],
-                    13 => ['name' => 'Columbus'],
-                    14 => ['name' => 'Charlotte'],
-                    15 => ['name' => 'Indianapolis'],
-                    16 => ['name' => 'Seattle'],
-                    17 => ['name' => 'Denver'],
-                    18 => ['name' => 'Washington, D.C.'],
-                    19 => ['name' => 'Boston'],
-                    20 => ['name' => 'Nashville'],
-                    21 => ['name' => 'Detroit'],
-                    22 => ['name' => 'Portland'],
-                    23 => ['name' => 'Las Vegas'],
-                    24 => ['name' => 'Memphis'],
-                    25 => ['name' => 'Baltimore'],
-                    26 => ['name' => 'Milwaukee'],
-                    27 => ['name' => 'Albuquerque'],
-                    28 => ['name' => 'Tucson'],
-                    29 => ['name' => 'Fresno'],
-                    30 => ['name' => 'Sacramento'],
-                    31 => ['name' => 'Kansas City'],
-                    32 => ['name' => 'Atlanta'],
-                    33 => ['name' => 'Miami'],
-                    34 => ['name' => 'Orlando'],
-                    35 => ['name' => 'Tampa'],
-                    36 => ['name' => 'New Orleans'],
-                    37 => ['name' => 'Cleveland'],
-                    38 => ['name' => 'Pittsburgh'],
-                    39 => ['name' => 'Cincinnati'],
-                    40 => ['name' => 'Minneapolis'],
-                    41 => ['name' => 'St. Louis'],
-                    42 => ['name' => 'Salt Lake City'],
-                    43 => ['name' => 'Raleigh'],
-                    44 => ['name' => 'Richmond'],
-                    45 => ['name' => 'Buffalo'],
-                    46 => ['name' => 'Providence'],
-                    47 => ['name' => 'Honolulu'],
-                    48 => ['name' => 'Anchorage'],
-                    49 => ['name' => 'Charleston'],
-                    50 => ['name' => 'Tacoma'],
-                    51 => ['name' => 'Olympia'],
-                    52 => ['name' => 'Bakersfield'],
-                    53 => ['name' => 'South Bend'],
-                    54 => ['name' => 'Toledo'],
-                    55 => ['name' => 'New Haven'],
-                    56 => ['name' => 'Corsicana'],
-                    57 => ['name' => 'Huntsville'],
-                    58 => ['name' => 'San Francisco'],
-                ];
-            }
-            public static function static_category(): array {
-                return [
-                    0 => ['name' => 'AC'],
-                    1 => ['name' => 'Non AC'],
-                    2 => ['name' => 'Economy'],
-                    3 => ['name' => 'Business'],
-                    4 => ['name' => 'VIP'],
-                    5 => ['name' => 'Sleeper'],
-                    6 => ['name' => 'Express'],
-                    7 => ['name' => 'Local'],
-                    8 => ['name' => 'Luxury'],
-                    9 => ['name' => 'Shuttle'],
-                ];
-            }
-            public static function static_organizer(): array {
-                return [
-                    0 => ['name' => 'Global Transit Group'],
-                    1 => ['name' => 'Express Travel Network'],
-                    2 => ['name' => 'Premium Coach Services'],
-                    3 => ['name' => 'InterCity Transport'],
-                    4 => ['name' => 'Continental Bus Lines'],
-                    5 => ['name' => 'Smart Mobility Solutions'],
-                ];
-            }
-            public static function static_brand(): array {
-                return [
-                    0 => ['name' => 'Mercedes-Benz'],
-                    1 => ['name' => 'Volvo'],
-                    2 => ['name' => 'Scania'],
-                    3 => ['name' => 'MAN'],
-                    4 => ['name' => 'IVECO'],
-                    5 => ['name' => 'Setra'],
-                    6 => ['name' => 'Yutong'],
-                    7 => ['name' => 'King Long'],
-                    8 => ['name' => 'Alexander Dennis'],
-                    9 => ['name' => 'VDL Bus & Coach'],
-                ];
-            }
-            public static function static_ticket(): array {
-                return [
-                    1 => ['label' => 'Ticket', 'color' => '', 'prefix' => '', 'icon' => '🎟️', 'type' => 'seat',],
-                    2 => ['label' => 'VIP', 'color' => '#A78BFA', 'prefix' => 'VIP-', 'icon' => '👑', 'type' => 'seat',],
-                    3 => ['label' => 'Business Class', 'color' => '#0EA5E9', 'prefix' => 'B-', 'icon' => '🛋️', 'type' => 'seat',],
-                    4 => ['label' => 'Special', 'color' => '#6366F1', 'prefix' => 'S-', 'icon' => 'fas fa-couch', 'type' => 'seat',],
-                    5 => ['label' => 'Couple', 'color' => '#C026D3', 'prefix' => 'C-', 'icon' => '💑', 'type' => 'seat',],
-                    6 => ['label' => 'Female', 'color' => '#F472B6', 'prefix' => 'F-', 'icon' => '👩', 'type' => 'seat',],
-                    7 => ['label' => 'Adult', 'color' => '#78350F', 'prefix' => 'AD-', 'icon' => 'fas fa-chair', 'type' => 'seat',],
-                    8 => ['label' => 'Child', 'color' => '#F59E0B', 'prefix' => 'CH-', 'icon' => '🪑', 'type' => 'seat',],
-                    9 => ['label' => 'Economy', 'color' => '#84CC16', 'prefix' => 'E-', 'icon' => '💺', 'type' => 'seat',],
-                ];
-            }
-            public static function static_decoration(): array {
-                return [
-                    1 => ['label' => 'Blank Space', 'color' => '', 'icon' => '', 'type' => 'other'],
-                    2 => ['label' => 'Driver Seat', 'color' => '#1E293B', 'icon' => '👨‍✈️', 'type' => 'other'],
-                    3 => ['label' => 'Door Entry', 'color' => '#EAB308', 'icon' => '🚪', 'type' => 'other'],
-                    4 => ['label' => 'Stairs', 'color' => '#64748B', 'icon' => '🪜', 'type' => 'other'],
-                    5 => ['label' => 'Aisle/Walkway', 'color' => '#94A3B8', 'icon' => '↔', 'type' => 'other'],
-                    6 => ['label' => 'Window', 'color' => '#38BDF8', 'icon' => '🪟', 'type' => 'other'],
-                    7 => ['label' => 'Engine Box', 'color' => '#475569', 'icon' => '⚙️', 'type' => 'other'],
-                    8 => ['label' => 'Toilet', 'color' => '#06B6D4', 'icon' => '🚽', 'type' => 'other'],
-                    9 => ['label' => 'Luggage Rack', 'color' => '#F97316', 'icon' => '🧳', 'type' => 'other'],
-                    10 => ['label' => 'Food/Snacks', 'color' => '#10B981', 'icon' => '🍔', 'type' => 'other'],
-                    11 => ['label' => 'Emergency Exit', 'color' => '#EF4444', 'icon' => '🚨', 'type' => 'other'],
-                ];
-            }
-            public static function static_feature(): array {
-                return [
-                    1 => ['icon' => '🚍', 'label' => 'Coach Bus'],
-                    2 => ['icon' => '🚐', 'label' => 'Minibus'],
-                    3 => ['icon' => '🏫', 'label' => 'School Bus'],
-                    4 => ['icon' => '🏙️', 'label' => 'City Bus'],
-                    5 => ['icon' => '🏨', 'label' => 'Shuttle Bus'],
-                    6 => ['icon' => '🚇', 'label' => 'Metro'],
-                    7 => ['icon' => '🚉', 'label' => 'Subway'],
-                    8 => ['icon' => '🚝', 'label' => 'Monorail'],
-                    9 => ['icon' => '🚈', 'label' => 'Light Rail'],
-                    10 => ['icon' => '🚄', 'label' => 'High Speed Train'],
-                    11 => ['icon' => '🚅', 'label' => 'Bullet Train'],
-                    12 => ['icon' => '🚞', 'label' => 'Mountain Railway'],
-                    13 => ['icon' => '🚠', 'label' => 'Cable Car'],
-                    15 => ['icon' => '🏠', 'label' => 'Domestic Flight'],
-                    16 => ['icon' => '🌍', 'label' => 'International Flight'],
-                    17 => ['icon' => '🛩️', 'label' => 'Air Charter'],
-                    18 => ['icon' => '🚢', 'label' => 'Passenger Ship'],
-                    19 => ['icon' => '🛳️', 'label' => 'Cruise Ship'],
-                    21 => ['icon' => '🚤', 'label' => 'Speed Boat'],
-                    22 => ['icon' => '🛶', 'label' => 'River Boat'],
-                    23 => ['icon' => '🚕', 'label' => 'Cab Service'],
-                    24 => ['icon' => '🚘', 'label' => 'Ride Sharing'],
-                    25 => ['icon' => '🚗', 'label' => 'Car Rental'],
-                    26 => ['icon' => '🏍️', 'label' => 'Motorbike Taxi'],
-                    27 => ['icon' => '🚲', 'label' => 'Bicycle Rental'],
-                    28 => ['icon' => '🛺', 'label' => 'Auto Rickshaw'],
-                    29 => ['icon' => '🚜', 'label' => 'Van Service'],
-                    31 => ['icon' => '🎟️', 'label' => 'E-Ticket'],
-                    32 => ['icon' => '📱', 'label' => 'Mobile Ticket'],
-                    33 => ['icon' => '🔳', 'label' => 'QR Code Ticket'],
-                    34 => ['icon' => '💺', 'label' => 'Seat Reservation'],
-                    36 => ['icon' => '⭐', 'label' => 'VIP Seat'],
-                    37 => ['icon' => '🛏️', 'label' => 'Sleeper Seat'],
-                    38 => ['icon' => '👨‍👩‍👧‍👦', 'label' => 'Family Seat'],
-                    40 => ['icon' => '🔄', 'label' => 'Round Trip Booking'],
-                    41 => ['icon' => '🌐', 'label' => 'Multi City Booking'],
-                    42 => ['icon' => '⚡', 'label' => 'Instant Booking'],
-                    43 => ['icon' => '❌', 'label' => 'Ticket Cancellation'],
-                    44 => ['icon' => '💰', 'label' => 'Ticket Refund'],
-                    45 => ['icon' => '📍', 'label' => 'Route Tracking'],
-                    46 => ['icon' => '🛰️', 'label' => 'GPS Tracking'],
-                    47 => ['icon' => '📡', 'label' => 'Live Location'],
-                    50 => ['icon' => '🌙', 'label' => 'Night Service'],
-                    51 => ['icon' => '🚀', 'label' => 'Express Service'],
-                    52 => ['icon' => '🌎', 'label' => 'International Routes'],
-                    53 => ['icon' => '💳', 'label' => 'Online Payment'],
-                    54 => ['icon' => '💵', 'label' => 'Cash Payment'],
-                    55 => ['icon' => '💳', 'label' => 'Card Payment'],
-                    56 => ['icon' => '📲', 'label' => 'Mobile Banking'],
-                    57 => ['icon' => '🧾', 'label' => 'Invoice Support'],
-                    58 => ['icon' => '❄️', 'label' => 'Air Conditioning'],
-                    59 => ['icon' => '📶', 'label' => 'WiFi'],
-                    60 => ['icon' => '🔌', 'label' => 'USB Charging'],
-                    61 => ['icon' => '🔋', 'label' => 'Power Outlet'],
-                    62 => ['icon' => '🪑', 'label' => 'Reclining Seats'],
-                    63 => ['icon' => '🎬', 'label' => 'Entertainment System'],
-                    64 => ['icon' => '💡', 'label' => 'Reading Light'],
-                    66 => ['icon' => '🚻', 'label' => 'Toilet Facility'],
-                    67 => ['icon' => '🧳', 'label' => 'Luggage Storage'],
-                    68 => ['icon' => '♿', 'label' => 'Wheelchair Access'],
-                    69 => ['icon' => '👴', 'label' => 'Priority Seating'],
-                    70 => ['icon' => '👶', 'label' => 'Child Friendly'],
-                    71 => ['icon' => '🐕', 'label' => 'Pet Friendly'],
-                    72 => ['icon' => '🎥', 'label' => 'CCTV Security'],
-                    73 => ['icon' => '🚪', 'label' => 'Emergency Exit'],
-                    74 => ['icon' => '⛑️', 'label' => 'First Aid Kit'],
-                ];
-            }
-            public static function static_faq(): array {
-                return [
-                    1 => [
-                        'title' => 'How do I book a ticket?',
-                        'des' => '<p>You can book a ticket by selecting your route, travel date, departure time, and preferred seat. Complete the payment process to confirm your booking.</p>',
-                    ],
-                    2 => [
-                        'title' => 'Can I cancel my booking?',
-                        'des' => '<p>Yes, you can cancel your booking according to the cancellation policy set by the transport operator. Refund eligibility may vary depending on the booking conditions.</p>',
-                    ],
-                    3 => [
-                        'title' => 'Can I change my travel date?',
-                        'des' => '<p>Travel dates can be modified only if the transport operator allows schedule changes and seats are available for the selected date.</p>',
-                    ],
-                    4 => [
-                        'title' => 'When should I arrive at the boarding point?',
-                        'des' => '<p>Passengers are advised to arrive at least 15 to 30 minutes before the scheduled departure time to avoid missing the journey.</p>',
-                    ],
-                    5 => [
-                        'title' => 'Will I receive a booking confirmation?',
-                        'des' => '<p>Yes, a booking confirmation will be sent after a successful payment. You can also review your booking details from your account dashboard.</p>',
-                    ],
-                    6 => [
-                        'title' => 'What payment methods are supported?',
-                        'des' => '<p>Available payment methods depend on the payment gateways configured by the website administrator.</p>',
-                    ],
-                    7 => [
-                        'title' => 'Can I select my preferred seat?',
-                        'des' => '<p>Yes, if seat selection is enabled by the operator, you will be able to choose your preferred seat during the booking process.</p>',
-                    ],
-                    8 => [
-                        'title' => 'What happens if the trip is delayed?',
-                        'des' => '<p>Departure times may change due to weather conditions, traffic congestion, maintenance requirements, or other unforeseen circumstances.</p>',
-                    ],
-                    9 => [
-                        'title' => 'Are children allowed to travel?',
-                        'des' => '<p>Yes, children are allowed to travel. Additional requirements and ticket policies may vary depending on the transport operator.</p>',
-                    ],
-                    10 => [
-                        'title' => 'Who should I contact for assistance?',
-                        'des' => '<p>If you need assistance, please contact the transport operator using the contact information provided on the website.</p>',
-                    ],
-                ];
-            }
-            public static function static_tc(): false|string {
-                ob_start(); ?>
-                <h6>1. Acceptance of Terms</h6>
-                By using our transport booking service, you agree to comply with these terms and conditions. If you do not agree with any part of these terms, please do not use this service.
-                <h6>2. Booking Confirmation</h6>
-                A booking is considered confirmed only after successful payment and receipt of a booking confirmation. The customer is responsible for providing accurate information during the booking process.
-                <h6>3. Passenger Information</h6>
-                Passengers must provide valid information, including their name, contact details, and any other required information. Incorrect information may result in booking cancellation without notice.
-                <h6>4. Seat Availability</h6>
-                All bookings are subject to seat availability. The operator reserves the right to change or reassign seats when necessary due to operational requirements.
-                <h6>5. Boarding and Arrival</h6>
-                Passengers are advised to arrive at the designated boarding point at least 15 to 30 minutes before departure. Failure to arrive on time may result in the loss of the booking without any refund.
-                <h6>6. Cancellation and Refund Policy</h6>
-                Cancellation and refund eligibility may vary depending on the operator's policy. Any applicable processing fees, taxes, or service charges may be deducted from the refund amount.
-                <h6>7. Schedule Changes</h6>
-                Departure times, routes, and stops may be modified because of weather conditions, traffic, technical issues, government regulations, or other unforeseen circumstances.
-                <h6>8. Passenger Conduct</h6>
-                Passengers must behave appropriately during the journey. Any unlawful, abusive, or disruptive behavior may result in immediate removal from the service without compensation.
-                <h6>9. Luggage Policy</h6>
-                Passengers are responsible for their belongings. The transport operator will not be liable for any loss, damage, or theft of personal items.
-                <h6>10. Limitation of Liability</h6>
-                The transport operator shall not be held responsible for delays, cancellations, accidents, natural disasters, or circumstances beyond reasonable control.
-                <h6>11. Privacy Policy</h6>
-                Personal information collected during the booking process will be used only to provide and improve the service in accordance with the applicable privacy policy.
-                <h6>12. Changes to Terms</h6>
-                These terms and conditions may be updated at any time without prior notice. Continued use of the service indicates acceptance of the revised terms and conditions.
-                <h6>13. Contact Information</h6>
-                If you have any questions regarding these terms and conditions, please contact the transport operator directly.
-                <?php return ob_get_clean();
             }
         }
         new ABPTB_Status();

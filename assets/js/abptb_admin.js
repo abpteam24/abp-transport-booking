@@ -361,7 +361,7 @@ window.abptb_create_page = function (page_type) {
 };
 window.abptb_wc_config = function (page_type) {
     if (page_type) {
-        let parent = abptb_parent.find('.abp_status');
+        let parent = abptb_parent.find('.abp_notice');
         jQuery.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": "abptb_wc_config", 'nonce': abptb_admin_data.nonce, 'type': page_type
@@ -515,7 +515,7 @@ window.abptb_image_selection = function ($this) {
             total_seat = total_seat + seatCount;
             if (label !== '') {
                 html += `<div class="abp_tag">`;
-                html += `<span class="_abp_gap_xxs" style="color: ${color}">`;
+                html += `<span class="abp_gap_xxs" style="color: ${color}">`;
                 if (icon_emoji !== '') {
                     html += ` ${icon_emoji}`;
                 }
@@ -862,7 +862,7 @@ window.abptb_image_selection = function ($this) {
             });
         }
     });
-    $(document).on('click', 'div.abptb_admin.add_new_hook', function (e) {
+    $(document).on('click', 'div.abptb_admin .add_new_hook', function (e) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -1018,7 +1018,7 @@ window.abptb_image_selection = function ($this) {
     }
     // ─── load input category ───────────
     function load_icon_category_list() {
-        let category_list = $('<ul>').addClass('_abp');
+        let category_list = $('<ul>').addClass('abp');
         $.each(abptb_json_icon, function (i, group) {
             let current_count = Object.keys(group.icons).length;
             if (i !== 0) {

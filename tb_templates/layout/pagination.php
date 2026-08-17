@@ -19,7 +19,7 @@
 					$end_page   = min( $start_page + 10, $total_page );
 					?>
                     <label class="_mar_r _max_200">
-                        <span class="_mar_r_xs"><?php esc_html_e( 'Showing Item', 'abp-transport-booking' ); ?></span>
+                        <span><?php esc_html_e( 'Showing Item', 'abp-transport-booking' ); ?></span>
                         <input type="number" class="_form_control_h_min_auto_w_min_auto  validation_number" name="page_item" value="<?php echo esc_attr( $per_page ); ?>" data-min="1" data-max="100"/>
                     </label>
                     <div class="_group_content">

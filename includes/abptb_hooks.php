@@ -8,11 +8,11 @@
 				add_action('abptb_load_details_template', [$this, 'details_template']);
 				add_action('abptb_search_form', [$this, 'search_form'], 10, 2);
 				add_action('abptb_post_filter', [$this, 'post_filter'], 10, 2);
-				add_action('abptb_type_head', [$this, 'type_head'], 10, 3);
 				add_action('abptb_ticket_type', [$this, 'ticket_type'], 10, 3);
 				add_action('abptb_sp_type', [$this, 'sp_type'], 10, 3);
 				add_action('abptb_registration', [$this, 'registration'], 10, 2);
 				add_action('abptb_registration_item', [$this, 'registration_item'], 10, 3);
+				add_action('abptb_selection_details', [$this, 'selection_details'], 10, 3);
 				add_action('abptb_additional', [$this, 'additional'], 10, 2);
 				add_action('abptb_client_form', [$this, 'client_form'], 10, 2);
 				add_action('abptb_total_price', [$this, 'total_price'], 10, 2);
@@ -37,10 +37,7 @@
 				include_once ABPTB_Function::template_path('layout/post_filter.php');
 				do_action('abptb_post_filter_template', $params);
 			}
-			public function type_head($post_infos, $form_data = [], $prefix = ''): void {
-				include_once ABPTB_Function::template_path('layout/type_head.php');
-				do_action('abptb_type_head_template', $post_infos, $form_data, $prefix);
-			}
+
 			public function ticket_type($post_infos, $form_data = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/ticket_type.php');
 				do_action('abptb_ticket_type_template', $post_infos, $form_data, $prefix);
@@ -89,6 +86,9 @@
 			public function registration_item($post_infos = [], $form_data = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/registration_item.php');
 				do_action('abptb_registration_item_template', $post_infos, $form_data, $prefix);
+			}public function selection_details($post_infos = [], $form_data = [], $prefix = ''): void {
+				include_once ABPTB_Function::template_path('layout/selection_details.php');
+				do_action('abptb_selection_details_template', $post_infos, $form_data, $prefix);
 			}
 			public function additional($post_infos = [], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/additional_services.php');

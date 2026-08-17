@@ -18,10 +18,10 @@
                         <?php if (ABPTB_Function::on_off('return')) { ?>
                             <div class="_fa_center">
                                 <?php ABPTB_Layout::switch_checkbox('display_return', $display_return); ?>
-                                <span class="_abp_label"><?php esc_html_e('Same Transport Return', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Same Transport Return', 'abp-transport-booking'); ?></span>
                             </div>
                         <?php } else { ?>
-                            <h4 class="_abp_color_theme"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Route Configuration', 'abp-transport-booking'); ?></h4>
+                            <h4 class="abp_color_theme"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Route Configuration', 'abp-transport-booking'); ?></h4>
                         <?php } ?>
                         <?php ABPTB_Layout::button_global_popup('tax_location', __('Add New', 'abp-transport-booking') . ' ' . ABPTB_Function::location_label()); ?>
                     </div>
@@ -30,9 +30,9 @@
                     <div class="_divider_xs"></div>
                     <div class="_f_wrap _f_equal _gap_xs">
                         <div class="configuration_content">
-                            <h6 class="_abp_color_theme_mar_b_xxs <?php echo esc_attr($display_return == 'on' ? 'abp_active' : ''); ?>" data-collapse="#display_return"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Forward Route Configuration', 'abp-transport-booking'); ?></h6>
+                            <h6 class="abp_color_theme_mar_b_xxs <?php echo esc_attr($display_return == 'on' ? 'abp_active' : ''); ?>" data-collapse="#display_return"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Forward Route Configuration', 'abp-transport-booking'); ?></h6>
                             <div class="_ov_auto">
-                                <table class="_abp">
+                                <table class="abp">
                                     <thead>
                                     <tr>
                                         <th class="_w_50"></th>
@@ -59,7 +59,7 @@
                             <div class="_divider_xs"></div>
                             <?php ABPTB_Layout::button_add(__('Add New Route', 'abp-transport-booking')); ?>
                             <div class="abp_hidden">
-                                <table class="_abp">
+                                <table class="abp">
                                     <tbody class="hidden_content">
                                     <?php $this->stop_item(); ?>
                                     </tbody>
@@ -68,9 +68,9 @@
                         </div>
                         <?php if (ABPTB_Function::on_off('return')) { ?>
                             <div class="configuration_content <?php echo esc_attr($display_return == 'on' ? 'abp_active' : ''); ?>" data-collapse="#display_return">
-                                <h6 class="_abp_color_theme_mar_b_xxs"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Return Route Configuration', 'abp-transport-booking'); ?></h6>
+                                <h6 class="abp_color_theme_mar_b_xxs"><span class="fas fa-route _mar_r_xs"></span><?php esc_html_e('Return Route Configuration', 'abp-transport-booking'); ?></h6>
                                 <div class="_ov_auto">
-                                    <table class="_abp">
+                                    <table class="abp">
                                         <thead>
                                         <tr>
                                             <th class="_w_50"></th>
@@ -97,7 +97,7 @@
                                 <div class="_divider_xs"></div>
                                 <?php ABPTB_Layout::button_add(__('Add New Return Route', 'abp-transport-booking')); ?>
                                 <div class="abp_hidden">
-                                    <table class="_abp">
+                                    <table class="abp">
                                         <tbody class="hidden_content">
                                         <?php $this->stop_item([], '','return_'); ?> ?>
                                         </tbody>

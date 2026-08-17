@@ -25,7 +25,7 @@
         //echo '<pre>';        print_r($all_dates);        echo '</pre>';
         ?>
         <div id="abptb_search_area">
-            <h5 class="_abp_gap_xs">
+            <h5 class="abp_gap_xs">
                 <span class="fas fa-ticket"></span><?php esc_html_e('BUY TICKET', 'abp-transport-booking'); ?>
             </h5>
             <form class="abp_search_form <?php echo esc_attr($form_type === 'column' ? '_form_column' : '_form_inline'); ?>" method="post" action="">

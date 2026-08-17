@@ -27,13 +27,13 @@
                 $time_format = $date_infos['time_format'] ?? ABPTB_Time_Format;
                 ?>
                 <div class="abp_form">
-                    <h4 class="_abp_gap_xs"><?php ABPTB_Static::icon_svg('date_2');
+                    <h4 class="abp_gap_xs"><?php ABPTB_Static::svg('date_2');
                             esc_html_e('Global Dates Configuration', 'abp-transport-booking'); ?></h4>
                     <?php ABPTB_Layout::info_text('abptb_dates'); ?>
                     <div class="group_setting _mar_t_xs">
                         <div class="setting_item">
                             <label class="_f_wrap_fj_between_fa_center">
-                                <span class="_abp_label"><?php esc_html_e('Date Format', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Date Format', 'abp-transport-booking'); ?></span>
                                 <?php if (sizeof($format_array) > 0) { ?>
                                     <select class="_form_control " name="date_format" required>
                                         <?php foreach ($format_array as $key => $format) { ?>
@@ -47,7 +47,7 @@
                         </div>
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('Time Format', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Time Format', 'abp-transport-booking'); ?></span>
                                 <input type="text" class="_form_control" name="time_format" placeholder="<?php echo esc_attr(ABPTB_Time_Format); ?>" value="<?php echo esc_attr($time_format); ?>" required/>
                             </label>
                             <div class="_divider_xs"></div>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('Number of advance booking date', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Number of advance booking date', 'abp-transport-booking'); ?></span>
                                 <input type="number" pattern="[0-9]*" step="1" class="_form_control validation_number" name="advance_date_number" placeholder="Ex: 28" value="<?php echo esc_attr($date_infos['advance_date_number'] ?? 28); ?>"/>
                             </label>
                             <div class="_divider_xs"></div>
@@ -89,14 +89,14 @@
                 //echo '<pre>';print_r($time_infos);echo '</pre>';
                 ?>
                 <div class="tab_item date_configuration" data-tabs="#abptb_dates">
-                    <h4 class="_abp_color_theme"><span class=" _mar_r_xxs">🗓️</span> <?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
+                    <h4 class="abp_color_theme"><span class=" _mar_r_xxs">🗓️</span> <?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_dates', $active_global_dates); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Use Global Date Configuration?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Use Global Date Configuration?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_dates" class=" <?php echo esc_attr($active_global_dates == 'on' ? '' : 'abp_active'); ?>">
                                     <button type="button" class="_btn_active_xs" onclick="abptb_import_global('date_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Date Configuration', 'abp-transport-booking'); ?></button>
@@ -111,13 +111,13 @@
                     </div>
                 </div>
                 <div class="tab_item times_configuration" data-tabs="#abptb_times">
-                    <h4 class="_abp_color_theme"><span class=" _mar_r_xxs">⏰</span> <?php esc_html_e('Time Configuration', 'abp-transport-booking'); ?></h4>
+                    <h4 class="abp_color_theme_gap_xs">⏰ <?php esc_html_e('Time Configuration', 'abp-transport-booking'); ?></h4>
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item full_width">
                             <div class=" configuration_content">
                                 <div class="_f_wrap_fj_between_fa_center_mar_b_xxs">
-                                    <span class="_abp_label"><?php esc_html_e('Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                                    <span class="abp_label"><?php esc_html_e('Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
                                     <?php do_action('abptb_multi_times', $post_infos); ?>
                                 </div>
                                 <?php ABPTB_Layout::info_text('operation_time'); ?>
@@ -159,7 +159,8 @@
                             <div class="setting_item full_width <?php echo esc_attr($display_return == 'on' ? 'abp_active' : ''); ?>" data-collapse="#display_return">
                                 <div class=" configuration_content">
                                     <div class="_f_wrap_fj_between_fa_center_mar_b_xxs">
-                                        <span class="_abp_label"><?php esc_html_e('Return Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                                        <span class="abp_label"><?php esc_html_e('Return Operation Time', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                                        <?php do_action('abptb_multi_times_return', $post_infos); ?>
                                     </div>
                                     <?php ABPTB_Layout::info_text('return_operation_time'); ?>
                                     <div class="_divider_xs"></div>
@@ -295,7 +296,7 @@
                 <div class="_mar_t_xs group_setting">
                     <div class="setting_item">
                         <div class=" _fj_between">
-                            <span class="_abp_label"><?php esc_html_e('Operational Date Type', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                            <span class="abp_label"><?php esc_html_e('Operational Date Type', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
                             <div class="custom_radio _group_content">
                                 <input type="hidden" class="_form_control" name="date_type" value="<?php echo esc_attr($date_type); ?>"/>
                                 <div class="radio_item">
@@ -323,7 +324,7 @@
                     </div>
                     <div class="setting_item <?php echo esc_attr($date_type == 'periodic_date' ? 'abp_active' : ''); ?>" data-close="#periodic_date">
                         <div class="_f_wrap_fj_between_fa_center">
-                            <span class="_abp_label"><?php esc_html_e('Launching Date (Optional)', 'abp-transport-booking'); ?></span>
+                            <span class="abp_label"><?php esc_html_e('Launching Date (Optional)', 'abp-transport-booking'); ?></span>
                             <?php ABPTB_Layout::input_date('periodic_start_date', ($date_infos['periodic_start_date'] ?? '')); ?>
                         </div>
                         <div class="_divider_xs"></div>
@@ -331,7 +332,7 @@
                     </div>
                     <div class="setting_item <?php echo esc_attr($date_type == 'periodic_date' ? 'abp_active' : ''); ?>" data-close="#periodic_date">
                         <div class="_f_wrap_fj_between_fa_center">
-                            <span class="_abp_label"><?php esc_html_e('Terminate Date (Optional)', 'abp-transport-booking'); ?></span>
+                            <span class="abp_label"><?php esc_html_e('Terminate Date (Optional)', 'abp-transport-booking'); ?></span>
                             <?php ABPTB_Layout::input_date('periodic_end_date', ($date_infos['periodic_end_date'] ?? '')); ?>
                         </div>
                         <div class="_divider_xs"></div>
@@ -339,7 +340,7 @@
                     </div>
                     <div class="setting_item full_width configuration_content <?php echo esc_attr($date_type == 'specific_date' ? 'abp_active' : ''); ?>" data-close="#specific_date">
                         <div class="_f_wrap_fj_between_fa_center">
-                            <span class="_abp_label"><?php esc_html_e('Specific Dates', 'abp-transport-booking'); ?></span>
+                            <span class="abp_label"><?php esc_html_e('Specific Dates', 'abp-transport-booking'); ?></span>
                             <?php ABPTB_Layout::button_add(__('Add Specific Date', 'abp-transport-booking')); ?>
                         </div>
                         <div class="_divider_xs"></div>
@@ -379,7 +380,7 @@
                     <div class="group_setting _mar_t_xs">
                         <div class="setting_item full_width">
                             <div class="_fj_between _mar_t_xs">
-                                <span class="_abp_label"><?php esc_html_e('Special On/Off Date(optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Special On/Off Date(optional)', 'abp-transport-booking'); ?></span>
                                 <div class="custom_checkbox _group_content">
                                     <input type="hidden" name="date_rule" value="<?php echo esc_attr($date_rule); ?>"/>
                                     <?php foreach ($date_rules as $key => $rule) { ?>
@@ -396,7 +397,7 @@
                         </div>
                         <div class="setting_item full_width <?php echo esc_attr(in_array('weekend', $date_rule_array, true) ? 'abp_active' : ''); ?> " data-collapse="#weekend">
                             <div class="_f_wrap_fj_between_fa_center">
-                                <span class="_abp_label"><?php esc_html_e('Weekend(optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Weekend(optional)', 'abp-transport-booking'); ?></span>
                                 <div class="custom_checkbox _group_content">
                                     <input type="hidden" name="weekend" value="<?php echo esc_attr($weekend); ?>"/>
                                     <?php foreach ($days as $key => $day) { ?>
@@ -413,7 +414,7 @@
                         </div>
                         <div class="setting_item configuration_content <?php echo esc_attr(in_array('specific_off_dates', $date_rule_array, true) ? 'abp_active' : ''); ?>" data-collapse="#specific_off_dates">
                             <div class="_fj_between_fa_center">
-                                <span class="_abp_label"><?php esc_html_e('Specific Off Dates(optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Specific Off Dates(optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Specific Off Date', 'abp-transport-booking')); ?>
                             </div>
                             <div class="_divider_xs"></div>
@@ -437,7 +438,7 @@
                         </div>
                         <div class="setting_item configuration_content  <?php echo esc_attr(in_array('special_on_dates', $date_rule_array, true) ? 'abp_active' : ''); ?>" data-collapse="#special_on_dates">
                             <div class="_fj_between_fa_center">
-                                <span class="_abp_label"><?php esc_html_e('Special On Dates (optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Special On Dates (optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Special On Dates', 'abp-transport-booking')); ?>
                             </div>
                             <div class="_divider_xs"></div>
@@ -461,7 +462,7 @@
                         </div>
                         <div class="setting_item configuration_content <?php echo esc_attr(in_array('off_date_range', $date_rule_array, true) ? 'abp_active' : ''); ?>" data-collapse="#off_date_range">
                             <div class="_fj_between_fa_center">
-                                <span class="_abp_label"><?php esc_html_e('Off Date Range(optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Off Date Range(optional)', 'abp-transport-booking'); ?></span>
                                 <?php ABPTB_Layout::button_add(__('Add Off Date Range', 'abp-transport-booking')); ?>
                             </div>
                             <div class="_divider_xs"></div>
@@ -493,7 +494,7 @@
                 <div class="full_width  <?php echo esc_attr(!empty($day_times) ? 'abp_active' : ''); ?>" data-collapse="#<?php echo esc_attr($prefix); ?>day_wise_time">
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between _fa_center">
-                        <span class="_abp_label"><?php esc_html_e('Day Wise Operation Time (Optional) ', 'abp-transport-booking'); ?></span>
+                        <span class="abp_label"><?php esc_html_e('Day Wise Operation Time (Optional) ', 'abp-transport-booking'); ?></span>
                         <div class="_group_content custom_checkbox">
                             <?php foreach ($days as $key => $day) { ?>
                                 <div class="checkbox_item">
@@ -537,7 +538,7 @@
                 <div class="full_width configuration_content   <?php echo esc_attr(!empty($date_times) ? 'abp_active' : ''); ?>" data-collapse="#<?php echo esc_attr($prefix); ?>date_wise_time">
                     <div class="_divider_xxs"></div>
                     <div class="_f_wrap_fj_between_fa_center">
-                        <span class="_abp_label"><?php esc_html_e('Date Wise Operation Time (Optional) ', 'abp-transport-booking'); ?></span>
+                        <span class="abp_label"><?php esc_html_e('Date Wise Operation Time (Optional) ', 'abp-transport-booking'); ?></span>
                         <?php ABPTB_Layout::button_add(__('Add New Date Wise Operation Time', 'abp-transport-booking')); ?>
                     </div>
                     <?php ABPTB_Layout::info_text('date_wise_time'); ?>

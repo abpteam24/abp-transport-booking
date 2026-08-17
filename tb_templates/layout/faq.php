@@ -19,9 +19,7 @@
             }
             ?>
             <div class="_section_card_xs_w_full faq_area">
-                <h4 class="_abp">
-                    <span class="_mar_r_xxs">❓</span>
-                    <?php esc_html_e('Frequently Asked Questions', 'abp-transport-booking'); ?>
+                <h4 class="abp_gap_xs">❓<?php esc_html_e('Frequently Asked Questions', 'abp-transport-booking'); ?>
                 </h4>
                 <div class="_divider_xs"></div>
                 <div class="faq_list">
@@ -38,7 +36,7 @@
                             ?>
                             <div class="faq_item">
                                 <div class="faq_question faq_target">
-                                    <h6 class="_abp"><?php echo esc_html($title); ?></h6>
+                                    <h6 class="abp"><?php echo esc_html($title); ?></h6>
                                     <span class="faq_icon"></span>
                                 </div>
                                 <div class="faq_answer">

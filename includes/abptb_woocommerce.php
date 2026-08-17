@@ -115,11 +115,11 @@
 					$post_id = $post_infos['post_id'] ?? '';
 					$seat_type = $post_infos['seat_type'] ?? 'sp';
 					$seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
-					$journey_time = $post_val($prefix . 'journey_time');
+					$bp_time = $post_val($prefix . 'bp_time');
 					$start_time = $post_val($prefix . 'start_time');
 					$start_point = $post_val($prefix . 'start_point');
 					$ticket_price = 0;
-					if (!empty($journey_time) && !empty($bp_dp) && !empty($post_id) && !empty($start_time)) {
+					if (!empty($bp_time) && !empty($bp_dp) && !empty($post_id) && !empty($start_time)) {
 						if ($seat_type == 'ticket') {
 							$ticket_types = $post_array($prefix . 'item_check');
 							$item_qty = $post_int_array($prefix . 'item_qty');
@@ -127,7 +127,7 @@
 								foreach ($ticket_types as $key => $ticket_type) {
 									$qty = absint($item_qty[$key] ?? '');
 									if (!empty($ticket_type) && $qty > 0) {
-										$price = ABPTB_Function::get_price($post_infos, $bp_dp, $ticket_type, $journey_time);
+										$price = ABPTB_Function::get_price($post_infos, $bp_dp, $ticket_type, $bp_time);
 										$booking_info['info'][$ticket_type]['id'] = $ticket_type;
 										$booking_info['info'][$ticket_type]['name'] = ABPTB_Function::ticket_name($ticket_type);
 										$booking_info['info'][$ticket_type]['price'] = $price;
@@ -146,7 +146,7 @@
 								foreach ($types as $index => $type) {
 									$seat = $seats[$index] ?? '';
 									if (!empty($seat) && !empty($type)) {
-										$price = ABPTB_Function::get_price($post_infos, $bp_dp, $type, $journey_time);
+										$price = ABPTB_Function::get_price($post_infos, $bp_dp, $type, $bp_time);
 										$booking_info['info'][$index]['id'] = $type;
 										$booking_info['info'][$index]['name'] = $seat;
 										$booking_info['info'][$index]['price'] = $price;
@@ -158,12 +158,22 @@
 							}
 						}
 						if (!empty($booking_info['info'])) {
+							[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+							$pick_up = $post_val($prefix . 'pick_up');
+							$drop_off = $post_val($prefix . 'drop_off');
+							$dp_time = $post_val($prefix . 'dp_time');
 							$additional_info = self::get_additional_info($post_infos, $prefix);
 							$additional_price = self::get_additional_price($additional_info);
 							$booking_info['seat_type'] = $seat_type;
-							$booking_info['journey_time'] = $journey_time;
+							$booking_info['bp_time'] = $bp_time;
+							$booking_info['dp_time'] = $dp_time;
+							$booking_info['pick_up'] = $pick_up;
+							$booking_info['drop_off'] = $drop_off;
+							$booking_info['pick_up_time'] = ABPTB_Function::get_pd_time($bp, $bp_time, $pick_up);
+							$booking_info['drop_off_time'] = ABPTB_Function::get_pd_time($dp, $dp_time, $drop_off);
 							$booking_info['start_time'] = $start_time;
 							$booking_info['start_point'] = $start_point;
+							$booking_info['duration'] = ABPTB_Function::date_time_difference($bp_time, $dp_time);
 							$booking_info['pass_info'] = self::get_passenger_info($post_infos, $prefix);
 							$booking_info['additional_info'] = $additional_info;
 							$booking_info['price'] = $ticket_price;
@@ -237,13 +247,26 @@
 						if (!empty($cart_item)) {
 							$ticket_infos = $cart_item['info'] ?? [];
 							if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
-								$journey_time = $cart_item['journey_time'] ?? '';
+								$bp_time = $cart_item['bp_time'] ?? '';
+								$dp_time = $cart_item['dp_time'] ?? '';
 								$seat_type = $cart_item['seat_type'] ?? '';
 								[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+								$pick_up = $cart_item['pick_up'] ?? '';
+								$drop_off = $cart_item['drop_off'] ?? '';
+								$start_point = $cart_item['start_point'] ?? '';
 								$item_data[] = array('name' => __('Booking Information', 'abp-transport-booking') . ' ' . $return, 'value' => '<br />');
-								$item_data[] = array('name' => __('Departure', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($bp) . '<br />');
-								$item_data[] = array('name' => __('Departure Time', 'abp-transport-booking'), 'value' => ABPTB_Function::date_format($journey_time) . '<br />');
-								$item_data[] = array('name' => __('Arrival', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($dp) . '<br />');
+								if (intval($start_point) !== intval($bp)) {
+									$item_data[] = array('name' => __('Start Point', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($start_point) . ' - ' . ABPTB_Function::date_format($cart_item['start_time'] ?? '') . '<br />');
+								}
+								$item_data[] = array('name' => __('Departure', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($bp) . ' -  ' . ABPTB_Function::date_format($bp_time) . '<br />');
+								$item_data[] = array('name' => __('Arrival', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($dp) . ' -  ' . ABPTB_Function::date_format($dp_time) . '<br />');
+								if (intval($pick_up) !== intval($bp)) {
+									$item_data[] = array('name' => __('Pick Up', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($cart_item['pick_up_time'] ?? '') . '<br />');
+								}
+								if (intval($drop_off) !== intval($dp)) {
+									$item_data[] = array('name' => __('Drop-Off', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($cart_item['drop_off_time'] ?? '') . '<br />');
+								}
+								$item_data[] = array('name' => __('Approximate Time ', 'abp-transport-booking'), 'value' => ($cart_item['duration'] ?? '') . '<br />');
 								$item_data[] = array('name' => __('Ticket Information', 'abp-transport-booking'), 'value' => '<br />');
 								foreach ($ticket_infos as $ticket_info) {
 									$price = $ticket_info['price'] ?? 0;
@@ -312,14 +335,25 @@
 							$ticket_infos = $cart_item['info'] ?? [];
 							$seat_type = $cart_item['seat_type'] ?? '';
 							if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
-								$journey_time = $cart_item['journey_time'] ?? '';
 								[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
 								$additional_infos = $cart_item['additional_info'] ?? [];
 								$attendee_infos = $cart_item['pass_info'] ?? [];
+								$pick_up = $cart_item['pick_up'] ?? '';
+								$drop_off = $cart_item['drop_off'] ?? '';
+								$start_point = $cart_item['start_point'] ?? '';
 								$item->add_meta_data(__('Booking Information', 'abp-transport-booking') . ' ' . $return, '');
-								$item->add_meta_data(__('Departure', 'abp-transport-booking'), ABPTB_Function::location_value($bp));
-								$item->add_meta_data(__('Departure Time: ', 'abp-transport-booking'), ABPTB_Function::date_format($journey_time));
-								$item->add_meta_data(__('Arrival : ', 'abp-transport-booking'), ABPTB_Function::location_value($dp));
+								if (intval($start_point) !== intval($bp)) {
+									$item->add_meta_data(__('Start Point', 'abp-transport-booking'), ABPTB_Function::location_value($start_point) . ' - ' . ABPTB_Function::date_format($cart_item['start_time'] ?? ''));
+								}
+								$item->add_meta_data(__('Departure', 'abp-transport-booking'), ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($cart_item['bp_time'] ?? ''));
+								$item->add_meta_data(__('Arrival', 'abp-transport-booking'), ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($cart_item['bp_time'] ?? ''));
+								if (intval($pick_up) !== intval($bp)) {
+									$item->add_meta_data(__('Pick Up', 'abp-transport-booking'), ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($cart_item['pick_up_time'] ?? ''));
+								}
+								if (intval($drop_off) !== intval($dp)) {
+									$item->add_meta_data(__('Drop-Off', 'abp-transport-booking'), ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($cart_item['drop_off_time'] ?? ''));
+								}
+								$item->add_meta_data(__('Approximate Time ', 'abp-transport-booking'), ($cart_item['duration'] ?? ''));
 								$item->add_meta_data(__('Ticket Information', 'abp-transport-booking'), '');
 								foreach ($ticket_infos as $ticket_info) {
 									$price = $ticket_info['price'] ?? 0;
@@ -436,8 +470,8 @@
 														'bp_dp' => sanitize_text_field($bp_dp),
 														'bp' => intval($bp),
 														'dp' => intval($dp),
-														'bp_time' => sanitize_text_field($item_info['journey_time'] ?? ''),
-														'dp_time' => sanitize_text_field($item_info['end_time'] ?? ''),
+														'bp_time' => sanitize_text_field($item_info['bp_time'] ?? ''),
+														'dp_time' => sanitize_text_field($item_info['dp_time'] ?? ''),
 														'pick_up' => sanitize_text_field($item_info['pick_up'] ?? ''),
 														'pick_up_time' => sanitize_text_field($item_info['pick_up_time'] ?? ''),
 														'drop_off' => sanitize_text_field($item_info['drop_off'] ?? ''),

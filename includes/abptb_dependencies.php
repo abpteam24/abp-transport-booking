@@ -5,14 +5,48 @@
 	if (!class_exists('ABPTB_Dependencies')) {
 		class ABPTB_Dependencies {
 			public function __construct() {
+				$this->load_file();
 				add_action('admin_enqueue_scripts', array($this, 'admin_enqueue'), 90);
 				add_action('wp_enqueue_scripts', array($this, 'frontend_enqueue'), 90);
-				$this->load_file();
 				add_action('init', [$this, 'register_cpt']);
 				add_filter('use_block_editor_for_post_type', [$this, 'disable_gutenberg'], 10, 2);
 				add_filter('plugin_action_links', array($this, 'plugin_settings_link'), 10, 2);
 				add_action('upgrader_process_complete', [$this, 'flush_rewrite']);
 				add_action('admin_init', array($this, 'activation_redirect'));
+			}
+			private function load_file(): void {
+				require_once ABPTB_DIR . 'includes/abptb_static.php';
+				require_once ABPTB_DIR . 'includes/abptb_function.php';
+				require_once ABPTB_DIR . 'includes/abptb_query.php';
+				require_once ABPTB_DIR . 'includes/abptb_layout.php';
+				if (is_admin()) {
+					require_once ABPTB_DIR . 'admin/abptb_admin.php';
+					require_once ABPTB_DIR . 'admin/abptb_post.php';
+					require_once ABPTB_DIR . 'admin/abptb_routing.php';
+					require_once ABPTB_DIR . 'admin/abptb_ticket.php';
+					require_once ABPTB_DIR . 'admin/abptb_price.php';
+					require_once ABPTB_DIR . 'admin/abptb_orders.php';
+					require_once ABPTB_DIR . 'admin/abptb_dates.php';
+					require_once ABPTB_DIR . 'admin/abptb_additional.php';
+					require_once ABPTB_DIR . 'admin/abptb_form.php';
+					require_once ABPTB_DIR . 'admin/abptb_seat_plan.php';
+					require_once ABPTB_DIR . 'admin/abptb_resource.php';
+					require_once ABPTB_DIR . 'admin/abptb_configuration.php';
+					require_once ABPTB_DIR . 'admin/abptb_status.php';
+					require_once ABPTB_DIR . 'admin/abptb_category.php';
+					require_once ABPTB_DIR . 'admin/abptb_organizer.php';
+					require_once ABPTB_DIR . 'admin/abptb_location.php';
+					require_once ABPTB_DIR . 'admin/abptb_brand.php';
+					require_once ABPTB_DIR . 'admin/abptb_feature.php';
+				}
+				if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'))) {
+					require_once ABPTB_DIR . 'includes/abptb_hooks.php';
+					require_once ABPTB_DIR . 'includes/abptb_ajax.php';
+					require_once ABPTB_DIR . 'includes/abptb_frontend.php';
+					require_once ABPTB_DIR . 'includes/abptb_shortcodes.php';
+					require_once ABPTB_DIR . 'includes/abptb_woocommerce.php';
+					require_once ABPTB_DIR . 'admin/abptb_hidden_post.php';
+				}
 			}
 			public function admin_enqueue($hook): void {
 				$screen = get_current_screen();
@@ -94,7 +128,7 @@
 				do_action('abptb_admin_enqueue');
 			}
 			public function frontend_enqueue(): void {
-				if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'))) {
+				if (class_exists('WooCommerce') || is_plugin_active('woocommerce/woocommerce.php')) {
 					wp_enqueue_script('wc-checkout');
 					wp_enqueue_style('select2');
 					wp_enqueue_script('select2');
@@ -112,7 +146,7 @@
 				wp_enqueue_style('abptb_font_awesome', ABPTB_URL . 'assets/css/font_awesome.min.css', array(), '5.15.4');
 				wp_enqueue_style('abptb_lib', ABPTB_URL . 'assets/css/abptb_lib.css', array(), time());
 				wp_enqueue_script('abptb_lib', ABPTB_URL . 'assets/js/abptb_lib.js', array('jquery'), time(), true);
-				if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'))) {
+				if (class_exists('WooCommerce') || is_plugin_active('woocommerce/woocommerce.php')) {
 					wp_localize_script('abptb_lib', 'abptb_var', [
 						'currency_symbol' => get_woocommerce_currency_symbol(),
 						'currency_position' => get_option('woocommerce_currency_pos'),
@@ -215,47 +249,13 @@
 						'dp_select' => __('Please select dropping point......!', 'abp-transport-booking'),
 						'select_post' => __('Please Select', 'abp-transport-booking') . ' ' . ABPTB_Function::label(),
 						'select_journey_date' => __('Please Select Journey Date', 'abp-transport-booking'),
-						'select_journey_time' => __('Please Select Journey Time', 'abp-transport-booking'),
+						'select_bp_time' => __('Please Select Journey Time', 'abp-transport-booking'),
 						'free' => __('FREE', 'abp-transport-booking'),
 						'loading' => __('Loading..............!', 'abp-transport-booking'),
 					],
 				);
 				wp_localize_script('abptb_infos', 'abptb_infos', $rental_data);
 				do_action('abptb_global_script');
-			}
-			private function load_file(): void {
-				require_once ABPTB_DIR . 'includes/abptb_static.php';
-				require_once ABPTB_DIR . 'includes/abptb_function.php';
-				require_once ABPTB_DIR . 'includes/abptb_query.php';
-				require_once ABPTB_DIR . 'includes/abptb_layout.php';
-				if (is_admin()) {
-					require_once ABPTB_DIR . 'admin/abptb_admin.php';
-					require_once ABPTB_DIR . 'admin/abptb_post.php';
-					require_once ABPTB_DIR . 'admin/abptb_routing.php';
-					require_once ABPTB_DIR . 'admin/abptb_ticket.php';
-					require_once ABPTB_DIR . 'admin/abptb_price.php';
-					require_once ABPTB_DIR . 'admin/abptb_orders.php';
-					require_once ABPTB_DIR . 'admin/abptb_dates.php';
-					require_once ABPTB_DIR . 'admin/abptb_additional.php';
-					require_once ABPTB_DIR . 'admin/abptb_form.php';
-					require_once ABPTB_DIR . 'admin/abptb_seat_plan.php';
-					require_once ABPTB_DIR . 'admin/abptb_resource.php';
-					require_once ABPTB_DIR . 'admin/abptb_configuration.php';
-					require_once ABPTB_DIR . 'admin/abptb_status.php';
-					require_once ABPTB_DIR . 'admin/abptb_category.php';
-					require_once ABPTB_DIR . 'admin/abptb_organizer.php';
-					require_once ABPTB_DIR . 'admin/abptb_location.php';
-					require_once ABPTB_DIR . 'admin/abptb_brand.php';
-					require_once ABPTB_DIR . 'admin/abptb_feature.php';
-				}
-				if (in_array('woocommerce/woocommerce.php', get_option('active_plugins'))) {
-					require_once ABPTB_DIR . 'includes/abptb_hooks.php';
-					require_once ABPTB_DIR . 'includes/abptb_ajax.php';
-					require_once ABPTB_DIR . 'includes/abptb_frontend.php';
-					require_once ABPTB_DIR . 'includes/abptb_shortcodes.php';
-					require_once ABPTB_DIR . 'includes/abptb_woocommerce.php';
-					require_once ABPTB_DIR . 'admin/abptb_hidden_post.php';
-				}
 			}
 			public function register_cpt(): void {
 				$cpt = ABPTB_Function::get_cpt();
@@ -453,7 +453,7 @@
 			}
 			public function plugin_settings_link($links_array, $plugin_file_name) {
 				if (strpos($plugin_file_name, ABPTB_BASE)) {
-					array_unshift($links_array, '<a class="_abp" href="' . esc_url(ABPTB_Function::build_url('configuration')) . '">' . __('Configuration', 'abp-transport-booking') . '</a>');
+					array_unshift($links_array, '<a class="abp" href="' . esc_url(ABPTB_Function::build_url('configuration')) . '">' . __('Configuration', 'abp-transport-booking') . '</a>');
 				}
 				return $links_array;
 			}

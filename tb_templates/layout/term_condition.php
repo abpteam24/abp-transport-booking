@@ -17,7 +17,7 @@
             if (!empty($infos) && is_string($infos)) {
                 ?>
                 <div class="_section_card_xs_w_full term_condition">
-                    <h4 class="_abp"><span class="_mar_r_xxs">🤝</span> <?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></h4>
+                    <h4 class="abp_gap_xs">🤝 <?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></h4>
                     <div class="_divider_xs"></div>
                     <?php
                         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound

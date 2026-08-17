@@ -84,6 +84,10 @@
 				if ( ! defined( 'ABPTB_Location' ) ) {
 					define( 'ABPTB_Location', ABPTB_Function::get_option( 'abptb_location' ) );
 				}
+
+				if ( ! defined( 'ABPTB_PD' ) ) {
+					define( 'ABPTB_PD', ABPTB_Function::get_option( 'abptb_pd' ) );
+				}
 				if ( ! defined( 'ABPTB_Brand' ) ) {
 					define( 'ABPTB_Brand', ABPTB_Function::get_option( 'abptb_brand' ) );
 				}

@@ -73,7 +73,7 @@
                     }
                     if (!empty($bp_dp)) {
                         ?>
-                        <h6 class="_abp_gap_xxs">
+                        <h6 class="abp_gap_xxs">
                             <?php ABPTB_Layout::route_direction($params, $bp_dp,false,false); ?>
                         </h6>
                     <?php }

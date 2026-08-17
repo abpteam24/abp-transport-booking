@@ -14,7 +14,7 @@
                 if (ABPTB_Function::on_off('feature')) {
                     $label = ABPTB_Function::feature_label(); ?>
                     <div class="_fj_between">
-                        <h5 class="_abp"><span class="_mar_r_xs">🔗</span><?php echo esc_html($label); ?></h5>
+                        <h5 class="abp_gap_xs">🔗<?php echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('option_feature', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
                     <?php ABPTB_Layout::info_text('abptb_feature'); ?>
@@ -38,13 +38,13 @@
                 $title = __('Add new ', 'abp-transport-booking') . ' ' . $label;
                 ?>
                 <div class="abp_form">
-                    <h5 class="_abp"><span class="_mar_r_xs">🔗</span><?php echo esc_html($title); ?></h5>
+                    <h5 class="abp_gap_xs">🔗<?php echo esc_html($title); ?></h5>
                     <?php ABPTB_Layout::info_text('feature_icon');
                         ABPTB_Layout::info_text('feature_name');
                         ABPTB_Layout::info_text('feature_value'); ?>
                     <div class="_divider_xxs"></div>
                     <div class="configuration_content">
-                        <table class="_abp ">
+                        <table class="abp ">
                             <thead>
                             <tr>
                                 <th><?php esc_html_e('Icon', 'abp-transport-booking'); ?></th>
@@ -63,7 +63,7 @@
                             <?php ABPTB_Layout::button_global_save('option_feature', $btn_label); ?>
                         </div>
                         <div class="abp_hidden">
-                            <table class="_abp">
+                            <table class="abp">
                                 <tbody class="hidden_content">
                                 <?php self::form_feature(); ?>
                                 </tbody>
@@ -152,13 +152,13 @@
                             $value = $feature['value'] ?? '';
                             if (!empty($label)) { ?>
                                 <div class="_list_item">
-                                    <h6 class="_abp_gap_xs">
+                                    <h6 class="abp_gap_xs">
                                         <?php ABPTB_Layout::image_icon($feature['icon'] ?? '');
                                             echo esc_html($label . ' ' . (!empty($value) ? '-' . $value : '')); ?>
                                     </h6>
                                     <div class="_group_content">
-                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
-                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::icon_svg('close_1'); ?></button>
+                                        <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::svg('edit'); ?></button>
+                                        <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('option_feature','<?php echo esc_attr($key); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($label); ?>"><?php ABPTB_Static::svg('close_1'); ?></button>
                                     </div>
                                 </div>
                                 <?php

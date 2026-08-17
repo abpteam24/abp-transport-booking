@@ -17,7 +17,7 @@
                 if (ABPTB_Function::on_off('faq')) {
                     ?>
                     <div class="setting_item faq_configuration _mar_b_xs">
-                        <h5 class="_abp" data-collapse-target="#faq_collapse"><span class="_mar_r_xxs">❓</span><?php esc_html_e('Global FAQ Configuration', 'abp-transport-booking'); ?></h5>
+                        <h5 class="abp_gap_xs" data-collapse-target="#faq_collapse">❓<?php esc_html_e('Global FAQ Configuration', 'abp-transport-booking'); ?></h5>
                         <div class="abp_active" data-collapse="#faq_collapse">
                             <div class="_divider_xxs"></div>
                             <?php ABPTB_Layout::info_text('abptb_faq'); ?>
@@ -31,7 +31,7 @@
                 if (ABPTB_Function::on_off('tc')) {
                     ?>
                     <div class="setting_item">
-                        <h5 class="_abp" data-collapse-target="#tc_collapse"><span class="_mar_r_xxs">🤝</span><?php esc_html_e('Global Term & Conditions Configuration', 'abp-transport-booking'); ?></h5>
+                        <h5 class="abp_gap_xs" data-collapse-target="#tc_collapse">🤝<?php esc_html_e('Global Term & Conditions Configuration', 'abp-transport-booking'); ?></h5>
                         <div class="abp_active" data-collapse="#tc_collapse">
                             <div class="_divider_xxs"></div>
                             <?php ABPTB_Layout::info_text('abptb_tc'); ?>
@@ -85,7 +85,7 @@
                 ?>
                 <div class="delete_area faq_item _mar_b_xs <?php echo esc_attr(empty($faq) ? 'active' : ''); ?>">
                     <div class="faq_question">
-                        <h6 class="_abp edit_hook" data-paste="#faq_title"><?php echo esc_html($title); ?></h6>
+                        <h6 class="abp edit_hook" data-paste="#faq_title"><?php echo esc_html($title); ?></h6>
                         <?php ABPTB_Layout::button_delete_sort_edit(); ?>
                     </div>
                     <div class="edit_area">
@@ -93,11 +93,11 @@
                             <?php ABPTB_Layout::info_text('faq_item'); ?>
                             <div class="_divider_xs"></div>
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('FAQ Title', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
+                                <span class="abp_label"><?php esc_html_e('FAQ Title', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
                                 <input type="text" class="_form_control" name="faq_title[]" data-pass="#faq_title" placeholder="<?php esc_attr_e('EX: What is the check-in time?', 'abp-transport-booking'); ?>" value="<?php echo esc_attr($title); ?>"/>
                             </label>
                             <div class="_fd_column_mar_t_xs">
-                                <span class="_abp_label"><?php esc_html_e('Description', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Description', 'abp-transport-booking'); ?></span>
                                 <?php
                                     wp_editor(
                                         $description,
@@ -146,13 +146,13 @@
                 $tax_classes = WC_Tax::get_tax_rate_classes();
                 $tax_class = $post_infos['_tax_class'] ?? '';
                 ?>
-                <h5 class="_abp"><span class="_mar_r_xxs">🧾</span> <?php esc_html_e('Tax Configuration', 'abp-transport-booking'); ?></h5>
+                <h5 class="abp_gap_xs">🧾<?php esc_html_e('Tax Configuration', 'abp-transport-booking'); ?></h5>
                 <div class="_divider_xs"></div>
                 <?php if (get_option('woocommerce_calc_taxes') == 'yes') { ?>
                     <div class="group_setting">
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('Tax Status', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Tax Status', 'abp-transport-booking'); ?></span>
                                 <select class="_form_control" name="_tax_status">
                                     <option disabled selected><?php esc_html_e('Please Select', 'abp-transport-booking'); ?></option>
                                     <option value="taxable" <?php echo esc_attr($tax_status == 'taxable' ? 'selected' : ''); ?>><?php esc_html_e('Taxable', 'abp-transport-booking'); ?></option>
@@ -163,7 +163,7 @@
                         </div>
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('Tax Class', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Tax Class', 'abp-transport-booking'); ?></span>
                                 <select class="_form_control" name="_tax_class">
                                     <option disabled selected><?php esc_html_e('Please Select', 'abp-transport-booking'); ?></option>
                                     <option value="standard" <?php echo esc_attr($tax_class == 'standard' ? 'selected' : ''); ?>><?php esc_html_e('Standard', 'abp-transport-booking'); ?></option>
@@ -191,14 +191,14 @@
                     $faqs = get_post_meta($post_id, 'abptb_faq', true);
                     $faqs = is_array($faqs) ? $faqs : [];
                     ?>
-                    <h5 class="_abp"><span class="_mar_r_xxs">❓</span><?php esc_html_e('FAQs Configuration', 'abp-transport-booking'); ?></h5>
+                    <h5 class="abp_gap_xs">❓<?php esc_html_e('FAQs Configuration', 'abp-transport-booking'); ?></h5>
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('display_faq', $display); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Active FAQs ?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Active FAQs ?', 'abp-transport-booking'); ?></span>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>
@@ -208,7 +208,7 @@
                             <div class="_fj_between">
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_faq', $active_global_faq); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Use Global FAQ ?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Use Global FAQ ?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_faq" class=" <?php echo esc_attr($active_global_faq == 'on' ? '' : 'abp_active'); ?>">
                                     <button type="button" class="_btn_theme" onclick="abptb_import_global('faq_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global FAQ', 'abp-transport-booking'); ?></button>
@@ -234,14 +234,14 @@
                     $display = $post_infos['display_tc'] ?? 'on';
                     $active_global_tc = $post_infos['active_global_tc'] ?? 'on';
                     ?>
-                    <h5 class="_abp"><span class="_mar_r_xxs">🤝</span><?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></h5>
+                    <h5 class="abp_gap_xs">🤝<?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></h5>
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('display_tc', $display); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Active Term & Conditions ?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Active Term & Conditions ?', 'abp-transport-booking'); ?></span>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>
@@ -251,7 +251,7 @@
                             <div class="_fj_between">
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_tc', $active_global_tc); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Use Global Term & Conditions ?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Use Global Term & Conditions ?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_tc" class=" <?php echo esc_attr($active_global_tc == 'on' ? '' : 'abp_active'); ?>">
                                     <button type="button" class="_btn_theme_xs" onclick="abptb_import_global('tc_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Term & Conditions', 'abp-transport-booking'); ?></button>
@@ -287,7 +287,7 @@
                 ?>
                 <div class="edit_area">
                     <div class="_fd_column_mar_t_xs">
-                        <span class="_abp_label"><?php esc_html_e('Term & Conditions Content', 'abp-transport-booking'); ?></span>
+                        <span class="abp_label"><?php esc_html_e('Term & Conditions Content', 'abp-transport-booking'); ?></span>
                         <?php
                             wp_editor(
                                 $description,

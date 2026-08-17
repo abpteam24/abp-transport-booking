@@ -39,7 +39,7 @@
                         </div>
                         <div class="item_body">
                             <div class="">
-                                <a class="_abp list_title" href="<?php echo esc_url($url); ?>" target="_blank">
+                                <a class="abp list_title" href="<?php echo esc_url($url); ?>" target="_blank">
                                     <?php ABPTB_Layout::title($post_infos); ?>
                                 </a>
                                 <div class="_divider_xxs"></div>

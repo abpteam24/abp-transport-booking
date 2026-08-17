@@ -19,30 +19,30 @@
         <div class="total_continue_area">
             <div class="total_continue item_box_1">
                 <div class="_fd_column_max_400">
-                    <h5 class="_abp _f_equal price_up">
+                    <h5 class="abp _f_equal price_up">
                         <span><?php esc_html_e('Ticket Price : ', 'abp-transport-booking'); ?>&nbsp;</span>
                         <span class="item_total _color_theme_text_right"></span>
                     </h5>
                     <?php if ($double_route) { ?>
-                        <h5 class="_abp _f_equal price_down">
+                        <h5 class="abp _f_equal price_down">
                             <span><?php esc_html_e('Ticket Price (Return) : ', 'abp-transport-booking'); ?>&nbsp;</span>
                             <span class="item_total _color_theme_text_right"></span>
                         </h5>
                     <?php } ?>
                     <?php if (ABPTB_Function::on_off('additional_info') && $display_additional === 'on') { ?>
-                        <h5 class="_abp _f_equal ex_price_up">
+                        <h5 class="abp _f_equal ex_price_up">
                             <span><?php esc_html_e('Additional : ', 'abp-transport-booking'); ?>&nbsp;</span>
                             <span class="additional_total _color_theme_text_right"></span>
                         </h5>
                         <?php if ($double_route) { ?>
-                            <h5 class="_abp _f_equal ex_price_down">
+                            <h5 class="abp _f_equal ex_price_down">
                                 <span><?php esc_html_e('Additional (Return) : ', 'abp-transport-booking'); ?>&nbsp;</span>
                                 <span class="additional_total _color_theme_text_right"></span>
                             </h5>
                         <?php } ?>
                     <?php } ?>
                     <div class="_divider_xs"></div>
-                    <h5 class="_abp _f_equal">
+                    <h5 class="abp _f_equal">
                         <span><?php esc_html_e('Total : ', 'abp-transport-booking'); ?>&nbsp;</span>
                         <span class="abptb_total _color_theme_text_right"></span>
                     </h5>

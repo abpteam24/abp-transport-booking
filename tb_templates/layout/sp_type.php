@@ -19,7 +19,7 @@
                 <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_selected_seat_id" value="">
                 <?php if (sizeof($_ticket_infos) > 1) { ?>
                     <label class="_text_nowrap _min_300_mar_auto">
-                        <span class="_abp_label"> <?php esc_html_e('Seat Label :', 'abp-transport-booking'); ?></span>
+                        <span class="abp_label"> <?php esc_html_e('Seat Label :', 'abp-transport-booking'); ?></span>
                         <select class="_form_control" name="<?php echo esc_attr($prefix); ?>sp_id">
                             <?php foreach ($_ticket_infos as $_ticket_info) {
                                 $id = $_ticket_info['id'] ?? '';

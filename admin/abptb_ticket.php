@@ -20,7 +20,7 @@
                     <div class="group_setting">
                         <div class="setting_item">
                             <label class="_fj_between">
-                                <span class="_abp_label"><?php esc_html_e('Ticket Type', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Ticket Type', 'abp-transport-booking'); ?></span>
                                 <?php if (ABPTB_Function::on_off('sp')) { ?>
                                     <select class="_form_control " name="seat_type" required>
                                         <option disabled selected> <?php esc_html_e('Please Select', 'abp-transport-booking'); ?></option>
@@ -29,7 +29,7 @@
                                     </select>
                                 <?php } else { ?>
                                     <input type="hidden" name="seat_type" value="<?php echo esc_attr($seat_type); ?>">
-                                    <span class="_abp_label"><?php esc_html_e('Ticket', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Ticket', 'abp-transport-booking'); ?></span>
                                 <?php } ?>
                             </label>
                             <div class="_divider_xxs"></div>
@@ -39,13 +39,13 @@
                             <?php if (ABPTB_Function::on_off('ticket_type')) { ?>
                                 <div class="_fa_center">
                                     <?php ABPTB_Layout::switch_checkbox('display_ticket_type', $display_ticket_type); ?>
-                                    <span class="_abp_label"><?php esc_html_e('Multiple Ticket Type?', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Multiple Ticket Type?', 'abp-transport-booking'); ?></span>
                                 </div>
                             <?php } else { ?>
                                 <div class="_fj_between">
                                     <input type="hidden" name="display_ticket_type" value="<?php echo esc_attr($display_ticket_type); ?>">
-                                    <span class="_abp_label"><?php esc_html_e('Ticket Type', 'abp-transport-booking'); ?></span>
-                                    <span class="_abp_label"><?php esc_html_e('Single', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Ticket Type', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Single', 'abp-transport-booking'); ?></span>
                                 </div>
                             <?php } ?>
                             <div class="_divider_xxs"></div>
@@ -54,7 +54,7 @@
                         <?php if (ABPTB_Function::on_off('min_max')) { ?>
                             <div class="setting_item">
                                 <label class="_fj_between _f_wrap">
-                                    <span class="_abp_label"><?php esc_html_e('Min Qty/Order', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Min Qty/Order', 'abp-transport-booking'); ?></span>
                                     <input class="_form_control validation_number" name="min_qty" value="<?php echo esc_attr($post_infos['min_qty'] ?? 0); ?>" placeholder="<?php esc_attr_e('Ex: 1', 'abp-transport-booking'); ?>"/>
                                 </label>
                                 <div class="_divider_xxs"></div>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="setting_item">
                                 <label class="_fj_between _f_wrap">
-                                    <span class="_abp_label"><?php esc_html_e('Max Qty/Order', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Max Qty/Order', 'abp-transport-booking'); ?></span>
                                     <input class="_form_control validation_number" name="max_qty" value="<?php echo esc_attr($post_infos['max_qty'] ?? ''); ?>" placeholder="<?php esc_attr_e('Ex: 5', 'abp-transport-booking'); ?>"/>
                                 </label>
                                 <div class="_divider_xxs"></div>
@@ -109,10 +109,10 @@
                 //echo '<pre>';print_r($sp_infos);echo '</pre>';
                 ?>
                 <div class="_fj_between">
-                    <h5 class="_abp"><?php esc_html_e('Seat Plan Configuration', 'abp-transport-booking'); ?></h5>
+                    <h5 class="abp"><?php esc_html_e('Seat Plan Configuration', 'abp-transport-booking'); ?></h5>
                     <button type="button" class="_btn_light_active_xs">
                         <?php esc_html_e('Total Seat :', 'abp-transport-booking'); ?>
-                        <span class="_abp_color_theme _mar_l_xs total_ticket"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
+                        <span class="abp_color_theme _mar_l_xs total_ticket"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
                     </button>
                     <div class="_group_content">
                         <?php ABPTB_Layout::button_add(__('Add New Seat Label', 'abp-transport-booking')); ?>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="_divider_xs"></div>
                 <div class="_ov_auto">
-                    <table class="_abp">
+                    <table class="abp">
                         <thead>
                         <tr>
                             <th><?php esc_html_e('Seat Plan Name', 'abp-transport-booking'); ?></th>
@@ -146,7 +146,7 @@
                     </table>
                 </div>
                 <div class="abp_hidden">
-                    <table class="_abp">
+                    <table class="abp">
                         <tbody class="hidden_content">
                         <?php $this->sp_item($sp_data, $display_ticket_type); ?>
                         </tbody>
@@ -160,7 +160,7 @@
                 $display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
                 ?>
                 <div class="_fj_between">
-                    <h5 class="_abp"><?php esc_html_e('Ticket Configuration', 'abp-transport-booking'); ?></h5>
+                    <h5 class="abp"><?php esc_html_e('Ticket Configuration', 'abp-transport-booking'); ?></h5>
                     <div class="_group_content">
                         <?php if (ABPTB_Function::on_off('ticket_type') && $display_ticket_type == 'on') {
                             ABPTB_Layout::button_add(__('Add New item', 'abp-transport-booking'));
@@ -170,7 +170,7 @@
                 </div>
                 <div class="_divider_xxs"></div>
                 <div class="_ov_auto">
-                    <table class="_abp">
+                    <table class="abp">
                         <thead>
                         <tr>
                             <th><?php esc_html_e('Name', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></th>
@@ -202,7 +202,7 @@
                 </div>
                 <?php if ($display_ticket_type === 'on') { ?>
                     <div class="abp_hidden">
-                        <table class="_abp">
+                        <table class="abp">
                             <tbody class="hidden_content">
                             <?php $this->ticket_item(); ?>
                             </tbody>
@@ -298,7 +298,7 @@
                     <td>
                         <div class="_all_center">
                             <div class="_group_content">
-                                <button type="button" class="_btn_light_theme_xxs sp_id_change" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($id); ?>')" title="<?php esc_attr_e('View : Seat Plan', 'abp-transport-booking'); ?>"><?php ABPTB_Static::icon_svg('view_1'); ?></button>
+                                <button type="button" class="_btn_light_theme_xxs sp_id_change" onclick="abptb_popup_open_global('view_sp','<?php echo esc_attr($id); ?>')" title="<?php esc_attr_e('View : Seat Plan', 'abp-transport-booking'); ?>"><?php ABPTB_Static::svg('view_1'); ?></button>
                                 <?php
                                     ABPTB_Layout::button_sort();
                                     ABPTB_Layout::button_delete();

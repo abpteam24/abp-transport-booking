@@ -40,7 +40,7 @@
                     ?>
                     <div class="ticket_item _section_card_xs_w_full">
                         <div class="_fj_between">
-                            <h5 class="_abp_gap_xxs"><?php ABPTB_Layout::image_icon(ABPTB_Function::ticket_icon($key)); ?><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></h5>
+                            <h5 class="abp_gap_xxs"><?php ABPTB_Layout::image_icon(ABPTB_Function::ticket_icon($key)); ?><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></h5>
                             <?php if (!empty($price) && !empty($bp_dp)) { ?>
                                 <div class="abp_tag price_value">
                                     <?php echo ($price > 0) ? wp_kses_post(wc_price($price)) : esc_html__('Free', 'abp-transport-booking'); ?>
@@ -49,9 +49,9 @@
                             <?php } ?>
                         </div>
                         <?php if (ABPTB_Function::on_off('capacity')) { ?>
-                            <h6 class="_abp"><?php echo esc_html__('Available : ', 'abp-transport-booking') . ' ' . esc_html($available . '/' . $qty); ?></h6>
+                            <h6 class="abp"><?php echo esc_html__('Available : ', 'abp-transport-booking') . ' ' . esc_html($available . '/' . $qty); ?></h6>
                         <?php } ?>
-                        <p class="_abp"><?php echo esc_html($ticket_info['description'] ?? ''); ?></p>
+                        <p class="abp"><?php echo esc_html($ticket_info['description'] ?? ''); ?></p>
                         <?php if (!empty($bp_dp) && !empty($bp_times)) {
                             ABPTB_Layout::item_select($ticket_info, $key, $price, $prefix);
                         } ?>

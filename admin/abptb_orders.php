@@ -12,7 +12,7 @@
             public function load_orders(): void {
                 ?>
                 <div class="abptb_orders _section_card">
-                    <h4 class="_abp_title_gap_xs"><span>📋</span> <?php esc_html_e('Order Filter', 'abp-transport-booking'); ?></h4>
+                    <h4 class="abp_title_gap_xs"><span>📋</span> <?php esc_html_e('Order Filter', 'abp-transport-booking'); ?></h4>
                     <div class="_ov_initial_mar_t_xs">
                         <form class="abp_search_form" method="post" action="">
                             <div class="_form_inline">
@@ -104,7 +104,7 @@
                     <?php do_action('abptb_order_tab_action', $_filter_args); ?>
                 </div>
                 <?php if (!empty($booking_lists) && is_array($booking_lists)) { ?>
-                    <table class=" _abp">
+                    <table class=" abp">
                         <thead>
                         <tr>
                             <th><?php esc_html_e('Action', 'abp-transport-booking'); ?><?php $count_foot_left_col++; ?></th>
@@ -149,21 +149,21 @@
                                     <div class="_group_content">
                                         <?php do_action('abptb_order_action', ($booking_list['id'] ?? ''));
                                             if (in_array($order_status, $booked_status, true)) { ?>
-                                                <button class="_btn_light_danger_xxs item_cancel" data-item_id="<?php echo esc_attr($booking_list['id'] ?? ''); ?>" title="<?php esc_attr_e('Ticket Cancel', 'abp-transport-booking'); ?>" type="button"><?php ABPTB_Static::icon_svg('close_2'); ?></button>
+                                                <button class="_btn_light_danger_xxs item_cancel" data-item_id="<?php echo esc_attr($booking_list['id'] ?? ''); ?>" title="<?php esc_attr_e('Ticket Cancel', 'abp-transport-booking'); ?>" type="button"><?php ABPTB_Static::svg('close_2'); ?></button>
                                             <?php } ?>
                                     </div>
                                 </th>
                                 <th class="_text_left">
-                                    <p class="_abp"><?php echo esc_html($si . '. #' . ($booking_list['order_id'] ?? '')); ?></p>
-                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['created_at'] ?? '')); ?></p>
+                                    <p class="abp"><?php echo esc_html($si . '. #' . ($booking_list['order_id'] ?? '')); ?></p>
+                                    <p class="abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['created_at'] ?? '')); ?></p>
                                 </th>
                                 <th class="_text_left">
                                     <div class="_gap_xxs"><?php ABPTB_Layout::title($post_infos); ?></div>
-                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['start_time'] ?? '')); ?></p>
+                                    <p class="abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['start_time'] ?? '')); ?></p>
                                 </th>
                                 <td>
                                     <?php ABPTB_Layout::route_direction($post_infos, ($booking_list['bp_dp'] ?? ''), false, false); ?>
-                                    <p class="_abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['bp_time'] ?? '')); ?></p>
+                                    <p class="abp_color_theme"><?php echo esc_html(ABPTB_Function::date_format($booking_list['bp_time'] ?? '')); ?></p>
                                 </td>
                                 <th><?php ABPTB_Layout::ticket_info($ticket_infos,$post_id); ?></th>
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>

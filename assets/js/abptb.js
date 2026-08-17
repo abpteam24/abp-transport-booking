@@ -212,7 +212,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                 return;
             }
         }
-        let target =  $(this).closest('div.abptb_area').find('.abptb_booking');
+        let target = $(this).closest('div.abptb_area').find('.abptb_booking');
         let formData = new FormData(this);
         formData.append('action', 'abptb_global_booking');
         formData.append('nonce', abptb_infos.nonce);
@@ -240,14 +240,13 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         });
     });
     //==============//
-    $(document).on('change', "div.abptb_booking [name='journey_time'] ,div.abptb_booking [name='return_journey_time'] ,div.abptb_booking [name='sp_id'] ,div.abptb_booking [name='return_sp_id']", function (e) {
+    $(document).on('change', "div.abptb_booking [name='bp_time'] ,div.abptb_booking [name='return_bp_time'] ,div.abptb_booking [name='sp_id'] ,div.abptb_booking [name='return_sp_id']", function (e) {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
         let target = $(this).closest(".booking_area");
         let parent = target.closest("form");
-        let target_html = target.find('.ticket_content');
-        let formData = abptb_get_form_data(target_html);
+        let formData = abptb_get_form_data(target);
         formData.append('post_id', parent.find('[name="post_id"]').val());
         formData.append('double_route', parent.find('[name="double_route"]').val());
         formData.append('action', 'abptb_load_transport_data');
@@ -262,10 +261,10 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                 abptb_spinner_remove(target);
                 //console.log(response);
                 abptb_toast_msg(response.data.msg, response.data.type);
-                if (response.data && response.data.hasOwnProperty('html') && target_html.length > 0) {
-                    target_html.html(response.data.html).promise().done(function () {
-                        abptb_init(target_html);
-                        all_management(target_html);
+                if (response.data && response.data.hasOwnProperty('html') && target.length > 0) {
+                    target.html(response.data.html).promise().done(function () {
+                        abptb_init(target);
+                        all_management(target);
                     });
                 }
             }, error: function (xhr) {
@@ -329,6 +328,14 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         current.toggleClass('selected').promise().done(function () {
             all_management(current);
         });
+    });
+    $(document).on('click', 'div.abptb_booking .seat_remove', function (e) {
+        e.preventDefault();
+        const $current = $(this);
+        const seatName = $current.data('name') || $current.attr('data-name');
+        const $parent = $current.closest('.booking_area');
+        if (!seatName || !$parent.length) return;
+        $parent.find(`.sp_cell.available.selected[data-name="${seatName}"]`).trigger('click');
     });
     $(document).on('click', 'div.abptb_booking .book_continue', function (e) {
         e.preventDefault();
@@ -465,6 +472,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                     seat_names.push(name);
                     type_ids.push(id);
                     let item_clone = hidden_target.clone();
+                    item_clone.find('.seat_remove').attr('data-name', name);
                     item_clone.find('.seat_name').html(name);
                     item_clone.find('.seat_price').html(abptb_wc_price_format(price));
                     target.append(item_clone);

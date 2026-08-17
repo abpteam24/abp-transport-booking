@@ -14,7 +14,7 @@
             public function global_location(): void {
                 $label = ABPTB_Function::location_label(); ?>
                 <div class="_fj_between">
-                    <h5 class="_abp_gap_xs"><span class="fas fa-route"></span><?php echo esc_html($label); ?></h5>
+                    <h5 class="abp_gap_xs"><span class="fas fa-route"></span><?php echo esc_html($label); ?></h5>
                     <?php ABPTB_Layout::button_global_popup('tax_location', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                 </div>
                 <?php ABPTB_Layout::info_text('abptb_location'); ?>
@@ -50,13 +50,13 @@
                 $pick_infos = $location['pd_info'] ?? [];
                 ?>
                 <div class="abp_form">
-                    <h5 class="_abp"><span class="_mar_r_xs">📍</span><?php echo esc_html($title); ?></h5>
+                    <h5 class="abp_gap_xs">📍<?php echo esc_html($title); ?></h5>
                     <div class="_divider_xs"></div>
                     <input type="hidden" name="id" value="<?php echo esc_attr($term_id); ?>"/>
                     <div class="group_setting">
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php echo esc_html($label); ?><sup class="_color_required">*</sup></span>
+                                <span class="abp_label"><?php echo esc_html($label); ?><sup class="_color_required">*</sup></span>
                                 <input class="_form_control" name="name" value="<?php echo esc_attr($name); ?>" placeholder="<?php esc_attr_e('Name', 'abp-transport-booking'); ?>" required/>
                             </label>
                             <div class="_divider_xs"></div>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="setting_item">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php echo esc_html($label) . ' ' . esc_html_e('Slug (Optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php echo esc_html($label) . ' ' . esc_html_e('Slug (Optional)', 'abp-transport-booking'); ?></span>
                                 <input class="_form_control" name="slug" value="<?php echo esc_attr($slug); ?>" placeholder="<?php esc_attr_e('Slug', 'abp-transport-booking'); ?>"/>
                             </label>
                             <div class="_divider_xs"></div>
@@ -72,7 +72,7 @@
                         </div>
                         <div class="setting_item full_width">
                             <label class="_f_equal_f_wrap">
-                                <span class="_abp_label"><?php esc_html_e('Full Address(optional)', 'abp-transport-booking'); ?></span>
+                                <span class="abp_label"><?php esc_html_e('Full Address(optional)', 'abp-transport-booking'); ?></span>
                                 <textarea class="_form_control" name="description" placeholder="<?php esc_attr_e('Address', 'abp-transport-booking'); ?>"><?php echo esc_html($des); ?></textarea>
                             </label>
                             <div class="_divider_xs"></div>
@@ -81,7 +81,7 @@
                         <?php if (ABPTB_Function::on_off('pickup')) { ?>
                             <div class="setting_item configuration_content full_width">
                                 <div class="_fj_between_fa_center">
-                                    <span class="_abp_label"><?php esc_html_e('Multiple Pickup/drop-off Point', 'abp-transport-booking'); ?></span>
+                                    <span class="abp_label"><?php esc_html_e('Multiple Pickup/drop-off Point', 'abp-transport-booking'); ?></span>
                                     <?php ABPTB_Layout::button_add(__('Add New Pickup/drop-off Point', 'abp-transport-booking')); ?>
                                 </div>
                                 <div class="_divider_xs"></div>
@@ -155,18 +155,10 @@
                     wp_send_json_error(['html' => '', 'msg' => __('Failed to resolve location context.', 'abp-transport-booking'), 'type' => 'warn']);
                 }
                 $pickup_info = [];
-                $number = 0;
                 if (!empty($pick_names)) {
                     foreach ($pick_names as $key => $pick) {
                         if (!empty($pick)) {
-                            $pick_id = isset($pick_ids[$key]) && $pick_ids[$key] !== '' ? (int)$pick_ids[$key] : '';
-                            if ($pick_id === '') {
-                                $pick_id = $number;
-                                while (isset($pickup_info[$pick_id])) {
-                                    $number++;
-                                    $pick_id = $number;
-                                }
-                            }
+                            $pick_id = isset($pick_ids[$key]) && $pick_ids[$key] !== '' ? $pick_ids[$key] : uniqid();
                             $pickup_info[$pick_id]['name'] = $pick;
                             $pickup_info[$pick_id]['time'] = $pick_times[$key] ?? '';
                         }
@@ -211,6 +203,7 @@
                 $taxonomies = is_array($taxonomies) ? $taxonomies : [];
                 $location = [];
                 $old_location = ABPTB_Function::get_option('abptb_location');
+                $pd_option= [];
                 $old_location = is_array($old_location) ? $old_location : [];
                 if (count($taxonomies) > 0) {
                     foreach ($taxonomies as $taxonomy) {
@@ -218,10 +211,20 @@
                         $location[$term_id]['name'] = $taxonomy->name;
                         $location[$term_id]['description'] = $taxonomy->description;
                         $location[$term_id]['slug'] = $taxonomy->slug;
+                        $pd_option[$term_id] = $taxonomy->name;
                         if (!empty($id) && (int)$id === (int)$term_id) {
                             $new_location = $pickup_info;
+                            $pd_info=$pickup_info;
                         } else {
-                            $new_location = $old_location[$term_id]['pd_info'] ?? [];
+                            $pd_info=$old_location[$term_id]['pd_info'] ?? [];
+                            if(!empty($pd_info)) {
+                                $new_location = $old_location[$term_id]['pd_info'] ?? [];
+                            }
+                        }
+                        if(!empty($pd_info)) {
+                            foreach ($pd_info as $pd_info_key => $pd_info_value) {
+                                $pd_option[$pd_info_key] = $pd_info_value['name']??'';
+                            }
                         }
                         if (!empty($new_location)) {
                             $location[$term_id]['pd_info'] = $new_location;
@@ -230,13 +233,14 @@
                 }
                 ksort($location);
                 update_option('abptb_location', $location);
+                update_option('abptb_pd', $pd_option);
             }
             public function location_list(): void {
                 $options = ABPTB_Function::get_option('abptb_location');
                 $options = is_array($options) ? $options : [];
                 $count = 1;
                 if (count($options) > 0) { ?>
-                    <table class="_abp">
+                    <table class="abp">
                         <thead>
                         <tr>
                             <th><?php esc_html_e('SI', 'abp-transport-booking') ?></th>
@@ -254,7 +258,7 @@
                             <tr>
                                 <th><?php echo esc_html($count); ?>.</th>
                                 <th><?php echo esc_html($term_id); ?></th>
-                                <th class="_text_left"><a href="<?php echo esc_url(get_term_link((int)$term_id)); ?>" target="_blank" class="_abp_fs_h5_color_theme"><?php echo esc_html($name); ?></a></th>
+                                <th class="_text_left"><a href="<?php echo esc_url(get_term_link((int)$term_id)); ?>" target="_blank" class="abp_fs_h5_color_theme"><?php echo esc_html($name); ?></a></th>
                                 <th>
                                     <?php
                                         $drop_info = $option['pd_info'] ?? [];
@@ -276,8 +280,8 @@
                                 <td>
                                     <div class="_fj_center">
                                         <div class="_group_content">
-                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::icon_svg('edit'); ?></button>
-                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::icon_svg('close_2'); ?></button>
+                                            <button type="button" class="_btn_light_yellow_xxs" onclick="abptb_popup_open_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Edit : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::svg('edit'); ?></button>
+                                            <button type="button" class="_btn_light_danger_xxs" onclick="abptb_delete_global('tax_location','<?php echo esc_attr($term_id); ?>')" title="<?php echo esc_attr__('Trash : ', 'abp-transport-booking') . ' ' . esc_attr($name); ?>"><?php ABPTB_Static::svg('close_2'); ?></button>
                                         </div>
                                     </div>
                                 </td>
