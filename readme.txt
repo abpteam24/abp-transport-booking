@@ -2,9 +2,9 @@
 Contributors: abpteam
 Tags: transport booking, bus booking, seat reservation, ticket booking, passenger transport
 Requires at least: 6.2
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -335,6 +335,7 @@ Pro features may include:
 ✅ Seasonal pricing and discounts
 ✅ Early booking discounts
 ✅ Advanced booking management
+✅ Create Bookings Directly from the Admin Dashboard
 ✅ Additional administrative tools
 ✅ Premium Support
 ✅ Priority Updates & New Features
@@ -465,6 +466,15 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.2 =
+
+* Added a new filter field to the Order List for improved order management and filtering.
+* Improved the Order List design and overall admin UI experience.
+* Fixed various design and UI issues.
+* Fixed several minor bugs and improved overall plugin stability.
+
+Released: August 21, 2026
+
 = 1.0.1 =
 
 * Improved Pickup Point and Drop-off Point management.
@@ -479,6 +489,9 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Released: August 21, 2026
 
 = 1.0.1 =
 Released: August 17, 2026

@@ -97,50 +97,58 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         let parent = $(this).closest(".abp_search_form");
         let target_return = parent.find('.return_date');
         let target_journey = parent.find('.journey_date');
+        let target_bp_dp = parent.find('.abptb_bp_dp');
         load_bp(parent);
-        let post_id = parent.find('[name="post_id"]').val();
-        let formData = new FormData();
-        formData.append('post_id', post_id);
-        formData.append('action', 'abptb_load_date');
-        formData.append('nonce', abptb_infos.nonce);
-        $.ajax({
-            type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
-            beforeSend: function () {
-                abptb_spinner(target_return);
-                abptb_spinner(target_journey);
-                abptb_toast_msg(abptb_infos.msg.date_loading);
-            },
-            success: function (response) {
-                abptb_spinner_remove(target_journey);
-                abptb_spinner_remove(target_return);
-                if (response.data && response.data.hasOwnProperty('html_journey')) {
-                    target_journey.html(response.data.html_journey).promise().done(function () {
-                        if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
-                            abptb_init_dynamic_date_pickers(response.data.journey, response.data.picker_config);
-                        } else {
-                            abptb_load_datepicker(target_journey);
-                        }
-                    });
-                    if (target_return.length > 0 && response.data.hasOwnProperty('html_return') && response.data.html_return) {
-                        target_return.slideDown('fast');
-                        target_return.html(response.data.html_return).promise().done(function () {
+        let post_id = parseInt(parent.find('[name="post_id"]').val());
+        if (target_bp_dp.length > 0 && (isNaN(post_id) || post_id < 1)) {
+            target_bp_dp.slideUp('fast').html('');
+        } else {
+            let action = target_journey.length > 0 ? 'abptb_load_date' : 'abptb_load_route';
+            let formData = new FormData();
+            formData.append('post_id', post_id);
+            formData.append('action', action);
+            formData.append('nonce', abptb_infos.nonce);
+            $.ajax({
+                type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
+                beforeSend: function () {
+                    abptb_spinner(target_return);
+                    abptb_spinner(target_journey);
+                    abptb_spinner(target_bp_dp);
+                    abptb_toast_msg(abptb_infos.msg.loading);
+                },
+                success: function (response) {
+                    abptb_spinner_remove(target_journey);
+                    abptb_spinner_remove(target_return);
+                    if (target_journey.length > 0 && response.data && response.data.hasOwnProperty('html_journey')) {
+                        target_journey.html(response.data.html_journey).promise().done(function () {
                             if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
-                                abptb_init_dynamic_date_pickers(response.data.return, response.data.picker_config);
+                                abptb_init_dynamic_date_pickers(response.data.journey, response.data.picker_config);
                             } else {
-                                abptb_load_datepicker(target_return);
+                                abptb_load_datepicker(target_journey);
                             }
                         });
-                    } else {
-                        target_return.slideUp('fast');
+                        if (target_return.length > 0 && response.data.hasOwnProperty('html_return') && response.data.html_return) {
+                            target_return.slideDown('fast');
+                            target_return.html(response.data.html_return).promise().done(function () {
+                                if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
+                                    abptb_init_dynamic_date_pickers(response.data.return, response.data.picker_config);
+                                } else {
+                                    abptb_load_datepicker(target_return);
+                                }
+                            });
+                        } else {
+                            target_return.slideUp('fast');
+                        }
+                    }
+                    if (target_bp_dp.length > 0 && response.data && response.data.hasOwnProperty('html')) {
+                        target_bp_dp.slideDown('fast').html(response.data.html)
                     }
                     abptb_toast_msg(response.data.msg, response.data.type);
-                } else {
-                    abptb_toast_msg(response.data.msg, response.data.type);
+                }, error: function (xhr) {
+                    abptb_ajx_error(xhr, target_journey);
                 }
-            }, error: function (xhr) {
-                abptb_ajx_error(xhr, target_journey);
-            }
-        });
+            });
+        }
     });
     $(document).on('abp_trigger', 'div.abptb_area .abp_search_form [name="_bp"]', function () {
         load_dp($(this).closest('.abp_search_form'));
@@ -472,6 +480,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             parent.find('.sp_cell.available.selected').each(function () {
                 let $this = $(this);
                 let name = $.trim($this.attr('data-name'));
+                let label = $.trim($this.attr('data-label'));
                 let id = $.trim($this.attr('data-id'));
                 if (name && id) {
                     let price = parseFloat($.trim($this.attr('data-price'))) || 0;
@@ -480,7 +489,7 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                     type_ids.push(id);
                     let item_clone = hidden_target.clone();
                     item_clone.find('.seat_remove').attr('data-name', name);
-                    item_clone.find('.seat_name').html(name);
+                    item_clone.find('.seat_name').html(name + (label ? '(' + label + ')' : ''));
                     item_clone.find('.seat_price').html(abptb_wc_price_format(price));
                     target.append(item_clone);
                 }

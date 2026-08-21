@@ -54,7 +54,7 @@
                 <?php } ?>
                 <button class="_btn_light_theme book_continue" type="button" data-alert="<?php esc_attr_e('No Ticket Selected ! Please Select Ticket', 'abp-transport-booking'); ?>" data-msg="<?php esc_attr_e('Added to Cart Successfully', 'abp-transport-booking'); ?>">
                     <?php esc_html_e('Continue', 'abp-transport-booking'); ?>
-                    <span class="fas fa-angle-double-right _mar_l_xs"></span>
+                    <span class="fas fa-angle-double-right"></span>
                 </button>
             </div>
         </div>

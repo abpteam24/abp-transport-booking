@@ -1,10 +1,11 @@
 @charset "utf-8";
 /******************************************************************** Registration, Form  details************************************************/
 @media only screen and (min-width: 10px) {
-	div.abptb_area .global_form{margin: var(--tb_gap) 0 0 0;}
-	div.abptb_area .admin_order .global_form{margin: 0 0 var(--tb_gap)  0;}
+	div.abptb_area .global_form {margin: var(--tb_gap) 0 0 0;}
+	div.abptb_area .admin_order .global_form {margin: 0 0 var(--tb_gap) 0;}
 	#abptb_search_area {background: var(--tb_color_white); border-radius: var(--tb_br); padding: var(--tb_gap); box-shadow: var(--tb_shadow_29); display: -webkit-flex;display: flex; gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	#abptb_search_area form {max-width: 100%;gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;}
+	/**********************************/
 	/**********************************/
 	div.abptb_booking form {display: -webkit-flex;display: flex;flex-direction: column;gap: var(--tb_gap);}
 	div.abptb_booking form.double_route {display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap; flex-direction: initial;}

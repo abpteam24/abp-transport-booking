@@ -16,7 +16,7 @@
                 <div class="tab_item abptb_routing" data-tabs="#abptb_routing">
                     <div class="_fj_between_fa_center">
                         <?php if (ABPTB_Function::on_off('return')) { ?>
-                            <div class="_fa_center">
+                            <div class="_gap_xs">
                                 <?php ABPTB_Layout::switch_checkbox('display_return', $display_return); ?>
                                 <span class="abp_label"><?php esc_html_e('Same Transport Return', 'abp-transport-booking'); ?></span>
                             </div>

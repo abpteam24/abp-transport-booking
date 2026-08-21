@@ -28,7 +28,7 @@
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <div class="_gap_xs">
+                                <div class="_gap_xs_mar_t_xs">
                                     <?php ABPTB_Layout::capacity($post_infos);
                                         ABPTB_Layout::category($post_infos);
                                         ABPTB_Layout::brand($post_infos);

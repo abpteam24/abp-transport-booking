@@ -213,7 +213,7 @@
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item">
-                            <div class="_fa_center">
+                            <div class="_gap_xs">
                                 <?php ABPTB_Layout::switch_checkbox('sale_continue', ($post_infos['sale_continue'] ?? 'on')); ?>
                                 <span class="abp_label"><?php esc_html_e('Sale continue?', 'abp-transport-booking'); ?></span>
                             </div>
@@ -235,7 +235,7 @@
                         <?php if (ABPTB_Function::on_off('sku')) { ?>
                             <div class="setting_item">
                                 <div class="_fj_between">
-                                    <div class="_fa_center">
+                                    <div class="_gap_xs">
                                         <?php ABPTB_Layout::switch_checkbox('display_sku', ($post_infos['display_sku'] ?? 'off')); ?>
                                         <span class="abp_label"><?php esc_html_e('ID/SKU', 'abp-transport-booking'); ?></span>
                                     </div>
@@ -281,7 +281,7 @@
                         <?php } ?>
                         <?php if (ABPTB_Function::on_off('display_capacity')) { ?>
                             <div class="setting_item">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('display_capacity', ($post_infos['display_capacity'] ?? 'off')); ?>
                                     <span class="abp_label"><?php esc_html_e('Display Capacity', 'abp-transport-booking'); ?></span>
                                 </div>
@@ -292,7 +292,7 @@
                         <?php if (ABPTB_Function::on_off('category')) { ?>
                             <div class="setting_item">
                                 <div class="_fj_between_fa_center">
-                                    <div class="_fa_center">
+                                    <div class="_gap_xs">
                                         <?php ABPTB_Layout::switch_checkbox('display_category', ($post_infos['display_category'] ?? 'on')); ?>
                                         <span class="abp_label"><?php echo esc_html(ABPTB_Function::category_label()); ?></span>
                                     </div>
@@ -307,7 +307,7 @@
                         <?php if (ABPTB_Function::on_off('organizer')) { ?>
                             <div class="setting_item">
                                 <div class="_fj_between_fa_center">
-                                    <div class="_fa_center">
+                                    <div class="_gap_xs">
                                         <?php ABPTB_Layout::switch_checkbox('display_organizer', ($post_infos['display_organizer'] ?? 'off')); ?>
                                         <span class="abp_label"><?php echo esc_html(ABPTB_Function::organizer_label()); ?></span>
                                     </div>
@@ -320,7 +320,7 @@
                         <?php if (ABPTB_Function::on_off('brand')) { ?>
                             <div class="setting_item">
                                 <div class="_fj_between_fa_center">
-                                    <div class="_fa_center">
+                                    <div class="_gap_xs">
                                         <?php ABPTB_Layout::switch_checkbox('display_brand', ($post_infos['display_brand'] ?? 'off')); ?>
                                         <span class="abp_label"><?php echo esc_html(ABPTB_Function::brand_label()); ?></span>
                                     </div>
@@ -705,6 +705,7 @@
                     }
                     //=============================//
                     $meta_info = apply_filters('abptb_meta_info_update', $meta_info, $post_id);
+                   // echo '<pre>';print_r($meta_info);echo '</pre>';die();
                     if (sizeof($meta_info) > 0) {
                         foreach ($meta_info as $key => $value) {
                             update_post_meta($post_id, sanitize_key($key), $value);

@@ -8,8 +8,11 @@
 	div.abptb_admin table tbody tr:nth-child(odd) {background: var(--tb_color_2);}
 	div.abptb_admin .abptb_orders{position: relative;}
 	div.abptb_admin .abptb_orders table[class*="abp"] tbody th,
-	div.abptb_admin .abptb_orders table[class*="abp"] tbody td {vertical-align: top;text-wrap: nowrap;padding: var(--tb_gap_xxs);}
+	div.abptb_admin .abptb_orders table[class*="abp"] tbody td {vertical-align: top;padding: var(--tb_gap_xxs);}
+	div.abptb_admin .abptb_orders table[class*="abp"] tbody th {text-wrap: nowrap;text-align: left;}
 	div.abptb_admin .abptb_orders .order_list{overflow: auto;}
+	div.abptb_admin .abptb_orders .abptb_start_time,
+	div.abptb_admin .abptb_orders .abptb_bp_dp{display: none;}
 	/*=============================*/
 	div.abptb_admin .info_text {background: var(--tb_color_white); padding: var(--tb_gap_xxs) var(--tb_gap_xs); border-left: 4px solid var(--tb_color_navy_blue);}
 	/*=============================*/

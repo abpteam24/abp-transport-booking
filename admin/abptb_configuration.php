@@ -140,7 +140,7 @@
                                         ?>
                                     </div>
                                     <div class="_divider_xs"></div>
-                                    <button type="submit" class="_btn_theme" value="submit"><span class="_mar_r_xxs">💾</span><?php echo esc_html(__('Save', 'abp-transport-booking') . ' ' . $title . ' ' . __('Configuration', 'abp-transport-booking')); ?></button>
+                                    <?php ABPTB_Layout::button_save(__('Save', 'abp-transport-booking') . ' ' . $title . ' ' . __('Configuration', 'abp-transport-booking')); ?>
                                 </form>
                             <?php } ?>
                         </div>
@@ -200,7 +200,7 @@
                             'label' => __('Slug', 'abp-transport-booking'),
                             'desc' => sprintf(
                             /* translators: %s: Permalinks settings page link layout */
-                                __('Define the primary URL slug for rentals. Important: After changing this, you must flush your permalinks by visiting %s and clicking Save Changes.', 'abp-transport-booking'),
+                                __('Define the primary URL slug for Transport. Important: After changing this, you must flush your permalinks by visiting %s and clicking Save Changes.', 'abp-transport-booking'),
                                 '<strong class="abp_color_theme">' . __('Settings → Permalinks', 'abp-transport-booking') . '</strong>'
                             ),
                             'type' => 'text',
@@ -897,7 +897,7 @@
                 $section_target = $option['collapse_target'] ?? [];
                 ?>
                 <div class="setting_item <?php echo esc_attr($option['class'] ?? ''); ?>" <?php if (!empty($section_target)) { ?> data-collapse="#<?php echo esc_attr($section_target); ?>"  <?php } ?>>
-                    <label><?php ABPTB_Layout::switch_checkbox($name, $value); ?><span class="_mar_l_xs"><?php echo esc_html($option['label'] ?? ''); ?></span></label>
+                    <label><?php ABPTB_Layout::switch_checkbox($name, $value); ?><span><?php echo esc_html($option['label'] ?? ''); ?></span></label>
                     <?php self::description($option); ?>
                 </div>
                 <?php
@@ -949,7 +949,7 @@
                 <div class="setting_item <?php echo esc_attr($option['class'] ?? ''); ?>" <?php if (!empty($section_target)) { ?> data-collapse="#<?php echo esc_attr($section_target); ?>"  <?php } ?>>
                     <div class="_f_wrap_fj_between_fa_center">
                         <span class="abp_label"><?php echo esc_html($option['label'] ?? ''); ?></span>
-                        <div class="custom_checkbox">
+                        <div class="custom_checkbox _group_content">
                             <input type="hidden" name="<?php echo esc_attr($option['name'] ?? ''); ?>" value="<?php echo esc_attr($option['value'] ?? ''); ?>"/>
                             <?php foreach ($wp_roles->roles as $key => $label) { ?>
                                 <div class="checkbox_item">

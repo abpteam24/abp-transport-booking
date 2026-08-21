@@ -121,6 +121,7 @@
                     "cat_id" => '',
                     "loc_id" => '',
                     "brand_id" => '',
+                    "org_id" => '',
                     "style" => 'grid',
                     "slider_style" => 'gallery',
                     "show" => '',

@@ -421,7 +421,6 @@ window.abptb_image_selection = function ($this) {
     abptb_media_uploader.current_target = $this.closest('.image_selection');
     abptb_media_uploader.open();
 };
-
 (function ($) {
     "use strict";
     //==========Post Pagination=================//
@@ -718,6 +717,52 @@ window.abptb_image_selection = function ($this) {
             }
         });
     });
+    $(document).on('change', 'div.abptb_admin  div.abptb_orders [name="_start_time"]', function (e) {
+        e.preventDefault();
+        let parent = $(this).closest(".abp_search_form");
+        load_order_time(parent);
+    });
+    $(document).on('abp_trigger', 'div.abptb_admin  div.abptb_orders [name="_bp_dp"]', function (e) {
+        e.preventDefault();
+        let parent = $(this).closest(".abp_search_form");
+        load_order_time(parent);
+    });
+    function load_order_time(parent) {
+        let raw_post_id = parseInt(parent.find('[name="post_id"]').val());
+        let post_id = (!isNaN(raw_post_id) && raw_post_id > 0) ? raw_post_id : '';
+        let raw_start_date = parent.find('[name="_start_time"]').val();
+        let start_date = raw_start_date ? raw_start_date.trim() : '';
+        let raw_bp_dp = parent.find('[name="_bp_dp"]').val();
+        let bp_dp = raw_bp_dp ? raw_bp_dp.trim() : '';
+        let target = parent.find('.abptb_start_time');
+        if (target.length > 0 && start_date) {
+            let formData = new FormData();
+            formData.append('post_id', post_id);
+            formData.append('_bp_dp', bp_dp);
+            formData.append('_start_time', start_date);
+            formData.append('action', 'abptb_load_time_list');
+            formData.append('nonce', abptb_admin_data.nonce);
+            $.ajax({
+                type: 'POST', url: abptb_admin_data.ajax_url, contentType: false, processData: false, data: formData,
+                beforeSend: function () {
+                    abptb_spinner(target);
+                },
+                success: function (response) {
+                    abptb_spinner_remove(target);
+                    if (response.data && response.data.hasOwnProperty('html')) {
+                        target.slideDown('fast').html(response.data.html);
+                    } else {
+                        target.slideUp('fast').html('');
+                    }
+                    abptb_toast_msg(response.data.msg, response.data.type);
+                }, error: function (xhr) {
+                    abptb_ajx_error(xhr, parent);
+                }
+            });
+        } else {
+            target.slideUp('fast').html('');
+        }
+    }
     $(document).on('click', 'div.abptb_admin  div.abptb_orders .order_status_menu button[data-status]', function () {
         let $this = $(this);
         if (!$this.hasClass('abp_active')) {

@@ -37,7 +37,7 @@
                         </div>
                         <div class="setting_item">
                             <?php if (ABPTB_Function::on_off('ticket_type')) { ?>
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('display_ticket_type', $display_ticket_type); ?>
                                     <span class="abp_label"><?php esc_html_e('Multiple Ticket Type?', 'abp-transport-booking'); ?></span>
                                 </div>
@@ -112,7 +112,7 @@
                     <h5 class="abp"><?php esc_html_e('Seat Plan Configuration', 'abp-transport-booking'); ?></h5>
                     <button type="button" class="_btn_light_active_xs">
                         <?php esc_html_e('Total Seat :', 'abp-transport-booking'); ?>
-                        <span class="abp_color_theme _mar_l_xs total_ticket"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
+                        <span class="abp_color_theme total_ticket"><?php echo esc_html(ABPTB_Function::get_total_qty($post_id, $post_infos)); ?></span>
                     </button>
                     <div class="_group_content">
                         <?php ABPTB_Layout::button_add(__('Add New Seat Label', 'abp-transport-booking')); ?>

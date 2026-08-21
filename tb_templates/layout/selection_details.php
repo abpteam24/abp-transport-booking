@@ -24,7 +24,7 @@
                     </li>
                     <li>
                         <span class="fas fa-route"></span>
-                        <span class="_fs_label"><?php esc_html_e('Departure : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($bp_time)); ?>
+                        <span class="_fs_label"><?php esc_html_e('Boarding Point : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($bp_time)); ?>
                     </li>
                     <li>
                         <span class="fas fa-map-marker-alt"></span>

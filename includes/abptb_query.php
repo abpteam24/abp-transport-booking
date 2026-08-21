@@ -50,15 +50,32 @@
 				$page = ($filters['paged'] ?? null) ?: 1;
 				$status = ($filters['status'] ?? null) ?: 'publish';
 				$cat_id = $filters['cat_id'] ?? null;
+				$loc_id = $filters['loc_id'] ?? null;
+				$brand_id = $filters['brand_id'] ?? null;
+				$org_id = $filters['org_id'] ?? null;
 				$bp_dp = $filters['bp_dp'] ?? null;
+				$bp = $filters['bp'] ?? null;
+				$dp = $filters['dp'] ?? null;
+				if(!empty($bp) && !empty($dp)) {
+					$bp_dp=$bp.'_'.$dp;
+				}
 				$meta_query = ['relation' => 'AND'];
 				// Category query
 				if (!empty($cat_id)) {
 					$meta_query[] = ['key' => 'abptb_category', 'value' => $cat_id, 'compare' => '='];
 				}
+				if (!empty($brand_id)) {
+					$meta_query[] = ['key' => 'abptb_brand', 'value' => $brand_id, 'compare' => '='];
+				}
+				if (!empty($org_id)) {
+					$meta_query[] = ['key' => 'abptb_organizer', 'value' => $org_id, 'compare' => '='];
+				}
 				// route query
 				if (!empty($bp_dp)) {
 					$meta_query[] = ['key' => 'route_data', 'value' => '"' . $bp_dp . '"', 'compare' => 'LIKE'];
+				}
+				if (!empty($loc_id)) {
+					$meta_query[] = ['key' => 'route_direction', 'value' => '"' . $loc_id . '"', 'compare' => 'LIKE'];
 				}
 				$all_data = get_posts(array(
 					'fields' => 'ids',
@@ -110,6 +127,11 @@
 						$conditions[] = 'DATE(start_time) = %s';
 					}
 				}
+				if (!empty($filters['_start_time'])) {
+					$timestamp = strtotime($filters['_start_time']);
+					$params[] = gmdate('Y-m-d', $timestamp);
+					$conditions[] = 'DATE(start_time) = %s';
+				}
 				// Route Directions (BP & DP dynamically handled)
 				if (!empty($filters['bp_dp'])) {
 					$post_id = !empty($filters['post_id']) ? absint($filters['post_id']) : 0;
@@ -147,6 +169,10 @@
 						$dp_val = !empty($filters['dp']) ? $filters['dp'] : $filters['_dp'];
 						$conditions[] = 'dp = %d';
 						$params[] = absint($dp_val);
+					}
+					if (!empty($filters['_bp_dp'])) {
+						$conditions[] = "bp_dp LIKE %s";
+						$params[] = '%' . $wpdb->esc_like(sanitize_text_field($filters['_bp_dp'])) . '%';
 					}
 				}
 				// JSON Fields
@@ -231,14 +257,14 @@
 			}
 			public static function get_sold_qty_ex($filters = []) {
 				$sold_qty = 0;
-				$booking_lists = self::get_booking_query($filters);
-				if (empty($booking_lists)) {
+				$booking_items = self::get_booking_query($filters);
+				if (empty($booking_items)) {
 					return $sold_qty;
 				}
 				$id = $filters['ex_id'] ?? '';
-				foreach ($booking_lists as $booking_list) {
-					$ex_ids = json_decode($booking_list['ex_id'] ?? '', true) ?: [];
-					$additional_infos = json_decode($booking_list['ex_info'] ?? '', true) ?: [];
+				foreach ($booking_items as $booking_item) {
+					$ex_ids = json_decode($booking_item['ex_id'] ?? '', true) ?: [];
+					$additional_infos = json_decode($booking_item['ex_info'] ?? '', true) ?: [];
 					if (!empty($id)) {
 						if (in_array($id, $ex_ids, true) && isset($additional_infos[$id])) {
 							$sold_qty += $additional_infos[$id]['qty'] ?? 1;
@@ -281,12 +307,12 @@
 			}
 			public static function get_sold_ticket($filters = []): array {
 				$sold_qty = [];
-				$booking_lists = self::get_booking_query($filters);
-				if (empty($booking_lists)) {
+				$booking_items = self::get_booking_query($filters);
+				if (empty($booking_items)) {
 					return $sold_qty;
 				}
-				foreach ($booking_lists as $booking_list) {
-					$ticket_infos = json_decode($booking_list['ticket_info'] ?? '', true) ?: [];
+				foreach ($booking_items as $booking_item) {
+					$ticket_infos = json_decode($booking_item['ticket_info'] ?? '', true) ?: [];
 					if (!empty($ticket_infos)) {
 						foreach ($ticket_infos as $ticket_info) {
 							if (!empty($ticket_info)) {
@@ -302,12 +328,12 @@
 			}
 			public static function get_sold_seat($filters = []): array {
 				$sold_seats = [];
-				$booking_lists = self::get_booking_query($filters);
-				if (empty($booking_lists)) {
+				$booking_items = self::get_booking_query($filters);
+				if (empty($booking_items)) {
 					return $sold_seats;
 				}
-				foreach ($booking_lists as $booking_list) {
-					$ticket_infos = json_decode($booking_list['ticket_info'] ?? '', true) ?: [];
+				foreach ($booking_items as $booking_item) {
+					$ticket_infos = json_decode($booking_item['ticket_info'] ?? '', true) ?: [];
 					if (!empty($ticket_infos)) {
 						foreach ($ticket_infos as $ticket_info) {
 							if (!empty($ticket_info)) {

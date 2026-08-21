@@ -149,6 +149,7 @@
                             <button class="_btn_warning_xs" onclick="abptb_create_page('tf_gallery')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Add Gallery Page', 'abp-transport-booking'); ?></button>
                         <?php } ?>
                     </div>
+                    <?php do_action('abptb_add_page'); ?>
                     <div class="_divider_xs"></div>
                     <div class="_fa_center_fj_between">
                         <h6 class="abp"> <?php esc_html_e('Number of Post', 'abp-transport-booking'); ?> </h6>
@@ -245,6 +246,10 @@
                             $label = __('Gallery', 'abp-transport-booking');
                             $short_code = '[abptb-gallery]';
                         }
+                        if ($page_type == 'tf_ticket') {
+                            $label = __('Ticket', 'abp-transport-booking');
+                            $short_code = '[abptb-ticket]';
+                        }
                         $page = array(
                             'post_type' => 'page',
                             'post_name' => $page_type,
@@ -257,7 +262,7 @@
                             wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Failed to create page.', 'abp-transport-booking')]);
                         }
                         flush_rewrite_rules();
-                        /* translators: %s: Trnasport Label */
+                        /* translators: %s: Transport Label */
                         $translated_format = esc_html__('%s Page Created successfully.....', 'abp-transport-booking');
                         $msg = sprintf($translated_format, $label);
                         wp_send_json_success(['type' => 'success', 'msg' => $msg]);

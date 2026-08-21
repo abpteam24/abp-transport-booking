@@ -236,7 +236,7 @@
 				wp_add_inline_style('abptb_lib', wp_kses_post($abptb_var));
 				wp_enqueue_style('abptb', ABPTB_URL . 'assets/css/abptb.css', array(), time());
 				wp_enqueue_script('abptb_infos', ABPTB_URL . 'assets/js/abptb.js', array('jquery'), time(), true);
-				$rental_data = array(
+				$data = array(
 					'ajax_url' => admin_url('admin-ajax.php'),
 					'nonce' => wp_create_nonce('abptb_ajax_nonce'),
 					'route_info' => wp_json_encode(ABPTB_Function::get_route_info()),
@@ -254,7 +254,7 @@
 						'loading' => __('Loading..............!', 'abp-transport-booking'),
 					],
 				);
-				wp_localize_script('abptb_infos', 'abptb_infos', $rental_data);
+				wp_localize_script('abptb_infos', 'abptb_infos', $data);
 				do_action('abptb_global_script');
 			}
 			public function register_cpt(): void {

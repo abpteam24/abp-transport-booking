@@ -88,6 +88,35 @@
                 </button>
                 <?php
             }
+            public static function button_edit($class_edit = 'edit_hook'): void {
+                ?>
+                <button class="_btn_light_navy_blue_xs <?php echo esc_attr($class_edit); ?>" type="button" title="<?php esc_attr_e('Edit This Item', 'abp-transport-booking'); ?>">
+                    <?php ABPTB_Static::svg('edit'); ?>
+                </button>
+                <?php
+            }
+            public static function button_delete($class = 'delete_hook'): void {
+                ?>
+                <button class="_btn_light_danger_xxs <?php echo esc_attr($class); ?>" type="button" title="<?php esc_attr_e('Delete This Item', 'abp-transport-booking'); ?>"><?php ABPTB_Static::svg('close_1'); ?></button>
+                <?php
+            }
+            public static function button_save($text = '', $class = ''): void {
+                $class = $class ?: '_btn_green_pale_xs';
+                $text = $text ?: __('save', 'abp-transport-booking');
+                ?>
+                <button class="<?php echo esc_attr($class); ?>" type="submit">
+                    <?php ABPTB_Static::svg('save');
+                        echo esc_html($text); ?>
+                </button>
+                <?php
+            }
+            public static function button_sort(): void {
+                ?>
+                <div class="_btn_light_info_xxs sortable_handle" type="button" title="<?php esc_attr_e('Move This Item', 'abp-transport-booking'); ?>">
+                    <?php ABPTB_Static::svg('drag'); ?>
+                </div>
+                <?php
+            }
             public static function button_delete_sort_edit(): void {
                 ?>
                 <div class="_all_center">
@@ -113,28 +142,9 @@
                 </div>
                 <?php
             }
-            public static function button_edit($class_edit = 'edit_hook'): void {
-                ?>
-                <button class="_btn_light_navy_blue_xs <?php echo esc_attr($class_edit); ?>" type="button" title="<?php esc_attr_e('Edit This Item', 'abp-transport-booking'); ?>">
-                    <?php ABPTB_Static::svg('edit'); ?>
-                </button>
-                <?php
-            }
-            public static function button_delete($class = 'delete_hook'): void {
-                ?>
-                <button class="_btn_light_danger_xxs <?php echo esc_attr($class); ?>" type="button" title="<?php esc_attr_e('Delete This Item', 'abp-transport-booking'); ?>"><?php ABPTB_Static::svg('close_1'); ?></button>
-                <?php
-            }
-            public static function button_sort(): void {
-                ?>
-                <div class="_btn_light_info_xxs sortable_handle" type="button" title="<?php esc_attr_e('Move This Item', 'abp-transport-booking'); ?>">
-                    <?php ABPTB_Static::svg('drag'); ?>
-                </div>
-                <?php
-            }
             public static function button_global_save($action, $text = '', $class = ''): void {
                 if (!empty($action)) {
-                    $class = $class ?: '_btn_theme_xs';
+                    $class = $class ?: '_btn_green_pale_xs';
                     $text = $text ?: __('save', 'abp-transport-booking');
                     ?>
                     <button class="<?php echo esc_attr($class); ?>" type="button" onclick="abptb_save_global('<?php echo esc_attr($action); ?>',this)">
@@ -544,50 +554,51 @@
                     }
                 }
             }
-            public static function capacity($post_infos = [], $class = 'publish',$list=false): void {
+            public static function capacity($post_infos = [], $class = 'publish', $list = false): void {
                 $post_id = absint($post_infos['post_id'] ?? 0);
                 if (ABPTB_Function::on_off('display_capacity') && $post_id > 0) {
                     $display = $post_infos['display_capacity'] ?? ABPTB_Function::get_post_info($post_id, 'display_capacity', 'on');
                     $capacity = $post_infos['capacity'] ?? ABPTB_Function::get_total_qty($post_id, $post_infos);
                     if (!empty($capacity) && $display === 'on') {
-                        if($list){
+                        if ($list) {
                             ?>
                             <div class="<?php echo esc_attr($class); ?> abp_gap_xxs">
                                 <?php ABPTB_Static::svg('user_group_2');
-                                    echo esc_html(__('Capacity : ', 'abp-transport-booking').' '.$capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
+                                    echo esc_html(__('Capacity : ', 'abp-transport-booking') . ' ' . $capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
                             </div>
                             <?php
-                        }else{
-                        ?>
-                        <div class="abp_tag <?php echo esc_attr($class); ?>">
-                            <?php ABPTB_Static::svg('user_group_2');
-                                echo esc_html($capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
-                        </div>
-                        <?php
+                        } else {
+                            ?>
+                            <div class="abp_tag <?php echo esc_attr($class); ?>">
+                                <?php ABPTB_Static::svg('user_group_2');
+                                    echo esc_html($capacity . ' ' . __('Passengers   ', 'abp-transport-booking')); ?>
+                            </div>
+                            <?php
                         }
                     }
                 }
             }
-            public static function category($post_infos = [], $class = '',$list=false): void {
+            public static function category($post_infos = [], $class = '', $list = false): void {
                 $post_id = absint($post_infos['post_id'] ?? 0);
                 if (ABPTB_Function::on_off('category') && $post_id > 0) {
                     $display = $post_infos['display_category'] ?? ABPTB_Function::get_post_info($post_id, 'display_category', 'on');
                     $value = $post_infos['abptb_category'] ?? ABPTB_Function::get_post_info($post_id, 'abptb_category');
                     if (!empty($value) && $display === 'on') {
                         $value = ABPTB_Function::category_value($value);
-                        if($list){
+                        if ($list) {
                             ?>
                             <div class="<?php echo esc_attr($class); ?> abp_gap_xxs">
                                 <?php ABPTB_Static::svg('category');
-                                    echo esc_html(ABPTB_Function::category_label().' '.$value ); ?>
+                                    echo esc_html(ABPTB_Function::category_label() . ' : ' . $value); ?>
                             </div>
                             <?php
-                        }else{?>
-                        <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::category_label() . ' : ' . $value); ?>">
-                            <?php ABPTB_Static::svg('category');
-                                echo esc_html($value); ?>
-                        </div>
-                        <?php
+                        } else {
+                            ?>
+                            <div class="abp_tag <?php echo esc_attr($class); ?>" title="<?php echo esc_attr(ABPTB_Function::category_label() . ' : ' . $value); ?>">
+                                <?php ABPTB_Static::svg('category');
+                                    echo esc_html($value); ?>
+                            </div>
+                            <?php
                         }
                     }
                 }
@@ -795,6 +806,22 @@
                     <?php
                 }
             }
+            public static function list_check_in($id, $status, $checkin): void {
+                $booked_status = ABPTB_Function::booking_status();
+                $booked_status = $booked_status ? explode(',', $booked_status) : [];
+                if (!empty($id) && in_array($status, $booked_status)) {
+                    $user_id = get_current_user_id();
+                    if ($checkin > 0) { ?>
+                        <button class="_btn_light_success_xxs" type="button" title="<?php echo esc_attr(__('Already Checked By', 'abp-transport-booking') . ' : ' . get_user_by('id', $user_id)->display_name); ?>">
+                            <?php ABPTB_Static::svg('check_1'); ?><?php esc_html_e('Checked', 'abp-transport-booking'); ?>
+                        </button>
+                    <?php } else { ?>
+                        <button class="_btn_light_warning_xxs check_in" data-id="<?php echo esc_attr($id); ?>" title="<?php esc_attr_e('Click to Check In', 'abp-transport-booking'); ?>" type="button">
+                            <?php esc_html_e('Not Checked !', 'abp-transport-booking'); ?>
+                        </button>
+                    <?php }
+                }
+            }
             public static function create_client_form($form, $name, $prefix = ''): void {
                 if (!is_array($form)) {
                     return;
@@ -905,11 +932,10 @@
                             $fs = $cell['fs'] ?? 12;
                             $is_seat = ($cell['type'] === 'seat');
                             $seat_type_class = $sale && $is_seat ? 'available' : '';
-                            $title = $sale && $is_seat ? __('Available !', 'abp-transport-booking') : '';
                             $seat_type_class = $sale && in_array($name, $sold_seat) ? 'sold' : $seat_type_class;
-                            $title = $sale && in_array($name, $sold_seat) ? __('Sold !', 'abp-transport-booking') : $title;
+                            $title = $sale && in_array($name, $sold_seat) ? __('Sold !', 'abp-transport-booking') : '';
                             $class = $is_seat ? "sp_cell " . $seat_type_class : "sp_decor";
-                            $tag_attr = $sale && $is_seat && $seat_type_class == 'available' ? 'data-name="' . $name . '" data-id="' . $type_id . '" data-price="' . ($price_info[$type_id] ?? 0) . '"' : '';
+                            $tag_attr = $sale && $is_seat && $seat_type_class == 'available' ? 'data-name="' . $name . '" data-id="' . $type_id . '" data-price="' . ($price_info[$type_id] ?? 0) . '" data-label="' . ABPTB_Function::ticket_name($type_id) . '"' : '';
                             if (!empty($title)) {
                                 $tag_attr = $tag_attr . '  title="' . $title . '"';
                             }
@@ -934,6 +960,14 @@
                                     <?php ABPTB_Layout::image_icon($icon_image); ?>
                                     <span class="cell_label"><?php echo esc_html($name); ?></span>
                                 </div>
+                                <?php if ($sale && $is_seat) {
+                                    $price = $price_info[$type_id] ?? 0;
+                                    ?>
+                                    <div class="sp_tooltip" style="color: <?php echo esc_url($color); ?>">
+                                        <?php echo esc_html(ABPTB_Function::ticket_name($type_id) . ' : ');
+                                            echo $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('Free', 'abp-transport-booking'); ?>
+                                    </div>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -943,19 +977,17 @@
                 }
             }
             //=============================//
-            public static function ticket_info($ticket_infos, $post_id): void {
-                if (!empty($ticket_infos) && is_array($ticket_infos)) { ?>
+            public static function ticket_info($booking_item): void {
+                $ticket_infos = json_decode($booking_item['ticket_info'] ?? '', true) ?: [];
+                $post_id = $booking_item['post_id'] ?? '';
+                if (!empty($ticket_infos) && is_array($ticket_infos) && !empty($post_id) && $post_id > 0) { ?>
                     <ul class=" abp">
-                        <?php foreach ($ticket_infos as $tic_id => $ticket_info) {
+                        <?php foreach ($ticket_infos as $ticket_info) {
                             if (!empty($ticket_info) && sizeof($ticket_info) > 0) {
-                                $seat_type = $ticket_info['seat_type'] ?? '';
                                 $qty = $ticket_info['qty'] ?? 1;
                                 $price = $ticket_info['price'] ?? 0;
                                 $total = $price * $qty;
-                                $name = $ticket_info['name'] ?? '';
-                                if ($seat_type == 'sp') {
-                                    $name = $name . ' - ' . ABPTB_Function::sp_label($post_id, ($ticket_info['sp_id'] ?? ''));
-                                }
+                                $name = ABPTB_Function::ticket_label($ticket_info, $booking_item);
                                 ?>
                                 <li>
                                     <strong><?php echo esc_html($name); ?></strong>
@@ -1013,12 +1045,12 @@
                     </ul>
                 <?php }
             }
-            public static function billing_info($booking_list): void {
-                if (!empty($booking_list)) {
-                    $billing_name = $booking_list['billing_name'] ?? '';
-                    $billing_email = $booking_list['billing_email'] ?? '';
-                    $billing_phone = $booking_list['billing_phone'] ?? '';
-                    $billing_address = $booking_list['billing_address'] ?? '';
+            public static function billing_info($booking_item): void {
+                if (!empty($booking_item)) {
+                    $billing_name = $booking_item['billing_name'] ?? '';
+                    $billing_email = $booking_item['billing_email'] ?? '';
+                    $billing_phone = $booking_item['billing_phone'] ?? '';
+                    $billing_address = $booking_item['billing_address'] ?? '';
                     ?>
                     <ul class=" abp">
                         <?php if (!empty($billing_name)) { ?>
@@ -1084,7 +1116,7 @@
                 <div class="_input_item">
                     <label>
                         <span class="_gap_xs"><?php ABPTB_Static::svg('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transport-booking') ?></span>
-                        <input type="hidden" name="start_time" value=""/>
+                        <input type="hidden" name="_start_time" value=""/>
                         <input type="text" value="" class="_form_control abp_datepicker" placeholder="<?php echo esc_attr($now); ?>" readonly/>
                         <span class="fas fa-times date_close_icon" title="<?php esc_attr_e('Clear Date', 'abp-transport-booking'); ?>"></span>
                     </label>
@@ -1095,7 +1127,7 @@
                 $date_format = ABPTB_Function::date_format_php();
                 $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
                 ?>
-                <div class="_g_input_input_item_fd_column">
+                <div class="_g_input_input_item_fd_column" data-collapse="#view_more_filter_option">
                     <label><span class="_gap_xs"><?php ABPTB_Static::svg('date_2'); ?><?php esc_html_e('Journey Date Between', 'abp-transport-booking'); ?></span></label>
                     <div class="_f_equal">
                         <label>
@@ -1204,7 +1236,7 @@
             }
             public static function filter_order_id(): void {
                 ?>
-                <div class="_input_item " data-collapse="#view_more_filter_option">
+                <div class="_input_item ">
                     <label>
                         <span class="_gap_xs">📦 <?php esc_html_e('Order ID', 'abp-transport-booking'); ?></span>
                         <input type="number" class="_form_control_w_full validation_number" name="order_id" placeholder="<?php esc_attr_e('Order ID', 'abp-transport-booking'); ?>" value=""/>

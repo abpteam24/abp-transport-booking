@@ -181,7 +181,7 @@ function abptb_wc_price_format(price) {
     return price_text;
 }
 function abptb_spinner(parent = abptb_parent) {
-    if (parent.find('.abp_spinner').length < 1) {
+    if (parent.length>0 && parent.find('.abp_spinner').length < 1) {
         parent.addClass('_p_relative').append('<div class="abp_spinner"></div>');
     }
 }

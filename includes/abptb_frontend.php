@@ -27,6 +27,9 @@
 				if (is_tax('abptb_brand')) {
 					return ABPTB_Function::template_path('page/brand.php');
 				}
+				if (is_tax('abptb_organizer')) {
+					return ABPTB_Function::template_path('page/organizer.php');
+				}
 				return (string)$template;
 			}
 		}

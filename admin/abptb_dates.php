@@ -89,17 +89,17 @@
                 //echo '<pre>';print_r($time_infos);echo '</pre>';
                 ?>
                 <div class="tab_item date_configuration" data-tabs="#abptb_dates">
-                    <h4 class="abp_color_theme"><span class=" _mar_r_xxs">🗓️</span> <?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
+                    <h4 class="abp_color_theme_gap_xs">🗓️<?php esc_html_e('Date Configuration', 'abp-transport-booking'); ?></h4>
                     <div class="_divider_xs"></div>
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_dates', $active_global_dates); ?>
                                     <span class="abp_label"><?php esc_html_e('Use Global Date Configuration?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_dates" class=" <?php echo esc_attr($active_global_dates == 'on' ? '' : 'abp_active'); ?>">
-                                    <button type="button" class="_btn_active_xs" onclick="abptb_import_global('date_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Date Configuration', 'abp-transport-booking'); ?></button>
+                                    <button type="button" class="_btn_active_xs" onclick="abptb_import_global('date_content')"><span class="fas fa-file-upload"></span><?php esc_html_e('Import Global Date Configuration', 'abp-transport-booking'); ?></button>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>

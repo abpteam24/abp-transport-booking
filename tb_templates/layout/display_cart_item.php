@@ -6,20 +6,17 @@
         $booking_info = $booking_infos['booking_infos'] ?? [];
         $post_id = $booking_infos['post_id'] ?? '';
         if (!empty($booking_info) && sizeof($booking_info) > 0 && !empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt()) {
-            $display_ticket_type = ABPTB_Function::get_post_info($post_id, 'display_ticket_type', 'on');
-            $display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
             $return = '';
-            foreach ($booking_info as $bp_dp => $cart_item) {
-                if (!empty($cart_item)) {
-                    $ticket_infos = $cart_item['info'] ?? [];
-                    $seat_type = $cart_item['seat_type'] ?? '';
+            foreach ($booking_info as $bp_dp => $booking_item) {
+                if (!empty($booking_item)) {
+                    $ticket_infos = $booking_item['info'] ?? [];
                     if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
                         [$bp, $dp] = array_map('intval', explode('_', $bp_dp));
-                        $additional_info = $cart_item['additional_info'] ?? [];
-                        $attendee_infos = $cart_item['pass_info'] ?? [];
-                        $pick_up = $cart_item['pick_up'] ?? '';
-                        $drop_off = $cart_item['drop_off'] ?? '';
-                        $start_point = $cart_item['start_point'] ?? '';
+                        $additional_info = $booking_item['additional_info'] ?? [];
+                        $attendee_infos = $booking_item['pass_info'] ?? [];
+                        $pick_up = $booking_item['pick_up'] ?? '';
+                        $drop_off = $booking_item['drop_off'] ?? '';
+                        $start_point = $booking_item['start_point'] ?? '';
                         //echo '<pre>';                    print_r($start_point);                    echo '</pre>';
                         ?>
                         <div class="abptb_area">
@@ -31,31 +28,31 @@
                                         <?php if (intval($start_point) !== intval($bp)) { ?>
                                             <li class="_gap_xxs">
                                                 <span class="fas fa-map-location"></span>
-                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Start Point  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($start_point) . ' - ' . ABPTB_Function::date_format($cart_item['start_time'] ?? '')); ?>
+                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Starting Point  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($start_point) . ' - ' . ABPTB_Function::date_format($booking_item['start_time'] ?? '')); ?>
                                             </li>
                                         <?php } ?>
                                         <li class="_gap_xxs">
                                             <span class="fas fa-route"></span>
-                                            <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Departure : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($cart_item['bp_time'] ?? '')); ?>
+                                            <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Boarding Point : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($booking_item['bp_time'] ?? '')); ?>
                                         </li>
                                         <li class="_gap_xxs">
                                             <span class="fas fa-map-marker-alt"></span>
-                                            <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Arrival : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($cart_item['dp_time'] ?? '')); ?>
+                                            <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Arrival : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($booking_item['dp_time'] ?? '')); ?>
                                         </li>
                                         <?php if (intval($pick_up) !== intval($bp)) { ?>
                                             <li class="_gap_xxs">
                                                 <span class="fas fa-map-location"></span>
-                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Pick Up  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($cart_item['pick_up_time'] ?? '')); ?>
+                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Pick Up  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($booking_item['pick_up_time'] ?? '')); ?>
                                             </li>
                                         <?php } ?>
                                         <?php if (intval($drop_off) !== intval($dp)) { ?>
                                             <li class="_gap_xxs">
                                                 <span class="fas fa-map-location"></span>
-                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Drop-Off  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($cart_item['drop_off_time'] ?? '')); ?>
+                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Drop-Off  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($booking_item['drop_off_time'] ?? '')); ?>
                                             </li>
                                         <?php } ?>
                                         <li class="_gap_xxs">
-                                            ⏰ <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Approximate Time  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html($cart_item['duration'] ?? ''); ?>
+                                            ⏰ <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Approximate Time  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html($booking_item['duration'] ?? ''); ?>
                                         </li>
                                     </ul>
                                 </div>
@@ -68,16 +65,8 @@
                                             $qty = $ticket_info['qty'] ?? 1;
                                             $price_text = $price > 0 ? wc_price($price) : __('FREE', 'abp-transport-booking');
                                             $price = $price > 0 ? wc_price($price * $qty) : __('FREE', 'abp-transport-booking');
-                                            $name = $ticket_info['name'] ?? '';
-                                            if ($display_ticket_type == 'on') {
-                                                $name = ABPTB_Function::ticket_name($ticket_info['id'] ?? '') . '-' . $name;
-                                            }
-                                            if ($seat_type == 'sp') {
-                                                $sp_name = ABPTB_Function::sp_label($post_id, ($cart_item['sp_id'] ?? ''));
-                                                if (!empty($sp_name)) {
-                                                    $name = $name . ' - ' . $sp_name;
-                                                }
-                                            } ?>
+                                            $name = ABPTB_Function::ticket_label($ticket_info, $booking_item);
+                                            ?>
                                             <li class="_gap_xxs">
                                                 <span class="_fs_label_color_burnt_orange"><?php echo esc_html($name . __(' : ', 'abp-transport-booking')); ?></span>
                                                 <?php echo wp_kses_post($price_text) . ' X ' . esc_html($qty) . ' = ' . wp_kses_post($price); ?>

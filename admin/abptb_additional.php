@@ -23,7 +23,7 @@
                     $additional_services = ABPTB_Function::get_option('abptb_additional', ABPTB_Static::static_additional());
                     ?>
                     <div class="abp_form">
-                        <h4 class="abp_color_theme"><span class="_mar_r_xxs">💰</span><?php esc_html_e('Global Additional services Configuration', 'abp-transport-booking'); ?></h4>
+                        <h4 class="abp_color_theme_gap_xs">💰<?php esc_html_e('Global Additional services Configuration', 'abp-transport-booking'); ?></h4>
                         <?php ABPTB_Layout::info_text('abptb_additional'); ?>
                         <div class="_mar_t_xs"></div>
                         <?php $this->additional_service($additional_services, true); ?>
@@ -38,26 +38,24 @@
                     $active_global_additional = $post_infos['active_global_additional'] ?? 'on';
                     ?>
                     <div class="tab_item additional_configuration" data-tabs="#abptb_additional_service">
-                        <h4 class="abp_color_theme"><span class="_mar_r_xxs">💰</span><?php esc_html_e('Additional services Configuration', 'abp-transport-booking'); ?></h4>
+                        <h4 class="abp_color_theme_gap_xs">💰<?php esc_html_e('Additional services Configuration', 'abp-transport-booking'); ?></h4>
                         <div class="group_setting _mar_t_xs">
                             <div class="setting_item">
-                                <div class="_f_wrap_fj_between_fa_center">
-                                    <div class="_fa_center">
-                                        <?php ABPTB_Layout::switch_checkbox('display_additional_services', $display); ?>
-                                        <span class="_fs_label_mar_l_xs"><?php esc_html_e('Active Additional services ?', 'abp-transport-booking'); ?></span>
-                                    </div>
+                                <div class="_gap_xs">
+                                    <?php ABPTB_Layout::switch_checkbox('display_additional_services', $display); ?>
+                                    <span class="_fs_label"><?php esc_html_e('Active Additional services ?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div class="_divider_xs"></div>
                                 <?php ABPTB_Layout::info_text('display_additional_services'); ?>
                             </div>
                             <div data-collapse="#display_additional_services" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
-                                <div class="_fj_between">
-                                    <div class="_fa_center">
+                                <div class="_fj_between_gap_xs">
+                                    <div class="_gap_xs">
                                         <?php ABPTB_Layout::switch_checkbox('active_global_additional', $active_global_additional); ?>
-                                        <span class="_fs_label_mar_lr_xs"><?php esc_html_e('Use Global Additional Service ?', 'abp-transport-booking'); ?></span>
+                                        <span class="_fs_label"><?php esc_html_e('Use Global Additional Service ?', 'abp-transport-booking'); ?></span>
                                     </div>
                                     <div data-collapse="#active_global_additional" class=" <?php echo esc_attr($active_global_additional == 'on' ? '' : 'abp_active'); ?>">
-                                        <button type="button" class="_btn_theme" onclick="abptb_import_global('additional_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Additional Service', 'abp-transport-booking'); ?></button>
+                                        <button type="button" class="_btn_theme" onclick="abptb_import_global('additional_content')"><span class="fas fa-file-upload"></span><?php esc_html_e('Import Additional Service', 'abp-transport-booking'); ?></button>
                                     </div>
                                 </div>
                                 <div class="_divider_xs"></div>

@@ -196,7 +196,7 @@
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('display_faq', $display); ?>
                                     <span class="abp_label"><?php esc_html_e('Active FAQs ?', 'abp-transport-booking'); ?></span>
                                 </div>
@@ -206,12 +206,12 @@
                         </div>
                         <div data-collapse="#display_faq" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
                             <div class="_fj_between">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_faq', $active_global_faq); ?>
                                     <span class="abp_label"><?php esc_html_e('Use Global FAQ ?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_faq" class=" <?php echo esc_attr($active_global_faq == 'on' ? '' : 'abp_active'); ?>">
-                                    <button type="button" class="_btn_theme" onclick="abptb_import_global('faq_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global FAQ', 'abp-transport-booking'); ?></button>
+                                    <button type="button" class="_btn_theme" onclick="abptb_import_global('faq_content')"><span class="fas fa-file-upload"></span><?php esc_html_e('Import Global FAQ', 'abp-transport-booking'); ?></button>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>
@@ -239,7 +239,7 @@
                     <div class="group_setting">
                         <div class="setting_item">
                             <div class="_f_wrap_fj_between_fa_center">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('display_tc', $display); ?>
                                     <span class="abp_label"><?php esc_html_e('Active Term & Conditions ?', 'abp-transport-booking'); ?></span>
                                 </div>
@@ -249,12 +249,12 @@
                         </div>
                         <div data-collapse="#display_tc" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
                             <div class="_fj_between">
-                                <div class="_fa_center">
+                                <div class="_gap_xs">
                                     <?php ABPTB_Layout::switch_checkbox('active_global_tc', $active_global_tc); ?>
                                     <span class="abp_label"><?php esc_html_e('Use Global Term & Conditions ?', 'abp-transport-booking'); ?></span>
                                 </div>
                                 <div data-collapse="#active_global_tc" class=" <?php echo esc_attr($active_global_tc == 'on' ? '' : 'abp_active'); ?>">
-                                    <button type="button" class="_btn_theme_xs" onclick="abptb_import_global('tc_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Term & Conditions', 'abp-transport-booking'); ?></button>
+                                    <button type="button" class="_btn_theme_xs" onclick="abptb_import_global('tc_content')"><span class="fas fa-file-upload "></span><?php esc_html_e('Import Global Term & Conditions', 'abp-transport-booking'); ?></button>
                                 </div>
                             </div>
                             <div class="_divider_xs"></div>

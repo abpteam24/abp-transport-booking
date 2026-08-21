@@ -39,13 +39,13 @@
                     $display_single_form = ABPTB_Function::on_off('same_attendee') ? $display_single_form : 'off';
                     ?>
                     <div class="tab_item abptb_client_form" data-tabs="#abptb_client_form">
-                        <h4 class=" abp_color_theme"><span class="_mar_r_xxs">📋</span> <?php esc_html_e('Client Forms Configuration', 'abp-transport-booking'); ?></h4>
+                        <h4 class=" abp_color_theme_gap_xs">📋<?php esc_html_e('Client Forms Configuration', 'abp-transport-booking'); ?></h4>
                         <div class="_divider_xs"></div>
                         <?php if (ABPTB_Function::on_off('custom_attendee')) { ?>
                             <div class="group_setting">
                                 <div class="setting_item">
                                     <div class="_f_wrap_fj_between_fa_center">
-                                        <div class="_fa_center">
+                                        <div class="_gap_xs">
                                             <?php ABPTB_Layout::switch_checkbox('display_client_form', $display); ?>
                                             <span class="abp_label"><?php esc_html_e('Client Form ?', 'abp-transport-booking'); ?></span>
                                         </div>
@@ -55,12 +55,12 @@
                                 </div>
                                 <div data-collapse="#display_client_form" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
                                     <div class="_fj_between">
-                                        <div class="_fa_center">
+                                        <div class="_gap_xs">
                                             <?php ABPTB_Layout::switch_checkbox('active_global_form', $active_global_form); ?>
                                             <span class="abp_label"><?php esc_html_e('Use Global Client Form ?', 'abp-transport-booking'); ?></span>
                                         </div>
                                         <div data-collapse="#active_global_form" class=" <?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>">
-                                            <button type="button" class="_btn_theme" onclick="abptb_import_global('client_form_content')"><span class="fas fa-file-upload _mar_r_xs"></span><?php esc_html_e('Import Global Client Form', 'abp-transport-booking'); ?></button>
+                                            <button type="button" class="_btn_theme" onclick="abptb_import_global('client_form_content')"><span class="fas fa-file-upload"></span><?php esc_html_e('Import Global Client Form', 'abp-transport-booking'); ?></button>
                                         </div>
                                     </div>
                                     <div class="_divider_xs"></div>
@@ -68,7 +68,7 @@
                                 </div>
                                 <?php if (ABPTB_Function::on_off('same_attendee')) { ?>
                                     <div data-collapse="#display_client_form" class="setting_item <?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
-                                        <div class="_fa_center">
+                                        <div class="_gap_xs">
                                             <?php ABPTB_Layout::switch_checkbox('display_single_form', $display_single_form); ?>
                                             <span class="abp_label"><?php esc_html_e('Same Attendee ?', 'abp-transport-booking'); ?></span>
                                         </div>
@@ -79,9 +79,11 @@
                                     <input type="hidden" name="display_single_form" value="<?php echo esc_attr($display_single_form); ?>">
                                 <?php } ?>
                             </div>
-                            <div class="<?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>" data-collapse="#active_global_form">
-                                <div class="client_form_content _mar_t_xs">
-                                    <?php $this->passenger_form_settings($client_forms); ?>
+                            <div data-collapse="#display_client_form" class="<?php echo esc_attr($display == 'on' ? 'abp_active' : ''); ?>">
+                                <div class="<?php echo esc_attr($active_global_form == 'on' ? '' : 'abp_active'); ?>" data-collapse="#active_global_form">
+                                    <div class="client_form_content _mar_t_xs">
+                                        <?php $this->passenger_form_settings($client_forms); ?>
+                                    </div>
                                 </div>
                             </div>
                         <?php } else {

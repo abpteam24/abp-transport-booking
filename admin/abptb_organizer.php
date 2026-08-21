@@ -193,7 +193,7 @@
                                 <th class="_text_left"><a href="<?php echo esc_url(get_term_link($term_id)); ?>" target="_blank" class="abp_fs_h5_color_theme"><?php echo esc_html($name); ?></a></th>
                                 <th><?php echo esc_html($term_id); ?></th>
                                 <td><?php echo esc_html($description); ?></td>
-                                <th><code> [abptb-post cat_id="<?php echo esc_attr($term_id); ?>"]</code></th>
+                                <th><code> [abptb-post org_id="<?php echo esc_attr($term_id); ?>"]</code></th>
                                 <th>
                                     <div class="_fj_center">
                                         <div class="_group_content">

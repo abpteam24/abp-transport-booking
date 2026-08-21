@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ABP Transport Booking\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-17 12:40+0000\n"
+"POT-Creation-Date: 2026-08-21 10:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,11 +13,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.8; wp-7.0.4; php-8.2.12\n"
+"X-Loco-Version: 2.8.8; wp-7.1; php-8.2.12\n"
 "X-Domain: abp-transport-booking"
 
 #. %s = Days
-#: includes/abptb_function.php:669 includes/abptb_function.php:781
+#: includes/abptb_function.php:692 includes/abptb_function.php:804
 #, php-format
 msgid " %s Day"
 msgid_plural " %s Days"
@@ -25,7 +25,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s = Hours
-#: includes/abptb_function.php:674 includes/abptb_function.php:786
+#: includes/abptb_function.php:697 includes/abptb_function.php:809
 #, php-format
 msgid " %s Hour"
 msgid_plural " %s Hours"
@@ -33,7 +33,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s = Minutes
-#: includes/abptb_function.php:679 includes/abptb_function.php:791
+#: includes/abptb_function.php:702 includes/abptb_function.php:814
 #, php-format
 msgid " %s Minute"
 msgid_plural " %s Minutes"
@@ -41,7 +41,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s = Months
-#: includes/abptb_function.php:776
+#: includes/abptb_function.php:799
 #, php-format
 msgid " %s Month"
 msgid_plural " %s Months"
@@ -49,7 +49,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s = Seconds
-#: includes/abptb_function.php:796
+#: includes/abptb_function.php:819
 #, php-format
 msgid " %s Second"
 msgid_plural " %s Seconds"
@@ -57,16 +57,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. %s =Years
-#: includes/abptb_function.php:771
+#: includes/abptb_function.php:794
 #, php-format
 msgid " %s Year"
 msgid_plural " %s Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: tb_templates/layout/display_cart_item.php:82
-#: tb_templates/layout/display_cart_item.php:107
-#: tb_templates/layout/display_cart_item.php:127
+#: tb_templates/layout/display_cart_item.php:71
+#: tb_templates/layout/display_cart_item.php:96
+#: tb_templates/layout/display_cart_item.php:116
 msgid " : "
 msgstr ""
 
@@ -78,35 +78,35 @@ msgstr ""
 msgid " Remove Last Row"
 msgstr ""
 
-#. %s: Trnasport Label
-#: admin/abptb_status.php:261
+#. %s: Transport Label
+#: admin/abptb_status.php:266
 #, php-format
 msgid "%s Page Created successfully....."
 msgstr ""
 
-#: includes/abptb_woocommerce.php:315
-#: tb_templates/layout/display_cart_item.php:141
+#: includes/abptb_woocommerce.php:311
+#: tb_templates/layout/display_cart_item.php:130
 msgid "( Return )"
 msgstr ""
 
-#: includes/abptb_layout.php:166 includes/abptb_layout.php:176
+#: includes/abptb_layout.php:176 includes/abptb_layout.php:186
 msgid ".... Less "
 msgstr ""
 
-#: admin/abptb_orders.php:184 admin/abptb_orders.php:192
-#: admin/abptb_orders.php:192 includes/abptb_layout.php:166
-#: includes/abptb_layout.php:166 includes/abptb_layout.php:176
-#: includes/abptb_layout.php:176 includes/abptb_layout.php:750
-#: includes/abptb_layout.php:750
+#: admin/abptb_orders.php:198 admin/abptb_orders.php:206
+#: admin/abptb_orders.php:206 includes/abptb_layout.php:176
+#: includes/abptb_layout.php:176 includes/abptb_layout.php:186
+#: includes/abptb_layout.php:186 includes/abptb_layout.php:761
+#: includes/abptb_layout.php:761
 msgid ".... More"
 msgstr ""
 
-#: admin/abptb_orders.php:184 admin/abptb_orders.php:192
-#: includes/abptb_layout.php:750
+#: admin/abptb_orders.php:198 admin/abptb_orders.php:206
+#: includes/abptb_layout.php:761
 msgid "....Less "
 msgstr ""
 
-#: admin/abptb_orders.php:184
+#: admin/abptb_orders.php:198
 msgid "....More"
 msgstr ""
 
@@ -114,7 +114,7 @@ msgstr ""
 msgid "/Ticket"
 msgstr ""
 
-#: includes/abptb_function.php:661
+#: includes/abptb_function.php:684
 msgid "0 Min"
 msgstr ""
 
@@ -134,10 +134,10 @@ msgstr ""
 msgid "abpteam"
 msgstr ""
 
-#: admin/abptb_additional.php:90 admin/abptb_brand.php:183
+#: admin/abptb_additional.php:88 admin/abptb_brand.php:183
 #: admin/abptb_category.php:184 admin/abptb_feature.php:53
-#: admin/abptb_form.php:110 admin/abptb_location.php:252
-#: admin/abptb_orders.php:110 admin/abptb_organizer.php:183
+#: admin/abptb_form.php:112 admin/abptb_location.php:252
+#: admin/abptb_orders.php:120 admin/abptb_organizer.php:183
 #: admin/abptb_routing.php:45 admin/abptb_routing.php:83
 #: admin/abptb_seat_plan.php:644 admin/abptb_seat_plan.php:825
 #: admin/abptb_ticket.php:132 admin/abptb_ticket.php:182
@@ -154,7 +154,7 @@ msgstr ""
 msgid "Activated"
 msgstr ""
 
-#: admin/abptb_additional.php:47
+#: admin/abptb_additional.php:46
 msgid "Active Additional services ?"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgstr ""
 msgid "Active Term & Conditions ?"
 msgstr ""
 
-#: includes/abptb_layout.php:432
+#: includes/abptb_layout.php:442
 msgid "Add  Image"
 msgstr ""
 
@@ -187,7 +187,7 @@ msgstr ""
 #: admin/abptb_feature.php:18 admin/abptb_location.php:18
 #: admin/abptb_organizer.php:21 admin/abptb_organizer.php:228
 #: admin/abptb_post.php:364 admin/abptb_routing.php:26
-#: includes/abptb_layout.php:83 includes/abptb_layout.php:150
+#: includes/abptb_layout.php:83 includes/abptb_layout.php:160
 msgid "Add New"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr ""
 msgid "Add new "
 msgstr ""
 
-#: admin/abptb_additional.php:106
+#: admin/abptb_additional.php:104
 msgid "Add New Additional services"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgstr ""
 msgid "Add New Decor Item"
 msgstr ""
 
-#: admin/abptb_status.php:164
+#: admin/abptb_status.php:165
 msgid "Add New Dummy Post"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 msgid "Add New Feature Item"
 msgstr ""
 
-#: admin/abptb_form.php:126
+#: admin/abptb_form.php:128
 msgid "Add New Form Item"
 msgstr ""
 
@@ -302,7 +302,7 @@ msgstr ""
 msgid "Added to Cart Successfully"
 msgstr ""
 
-#: admin/abptb_orders.php:120
+#: admin/abptb_orders.php:130
 msgid "Additional "
 msgstr ""
 
@@ -314,15 +314,15 @@ msgstr ""
 msgid "Additional : "
 msgstr ""
 
-#: admin/abptb_orders.php:116
+#: admin/abptb_orders.php:126
 msgid "Additional Info"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:289 includes/abptb_woocommerce.php:389
+#: includes/abptb_woocommerce.php:285 includes/abptb_woocommerce.php:376
 msgid "Additional Information"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:90
+#: tb_templates/layout/display_cart_item.php:79
 msgid "Additional Information : "
 msgstr ""
 
@@ -339,11 +339,11 @@ msgstr ""
 msgid "Additional services Configuration"
 msgstr ""
 
-#: admin/abptb_additional.php:181
+#: admin/abptb_additional.php:179
 msgid "Additional services Configuration Saved Successfully ..... !!"
 msgstr ""
 
-#: admin/abptb_additional.php:228
+#: admin/abptb_additional.php:226
 msgid "Additional services Imported Successfully ..... !! "
 msgstr ""
 
@@ -351,7 +351,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: includes/abptb_layout.php:1034
+#: includes/abptb_layout.php:1066
 msgid "Address :"
 msgstr ""
 
@@ -364,8 +364,12 @@ msgstr ""
 msgid "All "
 msgstr ""
 
-#: admin/abptb_orders.php:79 admin/abptb_orders.php:80
+#: admin/abptb_orders.php:88 admin/abptb_orders.php:89
 msgid "All Booking"
+msgstr ""
+
+#: includes/abptb_layout.php:815
+msgid "Already Checked By"
 msgstr ""
 
 #: admin/abptb_configuration.php:588
@@ -380,11 +384,11 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:271 includes/abptb_woocommerce.php:372
+#: includes/abptb_woocommerce.php:273 includes/abptb_woocommerce.php:365
 msgid "Approximate Time "
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:58
+#: tb_templates/layout/display_cart_item.php:55
 msgid "Approximate Time  : "
 msgstr ""
 
@@ -400,11 +404,11 @@ msgstr ""
 msgid "Are you sure you want to delete this Seat Plan?"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:264 includes/abptb_woocommerce.php:365
+#: includes/abptb_woocommerce.php:266 includes/abptb_woocommerce.php:358
 msgid "Arrival"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:43
+#: tb_templates/layout/display_cart_item.php:40
 #: tb_templates/layout/selection_details.php:31
 msgid "Arrival : "
 msgstr ""
@@ -415,10 +419,6 @@ msgstr ""
 
 #: admin/abptb_seat_plan.php:498 includes/abptb_layout.php:46
 msgid "Available"
-msgstr ""
-
-#: includes/abptb_layout.php:908
-msgid "Available !"
 msgstr ""
 
 #: tb_templates/layout/ticket_type.php:52
@@ -449,24 +449,33 @@ msgstr ""
 msgid "Bg Image"
 msgstr ""
 
-#: includes/abptb_layout.php:1229 includes/abptb_layout.php:1230
+#: includes/abptb_layout.php:1261 includes/abptb_layout.php:1262
 msgid "Billing Email"
 msgstr ""
 
-#: admin/abptb_orders.php:125
+#: admin/abptb_orders.php:136
 msgid "Billing Info"
 msgstr ""
 
-#: includes/abptb_layout.php:1219 includes/abptb_layout.php:1220
+#: includes/abptb_layout.php:1251 includes/abptb_layout.php:1252
 msgid "Billing Name"
 msgstr ""
 
-#: includes/abptb_layout.php:1239 includes/abptb_layout.php:1240
+#: includes/abptb_layout.php:1271 includes/abptb_layout.php:1272
 msgid "Billing phone"
 msgstr ""
 
 #: admin/abptb_routing.php:133
 msgid "Boarding"
+msgstr ""
+
+#: includes/abptb_woocommerce.php:265 includes/abptb_woocommerce.php:357
+msgid "Boarding Point"
+msgstr ""
+
+#: tb_templates/layout/display_cart_item.php:36
+#: tb_templates/layout/selection_details.php:27
+msgid "Boarding Point : "
 msgstr ""
 
 #: tb_templates/list/default.php:68 tb_templates/list/default.php:72
@@ -485,11 +494,11 @@ msgstr ""
 msgid "Booked Status"
 msgstr ""
 
-#: admin/abptb_status.php:238
+#: admin/abptb_status.php:239
 msgid "Booking"
 msgstr ""
 
-#: admin/abptb_orders.php:82 admin/abptb_orders.php:85
+#: admin/abptb_orders.php:91 admin/abptb_orders.php:94
 msgid "Booking Completed"
 msgstr ""
 
@@ -497,11 +506,11 @@ msgstr ""
 msgid "Booking Details"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:259 includes/abptb_woocommerce.php:360
+#: includes/abptb_woocommerce.php:261 includes/abptb_woocommerce.php:353
 msgid "Booking Information"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:28
+#: tb_templates/layout/display_cart_item.php:25
 msgid "Booking Information "
 msgstr ""
 
@@ -555,7 +564,7 @@ msgstr ""
 msgid "BUY TICKET"
 msgstr ""
 
-#: admin/abptb_status.php:158
+#: admin/abptb_status.php:159
 msgid "Can Not Find Post"
 msgstr ""
 
@@ -563,7 +572,7 @@ msgstr ""
 msgid "Capacity / Available Qty"
 msgstr ""
 
-#: includes/abptb_layout.php:557
+#: includes/abptb_layout.php:567
 msgid "Capacity : "
 msgstr ""
 
@@ -607,8 +616,16 @@ msgstr ""
 msgid "Check Availability"
 msgstr ""
 
-#: admin/abptb_form.php:179
+#: admin/abptb_orders.php:133
+msgid "Check In "
+msgstr ""
+
+#: admin/abptb_form.php:181
 msgid "Checkbox"
+msgstr ""
+
+#: includes/abptb_layout.php:816
+msgid "Checked"
 msgstr ""
 
 #. %s: Dashicons library link
@@ -625,11 +642,11 @@ msgid ""
 "dot interface elements."
 msgstr ""
 
-#: admin/abptb_form.php:201 includes/abptb_layout.php:271
-#: includes/abptb_layout.php:688 includes/abptb_layout.php:709
-#: includes/abptb_layout.php:1089 includes/abptb_layout.php:1104
-#: includes/abptb_layout.php:1109 includes/abptb_layout.php:1154
-#: includes/abptb_layout.php:1169 includes/abptb_layout.php:1174
+#: admin/abptb_form.php:203 includes/abptb_layout.php:281
+#: includes/abptb_layout.php:699 includes/abptb_layout.php:720
+#: includes/abptb_layout.php:1121 includes/abptb_layout.php:1136
+#: includes/abptb_layout.php:1141 includes/abptb_layout.php:1186
+#: includes/abptb_layout.php:1201 includes/abptb_layout.php:1206
 msgid "Clear Date"
 msgstr ""
 
@@ -637,8 +654,12 @@ msgstr ""
 msgid "Clear Layout"
 msgstr ""
 
-#: includes/abptb_layout.php:280
+#: includes/abptb_layout.php:290
 msgid "Clear Time"
+msgstr ""
+
+#: includes/abptb_layout.php:819
+msgid "Click to Check In"
 msgstr ""
 
 #: admin/abptb_admin.php:134 admin/abptb_post.php:189
@@ -649,7 +670,7 @@ msgstr ""
 msgid "Client Form ?"
 msgstr ""
 
-#: admin/abptb_form.php:251
+#: admin/abptb_form.php:253
 msgid "Client Form Configuration Saved Successfully..... !! "
 msgstr ""
 
@@ -661,15 +682,15 @@ msgstr ""
 msgid "Client Info : "
 msgstr ""
 
-#: includes/abptb_woocommerce.php:302 includes/abptb_woocommerce.php:402
+#: includes/abptb_woocommerce.php:298 includes/abptb_woocommerce.php:389
 msgid "Client Information"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:116
+#: tb_templates/layout/display_cart_item.php:105
 msgid "Client Information : "
 msgstr ""
 
-#: admin/abptb_orders.php:42
+#: admin/abptb_orders.php:51
 msgid "Close Options"
 msgstr ""
 
@@ -774,7 +795,7 @@ msgstr ""
 msgid "data loaded....!"
 msgstr ""
 
-#: admin/abptb_form.php:182 admin/abptb_post.php:183
+#: admin/abptb_form.php:184 admin/abptb_post.php:183
 msgid "Date"
 msgstr ""
 
@@ -794,7 +815,7 @@ msgstr ""
 msgid "Date Loaded successfully."
 msgstr ""
 
-#: includes/abptb_static.php:201
+#: includes/abptb_static.php:213
 msgid "Date of Birth"
 msgstr ""
 
@@ -854,7 +875,7 @@ msgstr ""
 msgid "Default Template"
 msgstr ""
 
-#: admin/abptb_form.php:108 admin/abptb_form.php:194
+#: admin/abptb_form.php:110 admin/abptb_form.php:196
 msgid "Default Value"
 msgstr ""
 
@@ -900,8 +921,8 @@ msgstr ""
 #: admin/abptb_configuration.php:203
 #, php-format
 msgid ""
-"Define the primary URL slug for rentals. Important: After changing this, you "
-"must flush your permalinks by visiting %s and clicking Save Changes."
+"Define the primary URL slug for Transport. Important: After changing this, "
+"you must flush your permalinks by visiting %s and clicking Save Changes."
 msgstr ""
 
 #: admin/abptb_configuration.php:697
@@ -910,12 +931,12 @@ msgid ""
 " alerts, or pending notices."
 msgstr ""
 
-#: includes/abptb_layout.php:125
+#: includes/abptb_layout.php:100
 msgid "Delete This Item"
 msgstr ""
 
 #: admin/abptb_brand.php:157 admin/abptb_category.php:158
-#: admin/abptb_location.php:199 admin/abptb_orders.php:261
+#: admin/abptb_location.php:199 admin/abptb_orders.php:277
 #: admin/abptb_organizer.php:157
 msgid "Deleted Successfully !"
 msgstr ""
@@ -928,16 +949,7 @@ msgstr ""
 msgid "Deleting............."
 msgstr ""
 
-#: includes/abptb_woocommerce.php:263 includes/abptb_woocommerce.php:364
-msgid "Departure"
-msgstr ""
-
-#: tb_templates/layout/display_cart_item.php:39
-#: tb_templates/layout/selection_details.php:27
-msgid "Departure : "
-msgstr ""
-
-#: admin/abptb_additional.php:89 admin/abptb_brand.php:73
+#: admin/abptb_additional.php:87 admin/abptb_brand.php:73
 #: admin/abptb_brand.php:181 admin/abptb_category.php:74
 #: admin/abptb_category.php:182 admin/abptb_organizer.php:75
 #: admin/abptb_organizer.php:181 admin/abptb_resource.php:100
@@ -988,11 +1000,11 @@ msgstr ""
 msgid "Drag Cells"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:269 includes/abptb_woocommerce.php:370
+#: includes/abptb_woocommerce.php:271 includes/abptb_woocommerce.php:363
 msgid "Drop-Off"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:54
+#: tb_templates/layout/display_cart_item.php:51
 msgid "Drop-Off  : "
 msgstr ""
 
@@ -1004,20 +1016,20 @@ msgstr ""
 msgid "Dropping"
 msgstr ""
 
-#: admin/abptb_status.php:320
+#: admin/abptb_status.php:325
 msgid "Dummy data imported successfully!"
 msgstr ""
 
-#: admin/abptb_status.php:163
+#: admin/abptb_status.php:164
 msgid "Dummy Import"
 msgstr ""
 
-#: admin/abptb_configuration.php:489 admin/abptb_form.php:176
-#: includes/abptb_static.php:198
+#: admin/abptb_configuration.php:489 admin/abptb_form.php:178
+#: includes/abptb_static.php:210
 msgid "E-Mail"
 msgstr ""
 
-#: includes/abptb_layout.php:1028
+#: includes/abptb_layout.php:1060
 msgid "E-Mail :"
 msgstr ""
 
@@ -1050,7 +1062,7 @@ msgstr ""
 msgid "Edit Post"
 msgstr ""
 
-#: includes/abptb_layout.php:118
+#: includes/abptb_layout.php:93
 msgid "Edit This Item"
 msgstr ""
 
@@ -1137,8 +1149,8 @@ msgstr ""
 msgid "Ex: 1"
 msgstr ""
 
-#: admin/abptb_additional.php:140 admin/abptb_additional.php:145
-#: admin/abptb_additional.php:150 admin/abptb_ticket.php:232
+#: admin/abptb_additional.php:138 admin/abptb_additional.php:143
+#: admin/abptb_additional.php:148 admin/abptb_ticket.php:232
 #: admin/abptb_ticket.php:237 admin/abptb_ticket.php:247
 msgid "EX: 15"
 msgstr ""
@@ -1159,7 +1171,7 @@ msgstr ""
 msgid "EX: Decor item Name"
 msgstr ""
 
-#: admin/abptb_additional.php:163 admin/abptb_post.php:276
+#: admin/abptb_additional.php:161 admin/abptb_post.php:276
 #: admin/abptb_ticket.php:252
 msgid "EX: Description"
 msgstr ""
@@ -1184,7 +1196,7 @@ msgstr ""
 msgid "EX: Ticket Name"
 msgstr ""
 
-#: admin/abptb_additional.php:135
+#: admin/abptb_additional.php:133
 msgid "EX: Water Bottle"
 msgstr ""
 
@@ -1196,7 +1208,7 @@ msgstr ""
 msgid "EX:10"
 msgstr ""
 
-#: admin/abptb_status.php:257
+#: admin/abptb_status.php:262
 msgid "Failed to create page."
 msgstr ""
 
@@ -1240,7 +1252,7 @@ msgstr ""
 msgid "Filter Post List"
 msgstr ""
 
-#: includes/abptb_static.php:196
+#: includes/abptb_static.php:208
 msgid "First Name"
 msgstr ""
 
@@ -1274,11 +1286,11 @@ msgstr ""
 msgid "Form Loaded Successfully .....! "
 msgstr ""
 
-#: admin/abptb_form.php:101
+#: admin/abptb_form.php:103
 msgid "Form Title"
 msgstr ""
 
-#: admin/abptb_form.php:103
+#: admin/abptb_form.php:105
 msgid "Form Type"
 msgstr ""
 
@@ -1290,23 +1302,23 @@ msgstr ""
 msgid "Forward Route Configuration"
 msgstr ""
 
-#: admin/abptb_orders.php:172 admin/abptb_orders.php:174
-#: admin/abptb_orders.php:176 admin/abptb_orders.php:204
-#: admin/abptb_orders.php:206 admin/abptb_orders.php:208
-#: includes/abptb_dependencies.php:253 includes/abptb_layout.php:962
-#: includes/abptb_layout.php:983 includes/abptb_woocommerce.php:276
-#: includes/abptb_woocommerce.php:277 includes/abptb_woocommerce.php:294
-#: includes/abptb_woocommerce.php:295 includes/abptb_woocommerce.php:377
-#: includes/abptb_woocommerce.php:378 includes/abptb_woocommerce.php:394
-#: includes/abptb_woocommerce.php:396
-#: tb_templates/layout/display_cart_item.php:69
-#: tb_templates/layout/display_cart_item.php:70
-#: tb_templates/layout/display_cart_item.php:102
-#: tb_templates/layout/display_cart_item.php:103
+#: admin/abptb_orders.php:185 admin/abptb_orders.php:187
+#: admin/abptb_orders.php:189 admin/abptb_orders.php:218
+#: admin/abptb_orders.php:220 admin/abptb_orders.php:222
+#: includes/abptb_dependencies.php:253 includes/abptb_layout.php:994
+#: includes/abptb_layout.php:1015 includes/abptb_woocommerce.php:278
+#: includes/abptb_woocommerce.php:279 includes/abptb_woocommerce.php:290
+#: includes/abptb_woocommerce.php:291 includes/abptb_woocommerce.php:370
+#: includes/abptb_woocommerce.php:371 includes/abptb_woocommerce.php:381
+#: includes/abptb_woocommerce.php:383
+#: tb_templates/layout/display_cart_item.php:66
+#: tb_templates/layout/display_cart_item.php:67
+#: tb_templates/layout/display_cart_item.php:91
+#: tb_templates/layout/display_cart_item.php:92
 msgid "FREE"
 msgstr ""
 
-#: tb_templates/layout/additional_services.php:68
+#: includes/abptb_layout.php:968 tb_templates/layout/additional_services.php:68
 #: tb_templates/layout/ticket_type.php:46 tb_templates/list/default.php:62
 msgid "Free"
 msgstr ""
@@ -1315,16 +1327,16 @@ msgstr ""
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: includes/abptb_layout.php:489
+#: includes/abptb_layout.php:499
 msgid "Friday"
 msgstr ""
 
 #: admin/abptb_price.php:49 admin/abptb_price.php:105
-#: includes/abptb_layout.php:1119
+#: includes/abptb_layout.php:1151
 msgid "From"
 msgstr ""
 
-#: admin/abptb_orders.php:113
+#: admin/abptb_orders.php:123
 msgid "From - To"
 msgstr ""
 
@@ -1340,7 +1352,7 @@ msgstr ""
 msgid "Full Address(optional)"
 msgstr ""
 
-#: admin/abptb_post.php:377 admin/abptb_status.php:245
+#: admin/abptb_post.php:377 admin/abptb_status.php:246
 msgid "Gallery"
 msgstr ""
 
@@ -1352,7 +1364,7 @@ msgstr ""
 msgid "Gallery Page"
 msgstr ""
 
-#: includes/abptb_static.php:200
+#: includes/abptb_static.php:212
 msgid "Gender"
 msgstr ""
 
@@ -1372,7 +1384,7 @@ msgstr ""
 msgid "Global Client Form Configuration"
 msgstr ""
 
-#: admin/abptb_form.php:263
+#: admin/abptb_form.php:265
 msgid "Global Client Form Imported Successfully ..... !! "
 msgstr ""
 
@@ -1425,7 +1437,7 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
-#: admin/abptb_additional.php:83
+#: admin/abptb_additional.php:81
 msgid "Icon / Image"
 msgstr ""
 
@@ -1629,7 +1641,7 @@ msgstr ""
 msgid "Images Per Row"
 msgstr ""
 
-#: admin/abptb_additional.php:60
+#: admin/abptb_additional.php:58
 msgid "Import Additional Service"
 msgstr ""
 
@@ -1695,27 +1707,28 @@ msgstr ""
 msgid "Install & Active Now"
 msgstr ""
 
-#: admin/abptb_post.php:745 admin/abptb_post.php:766
+#: admin/abptb_post.php:746 admin/abptb_post.php:767
 msgid "Invalid  ID ..... !! "
 msgstr ""
 
-#: admin/abptb_post.php:721
+#: admin/abptb_post.php:722
 msgid "Invalid ID ..... !! "
 msgstr ""
 
-#: admin/abptb_additional.php:172 admin/abptb_additional.php:221
+#: admin/abptb_additional.php:170 admin/abptb_additional.php:219
 #: admin/abptb_brand.php:30 admin/abptb_brand.php:88 admin/abptb_brand.php:139
 #: admin/abptb_category.php:31 admin/abptb_category.php:89
 #: admin/abptb_category.php:140 admin/abptb_dates.php:201
 #: admin/abptb_dates.php:210 admin/abptb_feature.php:29
 #: admin/abptb_feature.php:80 admin/abptb_feature.php:127
-#: admin/abptb_form.php:247 admin/abptb_form.php:255
+#: admin/abptb_form.php:249 admin/abptb_form.php:257
 #: admin/abptb_location.php:28 admin/abptb_location.php:114
-#: admin/abptb_location.php:182 admin/abptb_orders.php:221
-#: admin/abptb_orders.php:237 admin/abptb_organizer.php:32
-#: admin/abptb_organizer.php:90 admin/abptb_organizer.php:140
-#: admin/abptb_post.php:717 admin/abptb_post.php:733 admin/abptb_post.php:749
-#: admin/abptb_post.php:770 admin/abptb_price.php:158 admin/abptb_price.php:164
+#: admin/abptb_location.php:182 admin/abptb_orders.php:237
+#: admin/abptb_orders.php:253 admin/abptb_orders.php:328
+#: admin/abptb_organizer.php:32 admin/abptb_organizer.php:90
+#: admin/abptb_organizer.php:140 admin/abptb_post.php:718
+#: admin/abptb_post.php:734 admin/abptb_post.php:750 admin/abptb_post.php:771
+#: admin/abptb_price.php:158 admin/abptb_price.php:164
 #: admin/abptb_resource.php:122 admin/abptb_resource.php:311
 #: admin/abptb_resource.php:347 admin/abptb_resource.php:357
 #: admin/abptb_seat_plan.php:135 admin/abptb_seat_plan.php:256
@@ -1724,8 +1737,8 @@ msgstr ""
 #: admin/abptb_seat_plan.php:573 admin/abptb_seat_plan.php:627
 #: admin/abptb_seat_plan.php:679 admin/abptb_seat_plan.php:723
 #: admin/abptb_seat_plan.php:810 admin/abptb_seat_plan.php:860
-#: admin/abptb_seat_plan.php:902 admin/abptb_status.php:172
-#: admin/abptb_status.php:229 admin/abptb_status.php:272
+#: admin/abptb_seat_plan.php:902 admin/abptb_status.php:173
+#: admin/abptb_status.php:230 admin/abptb_status.php:277
 #: admin/abptb_ticket.php:86
 msgid "Invalid security token or Insufficient permissions."
 msgstr ""
@@ -1734,16 +1747,20 @@ msgstr ""
 msgid "Item Deleted Successfully............. !"
 msgstr ""
 
-#: includes/abptb_layout.php:685 includes/abptb_layout.php:1086
+#: includes/abptb_layout.php:696 includes/abptb_layout.php:1118
 msgid "Journey Date"
 msgstr ""
 
-#: includes/abptb_layout.php:1099
+#: includes/abptb_layout.php:1131
 msgid "Journey Date Between"
 msgstr ""
 
 #: tb_templates/layout/selection_details.php:23
 msgid "Journey Date: "
+msgstr ""
+
+#: admin/abptb_orders.php:351
+msgid "Journey Time"
 msgstr ""
 
 #: admin/abptb_configuration.php:193 admin/abptb_feature.php:51
@@ -1754,7 +1771,7 @@ msgstr ""
 msgid "Label Font Size"
 msgstr ""
 
-#: includes/abptb_static.php:197
+#: includes/abptb_static.php:209
 msgid "Last Name"
 msgstr ""
 
@@ -1806,7 +1823,7 @@ msgid ""
 "to hide or %2$s to display. (Default: %3$s)"
 msgstr ""
 
-#: admin/abptb_additional.php:87
+#: admin/abptb_additional.php:85
 msgid "Max qty"
 msgstr ""
 
@@ -1834,16 +1851,16 @@ msgstr ""
 msgid "Modify / Edit Seat Plan Seat Color Combination"
 msgstr ""
 
-#: includes/abptb_layout.php:485
+#: includes/abptb_layout.php:495
 msgid "Monday"
 msgstr ""
 
-#: admin/abptb_orders.php:41 admin/abptb_orders.php:42
-#: admin/abptb_orders.php:44
+#: admin/abptb_orders.php:50 admin/abptb_orders.php:51
+#: admin/abptb_orders.php:53
 msgid "More Options"
 msgstr ""
 
-#: includes/abptb_layout.php:130
+#: includes/abptb_layout.php:115
 msgid "Move This Item"
 msgstr ""
 
@@ -1855,7 +1872,7 @@ msgstr ""
 msgid "move to Trashing.........!"
 msgstr ""
 
-#: admin/abptb_post.php:743
+#: admin/abptb_post.php:744
 msgid "Moved to trash successfully...... !! "
 msgstr ""
 
@@ -1875,16 +1892,16 @@ msgstr ""
 msgid "Multiple Ticket Type?"
 msgstr ""
 
-#: admin/abptb_additional.php:84 admin/abptb_brand.php:56
+#: admin/abptb_additional.php:82 admin/abptb_brand.php:56
 #: admin/abptb_brand.php:57 admin/abptb_category.php:57
-#: admin/abptb_category.php:58 admin/abptb_form.php:160
+#: admin/abptb_category.php:58 admin/abptb_form.php:162
 #: admin/abptb_location.php:60 admin/abptb_organizer.php:58
 #: admin/abptb_organizer.php:59 admin/abptb_status.php:104
 #: admin/abptb_ticket.php:176
 msgid "Name"
 msgstr ""
 
-#: includes/abptb_layout.php:1025
+#: includes/abptb_layout.php:1057
 msgid "Name :"
 msgstr ""
 
@@ -1901,7 +1918,7 @@ msgstr ""
 msgid "Next Page"
 msgstr ""
 
-#: admin/abptb_additional.php:157
+#: admin/abptb_additional.php:155
 msgid "No"
 msgstr ""
 
@@ -1981,6 +1998,10 @@ msgstr ""
 
 #: tb_templates/layout/additional_services.php:60
 msgid "Not Available !"
+msgstr ""
+
+#: includes/abptb_layout.php:820
+msgid "Not Checked !"
 msgstr ""
 
 #: includes/abptb_static.php:17
@@ -2533,7 +2554,7 @@ msgstr ""
 msgid "Nothing Found !"
 msgstr ""
 
-#: admin/abptb_form.php:177
+#: admin/abptb_form.php:179
 msgid "Number"
 msgstr ""
 
@@ -2541,11 +2562,11 @@ msgstr ""
 msgid "Number of advance booking date"
 msgstr ""
 
-#: admin/abptb_status.php:154
+#: admin/abptb_status.php:155
 msgid "Number of Post"
 msgstr ""
 
-#: includes/abptb_dependencies.php:202 includes/abptb_layout.php:209
+#: includes/abptb_dependencies.php:202 includes/abptb_layout.php:219
 msgid "OFF"
 msgstr ""
 
@@ -2553,15 +2574,15 @@ msgstr ""
 msgid "Off Date Range(optional)"
 msgstr ""
 
-#: includes/abptb_layout.php:499
+#: includes/abptb_layout.php:509
 msgid "Off Dates Range"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:332
+#: includes/abptb_woocommerce.php:328
 msgid "Oh! We are sorry, something went wrong. Please try again later."
 msgstr ""
 
-#: includes/abptb_dependencies.php:203 includes/abptb_layout.php:202
+#: includes/abptb_dependencies.php:203 includes/abptb_layout.php:212
 msgid "ON"
 msgstr ""
 
@@ -2581,27 +2602,27 @@ msgstr ""
 msgid "Operational Date Type"
 msgstr ""
 
-#: includes/abptb_layout.php:1151
+#: includes/abptb_layout.php:1183
 msgid "Order Date"
 msgstr ""
 
-#: includes/abptb_layout.php:1164
+#: includes/abptb_layout.php:1196
 msgid "Order Date Between"
 msgstr ""
 
-#: admin/abptb_orders.php:15
+#: admin/abptb_orders.php:17
 msgid "Order Filter"
 msgstr ""
 
-#: includes/abptb_layout.php:1209 includes/abptb_layout.php:1210
+#: includes/abptb_layout.php:1241 includes/abptb_layout.php:1242
 msgid "Order ID"
 msgstr ""
 
-#: admin/abptb_orders.php:111
+#: admin/abptb_orders.php:121
 msgid "Order ID/ Date"
 msgstr ""
 
-#: admin/abptb_orders.php:233
+#: admin/abptb_orders.php:249
 msgid "Order Loaded Successfully !"
 msgstr ""
 
@@ -2633,7 +2654,7 @@ msgstr ""
 msgid "Others/Decor Item List"
 msgstr ""
 
-#: admin/abptb_status.php:265
+#: admin/abptb_status.php:270
 msgid "Page already exists."
 msgstr ""
 
@@ -2641,15 +2662,15 @@ msgstr ""
 msgid "Page Creating ........!"
 msgstr ""
 
-#: admin/abptb_orders.php:127
+#: admin/abptb_orders.php:138
 msgid "Passenger Info"
 msgstr ""
 
-#: includes/abptb_layout.php:557 includes/abptb_layout.php:564
+#: includes/abptb_layout.php:567 includes/abptb_layout.php:574
 msgid "Passengers   "
 msgstr ""
 
-#: admin/abptb_orders.php:124
+#: admin/abptb_orders.php:135
 msgid "Payment Method"
 msgstr ""
 
@@ -2669,15 +2690,15 @@ msgstr ""
 msgid "Permanent Remove : "
 msgstr ""
 
-#: admin/abptb_post.php:729
+#: admin/abptb_post.php:730
 msgid "Permanently removed. ..... !! "
 msgstr ""
 
-#: includes/abptb_static.php:199
+#: includes/abptb_static.php:211
 msgid "Phone"
 msgstr ""
 
-#: includes/abptb_layout.php:1031
+#: includes/abptb_layout.php:1063
 msgid "Phone :"
 msgstr ""
 
@@ -2697,11 +2718,11 @@ msgid ""
 "and buttons."
 msgstr ""
 
-#: includes/abptb_woocommerce.php:266 includes/abptb_woocommerce.php:367
+#: includes/abptb_woocommerce.php:268 includes/abptb_woocommerce.php:360
 msgid "Pick Up"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:48
+#: tb_templates/layout/display_cart_item.php:45
 msgid "Pick Up  : "
 msgstr ""
 
@@ -2729,7 +2750,7 @@ msgstr ""
 #: admin/abptb_configuration.php:1010 admin/abptb_organizer.php:219
 #: admin/abptb_post.php:227 admin/abptb_resource.php:157
 #: admin/abptb_resource.php:168 admin/abptb_ticket.php:26
-#: includes/abptb_dependencies.php:250 includes/abptb_layout.php:298
+#: includes/abptb_dependencies.php:250 includes/abptb_layout.php:308
 msgid "Please Select"
 msgstr ""
 
@@ -2741,7 +2762,7 @@ msgstr ""
 msgid "Please select dropping point......!"
 msgstr ""
 
-#: includes/abptb_dependencies.php:251 includes/abptb_layout.php:687
+#: includes/abptb_dependencies.php:251 includes/abptb_layout.php:698
 msgid "Please Select Journey Date"
 msgstr ""
 
@@ -2770,7 +2791,7 @@ msgstr ""
 msgid "Post List"
 msgstr ""
 
-#: admin/abptb_post.php:779
+#: admin/abptb_post.php:780
 msgid "Post List Loaded successfully...... !! "
 msgstr ""
 
@@ -2798,12 +2819,12 @@ msgstr ""
 msgid "Previous Page"
 msgstr ""
 
-#: admin/abptb_additional.php:86 admin/abptb_price.php:52
+#: admin/abptb_additional.php:84 admin/abptb_price.php:52
 #: admin/abptb_price.php:108 tb_templates/layout/selection_details.php:86
 msgid "Price"
 msgstr ""
 
-#: admin/abptb_orders.php:118
+#: admin/abptb_orders.php:128
 msgid "Price "
 msgstr ""
 
@@ -2833,11 +2854,11 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: admin/abptb_additional.php:85 admin/abptb_ticket.php:177
+#: admin/abptb_additional.php:83 admin/abptb_ticket.php:177
 msgid "Quantity"
 msgstr ""
 
-#: admin/abptb_form.php:180
+#: admin/abptb_form.php:182
 msgid "Radio"
 msgstr ""
 
@@ -2849,11 +2870,11 @@ msgstr ""
 msgid "Related Transport"
 msgstr ""
 
-#: includes/abptb_layout.php:389 includes/abptb_layout.php:453
+#: includes/abptb_layout.php:399 includes/abptb_layout.php:463
 msgid "Remove Icon"
 msgstr ""
 
-#: includes/abptb_layout.php:457
+#: includes/abptb_layout.php:467
 msgid "Remove Image"
 msgstr ""
 
@@ -2865,7 +2886,7 @@ msgstr ""
 msgid "Remove Post Image"
 msgstr ""
 
-#: admin/abptb_form.php:109
+#: admin/abptb_form.php:111
 msgid "Required"
 msgstr ""
 
@@ -2881,7 +2902,7 @@ msgstr ""
 msgid "Restore : "
 msgstr ""
 
-#: admin/abptb_post.php:764
+#: admin/abptb_post.php:765
 msgid "Restored successfully...... !! "
 msgstr ""
 
@@ -2893,7 +2914,7 @@ msgstr ""
 msgid "Return Date  Loading............."
 msgstr ""
 
-#: includes/abptb_layout.php:706
+#: includes/abptb_layout.php:717
 msgid "Return Date (optional)"
 msgstr ""
 
@@ -2913,11 +2934,12 @@ msgstr ""
 msgid "Return Route Configuration"
 msgstr ""
 
-#: includes/abptb_layout.php:986 tb_templates/layout/additional_services.php:71
+#: includes/abptb_layout.php:1018
+#: tb_templates/layout/additional_services.php:71
 msgid "Returnable"
 msgstr ""
 
-#: admin/abptb_additional.php:88
+#: admin/abptb_additional.php:86
 msgid "Returnable or Not"
 msgstr ""
 
@@ -2925,12 +2947,16 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: admin/abptb_post.php:83 admin/abptb_post.php:181
+#: admin/abptb_orders.php:305 admin/abptb_post.php:83 admin/abptb_post.php:181
 msgid "Route"
 msgstr ""
 
 #: admin/abptb_routing.php:24
 msgid "Route Configuration"
+msgstr ""
+
+#: admin/abptb_orders.php:322 admin/abptb_orders.php:324
+msgid "Route Data Loaded Successfully !"
 msgstr ""
 
 #: admin/abptb_configuration.php:351
@@ -2961,7 +2987,7 @@ msgstr ""
 msgid "Same Transport Return"
 msgstr ""
 
-#: includes/abptb_layout.php:490
+#: includes/abptb_layout.php:500
 msgid "Saturday"
 msgstr ""
 
@@ -2971,7 +2997,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/abptb_layout.php:138
+#: includes/abptb_layout.php:105 includes/abptb_layout.php:148
 msgid "save"
 msgstr ""
 
@@ -2991,11 +3017,11 @@ msgstr ""
 msgid "Save FAQs Configuration"
 msgstr ""
 
-#: admin/abptb_additional.php:108
+#: admin/abptb_additional.php:106
 msgid "Save Global Additional services Configuration"
 msgstr ""
 
-#: admin/abptb_form.php:128
+#: admin/abptb_form.php:130
 msgid "Save Global Client Form Configuration"
 msgstr ""
 
@@ -3024,7 +3050,7 @@ msgstr ""
 msgid "Saving.............!"
 msgstr ""
 
-#: admin/abptb_orders.php:37
+#: admin/abptb_orders.php:46
 msgid "Search"
 msgstr ""
 
@@ -3057,7 +3083,7 @@ msgid "Seat Label :"
 msgstr ""
 
 #: admin/abptb_configuration.php:400 admin/abptb_seat_plan.php:75
-#: includes/abptb_layout.php:471
+#: includes/abptb_layout.php:481
 msgid "Seat Plan"
 msgstr ""
 
@@ -3105,11 +3131,11 @@ msgstr ""
 msgid "Section Background Color"
 msgstr ""
 
-#: admin/abptb_form.php:178
+#: admin/abptb_form.php:180
 msgid "Select"
 msgstr ""
 
-#: includes/abptb_layout.php:775
+#: includes/abptb_layout.php:786
 msgid "Select "
 msgstr ""
 
@@ -3119,16 +3145,24 @@ msgid ""
 "brand identity throughout the plugin panels."
 msgstr ""
 
-#: includes/abptb_layout.php:1121
+#: includes/abptb_layout.php:1153
 msgid "Select Boarding Point"
 msgstr ""
 
-#: includes/abptb_layout.php:1136
+#: includes/abptb_layout.php:1168
 msgid "Select Dropping Point"
 msgstr ""
 
-#: includes/abptb_layout.php:406
+#: includes/abptb_layout.php:416
 msgid "Select Image"
+msgstr ""
+
+#: admin/abptb_orders.php:353
+msgid "Select Journey Time"
+msgstr ""
+
+#: admin/abptb_orders.php:307
+msgid "Select Route"
 msgstr ""
 
 #: admin/abptb_ticket.php:269
@@ -3175,7 +3209,8 @@ msgstr ""
 msgid "Session expired. Page Reloading......"
 msgstr ""
 
-#: includes/abptb_ajax.php:189 includes/abptb_ajax.php:218
+#: admin/abptb_orders.php:283 includes/abptb_ajax.php:189
+#: includes/abptb_ajax.php:218
 msgid "Session expired. Please refresh the page."
 msgstr ""
 
@@ -3255,7 +3290,7 @@ msgstr ""
 msgid "Sold"
 msgstr ""
 
-#: includes/abptb_layout.php:910
+#: includes/abptb_layout.php:936
 msgid "Sold !"
 msgstr ""
 
@@ -3263,11 +3298,11 @@ msgstr ""
 msgid "Sold Color"
 msgstr ""
 
-#: includes/abptb_layout.php:794
+#: includes/abptb_layout.php:805
 msgid "Sold Out !"
 msgstr ""
 
-#: admin/abptb_orders.php:263
+#: admin/abptb_orders.php:279
 msgid "Something Error Occurred !"
 msgstr ""
 
@@ -3275,7 +3310,7 @@ msgstr ""
 msgid "Something Wrong... Reload Page....!"
 msgstr ""
 
-#: admin/abptb_status.php:267
+#: admin/abptb_status.php:272
 msgid "Something Wrong...!"
 msgstr ""
 
@@ -3287,7 +3322,7 @@ msgstr ""
 msgid "Sorry ! We can not find any Order in your criteria."
 msgstr ""
 
-#: includes/abptb_layout.php:498
+#: includes/abptb_layout.php:508
 msgid "Special On Dates"
 msgstr ""
 
@@ -3303,7 +3338,7 @@ msgstr ""
 msgid "Specific Dates"
 msgstr ""
 
-#: includes/abptb_layout.php:497
+#: includes/abptb_layout.php:507
 msgid "Specific Off Dates"
 msgstr ""
 
@@ -3339,15 +3374,15 @@ msgstr ""
 msgid "Standard"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:261 includes/abptb_woocommerce.php:362
-msgid "Start Point"
+#: includes/abptb_woocommerce.php:263 includes/abptb_woocommerce.php:355
+msgid "Starting Point"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:34
-msgid "Start Point  : "
+#: tb_templates/layout/display_cart_item.php:31
+msgid "Starting Point  : "
 msgstr ""
 
-#: admin/abptb_admin.php:76 admin/abptb_orders.php:123
+#: admin/abptb_admin.php:76 admin/abptb_orders.php:134
 msgid "Status"
 msgstr ""
 
@@ -3355,7 +3390,7 @@ msgstr ""
 msgid "Status  & Information"
 msgstr ""
 
-#: includes/abptb_function.php:88 includes/abptb_layout.php:668
+#: includes/abptb_function.php:88 includes/abptb_layout.php:679
 msgid "Stops"
 msgstr ""
 
@@ -3383,7 +3418,7 @@ msgstr ""
 msgid "Sub-Total"
 msgstr ""
 
-#: includes/abptb_layout.php:491
+#: includes/abptb_layout.php:501
 msgid "Sunday"
 msgstr ""
 
@@ -3428,11 +3463,11 @@ msgstr ""
 msgid "Terminate Date (Optional)"
 msgstr ""
 
-#: admin/abptb_form.php:175
+#: admin/abptb_form.php:177
 msgid "Text"
 msgstr ""
 
-#: admin/abptb_form.php:181
+#: admin/abptb_form.php:183
 msgid "Textarea"
 msgstr ""
 
@@ -3446,16 +3481,17 @@ msgstr ""
 msgid "This transport sale close shortly. please try another transport."
 msgstr ""
 
-#: includes/abptb_layout.php:488
+#: includes/abptb_layout.php:498
 msgid "Thursday"
 msgstr ""
 
-#: admin/abptb_post.php:180 admin/abptb_ticket.php:32
-#: includes/abptb_layout.php:472 includes/abptb_woocommerce.php:285
+#: admin/abptb_post.php:180 admin/abptb_status.php:250
+#: admin/abptb_ticket.php:32 includes/abptb_layout.php:482
+#: includes/abptb_woocommerce.php:281
 msgid "Ticket"
 msgstr ""
 
-#: admin/abptb_orders.php:152
+#: admin/abptb_orders.php:165
 msgid "Ticket Cancel"
 msgstr ""
 
@@ -3463,15 +3499,15 @@ msgstr ""
 msgid "Ticket Configuration"
 msgstr ""
 
-#: admin/abptb_orders.php:114
+#: admin/abptb_orders.php:124
 msgid "Ticket Info"
 msgstr ""
 
-#: includes/abptb_woocommerce.php:272 includes/abptb_woocommerce.php:373
+#: includes/abptb_woocommerce.php:274 includes/abptb_woocommerce.php:366
 msgid "Ticket Information"
 msgstr ""
 
-#: tb_templates/layout/display_cart_item.php:63
+#: tb_templates/layout/display_cart_item.php:60
 msgid "Ticket Information : "
 msgstr ""
 
@@ -3535,6 +3571,10 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
+#: admin/abptb_orders.php:362
+msgid "Time  List Loaded Successfully !"
+msgstr ""
+
 #: tb_templates/layout/registration_item.php:35
 msgid "Time :"
 msgstr ""
@@ -3547,12 +3587,16 @@ msgstr ""
 msgid "Time Format"
 msgstr ""
 
+#: admin/abptb_orders.php:365
+msgid "Time Not Found !"
+msgstr ""
+
 #: admin/abptb_routing.php:41 admin/abptb_routing.php:79
 msgid "Time(in min)"
 msgstr ""
 
 #: admin/abptb_price.php:50 admin/abptb_price.php:106
-#: includes/abptb_layout.php:1134
+#: includes/abptb_layout.php:1166
 msgid "To"
 msgstr ""
 
@@ -3576,7 +3620,7 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: admin/abptb_orders.php:122
+#: admin/abptb_orders.php:132
 msgid "Total "
 msgstr ""
 
@@ -3600,7 +3644,7 @@ msgstr ""
 msgid "Total Seats"
 msgstr ""
 
-#: admin/abptb_orders.php:203
+#: admin/abptb_orders.php:217
 msgid "Total Summary"
 msgstr ""
 
@@ -3658,7 +3702,7 @@ msgstr ""
 msgid "Trash : "
 msgstr ""
 
-#: includes/abptb_layout.php:486
+#: includes/abptb_layout.php:496
 msgid "Tuesday"
 msgstr ""
 
@@ -3678,7 +3722,7 @@ msgstr ""
 msgid "Unavailable"
 msgstr ""
 
-#: admin/abptb_form.php:102 admin/abptb_form.php:168
+#: admin/abptb_form.php:104 admin/abptb_form.php:170
 msgid "Unique ID"
 msgstr ""
 
@@ -3699,7 +3743,7 @@ msgstr ""
 msgid "Use comma( , ) to separate option."
 msgstr ""
 
-#: admin/abptb_additional.php:57
+#: admin/abptb_additional.php:55
 msgid "Use Global Additional Service ?"
 msgstr ""
 
@@ -3737,7 +3781,7 @@ msgid ""
 "it. By default, this option is set to ON."
 msgstr ""
 
-#: includes/abptb_layout.php:1187 includes/abptb_layout.php:1189
+#: includes/abptb_layout.php:1219 includes/abptb_layout.php:1221
 msgid "User Name"
 msgstr ""
 
@@ -3745,7 +3789,7 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: admin/abptb_form.php:105 admin/abptb_form.php:188
+#: admin/abptb_form.php:107 admin/abptb_form.php:190
 msgid "Value Option"
 msgstr ""
 
@@ -3777,11 +3821,11 @@ msgstr ""
 msgid "We see, this id are not valid !"
 msgstr ""
 
-#: includes/abptb_layout.php:487
+#: includes/abptb_layout.php:497
 msgid "Wednesday"
 msgstr ""
 
-#: includes/abptb_layout.php:496
+#: includes/abptb_layout.php:506
 msgid "Weekend"
 msgstr ""
 
@@ -3793,7 +3837,7 @@ msgstr ""
 msgid "WooCommerce  Installing.........Please Wait...............!!"
 msgstr ""
 
-#: admin/abptb_status.php:222
+#: admin/abptb_status.php:223
 msgid "WooCommerce activated successfully!"
 msgstr ""
 
@@ -3806,11 +3850,11 @@ msgid ""
 "WooCommerce Downloading And Installing.........Please Wait...............!!"
 msgstr ""
 
-#: admin/abptb_status.php:214
+#: admin/abptb_status.php:215
 msgid "WooCommerce installed and activated successfully!"
 msgstr ""
 
-#: admin/abptb_status.php:225
+#: admin/abptb_status.php:226
 msgid "WooCommerce is either not installed or already active."
 msgstr ""
 
@@ -3840,7 +3884,7 @@ msgstr ""
 msgid "WordPress Version"
 msgstr ""
 
-#: admin/abptb_additional.php:156
+#: admin/abptb_additional.php:154
 msgid "Yes"
 msgstr ""
 

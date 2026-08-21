@@ -198,8 +198,8 @@
                             </div>
                             <div class="_divider_xxs"></div>
                             <div class="_group_content _w_full _f_equal">
-                                <button type="button" class="_btn_light_warning_xs" onclick="abptb_sp_row_last_remove()"><span class="_mar_r_xxs">➖</span> <?php esc_html_e(' Remove Last Row', 'abp-transport-booking'); ?></button>
-                                <button type="button" class="_btn_light_warning_xs" onclick="abptb_sp_col_last_remove()"><span class="_mar_r_xxs">➖</span> <?php esc_html_e('Remove Last Col', 'abp-transport-booking'); ?></button>
+                                <button type="button" class="_btn_light_warning_xs" onclick="abptb_sp_row_last_remove()">➖<?php esc_html_e(' Remove Last Row', 'abp-transport-booking'); ?></button>
+                                <button type="button" class="_btn_light_warning_xs" onclick="abptb_sp_col_last_remove()">➖<?php esc_html_e('Remove Last Col', 'abp-transport-booking'); ?></button>
                             </div>
                         </div>
                         <div class="sp_section_card_xs">

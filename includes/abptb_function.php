@@ -107,6 +107,25 @@
 				}
 				return null;
 			}
+			public static function ticket_label(array $ticket_info = [], array $booking_item = []): string {
+				if (empty($booking_item) || empty($ticket_info)) {
+					return '';
+				}
+				$label = $ticket_info['name'] ?? '';
+				$seat_type = $booking_item['seat_type'] ?? '';
+				$post_id = $booking_item['post_id'] ?? '';
+				if ($seat_type === 'sp' && ABPTB_Function::on_off('ticket_type') && ABPTB_Function::get_post_info($post_id, 'display_ticket_type') == 'on') {
+					$ticket_id = $ticket_info['id'] ?? '';
+					$sp_id = $booking_item['sp_id'] ?? '';
+					$tic_name = ABPTB_Function::ticket_name($ticket_id);
+					$sp_name = ABPTB_Function::sp_label($post_id, $sp_id);
+					$details = array_filter([$tic_name, $sp_name]);
+					if (!empty($details)) {
+						$label .= ' (' . implode(' - ', $details) . ')';
+					}
+				}
+				return $label;
+			}
 			public static function on_off($key): bool {
 				$value = (ABPTB_On_Off[$key] ?? 'on') ?: 'on';
 				return $value !== 'off';
@@ -370,12 +389,16 @@
 				}
 				return false;
 			}
-			public static function start_point($post_infos, $bp_dp): int|string|null {
+			public static function start_point($post_infos, $bp_dp, $end = false): int|string|null {
 				$start_point = '';
 				if (!empty($post_infos) && !empty($bp_dp)) {
 					$key = self::return_check($post_infos, $bp_dp) ? 'return_routing_infos' : 'routing_infos';
 					$route = $post_infos[$key] ?? [];
-					$start_point = array_key_first($route);
+					if ($end) {
+						$start_point = array_key_last($route);
+					} else {
+						$start_point = array_key_first($route);
+					}
 				}
 				return $start_point;
 			}
@@ -860,7 +883,7 @@
 						$price_infos = $post_infos['price_data'] ?? ABPTB_Function::get_post_info($post_id, 'price_data', []);
 						if (!empty($price_infos) && array_key_exists($bp_dp, $price_infos)) {
 							$price = $price_infos[$bp_dp][$type] ?? (current($price_infos[$bp_dp]) ?? 0);
-							$price = $price > 0 ? apply_filters('abptb_filter_price', $price, $date) : $price;
+							$price = $price > 0 ? apply_filters('abptb_filter_price', $price, $post_infos,$date) : $price;
 						}
 					}
 					return $price > 0 ? self::tax_with_price($post_id, $price) : 0;
