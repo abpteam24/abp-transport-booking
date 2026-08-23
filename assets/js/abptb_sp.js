@@ -44,10 +44,10 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
             type: 'POST', url: abptb_sp_config.ajax_url, data: {
                 action: 'abptb_add_sp', id: id, clone: clone, 'nonce': abptb_sp_config.nonce
             }, beforeSend: function () {
-                abptb_spinner(target);
+                abp_spinner(target);
                 abptb_toast_msg(abptb_sp_config.msg.sp_loading);
             }, success: function (response) {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 if (response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html).promise().done(function () {
                         abptb_init(target);
@@ -59,7 +59,7 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
                     });
                 }
             }, error: function (xhr) {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 if (xhr.response && xhr.response.data) {
                     abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
                 }
@@ -87,10 +87,10 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
                 type: 'POST', url: abptb_sp_config.ajax_url, data: {
                     "action": "abptb_delete_sp", 'id': id, 'nonce': abptb_sp_config.nonce
                 }, beforeSend: function () {
-                    abptb_spinner(parent);
+                    abp_spinner(parent);
                     abptb_toast_msg(abptb_sp_config.msg.sp_deleting, 'error');
                 }, success: function (response) {
-                    abptb_spinner_remove(parent);
+                    abp_spinner_remove(parent);
                     if (parent && parent.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                         parent.html(response.data.html);
                         abptb_toast_msg(response.data.msg, response.data.type);
@@ -136,10 +136,10 @@ let abptb_decor_item = abptb_sp_config.decor_item ? JSON.parse(abptb_sp_config.d
         $.ajax({
             type: 'POST', url: abptb_sp_config.ajax_url, data: payload,
             beforeSend: function () {
-                abptb_spinner(sp_parent);
+                abp_spinner(sp_parent);
                 abptb_toast_msg(abptb_sp_config.msg.sp_saving, 'info');
             }, success: function (response) {
-                abptb_spinner_remove(sp_parent);
+                abp_spinner_remove(sp_parent);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 window.location.reload();
             }

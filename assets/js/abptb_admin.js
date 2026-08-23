@@ -156,13 +156,13 @@ window.abptb_popup_open_global = function (action, id = '') {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": 'abptb_add_' + action, 'id': id, 'post_id': post_id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abptb_spinner(parent);
+                    abp_spinner(parent);
                     setTimeout(function () {
                         abptb_color_picker_init(parent);
                     }, 50);
                     abptb_toast_msg(abptb_admin_data.msg.loading);
                 }, success: function (response) {
-                    abptb_spinner_remove(parent);
+                    abp_spinner_remove(parent);
                     if (response.data && response.data.hasOwnProperty('html')) {
                         target.html(response.data.html).promise().done(function () {
                             abptb_toast_msg(response.data.msg, response.data.type);
@@ -212,7 +212,7 @@ window.abptb_save_global = function (action, $_this) {
                     processData: false,
                     data: formData,
                     beforeSend: function () {
-                        abptb_spinner(target);
+                        abp_spinner(target);
                         abptb_toast_msg(abptb_admin_data.msg.saving);
                     },
                     success: function (response) {
@@ -241,7 +241,7 @@ window.abptb_save_global = function (action, $_this) {
                                 new ABPTB_Multi_Selection('div.abptb_admin .post_feature', abptb_feature_data);
                             }
                         }
-                        abptb_spinner_remove(target);
+                        abp_spinner_remove(target);
                         abptb_toast_msg(response.data.msg, response.data.type);
                     },
                     error: function (xhr) {
@@ -260,7 +260,7 @@ window.abptb_delete_global = function (action, id = '') {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": 'abptb_delete_' + action, 'id': id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abptb_spinner(target);
+                    abp_spinner(target);
                     abptb_toast_msg(abptb_admin_data.msg.deleting, 'error');
                 }, success: function (response) {
                     if (response.data && response.data.hasOwnProperty('html')) {
@@ -279,7 +279,7 @@ window.abptb_delete_global = function (action, id = '') {
                         }
                     }
                     abptb_toast_msg(response.data.msg, response.data.type);
-                    abptb_spinner_remove(target);
+                    abp_spinner_remove(target);
                 }, error: function (xhr) {
                     abptb_ajx_error(xhr, target);
                 }
@@ -295,10 +295,10 @@ window.abptb_post_action = function (action, id) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_post_' + action, 'post_id': id, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abptb_spinner(parent);
+                abp_spinner(parent);
                 abptb_toast_msg((abptb_admin_data.msg[action] ? abptb_admin_data.msg[action] : abptb_admin_data.msg.loading), 'warn');
             }, success: function (response) {
-                abptb_spinner_remove(parent);
+                abp_spinner_remove(parent);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 window.location.reload();
             }, error: function (xhr) {
@@ -317,10 +317,10 @@ window.abptb_import_global = function (action) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_import_' + action, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abptb_spinner(target);
+                abp_spinner(target);
                 abptb_toast_msg((abptb_admin_data.msg[action] ? abptb_admin_data.msg[action] : abptb_admin_data.msg.loading));
             }, success: function (response) {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 if (action === 'dummy') {
                     window.location.reload();
@@ -348,7 +348,7 @@ window.abptb_create_page = function (page_type) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": "abptb_create_page", 'nonce': abptb_admin_data.nonce, 'type': page_type
             }, beforeSend: function () {
-                abptb_spinner(parent);
+                abp_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.create_post_page);
             }, success: function (response) {
                 abptb_toast_msg(response.data.msg, response.data.type);
@@ -366,7 +366,7 @@ window.abptb_wc_config = function (page_type) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": "abptb_wc_config", 'nonce': abptb_admin_data.nonce, 'type': page_type
             }, beforeSend: function () {
-                abptb_spinner(parent);
+                abp_spinner(parent);
                 abptb_toast_msg((abptb_admin_data.msg[page_type] ? abptb_admin_data.msg[page_type] : abptb_admin_data.msg.loading));
             }, success: function (response) {
                 if (response.data && response.data.hasOwnProperty('msg')) {
@@ -442,13 +442,13 @@ window.abptb_image_selection = function ($this) {
                     type: 'POST', url: abptb_admin_data.ajax_url, data: {
                         "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
                     }, beforeSend: function () {
-                        abptb_spinner(parent);
+                        abp_spinner(parent);
                         abptb_toast_msg(abptb_admin_data.msg.post_loading);
                     }, success: function (response) {
                         if (response.data && response.data.hasOwnProperty('html')) {
                             target.html(response.data.html);
                         }
-                        abptb_spinner_remove(parent);
+                        abp_spinner_remove(parent);
                         abptb_toast_msg(response.data.msg, response.data.type);
                     }, error: function (xhr) {
                         abptb_ajx_error(xhr, parent);
@@ -639,18 +639,18 @@ window.abptb_image_selection = function ($this) {
             processData: false,
             data: formData,
             beforeSend: function () {
-                abptb_spinner(target);
+                abp_spinner(target);
                 abptb_toast_msg(abptb_admin_data.msg.price_loading);
             },
             success: function (response) {
                 if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html);
                 }
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 abptb_toast_msg(response.data.msg, response.data.type);
             },
             error: function (xhr) {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 if (xhr.response && xhr.response.data) {
                     abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
                 }
@@ -667,16 +667,16 @@ window.abptb_image_selection = function ($this) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_type_switch', 'type': type, 'display_ticket_type': display_ticket_type, 'post_id': post_id, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abptb_spinner(parent);
+                abp_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.type_switch);
             }, success: function (response) {
                 if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html);
                 }
-                abptb_spinner_remove(parent);
+                abp_spinner_remove(parent);
                 abptb_toast_msg(response.data.msg, response.data.type);
             }, error: function (xhr) {
-                abptb_spinner_remove(parent);
+                abp_spinner_remove(parent);
                 if (xhr.response && xhr.response.data) {
                     abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
                 }
@@ -699,11 +699,11 @@ window.abptb_image_selection = function ($this) {
         $.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, contentType: false, processData: false, data: formData,
             beforeSend: function () {
-                abptb_spinner(parent);
+                abp_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.order_loading);
             },
             success: function (response) {
-                abptb_spinner_remove(parent);
+                abp_spinner_remove(parent);
                 if (response.data) {
                     if (response.data.hasOwnProperty('html')) {
                         target.html(response.data.html).promise().done(function () {
@@ -745,10 +745,10 @@ window.abptb_image_selection = function ($this) {
             $.ajax({
                 type: 'POST', url: abptb_admin_data.ajax_url, contentType: false, processData: false, data: formData,
                 beforeSend: function () {
-                    abptb_spinner(target);
+                    abp_spinner(target);
                 },
                 success: function (response) {
-                    abptb_spinner_remove(target);
+                    abp_spinner_remove(target);
                     if (response.data && response.data.hasOwnProperty('html')) {
                         target.slideDown('fast').html(response.data.html);
                     } else {
@@ -782,10 +782,10 @@ window.abptb_image_selection = function ($this) {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": "abptb_item_cancel", 'item_id': item_id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abptb_spinner(parent);
+                    abp_spinner(parent);
                     abptb_toast_msg(abptb_admin_data.msg.deleting, 'error');
                 }, success: function (response) {
-                    abptb_spinner_remove(parent);
+                    abp_spinner_remove(parent);
                     if (response.data) {
                         abptb_toast_msg(response.data.msg, response.data.type);
                     }
@@ -1077,7 +1077,7 @@ window.abptb_image_selection = function ($this) {
             category_li.appendTo(category_list);
         });
         category_list.appendTo(abptb_category_list);
-        abptb_spinner(abptb_item_loader);
+        abp_spinner(abptb_item_loader);
     }
     function load_icon_list() {
         abptb_icon_area.empty();

@@ -111,14 +111,14 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
             $.ajax({
                 type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
                 beforeSend: function () {
-                    abptb_spinner(target_return);
-                    abptb_spinner(target_journey);
-                    abptb_spinner(target_bp_dp);
+                    abp_spinner(target_return);
+                    abp_spinner(target_journey);
+                    abp_spinner(target_bp_dp);
                     abptb_toast_msg(abptb_infos.msg.loading);
                 },
                 success: function (response) {
-                    abptb_spinner_remove(target_journey);
-                    abptb_spinner_remove(target_return);
+                    abp_spinner_remove(target_journey);
+                    abp_spinner_remove(target_return);
                     if (target_journey.length > 0 && response.data && response.data.hasOwnProperty('html_journey')) {
                         target_journey.html(response.data.html_journey).promise().done(function () {
                             if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
@@ -169,11 +169,11 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
                 $.ajax({
                     type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
                     beforeSend: function () {
-                        abptb_spinner(target);
+                        abp_spinner(target);
                         abptb_toast_msg(abptb_infos.msg.end_date_loading);
                     },
                     success: function (response) {
-                        abptb_spinner_remove(target);
+                        abp_spinner_remove(target);
                         if (response.data && response.data.hasOwnProperty('html')) {
                             target.html(response.data.html).promise().done(function () {
                                 if (response.data.hasOwnProperty('picker_config') && response.data.picker_config) {
@@ -227,13 +227,13 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         $.ajax({
             type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
             beforeSend: function () {
-                abptb_spinner(target);
-                abptb_spinner(form_area);
+                abp_spinner(target);
+                abp_spinner(form_area);
                 abptb_toast_msg(abptb_infos.msg.loading);
             },
             success: function (response) {
-                abptb_spinner_remove(target);
-                abptb_spinner_remove(form_area);
+                abp_spinner_remove(target);
+                abp_spinner_remove(form_area);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 if (response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html).promise().done(function () {
@@ -262,11 +262,11 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
         $.ajax({
             type: 'POST', url: abptb_infos.ajax_url, contentType: false, processData: false, data: formData,
             beforeSend: function () {
-                abptb_spinner(target);
+                abp_spinner(target);
                 abptb_toast_msg(abptb_infos.msg.loading);
             },
             success: function (response) {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
                 //console.log(response);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 if (response.data && response.data.hasOwnProperty('html') && target.length > 0) {

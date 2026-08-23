@@ -59,7 +59,7 @@ function abptb_load_image(parent = abptb_parent) {
         }
         if (bg_url) {
             target.find('img').attr('src', bg_url).promise().done(function () {
-                abptb_spinner_remove(target);
+                abp_spinner_remove(target);
             });
         }
     });
@@ -180,12 +180,12 @@ function abptb_wc_price_format(price) {
     }
     return price_text;
 }
-function abptb_spinner(parent = abptb_parent) {
+function abp_spinner(parent = abptb_parent) {
     if (parent.length>0 && parent.find('.abp_spinner').length < 1) {
         parent.addClass('_p_relative').append('<div class="abp_spinner"></div>');
     }
 }
-function abptb_spinner_remove(parent = abptb_parent) {
+function abp_spinner_remove(parent = abptb_parent) {
     parent.removeClass('_p_relative').find('.abp_spinner').remove();
 }
 function abptb_get_form_data(form_area) {
@@ -206,7 +206,7 @@ function abptb_get_form_data(form_area) {
     return formData;
 }
 function abptb_ajx_error(xhr, target) {
-    abptb_spinner_remove(target);
+    abp_spinner_remove(target);
     if (xhr.response && xhr.response.data) {
         abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
     }
@@ -215,7 +215,7 @@ function abptb_ajx_error(xhr, target) {
     "use strict";
     $(document).ready(function () {
         $('body').find('div.abptb_area [data-image-href]').each(function () {
-            abptb_spinner($(this));
+            abp_spinner($(this));
         });
         abptb_init();
     });
@@ -715,7 +715,7 @@ function abptb_popup_close(target_id = '') {
 }(jQuery));
 //================================================================================Filter and pagination=================//
 function abptb_filter(parent) {
-    abptb_spinner(parent);
+    abp_spinner(parent);
     let cat_id = parent.find('[name="cat_id"]').val();
     let loc_id = parent.find('[name="loc_id"]').val();
     cat_id = cat_id ? cat_id.trim() : '';
@@ -794,7 +794,7 @@ function abptb_pagination_item(parent) {
     } else {
         parent.find('.live_pagination').removeAttr('disabled').show();
     }
-    abptb_spinner_remove(parent);
+    abp_spinner_remove(parent);
 }
 (function ($) {
     "use strict";
@@ -844,7 +844,7 @@ function abptb_pagination_item(parent) {
     });
     $(document).on('click', 'div.abptb_area .abp_pagination .live_pagination', function () {
         let parent = $(this).closest('.abp_pagination');
-        abptb_spinner(parent);
+        abp_spinner(parent);
         let pagination_page = parseInt($(this).attr('data-load-more')) + 1;
         $(this).attr('data-load-more', pagination_page);
         abptb_live_pagination(parent);
