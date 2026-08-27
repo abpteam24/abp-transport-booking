@@ -25,7 +25,7 @@
                 $icon = ABPTB_Function::icon();
                 $total_post = $abptb_info['total_post'] ?? 0;
                 $total_order = $abptb_info['total_order'] ?? 0;
-                $allowed_tabs = ['dashboard', 'posts', 'orders', 'sp', 'global', 'configuration', 'status', 'documentation', 'admin_order'];
+                $allowed_tabs = ['dashboard', 'posts', 'orders', 'sp', 'global', 'configuration', 'status', 'documentation', 'admin_order','license'];
                 $active_tab = 'posts';
                 if (isset($_GET['_abptb_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_abptb_nonce'])), 'abptb_url_action')) {
                     $active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'posts';

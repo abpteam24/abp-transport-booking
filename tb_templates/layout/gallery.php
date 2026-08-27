@@ -29,7 +29,7 @@
                         $url = ABPTB_Function::get_image_url('', $img_id) ?: ABPTB_BLANK_IMG_URL;
                         ?>
                         <div class="gallery_item <?php echo esc_attr($add_class); ?>" data-img="<?php echo esc_url($url); ?>" <?php if ($active_popup === 'on') { ?>data-target-popup="<?php echo esc_attr($popup_id); ?>"<?php } ?>>
-                            <img src="#" alt="<?php echo esc_html($img_id); ?>"/>
+                            <img src="#" alt="<?php echo esc_attr($img_id); ?>"/>
 <!--                            <div class="item_caption">-->
 <!--                                <div class="caption_label">--><?php //echo esc_html($img_post); ?><!--</div>-->
 <!--                                <div class="caption_title">--><?php //echo esc_html($img_label); ?><!--</div>-->
