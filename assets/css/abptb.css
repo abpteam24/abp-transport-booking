@@ -5,17 +5,19 @@
 	div.abptb_area .admin_order .global_form {margin: 0 0 var(--tb_gap) 0;}
 	#abptb_search_area {background: var(--tb_color_white); border-radius: var(--tb_br); padding: var(--tb_gap); box-shadow: var(--tb_shadow_29); display: -webkit-flex;display: flex; gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	#abptb_search_area form {max-width: 100%;gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;}
+
 	/**********************************/
+
 	/**********************************/
-	div.abptb_booking form {display: -webkit-flex;display: flex;flex-direction: column;gap: var(--tb_gap);}
-	div.abptb_booking form.double_route {display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap; flex-direction: initial;}
-	div.abptb_booking .booking_area {display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap; flex-wrap: wrap; gap: var(--tb_gap);-webkit-flex-grow: 1;flex-grow: 1; -webkit-flex-shrink: 1; flex-shrink: 1; -webkit-flex-basis: 45%; flex-basis: 45%;min-width: 600px;}
-	div.abptb_booking .booking_item {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
-	div.abptb_booking .booking_content {display: -webkit-flex;display: flex; gap: var(--tb_gap);-webkit-flex-grow: 1;flex-grow: 1; -webkit-flex-shrink: 1; flex-shrink: 1; -webkit-flex-basis: 45%; flex-basis: 45%;min-width: 600px;}
+	div.abptb_booking form {}
+	div.abptb_booking .booking_area {gap: var(--tb_gap);display: -webkit-flex;display: flex;-webkit-flex-direction: column;flex-direction: column;}
+
+	div.abptb_booking .booking_content {}
 	div.abptb_booking .booking_content .ticket_item {margin: 0;}
-	div.abptb_booking form.double_route .booking_content {-webkit-flex-direction: column;flex-direction: column;width: 100%;}
-	div.abptb_booking .booking_area .ticket_left {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;min-width: 550px;}
-	div.abptb_booking .booking_area .ticket_right {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;min-width: 400px;}
+	div.abptb_booking form.double_route {}
+	/*div.abptb_booking form.double_route .booking_content {-webkit-flex-direction: column;flex-direction: column;width: 100%;}*/
+	div.abptb_booking .booking_area .ticket_left {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
+	div.abptb_booking .booking_area .ticket_right {display: -webkit-flex;display: flex; gap: var(--tb_gap); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	div.abptb_booking .booking_area .ticket_content {display: -webkit-flex;display: flex; gap: var(--tb_gap_xs); -webkit-flex-direction: column;flex-direction: column;width: 100%;}
 	div.abptb_booking .seat_selection,
 	div.abptb_booking .total_continue_area,
@@ -123,8 +125,10 @@
 }
 /******************************************************************** Responsive ************************************************/
 @media only screen and (max-width: 1050px) {
+	div.abptb_booking .booking_content{-webkit-flex-wrap: wrap; flex-wrap: wrap;}
 }
 @media only screen and (max-width: 800px) {
+
 }
 @media only screen and (max-width: 600px) {
 }

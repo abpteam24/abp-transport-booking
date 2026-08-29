@@ -232,7 +232,41 @@
 						--tb_color_sold:{$sold};						
 						--tb_color_booked:{$booked};						
 						--tb_color_seclected:{$selected};						
-					}";
+					}
+					@media only screen and (max-width: 1100px) {
+							:root {
+								--tb_fs_small: 10px;
+								--tb_fs: 12px;
+								--tb_fs_label: 14px;
+								--tb_button_fs: 14px;
+								--tb_fs_h6: 14px;
+								--tb_fs_h5: 16px;
+								--tb_fs_h4: 18px;
+								--tb_fs_h3: 22px;
+								--tb_fs_h2: 25px;
+								--tb_fs_h1: 30px;
+								--tb_gap: 16px;
+								--tb_negative: -16px;
+								--tb_gap_xs: 8px;
+								--tb_gap_xs_neg: -8px;
+							}
+						}
+					@media only screen and (max-width: 700px) {
+							:root {
+								--tb_fs: 11px;
+								--tb_fs_label: 12px;
+								--tb_button_fs: 12px;
+								--tb_fs_h6: 14px;
+								--tb_fs_h5: 15px;
+								--tb_fs_h4: 16px;
+								--tb_fs_h3: 18px;
+								--tb_fs_h2: 20px;
+								--tb_fs_h1: 24px;
+								--tb_gap: 10px;
+								--tb_gap_xs: 5px;
+								--tb_gap_xs_neg: -5px;
+							}
+						}";
 				wp_add_inline_style('abptb_lib', wp_kses_post($abptb_var));
 				wp_enqueue_style('abptb', ABPTB_URL . 'assets/css/abptb.css', array(), time());
 				wp_enqueue_script('abptb_infos', ABPTB_URL . 'assets/js/abptb.js', array('jquery'), time(), true);

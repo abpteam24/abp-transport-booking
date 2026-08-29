@@ -12,12 +12,14 @@
             $content = get_post_field('post_content', $post_id);
             //echo '<pre>';print_r(ABPTB_Function::get_route_info());echo '</pre>';
             ?>
-            <div id="abptb_area" class="abptb_area default_details_page">
+            <div class="abptb_area default details_page">
                 <div class="abp_container">
                     <div class="abp_row">
-                        <div class="_f_equal_f_wrap_gap_section_15">
-                            <div class="_min_500"><?php ABPTB_Layout::image($post_id); ?></div>
-                            <div class="_min_500">
+                        <div class="_section_15_grid_500 details_head ">
+                            <div class="details_head_left">
+                                <?php ABPTB_Layout::image($post_id); ?>
+                            </div>
+                            <div class="details_head_right">
                                 <h1 class="abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
                                 <?php ABPTB_Layout::sub_title($post_infos); ?>
                                 <div class="_section_21_dot_xs_mar_t_xs">
@@ -60,13 +62,9 @@
                         </div>
                     </div>
                     <div class="abp_row">
-                        <div class="_f_equal_f_wrap_gap_w_full">
-                            <div class="_min_500">
-                                <?php do_action('abptb_faq', $post_infos); ?>
-                            </div>
-                            <div class="_min_500">
-                                <?php do_action('abptb_term_condition', $post_infos); ?>
-                            </div>
+                        <div class="_grid_500">
+                            <?php do_action('abptb_faq', $post_infos);
+                                do_action('abptb_term_condition', $post_infos); ?>
                         </div>
                     </div>
                     <div class="abp_row">

@@ -56,7 +56,7 @@
 					$form_data_up = $form_data['up'] ?? [];
                     $double_route = $form_data_down['double_route'] ?? '';
 					if ($sale_continue == 'on') { ?>
-                        <form action="" method="post" class="<?php echo esc_attr($double_route); ?>" enctype="multipart/form-data">
+                        <form action="" method="post" class="_grid_600 <?php echo esc_attr($double_route); ?>" enctype="multipart/form-data">
                             <input type="hidden" name="double_route" value="<?php echo esc_attr($double_route); ?>">
                             <input type="hidden" name="post_id" value="<?php echo esc_attr($post_id); ?>">
                             <input type="hidden" name="seat_type" value="<?php echo esc_attr($seat_type); ?>">

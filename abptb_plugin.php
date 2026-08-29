@@ -2,7 +2,7 @@
 	/**
 	 * Plugin Name: ABP Transport Booking
 	 * Description: WooCommerce transport booking for bus, ferry, shuttle and coach services with seat plans, ticket types, routes, schedules and return trips.
-	 * Version: 1.0.2
+	 * Version: 1.0.3
 	 * Author: abpteam
 	 * Author URI: https://abp-team.com
 	 * Text Domain: abp-transport-booking
@@ -45,7 +45,7 @@
 					define( 'ABPTB_PLUGIN_FILE', __FILE__ );
 				}
 				if ( ! defined( 'ABPTB_VERSION' ) ) {
-					define( 'ABPTB_VERSION', '1.0.2' );
+					define( 'ABPTB_VERSION', '1.0.3' );
 				}
 				if ( ! defined( 'ABPTB_DIR' ) ) {
 					define( 'ABPTB_DIR', plugin_dir_path( __FILE__ ) );

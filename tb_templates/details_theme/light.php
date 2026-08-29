@@ -2,21 +2,21 @@
     if (!defined('ABSPATH')) {
         exit; // Exit if accessed directly
     }
-    add_action('abptb_details_light_template', function ($post_id,$form_data = []) {
-        if (!empty($post_id) && $post_id > 0 && get_post_type( $post_id ) == ABPTB_Function::get_cpt() && (get_post_status($post_id)=='publish' || is_admin()) ) {
+    add_action('abptb_details_light_template', function ($post_id, $form_data = []) {
+        if (!empty($post_id) && $post_id > 0 && get_post_type($post_id) == ABPTB_Function::get_cpt() && (get_post_status($post_id) == 'publish' || is_admin())) {
             $post_infos = ABPTB_Function::get_all_meta($post_id);
             $form_data['form'] = 'inline';
             $display_return = $post_infos['display_return'] ?? 'off';
             $bp_dp = $form_data['bp_dp'] ?? '';
-            $display_return=ABPTB_Function::on_off('return')?$display_return:'off';
+            $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
             $content = get_post_field('post_content', $post_id);
             //echo '<pre>';print_r(ABPTB_Function::get_route_info());echo '</pre>';
             ?>
-            <div id="abptb_area" class="abptb_area default_details_page">
+            <div class="abptb_area light details_page">
                 <div class="abp_container">
                     <div class="abp_row">
-                        <div class="_f_equal_f_wrap_gap_section_15">
-                            <div class="_min_500">
+                        <div class="_section_15_grid_500 details_head">
+                            <div class="details_head_left">
                                 <h1 class="abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
                                 <?php ABPTB_Layout::sub_title($post_infos); ?>
                                 <div class="_section_21_dot_xs_mar_t_xs">
@@ -35,9 +35,9 @@
                                     ?>
                                 </div>
                                 <?php ABPTB_Layout::item_feature($post_infos['post_feature'] ?? '');
-                                    ABPTB_Layout::description($post_infos);                          ?>
+                                    ABPTB_Layout::description($post_infos); ?>
                             </div>
-                            <div class="_min_500">
+                            <div class="details_head_right">
                                 <?php do_action('abptb_search_form', $post_infos, $form_data); ?>
                             </div>
                         </div>
@@ -57,14 +57,12 @@
                         </div>
                     </div>
                     <div class="abp_row">
-                        <div class="_f_equal_f_wrap_gap_w_full">
-                            <div class="_min_500 _fd_column_gap_xs">
+                        <div class="_grid_500">
+                            <div class="_fd_column_gap">
                                 <?php do_action('abptb_faq', $post_infos); ?>
                                 <?php do_action('abptb_slider', ($post_infos['abptb_slider'] ?? [])); ?>
                             </div>
-                            <div class="_min_500">
-                                <?php do_action('abptb_term_condition', $post_infos); ?>
-                            </div>
+                            <?php do_action('abptb_term_condition', $post_infos); ?>
                         </div>
                     </div>
                     <div class="abp_row">
