@@ -452,6 +452,10 @@
 	div.abptb_area [class*="abp_tag"].publish {background: var(--tb_color_publish); color: var(--tb_color_7);}
 	div.abptb_area [class*="abp_tag"].trash {background: var(--tb_color_danger); color: var(--tb_color_white);}
 	div.abptb_area [class*="abp_tag"].draft {background: var(--tb_color_yellow); color: var(--tb_color_white);}
+	div.abptb_area [class*="abp_tag"].active {background: #28a745; color: var(--tb_color_white);}
+	div.abptb_area [class*="abp_tag"].inactive {background: #6c757d; color: var(--tb_color_white);}
+	div.abptb_area [class*="abp_tag"].invalid {background: #dc3545; color: var(--tb_color_white);}
+	div.abptb_area [class*="abp_tag"].expired {background: #fd7e14; color: var(--tb_color_white);}
 	div.abptb_area [class*="abp_tag"] svg {height: var(--tb_fs_label);width: auto;}
 	@media only screen and (max-width: 1200px) {
 		body.theme-astra div.abptb_area div.abp_container,
