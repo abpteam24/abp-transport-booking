@@ -111,7 +111,7 @@
                 <?php
             }
             public function load_global($abptb_info): void {
-                $allowed_tabs = ['dates', 'additional', 'client_form', 'resource', 'category', 'organizer', 'location', 'feature', 'brand', 'discount'];
+                $allowed_tabs = ['dates', 'additional', 'client_form', 'resource', 'category', 'organizer', 'location', 'feature', 'brand', 'discount', 'partial_payment'];
                 $active_tab = 'dates';
                 if (isset($_GET['_abptb_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_abptb_nonce'])), 'abptb_url_action')) {
                     $active_tab = isset($_GET['global']) ? sanitize_text_field(wp_unslash($_GET['global'])) : 'dates';
