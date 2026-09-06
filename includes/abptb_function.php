@@ -71,6 +71,15 @@
 				return $default;
 			}
 			public static function booking_status() { return (ABPTB_Configuration['booked_status'] ?? null) ?: 'wc-processing,wc-completed'; }
+			public static function booking_status_sold() {
+				$booked = self::booking_status();
+				$statuses = array_map('trim', explode(',', $booked));
+				if (in_array('all', $statuses, true)) {
+					return $booked;
+				}
+				$statuses = array_values(array_unique(array_merge($statuses, ['wc-pending', 'wc-on-hold'])));
+				return implode(',', $statuses);
+			}
 			public static function label() { return (ABPTB_Configuration['label'] ?? null) ?: __('Transport', 'abp-transport-booking'); }
 			public static function slug() { return (ABPTB_Configuration['slug'] ?? null) ?: 'transport-booking'; }
 			public static function icon_wp() { return (ABPTB_Configuration['icon'] ?? null) ?: 'dashicons-tickets'; }
@@ -311,11 +320,13 @@
 							return false;
 						}
 						$form_data['sp_id'] = $sp_id;
-						$sold_seat = ABPTB_Query::get_sold_seat($form_data);
+						$sold_seat = ABPTB_Query::get_sold_seat($form_data, true);
+						$exclude_session = (class_exists('ABPTB_Woocommerce') && method_exists('ABPTB_Woocommerce', 'hold_session')) ? ABPTB_Woocommerce::hold_session() : '';
+						$held_seat = ABPTB_Query::get_held_seat($form_data, $exclude_session);
 						$all_seat = self::get_sp_seat($sp_id);
 						foreach ($cart_tickets as $ticket_info) {
 							$name = $ticket_info['name'] ?? '';
-							if (empty($name) || !in_array($name, $all_seat, true) || in_array($name, $sold_seat, true)) {
+							if (empty($name) || !in_array($name, $all_seat, true) || in_array($name, $sold_seat, true) || in_array($name, $held_seat, true)) {
 								return false;
 							}
 						}
@@ -328,7 +339,9 @@
 					}
 					// Filter valid tickets based on display setting
 					$allowed_ticket_keys = ('off' === $display_ticket_type) ? [array_key_first($_ticket_infos)] : array_keys($_ticket_infos);
-					$sold_infos = ABPTB_Query::get_sold_ticket($form_data);
+					$sold_infos = ABPTB_Query::get_sold_ticket($form_data, true);
+					$exclude_session = (class_exists('ABPTB_Woocommerce') && method_exists('ABPTB_Woocommerce', 'hold_session')) ? ABPTB_Woocommerce::hold_session() : '';
+					$held_infos = ABPTB_Query::get_held_ticket($form_data, $exclude_session);
 					foreach ($cart_tickets as $tic_id => $ticket_info) {
 						// Ensure ticket ID exists in configured allowed tickets
 						if (!in_array($tic_id, $allowed_ticket_keys, true) || !isset($_ticket_infos[$tic_id])) {
@@ -337,10 +350,11 @@
 						$_ticket_info = $_ticket_infos[$tic_id];
 						$qty = intval($ticket_info['qty'] ?? 0);
 						$sold = intval($sold_infos[$tic_id] ?? 0);
+						$held = intval($held_infos[$tic_id] ?? 0);
 						$reserve = intval($_ticket_info['reserve'] ?? 0);
 						$total_qty = intval($_ticket_info['qty'] ?? 0);
 						$max_qty_raw = $_ticket_info['max_qty'] ?? '';
-						$available_qty = $total_qty - $sold - $reserve;
+						$available_qty = $total_qty - $sold - $held - $reserve;
 						$max_qty = ('' !== $max_qty_raw && intval($max_qty_raw) <= $available_qty)
 							? intval($max_qty_raw)
 							: $available_qty;

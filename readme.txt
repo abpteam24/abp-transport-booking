@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -325,7 +325,7 @@ Pro features may include:
 
 ✅ Same day multiple trip
 ✅ Day Wise multiple trip
-✅Date Wise multiple trip
+✅ Date Wise multiple trip
 ✅ PDF ticket and invoice generation
 ✅ Booking list export
 ✅ PDF booking export
@@ -424,7 +424,7 @@ Yes. The plugin can be used in local WordPress development environments such as 
 
 
 == Need help or have suggestions? ==
-If you need any further assistance or support, do contact us at this [🎫 support form](https://abp-team.com/support-desk/). We are very open to your suggestions. So do feel free to tell us if there is anything we can do to improve the plugin.
+If you need any further assistance or support, please contact us through the [🎫 support form](https://abp-team.com/support-desk/). We welcome your suggestions, so feel free to tell us anything we can improve in the plugin.
 
 🌐 [Live Demo](https://transport-booking.abp-team.com/)
 📖 [Documentation](https://transport-booking.abp-team.com/documentation/)
@@ -466,6 +466,15 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.4 =
+
+* Fixed booking search results and AJAX-loaded content not displaying the full design and layout.
+* Fixed the seat plan legend (Available / Selected / Sold) not showing correctly during booking.
+* Fixed missing transport and grid-view icons on the frontend.
+* Improved frontend styling consistency across the booking and seat plan interfaces.
+
+Released: September 6, 2026
+
 = 1.0.3 =
 
 * Fixed responsive layout issues across different screen sizes and devices.
@@ -498,6 +507,10 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Fixed seat plan legend and booking search result styling on the frontend.
+Released: September 6, 2026
 
 = 1.0.3 =
 Released: August 29, 2026

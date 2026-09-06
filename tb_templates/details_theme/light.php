@@ -17,28 +17,29 @@
                     <div class="abp_row">
                         <div class="_section_15_grid_500 details_head">
                             <div class="details_head_left">
-                                <h1 class="abp_color_theme_fs_h3"><?php ABPTB_Layout::title($post_infos); ?></h1>
-                                <?php ABPTB_Layout::sub_title($post_infos); ?>
-                                <div class="_section_21_dot_xs_mar_t_xs">
-                                    <div class="abp_color_active_fs_label"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
-                                    <?php if ($display_return == 'on') { ?>
-                                        <div class="abp_color_burnt_orange">
-                                            <?php ABPTB_Layout::route_direction($post_infos, '', true); ?>
-                                        </div>
-                                    <?php } ?>
+                                <div class="details_info">
+                                    <h1 class="abp_color_theme_fs_h3 details_title"><?php ABPTB_Layout::title($post_infos); ?></h1>
+                                    <?php ABPTB_Layout::sub_title($post_infos); ?>
+                                    <div class="details_route">
+                                        <div class="details_route_go"><?php ABPTB_Layout::route_direction($post_infos, $bp_dp); ?></div>
+                                        <?php if ($display_return == 'on') { ?>
+                                            <div class="details_route_return"><?php ABPTB_Layout::route_direction($post_infos, '', true); ?></div>
+                                        <?php } ?>
+                                    </div>
+                                    <div class="details_meta">
+                                        <?php ABPTB_Layout::brand($post_infos);
+                                            ABPTB_Layout::organizer($post_infos, 'publish'); ?>
+                                    </div>
+                                    <div class="details_facts">
+                                        <?php ABPTB_Layout::item_feature($post_infos['post_feature'] ?? '');
+                                            ABPTB_Layout::description($post_infos); ?>
+                                    </div>
                                 </div>
-                                <div class="_gap_xs_mar_t_xs">
-                                    <?php ABPTB_Layout::capacity($post_infos);
-                                        ABPTB_Layout::category($post_infos);
-                                        ABPTB_Layout::brand($post_infos);
-                                        ABPTB_Layout::organizer($post_infos, 'publish');
-                                    ?>
-                                </div>
-                                <?php ABPTB_Layout::item_feature($post_infos['post_feature'] ?? '');
-                                    ABPTB_Layout::description($post_infos); ?>
                             </div>
                             <div class="details_head_right">
-                                <?php do_action('abptb_search_form', $post_infos, $form_data); ?>
+                                <div class="details_booking_form">
+                                    <?php do_action('abptb_search_form', $post_infos, $form_data); ?>
+                                </div>
                             </div>
                         </div>
                     </div>

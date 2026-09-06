@@ -94,6 +94,7 @@
                                 $seat_type = $post_infos['seat_type'] ?? 'sp';
                                 $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
                                 $edit_link = get_edit_post_link($post_id);
+$edit_link = $edit_link ? $edit_link : get_permalink($post_id);
                                 $sale_continue = $post_infos['sale_continue'] ?? 'on';
                                 $display_return = $post_infos['display_return'] ?? 'off';
                                 $display_return = ABPTB_Function::on_off('return') ? $display_return : 'off';
@@ -227,6 +228,7 @@
                                     <option disabled selected><?php esc_html_e('Please Select', 'abp-transport-booking'); ?></option>
                                     <option value="default" <?php echo esc_attr($abptb_template == 'default' ? 'selected' : ''); ?>><?php esc_html_e('Default Template', 'abp-transport-booking'); ?></option>
                                     <option value="light" <?php echo esc_attr($abptb_template == 'light' ? 'selected' : ''); ?>><?php esc_html_e('Light Template', 'abp-transport-booking'); ?></option>
+                                    <option value="premium" <?php echo esc_attr($abptb_template == 'premium' ? 'selected' : ''); ?>><?php esc_html_e('Premium Template', 'abp-transport-booking'); ?></option>
                                 </select>
                             </label>
                             <div class="_divider_xxs"></div>

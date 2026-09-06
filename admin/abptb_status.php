@@ -404,7 +404,7 @@
             }
             public function dummy(): array {
                 $on_off = ['on', 'off'];
-                $template = ["default", "light"];
+                $template = ["default", "light", "premium"];
                 $icon = ["🚌", "🚐", "🚍", "🚎", "fas fa-bus", "fas fa-bus-simple"];
                 $all_organizer = ABPTB_Function::get_option('abptb_organizer');
                 $organizer = ['Global Transit Group', 'Express Travel Network', 'Premium Coach Services', 'InterCity Transport', 'Continental Bus Lines', 'Smart Mobility Solutions'];

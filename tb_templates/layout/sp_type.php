@@ -33,6 +33,14 @@
                 } else { ?>
                     <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_id" value="<?php echo esc_attr($sp_id); ?>">
                 <?php }
+                if (!empty($form_data['bp_dp']) && !empty($form_data['start_time'])) { ?>
+                    <div class="sp_legend">
+                        <span class="sp_legend_item available"><i></i><?php esc_html_e('Available', 'abp-transport-booking'); ?></span>
+                        <span class="sp_legend_item selected"><i></i><?php esc_html_e('Selected', 'abp-transport-booking'); ?></span>
+                        <span class="sp_legend_item sold"><i></i><?php esc_html_e('Sold', 'abp-transport-booking'); ?></span>
+                    </div>
+                <?php
+                }
                 ABPTB_Layout::sp($sp_id, [], $post_infos, $form_data);
             } else {
                 ABPTB_Layout::layout_warning_info('no_sp_config');

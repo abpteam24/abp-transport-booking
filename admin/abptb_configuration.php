@@ -347,6 +347,13 @@
                             'default' => 'on',
                         ),
                         array(
+                            'name' => 'capacity',
+                            'label' => __('Ticket Capacity', 'abp-transport-booking'),
+                            'desc' => __('If you do not want to display the available ticket capacity, simply turn this switch OFF. Once disabled, ticket capacity counts will be completely removed from the site.', 'abp-transport-booking'),
+                            'type' => 'button_switch',
+                            'default' => 'on',
+                        ),
+                        array(
                             'name' => 'display_location',
                             'label' => __('Route Direction', 'abp-transport-booking'),
                             'desc' => __('If you do not want to display route directions across the entire frontend of your site, turn this switch Off.', 'abp-transport-booking'),
@@ -378,13 +385,6 @@
                             'name' => 'related',
                             'label' => __('Related Post', 'abp-transport-booking'),
                             'desc' => __('Turn this switch OFF to completely disable the Related Posts feature. Once disabled, Related Post items will no longer be displayed on any details page throughout the website. Turn it back ON at any time to show related content again.', 'abp-transport-booking'),
-                            'type' => 'button_switch',
-                            'default' => 'on',
-                        ),
-                        array(
-                            'name' => 'feature',
-                            'label' => __('Features', 'abp-transport-booking'),
-                            'desc' => __('If you do not want to use Features, simply turn this switch OFF. This will completely disable the Features across the entire website, including all related , settings, and functionality. You can re-enable it at any time by turning the switch back ON.', 'abp-transport-booking'),
                             'type' => 'button_switch',
                             'default' => 'on',
                         ),
@@ -430,6 +430,13 @@
                             'type' => 'button_switch',
                             'default' => 'on',
                             'collapse_data' => array('option' => 'abptb_on_off', 'key' => 'custom_attendee'),
+                        ),
+                        array(
+                            'name' => 'client_info',
+                            'label' => __('Client Info Form', 'abp-transport-booking'),
+                            'desc' => __('If you do not want to use the Client Info Form, simply turn this switch OFF. Once disabled, the Client Info Form field and related Client Info options will be completely removed from the site.', 'abp-transport-booking'),
+                            'type' => 'button_switch',
+                            'default' => 'on',
                         ),
                         array(
                             'name' => 'pickup',

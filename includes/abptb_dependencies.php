@@ -13,6 +13,7 @@
 				add_filter('plugin_action_links', array($this, 'plugin_settings_link'), 10, 2);
 				add_action('upgrader_process_complete', [$this, 'flush_rewrite']);
 				add_action('admin_init', array($this, 'activation_redirect'));
+				add_action('admin_init', [$this, 'check_db_version']);
 			}
 			private function load_file(): void {
 				require_once ABPTB_DIR . 'includes/abptb_static.php';
@@ -421,6 +422,7 @@
 				global $wpdb;
 				$order_table = $wpdb->prefix . 'abptb_orders';
 				$sp_table = $wpdb->prefix . 'abptb_sp';
+				$hold_table = $wpdb->prefix . 'abptb_seat_holds';
 				$collate = $wpdb->get_charset_collate();
 				$abptb_orders = "CREATE TABLE $order_table (
 					        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -482,8 +484,42 @@
 				if (!function_exists('dbDelta')) {
 					require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 				}
+				// Seat Hold Table - prevents overselling by locking seats during cart/checkout.
+				$abptb_holds = "CREATE TABLE $hold_table (
+					        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					        post_id bigint(20) unsigned NOT NULL DEFAULT 0,
+					        start_time datetime DEFAULT NULL,
+					        bp_dp varchar(100) DEFAULT NULL,
+					        sp_id bigint(20) NOT NULL DEFAULT 0,
+					        seat_name varchar(191) DEFAULT NULL,
+					        qty int(5) NOT NULL DEFAULT 1,
+					        session_id varchar(191) DEFAULT NULL,
+					        hold_ref varchar(191) DEFAULT NULL,
+					        order_id bigint(20) unsigned NOT NULL DEFAULT 0,
+					        user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+					        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+					        expires_at datetime DEFAULT NULL,
+					        PRIMARY KEY  (id),
+					        UNIQUE KEY hold (post_id, start_time, bp_dp, sp_id, seat_name),
+					        KEY session_id (session_id),
+					        KEY expires_at (expires_at)
+					    ) $collate;";
 				dbDelta($abptb_orders);
 				dbDelta($sp);
+				dbDelta($abptb_holds);
+			}
+			public function check_db_version(): void {
+				if (!current_user_can('manage_options')) {
+					return;
+				}
+				global $wpdb;
+				$hold_table = $wpdb->prefix . 'abptb_seat_holds';
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_missing = null === $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $hold_table));
+				if ($table_missing || get_option('abptb_db_version') !== ABPTB_VERSION) {
+					self::create_table();
+					update_option('abptb_db_version', ABPTB_VERSION);
+				}
 			}
 			public function plugin_settings_link($links_array, $plugin_file_name) {
 				if (strpos($plugin_file_name, ABPTB_BASE)) {

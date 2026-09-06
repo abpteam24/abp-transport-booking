@@ -279,8 +279,8 @@
                 wp_send_json_error(['html' => '', 'msg' => esc_html__('Something Error Occurred !', 'abp-transport-booking'), 'type' => 'warn']);
             }
             public function load_route(): void {
-                if (!check_ajax_referer('abptb_ajax_nonce', 'nonce', false)) {
-                    wp_send_json_error(['msg' => esc_html__('Session expired. Please refresh the page.', 'abp-transport-booking')], 403);
+                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                    wp_send_json_error(['msg' => esc_html__('You do not have permission to perform this action.', 'abp-transport-booking')], 403);
                 }
                 $post_int = fn($key, $default = '') => isset($_POST[$key]) ? absint($_POST[$key]) : $default;
                 $post_id = $post_int('post_id');

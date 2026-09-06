@@ -386,7 +386,7 @@
                 $others['row'] = $post_int('rows', 10);
                 $others['column'] = $post_int('cols', 10);
                 $others['width'] = $post_int('width', 50);
-                $others['height'] = $post_int('width', 50);
+                $others['height'] = $post_int('height', 50);
                 $others['gap'] = $post_int('gap', 5);
                 $others['radius'] = $post_int('radius', 5);
                 $data = [

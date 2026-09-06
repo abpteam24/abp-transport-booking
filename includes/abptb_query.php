@@ -83,6 +83,7 @@
 					'posts_per_page' => $show,
 					'paged' => $page,
 					'post_status' => $status,
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					'meta_query' => $meta_query
 				));
 				return array_unique($all_data);
@@ -90,11 +91,14 @@
 			public static function get_booking_query($filters = array(), $limit = 0, $offset = 0, $count = false) {
 				global $wpdb;
 				$table_name = $wpdb->prefix . 'abptb_orders';
+				$use_cache = !isset($filters['cache']) || false !== $filters['cache'];
 				$cache_key = 'abptb_bk_' . md5(wp_json_encode($filters) . $limit . $offset . (int)$count);
 				$cache_group = 'abptb_orders';
-				$cached = wp_cache_get($cache_key, $cache_group);
-				if (false !== $cached) {
-					return $cached;
+				if ($use_cache) {
+					$cached = wp_cache_get($cache_key, $cache_group);
+					if (false !== $cached) {
+						return $cached;
+					}
 				}
 				$conditions = array();
 				$params = array();
@@ -209,7 +213,7 @@
 				}
 				// SQL Query Assembly
 				$select = $count ? 'SELECT COUNT(*)' : 'SELECT *';
-				$sql = "{$select} FROM {$table_name}";
+				$sql = "{$select} FROM %i";
 				if (!empty($conditions)) {
 					$sql .= ' WHERE ' . implode(' AND ', $conditions);
 				}
@@ -230,34 +234,36 @@
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$results = $wpdb->get_var(
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							$wpdb->prepare($sql, ...$params)
+							$wpdb->prepare($sql, array_merge(array($table_name), $params))
 						);
 					} else {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-						$results = $wpdb->get_var($sql);
+						$results = $wpdb->get_var($wpdb->prepare($sql, $table_name));
 					}
 				} else {
 					if (!empty($params)) {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$results = $wpdb->get_results(
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-							$wpdb->prepare($sql, ...$params),
+							$wpdb->prepare($sql, array_merge(array($table_name), $params)),
 							ARRAY_A
 						);
 					} else {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-						$results = $wpdb->get_results($sql, ARRAY_A);
+						$results = $wpdb->get_results($wpdb->prepare($sql, $table_name), ARRAY_A);
 					}
 				}
 				$results = $results ?: ($count ? 0 : array());
-				wp_cache_set($cache_key, $results, $cache_group, 30);
+				if ($use_cache) {
+					wp_cache_set($cache_key, $results, $cache_group, 30);
+				}
 				return $results;
 			}
-			public static function get_sold_qty_ex($filters = []) {
+			public static function get_sold_qty_ex($filters = [], $bypass_cache = false) {
 				$sold_qty = 0;
-				$booking_items = self::get_booking_query($filters);
+				$booking_items = self::get_booking_query(self::sold_filters($filters, $bypass_cache));
 				if (empty($booking_items)) {
 					return $sold_qty;
 				}
@@ -287,27 +293,27 @@
 				$table_name = $wpdb->prefix . 'abptb_sp';
 				if ($count) {
 					if (!empty($id)) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Safe table name variable; $id is prepared.
-						$results = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table_name} WHERE id = %d", (int)$id));
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						$results = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i WHERE id = %d", $table_name, (int)$id));
 					} else {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Safe table name variable with no user input.
-						$results = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						$results = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i", $table_name));
 					}
 				} else {
 					if (!empty($id)) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Safe table name variable; $id is prepared.
-						$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d ORDER BY id ASC", (int)$id), ARRAY_A);
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i WHERE id = %d ORDER BY id ASC", $table_name, (int)$id), ARRAY_A);
 					} else {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Safe table name variable with no user input.
-						$results = $wpdb->get_results("SELECT * FROM {$table_name} ORDER BY id ASC", ARRAY_A);
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM %i ORDER BY id ASC", $table_name), ARRAY_A);
 					}
 				}
 				wp_cache_set($cache_key, $results);
 				return $results;
 			}
-			public static function get_sold_ticket($filters = []): array {
+			public static function get_sold_ticket($filters = [], $bypass_cache = false): array {
 				$sold_qty = [];
-				$booking_items = self::get_booking_query($filters);
+				$booking_items = self::get_booking_query(self::sold_filters($filters, $bypass_cache));
 				if (empty($booking_items)) {
 					return $sold_qty;
 				}
@@ -326,9 +332,9 @@
 				}
 				return $sold_qty;
 			}
-			public static function get_sold_seat($filters = []): array {
+			public static function get_sold_seat($filters = [], $bypass_cache = false): array {
 				$sold_seats = [];
-				$booking_items = self::get_booking_query($filters);
+				$booking_items = self::get_booking_query(self::sold_filters($filters, $bypass_cache));
 				if (empty($booking_items)) {
 					return $sold_seats;
 				}
@@ -343,6 +349,165 @@
 					}
 				}
 				return array_values(array_unique($sold_seats));
+			}
+			public static function sold_filters(array $filters = [], bool $bypass_cache = false): array {
+				if (empty($filters['status'])) {
+					$filters['status'] = ABPTB_Function::booking_status_sold();
+				}
+				if ($bypass_cache) {
+					$filters['cache'] = false;
+				}
+				return $filters;
+			}
+			public static function holds_table(): string {
+				global $wpdb;
+				return $wpdb->prefix . 'abptb_seat_holds';
+			}
+			public static function hold_minutes(): int {
+				return (int) apply_filters('abptb_seat_hold_minutes', 20);
+			}
+			public static function prune_seat_holds(): void {
+				global $wpdb;
+				$table_name = self::holds_table();
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->query($wpdb->prepare("DELETE FROM %i WHERE expires_at IS NOT NULL AND expires_at < %s", $table_name, current_time('mysql')));
+			}
+			public static function seat_hold_exists($post_id, $start_time, $bp_dp, $sp_id, $seat_name, $session_id): bool {
+				if (empty($post_id) || empty($start_time) || empty($bp_dp) || empty($seat_name) || empty($session_id)) {
+					return false;
+				}
+				global $wpdb;
+				$table_name = self::holds_table();
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$count = (int) $wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(*) FROM %i WHERE post_id = %d AND start_time = %s AND bp_dp = %s AND sp_id = %d AND seat_name = %s AND session_id = %s",
+					$table_name,
+					absint($post_id),
+					sanitize_text_field($start_time),
+					sanitize_text_field($bp_dp),
+					absint($sp_id),
+					sanitize_text_field($seat_name),
+					sanitize_text_field($session_id)
+				));
+				return $count > 0;
+			}
+			public static function create_seat_hold($post_id, $start_time, $bp_dp, $sp_id, $seat_name, $qty = 1, $session_id = '', $hold_ref = ''): bool {
+				if (empty($post_id) || empty($start_time) || empty($bp_dp) || empty($seat_name) || empty($session_id)) {
+					return false;
+				}
+				self::prune_seat_holds();
+				global $wpdb;
+				$table_name = self::holds_table();
+				$expires_at = gmdate('Y-m-d H:i:s', strtotime('+' . self::hold_minutes() . ' minutes'));
+				if (self::seat_hold_exists($post_id, $start_time, $bp_dp, $sp_id, $seat_name, $session_id)) {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->update($table_name, ['expires_at' => $expires_at, 'hold_ref' => sanitize_text_field($hold_ref), 'qty' => absint($qty)], [
+						'post_id' => absint($post_id),
+						'start_time' => sanitize_text_field($start_time),
+						'bp_dp' => sanitize_text_field($bp_dp),
+						'sp_id' => absint($sp_id),
+						'seat_name' => sanitize_text_field($seat_name),
+						'session_id' => sanitize_text_field($session_id),
+					], ['%s', '%s', '%d'], ['%d', '%s', '%s', '%d', '%s', '%s']);
+					return true;
+				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->hide_errors();
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$inserted = $wpdb->insert($table_name, [
+					'post_id' => absint($post_id),
+					'start_time' => sanitize_text_field($start_time),
+					'bp_dp' => sanitize_text_field($bp_dp),
+					'sp_id' => absint($sp_id),
+					'seat_name' => sanitize_text_field($seat_name),
+					'qty' => absint($qty),
+					'session_id' => sanitize_text_field($session_id),
+					'hold_ref' => sanitize_text_field($hold_ref),
+					'user_id' => get_current_user_id(),
+					'expires_at' => $expires_at,
+				]);
+				$wpdb->show_errors();
+				return (bool) $inserted;
+			}
+			public static function delete_seat_holds($session_id = '', $hold_ref = ''): void {
+				global $wpdb;
+				$table_name = self::holds_table();
+				if (!empty($session_id) && !empty($hold_ref)) {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->delete($table_name, ['session_id' => sanitize_text_field($session_id), 'hold_ref' => sanitize_text_field($hold_ref)], ['%s', '%s']);
+				} elseif (!empty($session_id)) {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->delete($table_name, ['session_id' => sanitize_text_field($session_id)], ['%s']);
+				}
+			}
+			public static function get_held_seat($filters = [], $exclude_session = ''): array {
+				$held_seats = [];
+				$holds = self::get_seat_holds($filters, $exclude_session);
+				if (!empty($holds)) {
+					foreach ($holds as $hold) {
+						if (!empty($hold['seat_name']) && strpos($hold['seat_name'], 'ticket:') !== 0) {
+							$held_seats[] = $hold['seat_name'];
+						}
+					}
+				}
+				return array_values(array_unique($held_seats));
+			}
+			public static function get_held_ticket($filters = [], $exclude_session = ''): array {
+				$held_qty = [];
+				$holds = self::get_seat_holds($filters, $exclude_session);
+				if (!empty($holds)) {
+					foreach ($holds as $hold) {
+						if (!empty($hold['seat_name']) && strpos($hold['seat_name'], 'ticket:') === 0) {
+							$ticket_id = substr($hold['seat_name'], 7);
+							$held_qty[$ticket_id] = ($held_qty[$ticket_id] ?? 0) + intval($hold['qty'] ?? 1);
+						}
+					}
+				}
+				return $held_qty;
+			}
+			public static function get_seat_holds($filters = [], $exclude_session = ''): array {
+				self::prune_seat_holds();
+				global $wpdb;
+				$table_name = self::holds_table();
+				$conditions = [];
+				$params = [];
+				if (!empty($filters['post_id'])) {
+					$conditions[] = 'post_id = %d';
+					$params[] = absint($filters['post_id']);
+				}
+				if (!empty($filters['start_time'])) {
+					$conditions[] = 'start_time = %s';
+					$params[] = sanitize_text_field($filters['start_time']);
+				}
+				if (!empty($filters['bp_dp'])) {
+					$conditions[] = 'bp_dp = %s';
+					$params[] = sanitize_text_field($filters['bp_dp']);
+				}
+				if (!empty($filters['sp_id'])) {
+					$conditions[] = 'sp_id = %d';
+					$params[] = absint($filters['sp_id']);
+				}
+				if (!empty($filters['sp_id'])) {
+					$conditions[] = 'sp_id = %d';
+					$params[] = absint($filters['sp_id']);
+				}
+				if (!empty($exclude_session)) {
+					$conditions[] = 'session_id != %s';
+					$params[] = sanitize_text_field($exclude_session);
+				}
+				$sql = "SELECT * FROM %i";
+				if (!empty($conditions)) {
+					$sql .= ' WHERE ' . implode(' AND ', $conditions);
+				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$results = !empty($params)
+					? $wpdb->get_results(
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						$wpdb->prepare($sql, array_merge(array($table_name), $params)), ARRAY_A)
+					: $wpdb->get_results(
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						$wpdb->prepare($sql, $table_name), ARRAY_A);
+				return $results ?: [];
 			}
 		}
 		new ABPTB_Query();

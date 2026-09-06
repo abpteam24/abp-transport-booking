@@ -1260,3 +1260,25 @@
 	/*=============================*/
 	.abptb_allow {}
 }
+/******************************************************************** Frontend utilities (booking / AJAX results) ************************************************/
+@media only screen and (min-width: 10px) {
+	div.abptb_area [class*="_f_wrap_gap_xxs"] { gap: var(--tb_gap_xxs); -webkit-align-items: center; align-items: center; }
+	/*=============================*/
+	div.abptb_area [class*="_gap_fd_column"] { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; gap: var(--tb_gap_xs); }
+	div.abptb_area .abp_pagination { width: 100%; }
+	div.abptb_area [class*="_btn_theme_min_200"] { min-width: 200px; }
+	/*=============================*/
+	div.abptb_area [class*="_color_active"] { color: var(--tb_color_active); }
+	div.abptb_area [class*="_color_theme"] { color: var(--tb_color_theme); }
+	div.abptb_area [class*="_color_active_mar_r_xxs"] { margin-right: var(--tb_gap_xxs); }
+	div.abptb_area [class*="abp_color_gray"] { color: var(--tb_color_muted); }
+	div.abptb_area [class*="abp_color_info"] { color: var(--tb_color_info); }
+	div.abptb_area [class*="abp_text_center_color_white"] { text-align: center; color: var(--tb_color_white); }
+	div.abptb_area [class*="_fs_label"] { font-size: var(--tb_fs_label); }
+	div.abptb_area [class*="_section_bg_warning_mar_zero"] { margin: 0; padding: var(--tb_gap_xs); }
+	/*=============================*/
+	div.abptb_area [class*="_form_control_w_full"] { width: 100%; }
+	/*=============================*/
+	.fa-bus-simple:before { content: "\f207"; }
+	.fa-table-cells:before { content: "\f00a"; }
+}

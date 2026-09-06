@@ -259,8 +259,8 @@
             }
             public static function input_title($label = '', $required = ''): void {
                 if ($label) { ?>
-                    <span class="_mar_b_xxs">
-							<?php echo esc_html($label); ?>
+<span>
+						<?php echo esc_html($label); ?>
                         <?php if ($required) { ?>
                             <sup class="_color_required">*</sup>
                         <?php } ?>
@@ -324,7 +324,7 @@
                             <?php foreach ($options as $option) { ?>
                                 <div class="checkbox_item">
                                     <button type="button" class="_btn_white_xs <?php echo esc_attr($option == $value ? 'abp_active' : ''); ?>" data-checked="<?php echo esc_attr($option); ?>" data-open-icon="far fa-check-square" data-close-icon="far fa-square">
-                                        <span data-icon class="_mar_r_xs <?php echo esc_attr($option == $value ? 'far fa-check-square' : 'far fa-square'); ?>"></span><?php echo esc_html($option); ?>
+                                        <span data-icon class="<?php echo esc_attr($option == $value ? 'far fa-check-square' : 'far fa-square'); ?>"></span><?php echo esc_html($option); ?>
                                     </button>
                                 </div>
                             <?php } ?>
@@ -343,7 +343,7 @@
                             <?php foreach ($options as $option) { ?>
                                 <div class="radio_item">
                                     <button type="button" class="_btn_white_xs <?php echo esc_attr($option == $value ? 'abp_active' : ''); ?>" data-radio="<?php echo esc_attr($option); ?>" data-open-icon="far fa-check-circle" data-close-icon="far fa-circle">
-                                        <span data-icon class="_mar_r_xs <?php echo esc_attr($option == $value ? 'far fa-check-circle' : 'far fa-circle'); ?>"></span><?php echo esc_html($option); ?>
+                                        <span data-icon class="<?php echo esc_attr($option == $value ? 'far fa-check-circle' : 'far fa-circle'); ?>"></span><?php echo esc_html($option); ?>
                                     </button>
                                 </div>
                             <?php } ?>
@@ -673,7 +673,7 @@
                             $keys = array_keys($route);
                             $difference = abs(array_search($dp, $keys) - array_search($bp, $keys)) + 1;
                             ?>
-                            <span class="_color_theme_mar_r_xxs">(<?php echo esc_html(ABPTB_Function::time_difference($start_time, $end_time)); ?>)</span>
+                            <span class="mar_r_xxs">(<?php echo esc_html(ABPTB_Function::time_difference($start_time, $end_time)); ?>)</span>
                             <?php
                             if ($difference > 1) {
                                 echo esc_html(' - ' . $difference . ' ' . __('Stops', 'abp-transport-booking'));
@@ -810,9 +810,9 @@
                 $booked_status = ABPTB_Function::booking_status();
                 $booked_status = $booked_status ? explode(',', $booked_status) : [];
                 if (!empty($id) && in_array($status, $booked_status)) {
-                    $user_id = get_current_user_id();
+                    $checkin_by = wp_get_current_user()->display_name;
                     if ($checkin > 0) { ?>
-                        <button class="_btn_light_success_xxs" type="button" title="<?php echo esc_attr(__('Already Checked By', 'abp-transport-booking') . ' : ' . get_user_by('id', $user_id)->display_name); ?>">
+                        <button class="_btn_light_success_xxs" type="button" title="<?php echo esc_attr(__('Already Checked By', 'abp-transport-booking') . ' : ' . $checkin_by); ?>">
                             <?php ABPTB_Static::svg('check_1'); ?><?php esc_html_e('Checked', 'abp-transport-booking'); ?>
                         </button>
                     <?php } else { ?>

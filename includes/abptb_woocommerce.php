@@ -6,6 +6,10 @@
 		class ABPTB_Woocommerce {
 			public function __construct() {
 				add_filter('woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 90, 3);
+				add_filter('woocommerce_add_to_cart_validation', array($this, 'validate_abptb_add_to_cart'), 90, 3);
+				add_action('woocommerce_add_to_cart', array($this, 'create_cart_holds'), 90, 6);
+				add_action('woocommerce_cart_item_removed', array($this, 'release_cart_holds'), 90, 2);
+				add_action('woocommerce_cart_emptied', array($this, 'release_session_holds'), 90);
 				add_action('woocommerce_before_calculate_totals', array($this, 'before_calculate_totals'), 90);
 				add_filter('woocommerce_cart_item_thumbnail', array($this, 'cart_item_thumbnail'), 90, 3);
 				add_filter('woocommerce_get_item_data', array($this, 'get_item_data'), 90, 2);
@@ -13,10 +17,150 @@
 				add_action('woocommerce_checkout_create_order_line_item', array($this, 'checkout_create_order_line_item'), 90, 4);
 				add_action('woocommerce_checkout_order_processed', array($this, 'checkout_order_processed'));
 				add_action('woocommerce_store_api_checkout_order_processed', array($this, 'api_checkout_order_processed'));
-				add_filter('woocommerce_order_status_changed', array($this, 'order_status_changed'), 90, 4);
+				add_action('woocommerce_order_status_changed', array($this, 'order_status_changed'), 90, 4);
 				add_action('woocommerce_checkout_process', [$this, 'checkout_process_validation']);
 				add_action('woocommerce_after_checkout_validation', [$this, 'checkout_process_validation']);
 				add_action('woocommerce_check_cart_items', [$this, 'checkout_process_validation']);
+			}
+			public static function hold_session(): string {
+				if (function_exists('WC') && WC() && WC()->session) {
+					$customer_id = WC()->session->get_customer_id();
+					if (!empty($customer_id)) {
+						return (string) $customer_id;
+					}
+				}
+				return '';
+			}
+			private function is_abptb_product($product_id): int {
+				$linked_id = absint(get_post_meta($product_id, 'abptb_link_id', true));
+				if ($linked_id > 0 && $linked_id !== absint($product_id) && get_post_type($linked_id) === ABPTB_Function::get_cpt()) {
+					return $linked_id;
+				}
+				return 0;
+			}
+			public function validate_abptb_add_to_cart($passed, $product_id, $quantity) {
+				if (!$passed) {
+					return $passed;
+				}
+				$post_id = $this->is_abptb_product($product_id);
+				if (!$post_id) {
+					return $passed;
+				}
+				// Prevent direct (non-form) purchases of the internal WooCommerce product.
+				$valid_submission = isset($_POST['_wpnonce'])
+					&& wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'abptb_registration_nonce')
+					&& isset($_POST['post_id'])
+					&& absint($_POST['post_id']) === $post_id;
+				if (!$valid_submission) {
+					wc_add_notice(__('This transport cannot be purchased directly. Please book through the transport booking form.', 'abp-transport-booking'), 'error');
+					return false;
+				}
+				$bp_dp = isset($_POST['bp_dp']) ? sanitize_text_field(wp_unslash($_POST['bp_dp'])) : '';
+				$return_bp_dp = isset($_POST['return_bp_dp']) ? sanitize_text_field(wp_unslash($_POST['return_bp_dp'])) : '';
+				if (empty($bp_dp) && empty($return_bp_dp)) {
+					wc_add_notice(__('Please select a valid route before booking.', 'abp-transport-booking'), 'error');
+					return false;
+				}
+				$post_infos = ABPTB_Function::get_all_meta($post_id);
+				$legs = ['' => $bp_dp, 'return_' => $return_bp_dp];
+				foreach ($legs as $prefix => $leg) {
+					if (empty($leg)) {
+						continue;
+					}
+					$info = self::get_booking_info($post_infos, $leg, $prefix);
+					if (empty($info['info'])) {
+						wc_add_notice(__('Invalid booking. Please select at least one valid ticket or seat from the booking form.', 'abp-transport-booking'), 'error');
+						return false;
+					}
+					$seat_type = $info['seat_type'] ?? 'ticket';
+					$form_data = [
+						'post_id' => $post_id,
+						'start_time' => $info['start_time'] ?? '',
+						'bp_dp' => $leg,
+						'sp_id' => $info['sp_id'] ?? '',
+					];
+					if ($seat_type === 'sp') {
+						$sold = ABPTB_Query::get_sold_seat($form_data, true);
+						$held = ABPTB_Query::get_held_seat($form_data, '');
+						foreach (($info['info'] ?? []) as $seat) {
+							$name = $seat['name'] ?? '';
+							if (!empty($name) && (in_array($name, $sold, true) || in_array($name, $held, true))) {
+								// translators: %s: seat name.
+								wc_add_notice(sprintf(__('Sorry, the seat "%s" is no longer available.', 'abp-transport-booking'), $name), 'error');
+								return false;
+							}
+						}
+					} else {
+						$sold = ABPTB_Query::get_sold_ticket($form_data, true);
+						$held = ABPTB_Query::get_held_ticket($form_data, '');
+						$_ticket_infos = $post_infos['ticket_infos'] ?? [];
+						foreach (($info['info'] ?? []) as $tic_id => $ticket) {
+							$qty = intval($ticket['qty'] ?? 0);
+							$config = $_ticket_infos[$tic_id] ?? [];
+							$total_qty = intval($config['qty'] ?? 0);
+							$reserve = intval($config['reserve'] ?? 0);
+							$available = $total_qty - intval($sold[$tic_id] ?? 0) - intval($held[$tic_id] ?? 0) - $reserve;
+							if ($qty <= 0 || $qty > $available) {
+								// translators: %d: number of remaining tickets.
+								wc_add_notice(sprintf(__('Sorry, only %d ticket(s) remain for the selected transport.', 'abp-transport-booking'), max($available, 0)), 'error');
+								return false;
+							}
+						}
+					}
+				}
+				return $passed;
+			}
+			public function create_cart_holds($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data): void {
+				$post_id = $cart_item_data['post_id'] ?? 0;
+				if (empty($post_id) || get_post_type($post_id) !== ABPTB_Function::get_cpt()) {
+					return;
+				}
+				$booking_infos = $cart_item_data['booking_infos'] ?? [];
+				$session = self::hold_session();
+				if (empty($session) || empty($booking_infos)) {
+					return;
+				}
+				foreach ($booking_infos as $bp_dp => $info) {
+					if (empty($info)) {
+						continue;
+					}
+					$seat_type = $info['seat_type'] ?? 'ticket';
+					$start_time = $info['start_time'] ?? '';
+					$sp_id = $info['sp_id'] ?? 0;
+					$created = true;
+					if ($seat_type === 'sp') {
+						foreach (($info['info'] ?? []) as $seat) {
+							$name = $seat['name'] ?? '';
+							if (!empty($name) && !ABPTB_Query::create_seat_hold($post_id, $start_time, $bp_dp, $sp_id, $name, 1, $session, $cart_item_key)) {
+								$created = false;
+							}
+						}
+					} else {
+						foreach (($info['info'] ?? []) as $tic_id => $ticket) {
+							$qty = intval($ticket['qty'] ?? 0);
+							if ($qty > 0 && !ABPTB_Query::create_seat_hold($post_id, $start_time, $bp_dp, $sp_id, 'ticket:' . $tic_id, $qty, $session, $cart_item_key)) {
+								$created = false;
+							}
+						}
+					}
+					if (!$created && WC() && WC()->cart) {
+						wc_add_notice(__('Sorry, one of the selected seats was just booked by someone else.', 'abp-transport-booking'), 'error');
+						WC()->cart->remove_cart_item($cart_item_key);
+						return;
+					}
+				}
+			}
+			public function release_cart_holds($cart_item_key, $cart): void {
+				$session = self::hold_session();
+				if (!empty($session)) {
+					ABPTB_Query::delete_seat_holds($session, $cart_item_key);
+				}
+			}
+			public function release_session_holds(): void {
+				$session = self::hold_session();
+				if (!empty($session)) {
+					ABPTB_Query::delete_seat_holds($session, '');
+				}
 			}
 			public function add_cart_item_data($cart_item, $product_id) {
 				$linked_id = ABPTB_Function::get_post_info($product_id, 'abptb_link_id', $product_id);
@@ -64,8 +208,7 @@
 						$value['data']->set_price($total_price);
 						$value['data']->set_regular_price($total_price);
 						$value['data']->set_sale_price($total_price);
-						$value['data']->set_sold_individually('yes');
-						$value['data']->get_price();
+						$value['data']->set_sold_individually(true);
 					}
 				}
 			}
@@ -431,7 +574,7 @@
 					$billing_name = $_billing_first_name . ' ' . $_billing_last_name;
 					$billing_address = $_billing_address_1 . ' ' . $_billing_address_2;
 					if ($order_status != 'failed') {
-						$total_order = ABPTB_Query::get_booking_query(['order_id' => $order_id], 0, 0, true);
+						$total_order = ABPTB_Query::get_booking_query(['order_id' => $order_id, 'status' => 'all'], 0, 0, true);
 						if ($total_order == 0) {
 							foreach ($order->get_items() as $item_id => $item) {
 								$item_infos = wc_get_order_item_meta($item_id, '_abptb_items');
@@ -439,14 +582,37 @@
 									$post_id = $item_infos['post_id'] ?? '';
 									$booking_info = $item_infos['booking_infos'] ?? [];
 
-									if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
-										foreach ($booking_info as $bp_dp => $item_info) {
-											if (!empty($item_info)) {
-												$seat_type = $item_info['seat_type'] ?? '';
-												$ticket_infos = $item_info['info'] ?? [];
-												[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
-												$additional_info = $item_info['additional_info'] ?? [];
-												global $wpdb;
+if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
+												$hold_session = self::hold_session();
+												foreach ($booking_info as $bp_dp => $item_info) {
+													if (!empty($item_info)) {
+														$seat_type = $item_info['seat_type'] ?? '';
+														$ticket_infos = $item_info['info'] ?? [];
+														[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+														$additional_info = $item_info['additional_info'] ?? [];
+														// Final availability re-check (seat plan) to prevent overselling.
+														if ($seat_type === 'sp' && !empty($ticket_infos)) {
+															$check_data = [
+																'post_id' => $post_id,
+																'start_time' => $item_info['start_time'] ?? '',
+																'bp_dp' => $bp_dp,
+																'sp_id' => $item_info['sp_id'] ?? '',
+															];
+															$sold_seat = ABPTB_Query::get_sold_seat($check_data, true);
+															$held_seat = ABPTB_Query::get_held_seat($check_data, $hold_session);
+															$still_available = true;
+															foreach ($ticket_infos as $seat) {
+																$name = $seat['name'] ?? '';
+																if (!empty($name) && (in_array($name, $sold_seat, true) || in_array($name, $held_seat, true))) {
+																	$still_available = false;
+																	break;
+																}
+															}
+															if (!$still_available) {
+																continue;
+															}
+														}
+														global $wpdb;
 												$table_name = $wpdb->prefix . 'abptb_orders';
 												if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
 													$ticket_id = $ex_id = [];
@@ -517,6 +683,8 @@
 						}
 					}
 				}
+				// The order (or failure) now owns whatever is booked - release this session's holds.
+				ABPTB_Query::delete_seat_holds(self::hold_session(), '');
 			}
 			public function checkout_order_processed($order_id): void {
 				self::save_custom_data($order_id);

@@ -18,6 +18,10 @@
         ?>
         <div class="total_continue_area">
             <div class="total_continue item_box_1">
+                <div class="total_summary_head">
+                    <span class="fas fa-receipt"></span>
+                    <span><?php esc_html_e('Booking Summary', 'abp-transport-booking'); ?></span>
+                </div>
                 <div class="_fd_column_max_400">
                     <h5 class="abp _f_equal price_up">
                         <span><?php esc_html_e('Ticket Price : ', 'abp-transport-booking'); ?>&nbsp;</span>
