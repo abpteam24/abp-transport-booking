@@ -60,6 +60,7 @@ Administrators can create reusable global ticket types, seat plans, stops, categ
 * Related transport display
 * Dynamic pricing and quantity controls
 * WooCommerce checkout and payment integration
+* Customer transport bookings on the WooCommerce My Account page
 * Responsive frontend booking interface
 * Translation-ready
 
@@ -282,6 +283,20 @@ Customers can complete transport bookings through WooCommerce checkout and use p
 
 WooCommerce handles payment processing, taxes, coupons, customer accounts, and order management according to the site's WooCommerce configuration.
 
+== My Account Bookings ==
+
+Customers can view all of their transport bookings directly from the WooCommerce **My Account** page.
+
+A **Transport Bookings** menu item is added next to the WooCommerce Orders section. From there, customers can see a list of their bookings with:
+
+* Transport name and order reference
+* Route, boarding point, and dropping point
+* Travel date, seat, and approximate journey time
+* Ticket types and quantities
+* Booking total and current status
+
+Bookings are listed newest first with pagination, and each booking shows its current status (processing, completed, cancelled, and so on).
+
 == Recommended For ==
 
 * Bus operators
@@ -334,6 +349,8 @@ Pro features may include:
 ✅ Email notifications with PDF attachments
 ✅ Seasonal pricing and discounts
 ✅ Early booking discounts
+✅ Partial payment and deposit booking
+✅ My Account booking PDF download and cancel request
 ✅ Advanced booking management
 ✅ Create Bookings Directly from the Admin Dashboard
 ✅ Additional administrative tools

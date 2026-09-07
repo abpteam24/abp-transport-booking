@@ -46,6 +46,7 @@
 					require_once ABPTB_DIR . 'includes/abptb_frontend.php';
 					require_once ABPTB_DIR . 'includes/abptb_shortcodes.php';
 					require_once ABPTB_DIR . 'includes/abptb_woocommerce.php';
+					require_once ABPTB_DIR . 'includes/abptb_my_account.php';
 					require_once ABPTB_DIR . 'admin/abptb_hidden_post.php';
 				}
 			}
