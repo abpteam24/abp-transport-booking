@@ -25,84 +25,61 @@
                 $icon = ABPTB_Function::icon();
                 $total_post = $abptb_info['total_post'] ?? 0;
                 $total_order = $abptb_info['total_order'] ?? 0;
-                $allowed_tabs = ['dashboard', 'posts', 'orders', 'sp', 'global', 'configuration', 'status', 'documentation', 'admin_order', 'license', 'cancel_requests'];
-                $active_tab = 'posts';
+                /* translators: %s: transport label. */
+                $add_new_title = sprintf(esc_html__('Add New %s', 'abp-transport-booking'), $label);
+                $allowed_tabs = ['dashboard', 'posts', 'orders', 'sp', 'global', 'configuration', 'documentation', 'admin_order', 'cancel_requests'];
+                $active_tab = 'dashboard';
                 if (isset($_GET['_abptb_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_abptb_nonce'])), 'abptb_url_action')) {
-                    $active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'posts';
+                    $active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'dashboard';
                 }
                 if (!in_array($active_tab, $allowed_tabs, true)) {
-                    $active_tab = 'posts';
-                }
-                if (ABPTB_WC < 2) {
-                    $active_tab = 'status';
+                    $active_tab = 'dashboard';
                 }
                 ?>
-                <div class="abptb_area  abptb_admin">
-                    <div class="admin_head ">
-                        <div class="head_brand">
-                            <div class="brand_icon _all_center"><?php ABPTB_Layout::image_icon($icon); ?></div>
-                            <div class="_fd_column">
-                                <h4 class="abp"><?php echo esc_html($label); ?></h4>
-                                <span class="brand_version"><?php echo esc_html(ABPTB_VERSION); ?></span>
-                            </div>
+                <div class="abptb_area  abptb_admin <?php echo esc_attr($active_tab == 'documentation' ? 'documentation' : ''); ?>">
+                    <div class="admin_head">
+                        <div class="abptb_head_brand">
+                            <span class="abptb_head_logo"><?php ABPTB_Layout::image_icon($icon); ?></span>
+                            <span class="abptb_head_title">
+                                <b><?php echo esc_html($label); ?></b>
+                                <small>v<?php echo esc_html(ABPTB_VERSION); ?></small>
+                            </span>
                         </div>
-                        <div class="_group_content">
-                            <!--                            <a href="--><?php //echo esc_url( add_query_arg( 'tab', 'dashboard' ) ); ?><!--" class="_btn_light_info --><?php //echo esc_attr( $active_tab == 'dashboard' ? 'abp_active' : '' ); ?><!--"><span class="_mar_r_xs">📊</span>--><?php //esc_html_e( 'Dashboard', 'abp-transport-booking' ); ?><!--</a>-->
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('posts')); ?>" class="_btn_white_xs post_tab <?php echo esc_attr($active_tab == 'posts' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Layout::image_icon($icon);
-                                    echo esc_html($label) . ' ' . esc_html__('Lists', 'abp-transport-booking'); ?>
-                                <sup class="_color_theme">( <?php echo esc_html($total_post); ?> )</sup>
+                        <nav class="abptb_nav">
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('dashboard')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'dashboard' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-gauge-high"></i><?php esc_html_e('Dashboard', 'abp-transport-booking'); ?>
                             </a>
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'orders' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Static::svg('order');
-                                    esc_html_e('Orders', 'abp-transport-booking'); ?>
-                                <sup class="_color_theme">( <?php echo esc_html($total_order); ?> )</sup>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('posts')); ?>" class="_btn_xs post_tab <?php echo esc_attr($active_tab == 'posts' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-bus"></i><?php esc_html_e('Lists', 'abp-transport-booking'); ?><sup><?php echo esc_html($total_post); ?></sup>
                             </a>
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('sp')); ?>" class="_btn_white_xs  <?php echo esc_attr($active_tab == 'sp' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Static::svg('seat');
-                                    esc_html_e('Ticket/Seat Plan', 'abp-transport-booking'); ?>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'orders' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-file-invoice"></i><?php esc_html_e('Orders', 'abp-transport-booking'); ?><sup><?php echo esc_html($total_order); ?></sup>
+                            </a>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('sp')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'sp' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-chair"></i><?php esc_html_e('Ticket/Seat Plan', 'abp-transport-booking'); ?>
                             </a>
                             <?php do_action('abptb_add_admin_menu_tab_middle', $active_tab); ?>
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('global')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'global' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Static::svg('globe');
-                                    esc_html_e('Global Data', 'abp-transport-booking'); ?>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('global')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'global' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-globe"></i><?php esc_html_e('Global Data', 'abp-transport-booking'); ?>
                             </a>
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('configuration')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'configuration' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Static::svg('setting');
-                                    esc_html_e('Configuration', 'abp-transport-booking'); ?>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('configuration')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'configuration' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-gear"></i><?php esc_html_e('Configuration', 'abp-transport-booking'); ?>
                             </a>
-                            <a href="<?php echo esc_url(ABPTB_Function::build_url('status')); ?>" class="_btn_white_xs <?php echo esc_attr($active_tab == 'status' ? 'abp_active' : ''); ?>">
-                                <?php ABPTB_Static::svg('status');
-                                    esc_html_e('Status', 'abp-transport-booking'); ?>
+                            <a href="<?php echo esc_url(ABPTB_Function::build_url('documentation')); ?>" class="_btn_xs <?php echo esc_attr($active_tab == 'documentation' ? 'abp_active' : ''); ?>">
+                                <i class="fas fa-book-open"></i><?php esc_html_e('Documentation', 'abp-transport-booking'); ?>
                             </a>
                             <?php do_action('abptb_add_admin_menu_tab', $active_tab); ?>
-                        </div>
+                        </nav>
                         <?php if (ABPTB_WC == 2) { ?>
-                            <div class="_group_content">
-                                <button type="button" class="_btn_white_xs" data-href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>" data-blank="_blank">
-                                    <?php ABPTB_Static::svg('plus');
-                                        echo esc_html($label); ?>
+                            <div class="abptb_head_actions">
+                                <button type="button" class="abptb_head_cta" title="<?php echo esc_attr($add_new_title); ?>" data-href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>" data-blank="_blank">
+                                    <i class="fas fa-plus"></i><?php esc_html_e('Add New', 'abp-transport-booking'); ?>
                                 </button>
-                                <?php ABPTB_Layout::button_global_popup('tax_location', ABPTB_Function::location_label(), '_btn_white_xs');
-                                    if (ABPTB_Function::on_off('category')) {
-                                        ABPTB_Layout::button_global_popup('tax_category', ABPTB_Function::category_label(), '_btn_white_xs');
-                                    } ?>
                             </div>
                         <?php } ?>
                     </div>
                     <div class="dashboard_content">
-                        <?php if (ABPTB_WC < 2) { ?>
-                            <div class="_section_1_xs abp_notice">
-                                <h6 class=" abp_color_warning_gap_xs"><span class="fas fa-exclamation-triangle"></span><?php esc_html_e('Transport Booking is entirely dependent on the WooCommerce plugin. Please install and activate the WooCommerce plugin otherwise the plugin will not work. Installing this tool may take some time', 'abp-transport-booking'); ?></h6>
-                                <?php if (ABPTB_WC == 1) { ?>
-                                    <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_active')" type="button"><span class="fas fa-tasks"></span><?php esc_html_e('Active Now', 'abp-transport-booking'); ?></button>
-                                <?php } else { ?>
-                                    <button class="_btn_warning_xs" onclick="abptb_wc_config('wc_install_active')" type="button"><span class="fas fa-file-download"></span><?php esc_html_e('Install & Active Now', 'abp-transport-booking'); ?></button>
-                                <?php } ?>
-                            </div>
-                            <div class="_divider"></div>
-                            <?php
-                        }
+                        <?php
                             do_action('abptb_notice');
                             do_action('abptb_load_' . $active_tab, $abptb_info); ?>
                     </div>

@@ -156,13 +156,13 @@ window.abptb_popup_open_global = function (action, id = '') {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": 'abptb_add_' + action, 'id': id, 'post_id': post_id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abp_spinner(parent);
+                    abptb_spinner(parent);
                     setTimeout(function () {
                         abptb_color_picker_init(parent);
                     }, 50);
                     abptb_toast_msg(abptb_admin_data.msg.loading);
                 }, success: function (response) {
-                    abp_spinner_remove(parent);
+                    abptb_spinner_remove(parent);
                     if (response.data && response.data.hasOwnProperty('html')) {
                         target.html(response.data.html).promise().done(function () {
                             abptb_toast_msg(response.data.msg, response.data.type);
@@ -212,7 +212,7 @@ window.abptb_save_global = function (action, $_this) {
                     processData: false,
                     data: formData,
                     beforeSend: function () {
-                        abp_spinner(target);
+                        abptb_spinner(target);
                         abptb_toast_msg(abptb_admin_data.msg.saving);
                     },
                     success: function (response) {
@@ -241,7 +241,7 @@ window.abptb_save_global = function (action, $_this) {
                                 new ABPTB_Multi_Selection('div.abptb_admin .post_feature', abptb_feature_data);
                             }
                         }
-                        abp_spinner_remove(target);
+                        abptb_spinner_remove(target);
                         abptb_toast_msg(response.data.msg, response.data.type);
                     },
                     error: function (xhr) {
@@ -260,7 +260,7 @@ window.abptb_delete_global = function (action, id = '') {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": 'abptb_delete_' + action, 'id': id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abp_spinner(target);
+                    abptb_spinner(target);
                     abptb_toast_msg(abptb_admin_data.msg.deleting, 'error');
                 }, success: function (response) {
                     if (response.data && response.data.hasOwnProperty('html')) {
@@ -279,7 +279,7 @@ window.abptb_delete_global = function (action, id = '') {
                         }
                     }
                     abptb_toast_msg(response.data.msg, response.data.type);
-                    abp_spinner_remove(target);
+                    abptb_spinner_remove(target);
                 }, error: function (xhr) {
                     abptb_ajx_error(xhr, target);
                 }
@@ -295,10 +295,10 @@ window.abptb_post_action = function (action, id) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_post_' + action, 'post_id': id, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abp_spinner(parent);
+                abptb_spinner(parent);
                 abptb_toast_msg((abptb_admin_data.msg[action] ? abptb_admin_data.msg[action] : abptb_admin_data.msg.loading), 'warn');
             }, success: function (response) {
-                abp_spinner_remove(parent);
+                abptb_spinner_remove(parent);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 window.location.reload();
             }, error: function (xhr) {
@@ -311,16 +311,16 @@ window.abptb_import_global = function (action) {
     if (action) {
         let target = abptb_parent.find('.' + action);
         if (action === 'dummy') {
-            target = abptb_parent.find('.abp_status');
+            target = abptb_parent.find('#abptb_dummy_row');
         }
         jQuery.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_import_' + action, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abp_spinner(target);
+                abptb_spinner(target);
                 abptb_toast_msg((abptb_admin_data.msg[action] ? abptb_admin_data.msg[action] : abptb_admin_data.msg.loading));
             }, success: function (response) {
-                abp_spinner_remove(target);
+                abptb_spinner_remove(target);
                 abptb_toast_msg(response.data.msg, response.data.type);
                 if (action === 'dummy') {
                     window.location.reload();
@@ -341,32 +341,50 @@ window.abptb_import_global = function (action) {
         });
     }
 };
+window.abptb_delete_dummy = function () {
+    let parent = abptb_parent.find('#abptb_dummy_row');
+    jQuery.ajax({
+        type: 'POST', url: abptb_admin_data.ajax_url, data: {
+            "action": "abptb_delete_dummy", 'nonce': abptb_admin_data.nonce
+        }, beforeSend: function () {
+            abptb_spinner(parent);
+            abptb_toast_msg(abptb_admin_data.msg.loading);
+        }, success: function (response) {
+            abptb_spinner_remove(parent);
+            abptb_toast_msg(response.data.msg, response.data.type);
+            window.location.reload();
+        }, error: function (xhr) {
+            abptb_ajx_error(xhr, parent);
+        }
+    });
+};
 window.abptb_create_page = function (page_type) {
     if (page_type) {
-        let parent = abptb_parent.find('.abp_status');
+        let parent = abptb_parent.find('.dash_status_checklist');
         jQuery.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": "abptb_create_page", 'nonce': abptb_admin_data.nonce, 'type': page_type
             }, beforeSend: function () {
-                abp_spinner(parent);
+                abptb_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.create_post_page);
             }, success: function (response) {
                 abptb_toast_msg(response.data.msg, response.data.type);
                 window.location.reload();
             }, error: function (xhr) {
-                abptb_ajx_error(xhr, target);
+                abptb_ajx_error(xhr, parent);
             }
         });
     }
 };
-window.abptb_wc_config = function (page_type) {
+window.abptb_wc_config = function (page_type, el) {
     if (page_type) {
-        let parent = abptb_parent.find('.abp_notice');
+        let parent = el ? jQuery(el).closest('.dash_wc_setup, .dash_kv') : abptb_parent.find('#abptb_wc_row');
+        if (!parent.length) parent = abptb_parent.find('#abptb_wc_row');
         jQuery.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": "abptb_wc_config", 'nonce': abptb_admin_data.nonce, 'type': page_type
             }, beforeSend: function () {
-                abp_spinner(parent);
+                abptb_spinner(parent);
                 abptb_toast_msg((abptb_admin_data.msg[page_type] ? abptb_admin_data.msg[page_type] : abptb_admin_data.msg.loading));
             }, success: function (response) {
                 if (response.data && response.data.hasOwnProperty('msg')) {
@@ -442,13 +460,13 @@ window.abptb_image_selection = function ($this) {
                     type: 'POST', url: abptb_admin_data.ajax_url, data: {
                         "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
                     }, beforeSend: function () {
-                        abp_spinner(parent);
+                        abptb_spinner(parent);
                         abptb_toast_msg(abptb_admin_data.msg.post_loading);
                     }, success: function (response) {
                         if (response.data && response.data.hasOwnProperty('html')) {
                             target.html(response.data.html);
                         }
-                        abp_spinner_remove(parent);
+                        abptb_spinner_remove(parent);
                         abptb_toast_msg(response.data.msg, response.data.type);
                     }, error: function (xhr) {
                         abptb_ajx_error(xhr, parent);
@@ -639,18 +657,18 @@ window.abptb_image_selection = function ($this) {
             processData: false,
             data: formData,
             beforeSend: function () {
-                abp_spinner(target);
+                abptb_spinner(target);
                 abptb_toast_msg(abptb_admin_data.msg.price_loading);
             },
             success: function (response) {
                 if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html);
                 }
-                abp_spinner_remove(target);
+                abptb_spinner_remove(target);
                 abptb_toast_msg(response.data.msg, response.data.type);
             },
             error: function (xhr) {
-                abp_spinner_remove(target);
+                abptb_spinner_remove(target);
                 if (xhr.response && xhr.response.data) {
                     abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
                 }
@@ -667,16 +685,16 @@ window.abptb_image_selection = function ($this) {
             type: 'POST', url: abptb_admin_data.ajax_url, data: {
                 "action": 'abptb_type_switch', 'type': type, 'display_ticket_type': display_ticket_type, 'post_id': post_id, 'nonce': abptb_admin_data.nonce
             }, beforeSend: function () {
-                abp_spinner(parent);
+                abptb_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.type_switch);
             }, success: function (response) {
                 if (target && target.length > 0 && response.data && response.data.hasOwnProperty('html')) {
                     target.html(response.data.html);
                 }
-                abp_spinner_remove(parent);
+                abptb_spinner_remove(parent);
                 abptb_toast_msg(response.data.msg, response.data.type);
             }, error: function (xhr) {
-                abp_spinner_remove(parent);
+                abptb_spinner_remove(parent);
                 if (xhr.response && xhr.response.data) {
                     abptb_toast_msg(xhr.response.data.msg, xhr.response.data.type);
                 }
@@ -699,11 +717,11 @@ window.abptb_image_selection = function ($this) {
         $.ajax({
             type: 'POST', url: abptb_admin_data.ajax_url, contentType: false, processData: false, data: formData,
             beforeSend: function () {
-                abp_spinner(parent);
+                abptb_spinner(parent);
                 abptb_toast_msg(abptb_admin_data.msg.order_loading);
             },
             success: function (response) {
-                abp_spinner_remove(parent);
+                abptb_spinner_remove(parent);
                 if (response.data) {
                     if (response.data.hasOwnProperty('html')) {
                         target.html(response.data.html).promise().done(function () {
@@ -745,10 +763,10 @@ window.abptb_image_selection = function ($this) {
             $.ajax({
                 type: 'POST', url: abptb_admin_data.ajax_url, contentType: false, processData: false, data: formData,
                 beforeSend: function () {
-                    abp_spinner(target);
+                    abptb_spinner(target);
                 },
                 success: function (response) {
-                    abp_spinner_remove(target);
+                    abptb_spinner_remove(target);
                     if (response.data && response.data.hasOwnProperty('html')) {
                         target.slideDown('fast').html(response.data.html);
                     } else {
@@ -782,10 +800,10 @@ window.abptb_image_selection = function ($this) {
                 type: 'POST', url: abptb_admin_data.ajax_url, data: {
                     "action": "abptb_item_cancel", 'item_id': item_id, 'nonce': abptb_admin_data.nonce
                 }, beforeSend: function () {
-                    abp_spinner(parent);
+                    abptb_spinner(parent);
                     abptb_toast_msg(abptb_admin_data.msg.deleting, 'error');
                 }, success: function (response) {
-                    abp_spinner_remove(parent);
+                    abptb_spinner_remove(parent);
                     if (response.data) {
                         abptb_toast_msg(response.data.msg, response.data.type);
                     }
@@ -806,6 +824,55 @@ window.abptb_image_selection = function ($this) {
                 });
             });
         }
+    });
+}(jQuery));
+//==========Dashboard Recent/Today Orders===========//
+(function ($) {
+    "use strict";
+    $(document).on('click', 'div.abptb_admin .dash_order_tab[data-dtab]', function () {
+        let $this = $(this);
+        let $card = $this.closest('.dash_orders_card');
+        if ($this.hasClass('abp_active')) {
+            return;
+        }
+        $card.find('.dash_order_tab.abp_active').removeClass('abp_active');
+        $this.addClass('abp_active');
+        let key = $this.attr('data-dtab');
+        $card.find('.dash_orders_pane.abp_active').removeClass('abp_active');
+        let $panel = $card.find('.dash_orders_pane[data-dpane="' + key + '"]');
+        $panel.addClass('abp_active');
+    });
+    //========== Upcoming Journeys : click to open booking popup ==========//
+    $(document).on('click', 'div.abptb_admin .dash_journey_row', function () {
+        let $this = $(this);
+        let post_id = $this.attr('data-post');
+        let start_time = $this.attr('data-start');
+        let direction = $this.attr('data-direction') || 'up';
+        if (!post_id || !start_time) {
+            return;
+        }
+        jQuery('body').addClass('_stop_scroll').find('[data-popup="#abptb_global_popup"]').addClass('in').promise().done(function () {
+            let parent = abptb_parent.find('[data-popup="#abptb_global_popup"]').find('.popup_area').addClass('dash_journey_popup_area');
+            let target = parent.find('.popup_body');
+            jQuery.ajax({
+                type: 'POST', url: abptb_admin_data.ajax_url, data: {
+                    "action": 'abptb_journey_popup', 'post_id': post_id, 'start_time': start_time, 'direction': direction, 'nonce': abptb_admin_data.nonce
+                }, beforeSend: function () {
+                    abptb_spinner(parent);
+                    abptb_toast_msg(abptb_admin_data.msg.loading);
+                }, success: function (response) {
+                    abptb_spinner_remove(parent);
+                    if (response.data && response.data.hasOwnProperty('html')) {
+                        target.html(response.data.html).promise().done(function () {
+                            abptb_toast_msg(response.data.msg, response.data.type);
+                            abptb_init(target);
+                        });
+                    }
+                }, error: function (xhr) {
+                    abptb_ajx_error(xhr, parent);
+                }
+            });
+        });
     });
 }(jQuery));
 //==============Empty title check /image selection/add_new_delete============================//
@@ -1077,7 +1144,7 @@ window.abptb_image_selection = function ($this) {
             category_li.appendTo(category_list);
         });
         category_list.appendTo(abptb_category_list);
-        abp_spinner(abptb_item_loader);
+        abptb_spinner(abptb_item_loader);
     }
     function load_icon_list() {
         abptb_icon_area.empty();

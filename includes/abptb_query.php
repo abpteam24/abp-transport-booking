@@ -56,8 +56,8 @@
 				$bp_dp = $filters['bp_dp'] ?? null;
 				$bp = $filters['bp'] ?? null;
 				$dp = $filters['dp'] ?? null;
-				if(!empty($bp) && !empty($dp)) {
-					$bp_dp=$bp.'_'.$dp;
+				if (!empty($bp) && !empty($dp)) {
+					$bp_dp = $bp . '_' . $dp;
 				}
 				$meta_query = ['relation' => 'AND'];
 				// Category query
@@ -204,21 +204,33 @@
 					$params[] = gmdate('Y-m-d', strtotime($filters['order_date_to']));
 				}
 				// Billing Info (LIKE search)
-				$like_keys = array('billing_name', 'billing_email', 'billing_phone');
+				$like_keys = array('billing_name', 'billing_email', 'billing_phone', 'others');
 				foreach ($like_keys as $like_key) {
 					if (!empty($filters[$like_key])) {
 						$conditions[] = "{$like_key} LIKE %s";
 						$params[] = '%' . $wpdb->esc_like(sanitize_text_field($filters[$like_key])) . '%';
 					}
+}
+			// Aggregate Mode (SUM/MIN/MAX/AVG over numeric columns, e.g. filters['aggregate'] => array('total' => 'SUM'))
+			$aggregate_fields = array();
+			if (!empty($filters['aggregate']) && is_array($filters['aggregate']) && !$count) {
+				$agg_available = array('total' => 1, 'qty' => 1, 'price' => 1);
+				foreach ($filters['aggregate'] as $agg_col => $agg_fn) {
+					$agg_col = sanitize_key($agg_col);
+					$agg_fn = strtoupper(sanitize_key($agg_fn));
+					if (isset($agg_available[$agg_col]) && in_array($agg_fn, array('SUM', 'MIN', 'MAX', 'AVG'), true)) {
+						$aggregate_fields[] = "COALESCE({$agg_fn}({$agg_col}), 0) AS {$agg_col}";
+					}
 				}
-				// SQL Query Assembly
-				$select = $count ? 'SELECT COUNT(*)' : 'SELECT *';
+			}
+			// SQL Query Assembly
+				$select = $count ? 'SELECT COUNT(*)' : ($aggregate_fields ? 'SELECT ' . implode(', ', $aggregate_fields) : 'SELECT *');
 				$sql = "{$select} FROM %i";
 				if (!empty($conditions)) {
 					$sql .= ' WHERE ' . implode(' AND ', $conditions);
 				}
-				if (!$count) {
-					$allowed_columns = array('id', 'post_id', 'order_id', 'status', 'created_at');
+				if (!$count && empty($aggregate_fields)) {
+					$allowed_columns = array('id', 'post_id', 'order_id', 'status', 'created_at', 'updated_at');
 					$raw_order_by = !empty($filters['order_by']) ? sanitize_key($filters['order_by']) : 'order_id';
 					$order_by = in_array($raw_order_by, $allowed_columns, true) ? $raw_order_by : 'order_id';
 					$order_dir = (!empty($filters['order_dir']) && strtoupper($filters['order_dir']) === 'ASC') ? 'ASC' : 'DESC';
@@ -240,6 +252,19 @@
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 						$results = $wpdb->get_var($wpdb->prepare($sql, $table_name));
+					}
+				} elseif (!empty($aggregate_fields)) {
+					if (!empty($params)) {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						$results = $wpdb->get_row(
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							$wpdb->prepare($sql, array_merge(array($table_name), $params)),
+							ARRAY_A
+						);
+					} else {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						$results = $wpdb->get_row($wpdb->prepare($sql, $table_name), ARRAY_A);
 					}
 				} else {
 					if (!empty($params)) {
@@ -364,7 +389,7 @@
 				return $wpdb->prefix . 'abptb_seat_holds';
 			}
 			public static function hold_minutes(): int {
-				return (int) apply_filters('abptb_seat_hold_minutes', 20);
+				return (int)apply_filters('abptb_seat_hold_minutes', 20);
 			}
 			public static function prune_seat_holds(): void {
 				global $wpdb;
@@ -379,7 +404,7 @@
 				global $wpdb;
 				$table_name = self::holds_table();
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$count = (int) $wpdb->get_var($wpdb->prepare(
+				$count = (int)$wpdb->get_var($wpdb->prepare(
 					"SELECT COUNT(*) FROM %i WHERE post_id = %d AND start_time = %s AND bp_dp = %s AND sp_id = %d AND seat_name = %s AND session_id = %s",
 					$table_name,
 					absint($post_id),
@@ -427,7 +452,7 @@
 					'expires_at' => $expires_at,
 				]);
 				$wpdb->show_errors();
-				return (bool) $inserted;
+				return (bool)$inserted;
 			}
 			public static function delete_seat_holds($session_id = '', $hold_ref = ''): void {
 				global $wpdb;

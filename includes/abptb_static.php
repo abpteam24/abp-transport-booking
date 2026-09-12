@@ -4,6 +4,31 @@
     }
     if (!class_exists('ABPTB_Static')) {
         class ABPTB_Static {
+            public function __construct() {
+                add_action('abptb_notice', [$this, 'wc_notice']);
+            }
+            public function wc_notice(): void {
+                if (ABPTB_WC < 2) {
+                    $type = ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active';
+                    $btn = ABPTB_WC == 1 ? __('Active Now', 'abp-transport-booking') : __('Install & Active Now', 'abp-transport-booking');
+                    ?>
+                    <div class="dash_card dash_wc_setup">
+                        <div class="dash_wc_setup_icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="dash_wc_setup_body">
+                            <h4><?php esc_html_e('WooCommerce is required', 'abp-transport-booking'); ?></h4>
+                            <p><?php echo esc_html(ABPTB_Static::array_info('must_wc')); ?></p>
+                        </div>
+                        <?php
+                            $icon = ABPTB_WC == 1 ? 'fa-tasks' : 'fa-file-download';
+                        ?>
+                        <button type="button" class="_btn_warning_xs" onclick="abptb_wc_config('<?php echo esc_attr($type); ?>', this)">
+                            <i class="fas <?php echo esc_attr($icon); ?>"></i> <?php echo esc_html($btn); ?>
+                        </button>
+                    </div>
+                    <div class="_divider"></div>
+                    <?php
+                }
+            }
             public static function array_info($key) {
                 $current_date = current_time('Y-m-d H:i');
                 $des = array(
@@ -493,4 +518,5 @@
                 <?php return ob_get_clean();
             }
         }
+        new ABPTB_Static();
     }

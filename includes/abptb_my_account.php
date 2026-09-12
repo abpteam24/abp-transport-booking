@@ -25,11 +25,11 @@
 				foreach ($items as $key => $value) {
 					$menu[$key] = $value;
 					if ('orders' === $key) {
-						$menu[$slug] = __('Transport Bookings', 'abp-transport-booking');
+						$menu[$slug] = ABPTB_Function::label().' '.__('Bookings', 'abp-transport-booking');
 					}
 				}
 				if ('dashboard' === $slug || !array_key_exists($slug, $menu)) {
-					$menu[$slug] = __('Transport Bookings', 'abp-transport-booking');
+					$menu[$slug] = ABPTB_Function::label().' '.__('Bookings', 'abp-transport-booking');
 				}
 				return $menu;
 			}
@@ -140,6 +140,7 @@
 					<?php } ?>
 					<div class="_divider_xs"></div>
 					<p style="margin:0;"><strong><?php esc_html_e('Total', 'abp-transport-booking'); ?></strong> : <?php echo $total > 0 ? wp_kses_post(wc_price($total)) : esc_html__('FREE', 'abp-transport-booking'); ?></p>
+					<?php do_action('abptb_my_account_partial_payment', $booking_item); ?>
 					<div class="_divider_xs"></div>
 					<div class="_fj_start _f_wrap_gap_xxs">
 						<?php do_action('abptb_my_account_booking_actions', $booking_item); ?>

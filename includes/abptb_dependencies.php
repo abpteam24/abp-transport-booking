@@ -22,6 +22,7 @@
 				require_once ABPTB_DIR . 'includes/abptb_layout.php';
 				if (is_admin()) {
 					require_once ABPTB_DIR . 'admin/abptb_admin.php';
+					require_once ABPTB_DIR . 'admin/abptb_dashboard.php';
 					require_once ABPTB_DIR . 'admin/abptb_post.php';
 					require_once ABPTB_DIR . 'admin/abptb_routing.php';
 					require_once ABPTB_DIR . 'admin/abptb_ticket.php';
@@ -33,7 +34,7 @@
 					require_once ABPTB_DIR . 'admin/abptb_seat_plan.php';
 					require_once ABPTB_DIR . 'admin/abptb_resource.php';
 					require_once ABPTB_DIR . 'admin/abptb_configuration.php';
-					require_once ABPTB_DIR . 'admin/abptb_status.php';
+					require_once ABPTB_DIR . 'admin/abptb_documentation.php';
 					require_once ABPTB_DIR . 'admin/abptb_category.php';
 					require_once ABPTB_DIR . 'admin/abptb_organizer.php';
 					require_once ABPTB_DIR . 'admin/abptb_location.php';
@@ -130,7 +131,7 @@
 				do_action('abptb_admin_enqueue');
 			}
 			public function frontend_enqueue(): void {
-				if (class_exists('WooCommerce') || is_plugin_active('woocommerce/woocommerce.php')) {
+				if (ABPTB_WC >= 2) {
 					wp_enqueue_script('wc-checkout');
 					wp_enqueue_style('select2');
 					wp_enqueue_script('select2');
@@ -148,7 +149,7 @@
 				wp_enqueue_style('abptb_font_awesome', ABPTB_URL . 'assets/css/font_awesome.min.css', array(), '5.15.4');
 				wp_enqueue_style('abptb_lib', ABPTB_URL . 'assets/css/abptb_lib.css', array(), time());
 				wp_enqueue_script('abptb_lib', ABPTB_URL . 'assets/js/abptb_lib.js', array('jquery'), time(), true);
-				if (class_exists('WooCommerce') || is_plugin_active('woocommerce/woocommerce.php')) {
+				if (ABPTB_WC >= 2) {
 					wp_localize_script('abptb_lib', 'abptb_var', [
 						'currency_symbol' => get_woocommerce_currency_symbol(),
 						'currency_position' => get_option('woocommerce_currency_pos'),
@@ -185,11 +186,6 @@
 				$bg_section = ($abptb_css_var['bg_section'] ?? null) ?: '#FAFCFE';
 				$bg_button = ($abptb_css_var['bg_button'] ?? null) ?: '#222';
 				$color_button = ($abptb_css_var['color_button'] ?? null) ?: $alternate_color;
-				$color_theme_ee = $color_theme . 'ee';
-				$color_theme_cc = $color_theme . 'cc';
-				$color_theme_aa = $color_theme . 'aa';
-				$color_theme_88 = $color_theme . '88';
-				$color_theme_77 = $color_theme . '77';
 				$default_br = !empty($abptb_css_var['br_default']) ? $abptb_css_var['br_default'] . 'px' : '5px';
 				$br_xl = !empty($abptb_css_var['br_default']) ? $abptb_css_var['br_default'] * 2 . 'px' : '10px';
 				$fs_h1 = !empty($abptb_css_var['fs_h1']) ? $abptb_css_var['fs_h1'] . 'px' : '30px';
@@ -223,11 +219,6 @@
 						--tb_color_default: {$default_color};						
 						--tb_color_section: {$bg_section};
 						--tb_color_theme: {$color_theme};
-						--tb_color_theme_ee: {$color_theme_ee};
-						--tb_color_theme_cc: {$color_theme_cc};
-						--tb_color_theme_aa: {$color_theme_aa};
-						--tb_color_theme_88: {$color_theme_88};
-						--tb_color_theme_77: {$color_theme_77};
 						--tb_color_theme_alter: {$alternate_color};
 						--tb_color_warning:{$color_warning};						
 						--tb_color_available:{$available};						
@@ -451,7 +442,12 @@
 					        ex_info text NOT NULL,				        					        
 					        ex_id varchar(255) NOT NULL,
 					        ex_price varchar(100) DEFAULT NULL,
-					        total varchar(100) DEFAULT NULL,					        
+					        total varchar(100) DEFAULT NULL,			
+					        pp_choice varchar(20) DEFAULT NULL,
+					        pp_full varchar(100) DEFAULT NULL,
+					        pp_deposit varchar(100) DEFAULT NULL,
+					        pp_balance varchar(100) DEFAULT NULL,
+					        pp_date datetime DEFAULT NULL,		        
 					        pass_info text NOT NULL,					        
 					        checkin tinyint(1) NOT NULL DEFAULT 0,					        
 					        female tinyint(1) NOT NULL DEFAULT 0,					        
@@ -464,7 +460,7 @@
 					        billing_address varchar(255) DEFAULT NULL,
 					        others text DEFAULT NULL,
 					        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
-					        updated_at datetime DEFAULT NULL,
+					        updated_at datetime DEFAULT NULL,					        
 					        PRIMARY KEY  (id),
 					        KEY order_id  (order_id),
 					        KEY user_id  (user_id),
@@ -541,11 +537,11 @@
 				$active_tab = '';
 				$page = '';
 				if (isset($_GET['_abptb_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_abptb_nonce'])), 'abptb_url_action')) {
-					$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'status';
+					$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'dashboard';
 					$page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
 				}
-				if ($page === ABPTB_Function::slug() && ABPTB_WC < 2 && $active_tab != 'status') {
-					wp_safe_redirect(ABPTB_Function::build_url('status'));
+				if ($page === ABPTB_Function::slug() && ABPTB_WC < 2 && $active_tab != 'dashboard') {
+					wp_safe_redirect(ABPTB_Function::build_url('dashboard'));
 					exit;
 				}
 			}

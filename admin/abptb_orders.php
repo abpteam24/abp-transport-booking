@@ -182,11 +182,13 @@
                                     <?php if (ABPTB_Function::on_off('additional_info')) { ?>
                                         <th><?php ABPTB_Layout::additional_info($additional_infos); ?></th>
                                     <?php } ?>
-                                    <th><?php echo $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                    <th><?php echo $price > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($price) : number_format_i18n((float)$price, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                     <?php if (ABPTB_Function::on_off('additional_info')) { ?>
-                                        <th><?php echo $ex_price > 0 ? wp_kses_post(wc_price($ex_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                        <th><?php echo $ex_price > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($ex_price) : number_format_i18n((float)$ex_price, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                     <?php } ?>
-                                    <th><?php echo $item_total > 0 ? wp_kses_post(wc_price($item_total)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                    <th><?php echo $item_total > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($item_total) : number_format_i18n((float)$item_total, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?>
+                                        <?php do_action('abptb_order_list_partial_payment', $booking_item); ?>
+                                    </th>
                                     <th><?php ABPTB_Layout::list_check_in($id, $order_status, $checkin); ?></th>
                                     <th>
                                         <span class="abp_tag _text_capitalize <?php echo esc_attr($order_status); ?>"> <?php echo esc_html(ABPTB_Layout::status_text($order_status)); ?></span>
@@ -215,11 +217,11 @@
                             <tfoot>
                             <tr>
                                 <th colspan="<?php echo esc_attr($count_foot_left_col); ?>"><?php esc_html_e('Total Summary', 'abp-transport-booking'); ?></th>
-                                <th><?php echo (!empty($total_price) && $total_price > 0) ? wp_kses_post(wc_price($total_price)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                <th><?php echo (!empty($total_price) && $total_price > 0) ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total_price) : number_format_i18n((float)$total_price, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <?php if (ABPTB_Function::on_off('additional_info')) { ?>
-                                    <th><?php echo (!empty($total_additional) && $total_additional > 0) ? wp_kses_post(wc_price($total_additional)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                    <th><?php echo (!empty($total_additional) && $total_additional > 0) ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total_additional) : number_format_i18n((float)$total_additional, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <?php } ?>
-                                <th><?php echo (!empty($total_sale) && $total_sale > 0) ? wp_kses_post(wc_price($total_sale)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
+                                <th><?php echo (!empty($total_sale) && $total_sale > 0) ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total_sale) : number_format_i18n((float)$total_sale, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></th>
                                 <th colspan="<?php echo esc_attr($count_foot_right_col); ?>"></th>
                             </tr>
                             </tfoot>

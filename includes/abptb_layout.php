@@ -269,10 +269,9 @@
                 }
             }
             public static function input_date($name, $date = '', $label = '', $required = ''): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 $hidden_date = $date ? gmdate('Y-m-d', strtotime($date)) : '';
-                $visible_date = $date ? date_i18n($date_format, strtotime($date)) : '';
+                $visible_date = $date ? ABPTB_Function::date_format($date, 'date') : '';
                 ?>
                 <label class="_input_item">
                     <?php self::input_title($label, $required); ?>
@@ -685,12 +684,11 @@
             public static function journey_date($all_dates, $date = ''): void {
                 //echo '<pre>';print_r($all_dates);					echo '</pre>';
                 if (sizeof($all_dates) > 0) {
-                    $date_format = ABPTB_Function::date_format_php();
-                    $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                    $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                     $date = $date ?: current($all_dates);
                     //if ( sizeof( $all_dates ) > 10 ) {
                     $hidden_date = !empty($date) ? gmdate('Y-m-d', strtotime($date)) : '';
-                    $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
+                    $visible_date = !empty($date) ? ABPTB_Function::date_format($date, 'date') : '';
                     ?>
                     <label>
                         <span class="_gap_xxs"><?php ABPTB_Static::svg('date_1'); ?><?php esc_html_e('Journey Date', 'abp-transport-booking'); ?><sup class="_color_required">*</sup></span>
@@ -706,12 +704,11 @@
                 }
             }
             public static function return_date($all_dates, $date = ''): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 if (sizeof($all_dates) > 0) {
                     //if ( sizeof( $all_dates ) > 10 ) {
                     $hidden_date = !empty($date) ? gmdate('Y-m-d', strtotime($date)) : '';
-                    $visible_date = !empty($date) ? date_i18n($date_format, strtotime($date)) : '';
+                    $visible_date = !empty($date) ? ABPTB_Function::date_format($date, 'date') : '';
                     ?>
                     <label>
                         <span class="_gap_xxs"><?php ABPTB_Static::svg('date_2'); ?><?php esc_html_e('Return Date (optional)', 'abp-transport-booking'); ?></span>
@@ -965,7 +962,7 @@
                                     ?>
                                     <div class="sp_tooltip" style="color: <?php echo esc_url($color); ?>">
                                         <?php echo esc_html(ABPTB_Function::ticket_name($type_id) . ' : ');
-                                            echo $price > 0 ? wp_kses_post(wc_price($price)) : esc_html__('Free', 'abp-transport-booking'); ?>
+                                            echo $price > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($price) : number_format_i18n((float)$price, 2)) : esc_html__('Free', 'abp-transport-booking'); ?>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -991,7 +988,7 @@
                                 ?>
                                 <li>
                                     <strong><?php echo esc_html($name); ?></strong>
-                                    <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $total > 0 ? wp_kses_post(wc_price($total)) : esc_html__('FREE', 'abp-transport-booking')); ?>
+                                    <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $total > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total) : number_format_i18n((float)$total, 2)) : esc_html__('FREE', 'abp-transport-booking')); ?>
                                 </li>
                                 <?php
                             }
@@ -1012,7 +1009,7 @@
                                 if (!empty($name)) { ?>
                                     <li>
                                         <strong><?php echo esc_html($name); ?></strong>
-                                        <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $total > 0 ? wp_kses_post(wc_price($total)) : esc_html__('FREE', 'abp-transport-booking')); ?>
+                                        <?php echo esc_html(' X ' . $qty . ' = ') . ' ' . (!empty($price) && $total > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total) : number_format_i18n((float)$total, 2)) : esc_html__('FREE', 'abp-transport-booking')); ?>
                                         <?php
                                             if ($returnable == 'yes') {
                                                 ?> <span class="_color_required"> - <?php esc_html_e('Returnable', 'abp-transport-booking'); ?></span><?php
@@ -1110,8 +1107,7 @@
                 <?php
             }
             public static function filter_booking_date(): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 ?>
                 <div class="_input_item">
                     <label>
@@ -1124,8 +1120,7 @@
                 <?php
             }
             public static function filter_booking_date_between(): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 ?>
                 <div class="_g_input_input_item_fd_column" data-collapse="#view_more_filter_option">
                     <label><span class="_gap_xs"><?php ABPTB_Static::svg('date_2'); ?><?php esc_html_e('Journey Date Between', 'abp-transport-booking'); ?></span></label>
@@ -1175,8 +1170,7 @@
                 <?php
             }
             public static function filter_order_date(): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 ?>
                 <div class="_input_item">
                     <label>
@@ -1189,8 +1183,7 @@
                 <?php
             }
             public static function filter_order_date_between(): void {
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 ?>
                 <div class="_g_input_input_item_fd_column" data-collapse="#view_more_filter_option">
                     <label class="_mar_b_xxs"><span class="_gap_xs">⏰ <?php esc_html_e('Order Date Between', 'abp-transport-booking'); ?></span></label>

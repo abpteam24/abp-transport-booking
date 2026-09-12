@@ -178,7 +178,13 @@
 				return $page?->ID;
 			}
 			public static function check_wc(): int {
-				if (class_exists('WooCommerce') || is_plugin_active('woocommerce/woocommerce.php')) {
+				if (class_exists('WooCommerce')) {
+					return 2;
+				}
+				if (!function_exists('is_plugin_active')) {
+					require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				}
+				if (is_plugin_active('woocommerce/woocommerce.php')) {
 					return 2;
 				}
 				$wc_dir = trailingslashit(WP_PLUGIN_DIR) . 'woocommerce';
@@ -605,6 +611,15 @@
 				}
 				return $time_info;
 			}
+			public static function time_operation($post_id, $journey_date,$is_return=false): array {
+				$time_info = [];
+				if (!empty($post_id) && !empty($journey_date)) {
+					$key = $is_return ? 'return_time_infos' : 'time_infos';
+					$time_infos = self::get_post_info($post_id,$key,[]);
+					$time_info = self::time($time_infos, $journey_date);
+				}
+				return $time_info;
+			}
 			public static function time($time_infos, $journey_date) {
 				$day_times = $time_infos['day_time'] ?? [];
 				$date_times = $time_infos['date_times'] ?? [];
@@ -862,15 +877,21 @@
 				}
 				return $time;
 			}
+			public static function order_date(int $post_id) {
+
+			}
 			//=============Price Function================//
 			public static function tax_with_price($post_id, $price): string {
+				if ('' === $price) {
+					return '';
+				}
+				if (!function_exists('wc_get_product')) {
+					return (string)(float)$price;
+				}
 				$num_of_decimal = get_option('woocommerce_price_num_decimals', 2);
 				$_product = self::get_post_info($post_id, 'link_wc_id', $post_id);
 				$product = wc_get_product($_product);
 				$tax_display = get_option('woocommerce_tax_display_shop');
-				if ('' === $price) {
-					return '';
-				}
 				$return_price = (float)$price;
 				if ($product && $product->is_taxable()) {
 					$tax_rates = WC_Tax::get_rates($product->get_tax_class());

@@ -150,10 +150,9 @@
                 $active_type = ($type == 'select' || $type == 'checkbox' || $type == 'radio') ? 'abp_active' : '';
                 $active_value = $type != 'date' ? 'abp_active' : '';
                 $date = $type == 'date' ? $d_value : '';
-                $date_format = ABPTB_Function::date_format_php();
-                $now = date_i18n($date_format, strtotime(current_time('Y-m-d')));
+                $now = ABPTB_Function::date_format(current_time('Y-m-d'), 'date');
                 $hidden_date = $date ? gmdate('Y-m-d', strtotime($date)) : '';
-                $visible_date = $date ? date_i18n($date_format, strtotime($date)) : '';
+                $visible_date = $date ? ABPTB_Function::date_format($date, 'date') : '';
                 $active_date = $type == 'date' ? 'abp_active' : '';
                 ?>
                 <tr class="delete_area data_single_collapse">

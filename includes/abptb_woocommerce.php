@@ -21,12 +21,17 @@
 				add_action('woocommerce_checkout_process', [$this, 'checkout_process_validation']);
 				add_action('woocommerce_after_checkout_validation', [$this, 'checkout_process_validation']);
 				add_action('woocommerce_check_cart_items', [$this, 'checkout_process_validation']);
+				//=====My Account Registration=====//
+				add_filter('pre_option_woocommerce_enable_myaccount_registration', [$this, 'enable_myaccount_registration']);
+			}
+			public function enable_myaccount_registration() {
+				return 'yes';
 			}
 			public static function hold_session(): string {
 				if (function_exists('WC') && WC() && WC()->session) {
 					$customer_id = WC()->session->get_customer_id();
 					if (!empty($customer_id)) {
-						return (string) $customer_id;
+						return (string)$customer_id;
 					}
 				}
 				return '';
@@ -262,8 +267,8 @@
 					$seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
 					$bp_time = $post_val($prefix . 'bp_time');
 					$start_time = $post_val($prefix . 'start_time');
-					$start_point = ABPTB_Function::start_point($post_infos,$bp_dp);
-					$end_point = ABPTB_Function::start_point($post_infos,$bp_dp,true);
+					$start_point = ABPTB_Function::start_point($post_infos, $bp_dp);
+					$end_point = ABPTB_Function::start_point($post_infos, $bp_dp, true);
 					$ticket_price = 0;
 					if (!empty($bp_time) && !empty($bp_dp) && !empty($post_id) && !empty($start_time)) {
 						if ($seat_type == 'ticket') {
@@ -320,7 +325,7 @@
 							$booking_info['drop_off_time'] = ABPTB_Function::get_pd_time($dp, $dp_time, $drop_off);
 							$booking_info['start_time'] = $start_time;
 							$booking_info['start_point'] = $start_point;
-							$booking_info['bp_dp'] = $start_point.'_'.$end_point;
+							$booking_info['bp_dp'] = $start_point . '_' . $end_point;
 							$booking_info['duration'] = ABPTB_Function::date_time_difference($bp_time, $dp_time);
 							$booking_info['pass_info'] = self::get_passenger_info($post_infos, $prefix);
 							$booking_info['additional_info'] = $additional_info;
@@ -581,38 +586,37 @@
 								if (!empty($item_infos) && is_array($item_infos) && sizeof($item_infos) > 0) {
 									$post_id = $item_infos['post_id'] ?? '';
 									$booking_info = $item_infos['booking_infos'] ?? [];
-
-if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
-												$hold_session = self::hold_session();
-												foreach ($booking_info as $bp_dp => $item_info) {
-													if (!empty($item_info)) {
-														$seat_type = $item_info['seat_type'] ?? '';
-														$ticket_infos = $item_info['info'] ?? [];
-														[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
-														$additional_info = $item_info['additional_info'] ?? [];
-														// Final availability re-check (seat plan) to prevent overselling.
-														if ($seat_type === 'sp' && !empty($ticket_infos)) {
-															$check_data = [
-																'post_id' => $post_id,
-																'start_time' => $item_info['start_time'] ?? '',
-																'bp_dp' => $bp_dp,
-																'sp_id' => $item_info['sp_id'] ?? '',
-															];
-															$sold_seat = ABPTB_Query::get_sold_seat($check_data, true);
-															$held_seat = ABPTB_Query::get_held_seat($check_data, $hold_session);
-															$still_available = true;
-															foreach ($ticket_infos as $seat) {
-																$name = $seat['name'] ?? '';
-																if (!empty($name) && (in_array($name, $sold_seat, true) || in_array($name, $held_seat, true))) {
-																	$still_available = false;
-																	break;
-																}
-															}
-															if (!$still_available) {
-																continue;
-															}
+									if (!empty($post_id) && get_post_type($post_id) == ABPTB_Function::get_cpt() && !empty($booking_info) && sizeof($booking_info) > 0) {
+										$hold_session = self::hold_session();
+										foreach ($booking_info as $bp_dp => $item_info) {
+											if (!empty($item_info)) {
+												$seat_type = $item_info['seat_type'] ?? '';
+												$ticket_infos = $item_info['info'] ?? [];
+												[$bp, $dp] = array_map('intval', explode('_', $bp_dp));
+												$additional_info = $item_info['additional_info'] ?? [];
+												// Final availability re-check (seat plan) to prevent overselling.
+												if ($seat_type === 'sp' && !empty($ticket_infos)) {
+													$check_data = [
+														'post_id' => $post_id,
+														'start_time' => $item_info['start_time'] ?? '',
+														'bp_dp' => $bp_dp,
+														'sp_id' => $item_info['sp_id'] ?? '',
+													];
+													$sold_seat = ABPTB_Query::get_sold_seat($check_data, true);
+													$held_seat = ABPTB_Query::get_held_seat($check_data, $hold_session);
+													$still_available = true;
+													foreach ($ticket_infos as $seat) {
+														$name = $seat['name'] ?? '';
+														if (!empty($name) && (in_array($name, $sold_seat, true) || in_array($name, $held_seat, true))) {
+															$still_available = false;
+															break;
 														}
-														global $wpdb;
+													}
+													if (!$still_available) {
+														continue;
+													}
+												}
+												global $wpdb;
 												$table_name = $wpdb->prefix . 'abptb_orders';
 												if (!empty($ticket_infos) && sizeof($ticket_infos) > 0) {
 													$ticket_id = $ex_id = [];
