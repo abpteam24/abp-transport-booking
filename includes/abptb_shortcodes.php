@@ -119,6 +119,10 @@
                 return array(
                     "post_id" => '',
                     "cat_id" => '',
+                    "category" => 'on',
+                    "brand" => 'off',
+                    "organizer" => 'off',
+                    "location" => 'on',
                     "loc_id" => '',
                     "brand_id" => '',
                     "org_id" => '',

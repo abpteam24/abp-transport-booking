@@ -7,10 +7,11 @@
             public function __construct() {
                 add_action('abptb_load_dashboard', array($this, 'load_dashboard'), 10);
                 add_action('wp_ajax_abptb_journey_popup', array($this, 'journey_popup'));
+                add_action('abptb_notice', [$this, 'wc_notice']);
                 add_action('wp_ajax_abptb_wc_config', array($this, 'wc_config'));
                 add_action('wp_ajax_abptb_create_page', array($this, 'create_page'));
-                add_action('wp_ajax_abptb_import_dummy', array($this, 'import_dummy'));
                 add_action('wp_ajax_abptb_delete_dummy', array($this, 'delete_dummy'));
+                add_action('wp_ajax_abptb_import_dummy', array($this, 'import_dummy'));
             }
             public function load_dashboard($abptb_info): void {
                 $label = ABPTB_Function::label();
@@ -131,11 +132,29 @@
                                             </small>
                                         </div>
                                         <div class="dash_row_meta dash_journey_meta">
-                                            <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i> <?php echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $sold)); ?></span>
-                                            <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i> <?php echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $available)); ?></span>
-                                            <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i> <?php echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $total)); ?></span>
+                                            <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i>
+                                                <?php
+                                                    // translators: %d: number of tickets sold.
+                                                    echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $sold));
+                                                ?>
+                                            </span>
+                                            <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
+                                                <?php
+                                                    // translators: %d: number of available seats.
+                                                    echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $available));
+                                                ?>
+                                            </span>
+                                            <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
+                                                <?php
+                                                    // translators: %d: total number of seats.
+                                                    echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $total));
+                                                ?>
+                                            </span>
                                             <?php if ($reserve > 0) { ?>
-                                                <span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i> <?php echo esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $reserve)); ?></span>
+                                                <?php
+                                                // translators: %d: number of reserved seats.
+                                                echo '<span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i> ' . esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $reserve)) . '</span>';
+                                                ?>
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -166,24 +185,28 @@
                 $actions[] = array('fas fa-route', __('Stops Configuration', 'abp-transport-booking'), __('Manage stops / locations', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'location']), 'navy');
                 if (defined('ABPTB_DIR_PRO')) {
                     if (ABPTB_Function::on_off('partial_payment')) {
-                        $actions[] = array('fas fa-hand-holding-dollar', __('Partial Payment', 'abp-transport-booking-pro'), __('Configure partial payment', 'abp-transport-booking-pro'), ABPTB_Function::build_url('global', ['global' => 'partial_payment']), 'success');
+                        $actions[] = array('fas fa-hand-holding-dollar', __('Partial Payment', 'abp-transport-booking'), __('Configure partial payment', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'partial_payment']), 'success');
                     }
                     if ((ABPTB_Function::on_off('seasonal') && ABPTB_Function::on_off('seasonal_global')) || (ABPTB_Function::on_off('early_bird') && ABPTB_Function::on_off('early_bird_global'))) {
-                        $actions[] = array('fas fa-percent', __('Global Discount', 'abp-transport-booking-pro'), __('Configure global discounts', 'abp-transport-booking-pro'), ABPTB_Function::build_url('global', ['global' => 'discount']), 'info');
+                        $actions[] = array('fas fa-percent', __('Global Discount', 'abp-transport-booking'), __('Configure global discounts', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'discount']), 'info');
                     }
                     if (ABPTB_Function::on_off('cancel_request')) {
-                        $actions[] = array('fas fa-ban', __('Cancel Request', 'abp-transport-booking-pro'), __('Manage cancellation requests', 'abp-transport-booking-pro'), ABPTB_Function::build_url('cancel_requests'), 'warning');
+                        $actions[] = array('fas fa-ban', __('Cancel Request', 'abp-transport-booking'), __('Manage cancellation requests', 'abp-transport-booking'), ABPTB_Function::build_url('cancel_requests'), 'warning');
                     }
+                }
+                $actions[] = array('fas fa-book-open', __('Documentation', 'abp-transport-booking'), __('Read the plugin documentation & help', 'abp-transport-booking'), 'https://transport-booking.abp-team.com/documentation/', 'info', '_blank');
+                if (!defined('ABPTB_DIR_PRO')) {
+                    $actions[] = array('fas fa-crown', __('Buy Pro', 'abp-transport-booking'), __('Unlock all Pro features', 'abp-transport-booking'), 'https://abp-team.com/downloads/abp-transport-booking-pro/', 'success', '_blank');
                 }
                 ?>
                 <div class="dash_card">
                     <div class="dash_card_head">
-                        <h4><i class="fas fa-bolt"></i> <?php esc_html_e('Quick Actions', 'abp-transport-booking'); ?></h4>
+                        <h4 class="abp_gap_xs"><i class="fas fa-bolt"></i> <?php esc_html_e('Quick Actions', 'abp-transport-booking'); ?></h4>
                     </div>
                     <div class="dash_card_body">
                         <div class="dash_action_grid">
                             <?php foreach ($actions as $action) { ?>
-                                <a class="dash_action" href="<?php echo esc_url($action[3]); ?>">
+                                <a class="dash_action" href="<?php echo esc_url($action[3]); ?>"<?php echo !empty($action[5]) ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
                                     <span class="dash_action_icon <?php echo esc_attr($action[4]); ?>"><i class="<?php echo esc_attr($action[0]); ?>"></i></span>
                                     <span class="dash_action_text">
                                         <b><?php echo esc_html($action[1]); ?></b>
@@ -307,11 +330,31 @@
                         <span class="dash_chip dash_chip_total"><?php echo esc_html(('sp' === $seat_type) ? __('Seat Plan', 'abp-transport-booking') : __('Ticket Type', 'abp-transport-booking')); ?></span>
                     </div>
                     <div class="dash_journey_stats">
-                        <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i> <?php echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $meta['sold'])); ?></span>
-                        <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i> <?php echo esc_html(sprintf(__('Available %d', 'abp-transport-booking'), $meta['available'])); ?></span>
-                        <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i> <?php echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $meta['total'])); ?></span>
+                        <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i>
+                            <?php
+                                // translators: %d: number of tickets sold.
+                                echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $meta['sold']));
+                            ?>
+                        </span>
+                        <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
+                            <?php
+                                // translators: %d: number of available seats.
+                                echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $meta['available']));
+                            ?>
+                        </span>
+                        <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
+                            <?php
+                                // translators: %d: total number of seats.
+                                echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $meta['total']));
+                            ?>
+                        </span>
                         <?php if ($meta['reserve'] > 0) { ?>
-                            <span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i> <?php echo esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $meta['reserve'])); ?></span>
+                            <span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i>
+                                <?php
+                                    // translators: %d: number of reserved seats.
+                                    echo esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $meta['reserve']));
+                                ?>
+                            </span>
                         <?php } ?>
                     </div>
                     <?php if ('sp' === $seat_type) { ?>
@@ -391,11 +434,11 @@
                     if ($sp_id <= 0) {
                         continue;
                     }
-                    $this->render_seat_plan($sp_id, $sold_seat, $post_infos);
+                    $this->render_seat_plan($sp_id, $sold_seat);
                 }
             }
             //=============================//
-            private function render_seat_plan($sp_id, $sold_seat, $post_infos): void {
+            private function render_seat_plan($sp_id, $sold_seat): void {
                 $row = ABPTB_Query::get_sp($sp_id);
                 $sp_info = !empty($row) ? current($row) : array();
                 if (empty($sp_info)) {
@@ -508,7 +551,7 @@
                             <div class="dash_journey_booking_main">
                                 <strong><?php echo esc_html($name ? $name : '#' . esc_html($booking['order_id'] ?? '')); ?></strong>
                                 <?php if (!empty($ticket_text)) { ?>
-                                    <small><?php echo implode(', ', $ticket_text); ?></small>
+                                    <small><?php echo esc_html(implode(', ', array_map('esc_html', $ticket_text))); ?></small>
                                 <?php } ?>
                             </div>
                             <div class="dash_journey_booking_side">
@@ -523,7 +566,7 @@
 //=============================//
             private function system_status($abptb_info, $label): void {
                 $total = (int)($abptb_info['total_post'] ?? 0);
-                $dummy_total = self::dummy_count();
+                $dummy_total = count(ABPTB_Query::dummy_ids());
                 ?>
                 <div class="dash_card">
                     <div class="dash_card_head">
@@ -687,11 +730,6 @@
                 return $data;
             }
             //=============================//
-            /**
-             * Build today's journey list (a journey = a transport on a specific start time).
-             * Only today's date is considered; every transport scheduled today is shown,
-             * including trips whose departure time has already passed.
-             */
             public static function journey_list(): array {
                 $post_ids = defined('ABPTB_ids') && !empty(ABPTB_ids) ? ABPTB_ids : ABPTB_Query::get_post_id();
                 if (empty($post_ids) || !is_array($post_ids)) {
@@ -795,15 +833,6 @@
                 return in_array($today, ABPTB_Function::date_list_modify($start_date, $calc_end, $date_infos), true);
             }
             //=============================//
-            /**
-             * Compute the stats (total, sold, available, reserve, seat_type) for a single journey.
-             *
-             * @param int $post_id Transport post ID.
-             * @param string $start_time Exact journey datetime.
-             * @param int $sold_qty Pre-computed sold quantity (optional).
-             * @param int $order_count Number of distinct orders (optional).
-             * @param string $direction 'up' or 'return' trip direction.
-             */
             public static function journey_meta($post_id, $start_time, $sold_qty = -1, $order_count = -1, $direction = 'up'): array {
                 $post_id = (int)$post_id;
                 $post_infos = ABPTB_Function::get_all_meta($post_id);
@@ -865,6 +894,28 @@
                 );
             }
             //=============================//
+            public function wc_notice(): void {
+                if (ABPTB_WC < 2) {
+                    $type = ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active';
+                    $btn = ABPTB_WC == 1 ? __('Active Now', 'abp-transport-booking') : __('Install & Active Now', 'abp-transport-booking');
+                    ?>
+                    <div class="dash_card dash_wc_setup">
+                        <div class="dash_wc_setup_icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="dash_wc_setup_body">
+                            <h4><?php esc_html_e('WooCommerce is required', 'abp-transport-booking'); ?></h4>
+                            <p><?php echo esc_html(ABPTB_Static::array_info('must_wc')); ?></p>
+                        </div>
+                        <?php
+                            $icon = ABPTB_WC == 1 ? 'fa-tasks' : 'fa-file-download';
+                        ?>
+                        <button type="button" class="_btn_warning_xs" onclick="abptb_wc_config('<?php echo esc_attr($type); ?>', this)">
+                            <i class="fas <?php echo esc_attr($icon); ?>"></i> <?php echo esc_html($btn); ?>
+                        </button>
+                    </div>
+                    <div class="_divider"></div>
+                    <?php
+                }
+            }
             public function wc_config(): void {
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
@@ -969,6 +1020,20 @@
                     wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('Something Wrong...!', 'abp-transport-booking')]);
                 }
             }
+            public function delete_dummy(): void {
+                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+                }
+                $dummy_posts = ABPTB_Query::dummy_ids();
+                if (empty($dummy_posts)) {
+                    wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('No dummy data found to delete.', 'abp-transport-booking')]);
+                }
+                foreach ($dummy_posts as $post_id) {
+                    wp_delete_post((int)$post_id, true);
+                }
+                flush_rewrite_rules();
+                wp_send_json_success(['type' => 'success', 'msg' => esc_html__('Dummy data deleted successfully!', 'abp-transport-booking')]);
+            }
             public function import_dummy(): void {
                 if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
                     wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
@@ -1022,36 +1087,6 @@
                     'msg' => esc_html__('Dummy data imported successfully!', 'abp-transport-booking')
                 ]);
             }
-            public function delete_dummy(): void {
-                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
-                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
-                }
-                $dummy_posts = self::dummy_ids();
-                if (empty($dummy_posts)) {
-                    wp_send_json_error(['type' => 'warn', 'msg' => esc_html__('No dummy data found to delete.', 'abp-transport-booking')]);
-                }
-                foreach ($dummy_posts as $post_id) {
-                    wp_delete_post((int)$post_id, true);
-                }
-                flush_rewrite_rules();
-                wp_send_json_success(['type' => 'success', 'msg' => esc_html__('Dummy data deleted successfully!', 'abp-transport-booking')]);
-            }
-            public static function dummy_count(): int {
-                return count(self::dummy_ids());
-            }
-            private static function dummy_ids(): array {
-                $args = array(
-                    'post_type' => ABPTB_Function::get_cpt(),
-                    'post_status' => 'any',
-                    'posts_per_page' => -1,
-                    'fields' => 'ids',
-                    'meta_key' => 'dummy',
-                    'meta_value' => 'on',
-                );
-                // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-                $posts = get_posts($args);
-                return is_array($posts) ? $posts : array();
-            }
             public function dummy_data(): array {
                 return [
                     'taxonomy' => [
@@ -1071,63 +1106,6 @@
                     ],
                     'custom_post' => []
                 ];
-            }
-            public function static_sp(): void {
-                $sp_data = ABPTB_Query::get_sp();
-                if (empty($sp_data)) {
-                    global $wpdb;
-                    $table_name = $wpdb->prefix . 'abptb_sp';
-                    $bus_plan_data_1 = [
-                        'name' => uniqid('sp_'),
-                        'total_seats' => 41,
-                        'others' => '{"bg_image":"0","bg_color":"#fff","row":11,"column":5,"width":60,"height":60,"gap":5,"radius":5}',
-                        'layout_data' => '[{"index":"0","type":"other","id":"1","name":"Entrance","width_ratio":"3","fs":"15"},{"index":"1","type":"other","id":"1","name":""},{"index":"2","type":"other","id":"1","name":""},{"index":"3","type":"other","id":"2","name":"Driver","width_ratio":"2","fs":"14"},{"index":"4","type":"other","id":"1","name":""},{"index":"5","type":"seat","id":"3","name":"B-1"},{"index":"6","type":"seat","id":"3","name":"B-2"},{"index":"7","type":"other","id":"1","name":"Passenger Aisle","height_ratio":"9","rotate":"90","fs":"20"},{"index":"8","type":"seat","id":"3","name":"B-3"},{"index":"9","type":"seat","id":"3","name":"B-4"},{"index":"10","type":"seat","id":"5","name":"C-1"},{"index":"11","type":"seat","id":"5","name":"C-2"},{"index":"12","type":"other","id":"1","name":""},{"index":"13","type":"seat","id":"5","name":"C-3"},{"index":"14","type":"seat","id":"5","name":"C-4"},{"index":"15","type":"seat","id":"6","name":"F-1"},{"index":"16","type":"seat","id":"6","name":"F-2"},{"index":"17","type":"other","id":"1","name":""},{"index":"18","type":"seat","id":"6","name":"F-3"},{"index":"19","type":"seat","id":"6","name":"F-4"},{"index":"20","type":"seat","id":"7","name":"AD-1"},{"index":"21","type":"seat","id":"7","name":"AD-2"},{"index":"22","type":"other","id":"1","name":""},{"index":"23","type":"seat","id":"7","name":"AD-3"},{"index":"24","type":"seat","id":"7","name":"AD-4"},{"index":"25","type":"seat","id":"8","name":"CH-1"},{"index":"26","type":"seat","id":"8","name":"CH-2"},{"index":"27","type":"other","id":"1","name":""},{"index":"28","type":"seat","id":"8","name":"CH-3"},{"index":"29","type":"seat","id":"8","name":"CH-4"},{"index":"30","type":"seat","id":"2","name":"VIP-1"},{"index":"31","type":"seat","id":"2","name":"VIP-2"},{"index":"32","type":"other","id":"1","name":""},{"index":"33","type":"seat","id":"2","name":"VIP-3"},{"index":"34","type":"seat","id":"2","name":"VIP-4"},{"index":"35","type":"seat","id":"4","name":"S-1"},{"index":"36","type":"seat","id":"4","name":"S-2"},{"index":"37","type":"other","id":"1","name":""},{"index":"38","type":"seat","id":"4","name":"S-3"},{"index":"39","type":"seat","id":"4","name":"S-4"},{"index":"40","type":"seat","id":"4","name":"S-5"},{"index":"41","type":"seat","id":"4","name":"S-6"},{"index":"42","type":"other","id":"1","name":""},{"index":"43","type":"seat","id":"4","name":"S-7"},{"index":"44","type":"seat","id":"4","name":"S-8"},{"index":"45","type":"seat","id":"3","name":"B-5"},{"index":"46","type":"seat","id":"3","name":"B-6"},{"index":"47","type":"other","id":"1","name":""},{"index":"48","type":"seat","id":"3","name":"B-7"},{"index":"49","type":"seat","id":"3","name":"B-8"},{"index":"50","type":"seat","id":"9","name":"E-1"},{"index":"51","type":"seat","id":"9","name":"E-2"},{"index":"52","type":"seat","id":"9","name":"E-3"},{"index":"53","type":"seat","id":"9","name":"E-4"},{"index":"54","type":"seat","id":"9","name":"E-5"}]',
-                        'seat_info' => '{"2":"4","3":"8","4":"8","5":"4","6":"4","7":"4","8":"4","9":"5"}'
-                    ];
-                    $bus_plan_data_2 = [
-                        'name' => uniqid('sp_'),
-                        'total_seats' => 40,
-                        'others' => '{"bg_image":"0","bg_color":"#fff","row":11,"column":5,"width":60,"height":60,"gap":5,"radius":5}',
-                        'layout_data' => '[{"index":"0","type":"other","id":"1","name":"Entance","width_ratio":"3","fs":"15"},{"index":"1","type":"other","id":"1","name":""},{"index":"2","type":"other","id":"1","name":""},{"index":"3","type":"other","id":"2","name":"","width_ratio":"2"},{"index":"4","type":"other","id":"1","name":""},{"index":"5","type":"seat","id":"3","name":"A-1"},{"index":"6","type":"seat","id":"3","name":"A-2"},{"index":"7","type":"other","id":"1","name":"Passenger Walkway","height_ratio":"10","rotate":"90","fs":"18"},{"index":"8","type":"seat","id":"3","name":"A-3"},{"index":"9","type":"seat","id":"3","name":"A-4"},{"index":"10","type":"seat","id":"3","name":"B-1"},{"index":"11","type":"seat","id":"3","name":"B-2"},{"index":"12","type":"other","id":"1","name":""},{"index":"13","type":"seat","id":"3","name":"B-3"},{"index":"14","type":"seat","id":"3","name":"B-4"},{"index":"15","type":"seat","id":"3","name":"C-1"},{"index":"16","type":"seat","id":"3","name":"C-2"},{"index":"17","type":"other","id":"1","name":""},{"index":"18","type":"seat","id":"3","name":"C-3"},{"index":"19","type":"seat","id":"3","name":"C-4"},{"index":"20","type":"seat","id":"3","name":"D-1"},{"index":"21","type":"seat","id":"3","name":"D-2"},{"index":"22","type":"other","id":"1","name":""},{"index":"23","type":"seat","id":"3","name":"D-3"},{"index":"24","type":"seat","id":"3","name":"D-4"},{"index":"25","type":"seat","id":"3","name":"E-1"},{"index":"26","type":"seat","id":"3","name":"E-2"},{"index":"27","type":"other","id":"1","name":""},{"index":"28","type":"seat","id":"3","name":"E-3"},{"index":"29","type":"seat","id":"3","name":"E-4"},{"index":"30","type":"seat","id":"3","name":"F-1"},{"index":"31","type":"seat","id":"3","name":"F-2"},{"index":"32","type":"other","id":"1","name":""},{"index":"33","type":"seat","id":"3","name":"F-3"},{"index":"34","type":"seat","id":"3","name":"F-4"},{"index":"35","type":"seat","id":"3","name":"G-1"},{"index":"36","type":"seat","id":"3","name":"G-2"},{"index":"37","type":"other","id":"1","name":""},{"index":"38","type":"seat","id":"3","name":"G-3"},{"index":"39","type":"seat","id":"3","name":"G-4"},{"index":"40","type":"seat","id":"3","name":"H-1"},{"index":"41","type":"seat","id":"3","name":"H-2"},{"index":"42","type":"other","id":"1","name":""},{"index":"43","type":"seat","id":"3","name":"H-3"},{"index":"44","type":"seat","id":"3","name":"H-4"},{"index":"45","type":"seat","id":"3","name":"I-1"},{"index":"46","type":"seat","id":"3","name":"I-2"},{"index":"47","type":"other","id":"1","name":""},{"index":"48","type":"seat","id":"3","name":"I-3"},{"index":"49","type":"seat","id":"3","name":"I-4"},{"index":"50","type":"seat","id":"3","name":"J-1"},{"index":"51","type":"seat","id":"3","name":"J-2"},{"index":"52","type":"other","id":"1","name":""},{"index":"53","type":"seat","id":"3","name":"J-3"},{"index":"54","type":"seat","id":"3","name":"J-4"}]',
-                        'seat_info' => '{"3":"40"}'
-                    ];
-                    $bus_plan_data_3 = [
-                        'name' => uniqid('sp_'),
-                        'total_seats' => 30,
-                        'others' => '{"bg_image":"","bg_color":"#fff","row":11,"column":4,"width":60,"height":60,"gap":5,"radius":5}',
-                        'layout_data' => '[{"index":"0","type":"other","id":"1","name":"Entrance","width_ratio":"2","fs":"16"},{"index":"1","type":"other","id":"1","name":""},{"index":"2","type":"other","id":"2","name":"","width_ratio":"2"},{"index":"3","type":"other","id":"1","name":""},{"index":"4","type":"seat","id":"1","name":"A-1"},{"index":"5","type":"other","id":"1","name":"Passenger Access Path","height_ratio":"10","rotate":"90","fs":"16"},{"index":"6","type":"seat","id":"1","name":"A-2"},{"index":"7","type":"seat","id":"1","name":"A-3"},{"index":"8","type":"seat","id":"1","name":"B-1"},{"index":"9","type":"other","id":"1","name":""},{"index":"10","type":"seat","id":"1","name":"B-2"},{"index":"11","type":"seat","id":"1","name":"B-3"},{"index":"12","type":"seat","id":"1","name":"C-1"},{"index":"13","type":"other","id":"1","name":""},{"index":"14","type":"seat","id":"1","name":"C-2"},{"index":"15","type":"seat","id":"1","name":"C-3"},{"index":"16","type":"seat","id":"1","name":"D-1"},{"index":"17","type":"other","id":"1","name":""},{"index":"18","type":"seat","id":"1","name":"D-2"},{"index":"19","type":"seat","id":"1","name":"D-3"},{"index":"20","type":"seat","id":"1","name":"E-1"},{"index":"21","type":"other","id":"1","name":""},{"index":"22","type":"seat","id":"1","name":"E-2"},{"index":"23","type":"seat","id":"1","name":"E-3"},{"index":"24","type":"seat","id":"1","name":"F-1"},{"index":"25","type":"other","id":"1","name":""},{"index":"26","type":"seat","id":"1","name":"F-2"},{"index":"27","type":"seat","id":"1","name":"F-3"},{"index":"28","type":"seat","id":"1","name":"G-1"},{"index":"29","type":"other","id":"1","name":""},{"index":"30","type":"seat","id":"1","name":"G-2"},{"index":"31","type":"seat","id":"1","name":"G-3"},{"index":"32","type":"seat","id":"1","name":"H-1"},{"index":"33","type":"other","id":"1","name":""},{"index":"34","type":"seat","id":"1","name":"H-2"},{"index":"35","type":"seat","id":"1","name":"H-3"},{"index":"36","type":"seat","id":"1","name":"I-1"},{"index":"37","type":"other","id":"1","name":""},{"index":"38","type":"seat","id":"1","name":"I-2"},{"index":"39","type":"seat","id":"1","name":"I-3"},{"index":"40","type":"seat","id":"1","name":"J-1"},{"index":"41","type":"other","id":"1","name":""},{"index":"42","type":"seat","id":"1","name":"J-2"},{"index":"43","type":"seat","id":"1","name":"J-3"}]',
-                        'seat_info' => '{"1":"30"}'
-                    ];
-                    $bus_plan_data_4 = [
-                        'name' => uniqid('sp_'),
-                        'total_seats' => 15,
-                        'others' => '{"bg_image":"","bg_color":"#fff","row":11,"column":4,"width":60,"height":60,"gap":5,"radius":5}',
-                        'layout_data' => '[{"index":"0","type":"other","id":"1","name":"Entance","width_ratio":"2","fs":"16"},{"index":"1","type":"other","id":"1","name":""},{"index":"2","type":"other","id":"2","name":"Driver","width_ratio":"2","fs":"16"},{"index":"3","type":"other","id":"1","name":""},{"index":"4","type":"seat","id":"4","name":"S-1","height_ratio":"2","fs":"14"},{"index":"5","type":"other","id":"1","name":"Passenger Way","height_ratio":"10","rotate":"90","fs":"18"},{"index":"6","type":"seat","id":"4","name":"S-2","height_ratio":"2","fs":"14"},{"index":"7","type":"seat","id":"4","name":"S-3","height_ratio":"2","fs":"14"},{"index":"8","type":"other","id":"1","name":""},{"index":"9","type":"other","id":"1","name":""},{"index":"10","type":"other","id":"1","name":""},{"index":"11","type":"other","id":"1","name":""},{"index":"12","type":"seat","id":"4","name":"S-4","height_ratio":"2","fs":"14"},{"index":"13","type":"other","id":"1","name":""},{"index":"14","type":"seat","id":"4","name":"S-5","height_ratio":"2","fs":"14"},{"index":"15","type":"seat","id":"4","name":"S-6","height_ratio":"2","fs":"14"},{"index":"16","type":"other","id":"1","name":""},{"index":"17","type":"other","id":"1","name":""},{"index":"18","type":"other","id":"1","name":""},{"index":"19","type":"other","id":"1","name":""},{"index":"20","type":"seat","id":"4","name":"S-7","height_ratio":"2","fs":"14"},{"index":"21","type":"other","id":"1","name":""},{"index":"22","type":"seat","id":"4","name":"S-8","height_ratio":"2","fs":"14"},{"index":"23","type":"seat","id":"4","name":"S-9","height_ratio":"2","fs":"14"},{"index":"24","type":"other","id":"1","name":""},{"index":"25","type":"other","id":"1","name":""},{"index":"26","type":"other","id":"1","name":""},{"index":"27","type":"other","id":"1","name":""},{"index":"28","type":"seat","id":"4","name":"S-10","height_ratio":"2","fs":"14"},{"index":"29","type":"other","id":"1","name":""},{"index":"30","type":"seat","id":"4","name":"S-11","height_ratio":"2","fs":"14"},{"index":"31","type":"seat","id":"4","name":"S-12","height_ratio":"2","fs":"14"},{"index":"32","type":"other","id":"1","name":""},{"index":"33","type":"other","id":"1","name":""},{"index":"34","type":"other","id":"1","name":""},{"index":"35","type":"other","id":"1","name":""},{"index":"36","type":"seat","id":"4","name":"S-13","height_ratio":"2","fs":"14"},{"index":"37","type":"other","id":"1","name":""},{"index":"38","type":"seat","id":"4","name":"S-14","height_ratio":"2","fs":"14"},{"index":"39","type":"seat","id":"4","name":"S-15","height_ratio":"2","fs":"14"},{"index":"40","type":"other","id":"1","name":""},{"index":"41","type":"other","id":"1","name":""},{"index":"42","type":"other","id":"1","name":""},{"index":"43","type":"other","id":"1","name":""}]',
-                        'seat_info' => '{"4":"15"}'
-                    ];
-                    $ticket_infos = ABPTB_Function::get_option('abptb_ticket_sp');
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->insert($table_name, $bus_plan_data_1);
-                    $id_1 = $wpdb->insert_id;
-                    $ticket_infos[$id_1]['type'] = json_decode($bus_plan_data_1['seat_info'], true);
-                    $ticket_infos[$id_1]['total'] = 41;
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->insert($table_name, $bus_plan_data_2);
-                    $id_2 = $wpdb->insert_id;
-                    $ticket_infos[$id_2]['type'] = json_decode($bus_plan_data_2['seat_info'], true);
-                    $ticket_infos[$id_2]['total'] = 40;
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->insert($table_name, $bus_plan_data_3);
-                    $id_3 = $wpdb->insert_id;
-                    $ticket_infos[$id_3]['type'] = json_decode($bus_plan_data_3['seat_info'], true);
-                    $ticket_infos[$id_3]['total'] = 30;
-                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                    $wpdb->insert($table_name, $bus_plan_data_4);
-                    $id_4 = $wpdb->insert_id;
-                    $ticket_infos[$id_4]['type'] = json_decode($bus_plan_data_4['seat_info'], true);
-                    $ticket_infos[$id_4]['total'] = 15;
-                    update_option('abptb_ticket_sp', $ticket_infos);
-                }
             }
             public function dummy(): array {
                 $on_off = ['on', 'off'];
@@ -1156,12 +1134,12 @@
                         'sub_title' => 'Travel comfortably with modern vehicles and professional drivers.',
                         'post_description' => 'Experience hassle-free transportation with well-maintained vehicles, affordable fares, and excellent customer support. Whether traveling for business or leisure, our services ensure comfort, punctuality, and convenience from departure to arrival.',
                         'display_organizer' => $on_off[wp_rand(0, 1)],
-                        'abptb_organizer' => $this->get_id($all_organizer, $organizer[$i]),
+                        'abptb_organizer' => ABPTB_Static::get_id($all_organizer, $organizer[$i]),
                         'display_brand' => $on_off[wp_rand(0, 1)],
-                        'abptb_brand' => $this->get_id($all_brands, $band[$i]),
+                        'abptb_brand' => ABPTB_Static::get_id($all_brands, $band[$i]),
                         'display_capacity' => $on_off[wp_rand(0, 1)],
                         'display_category' => $on_off[wp_rand(0, 1)],
-                        'abptb_category' => $this->get_id($all_categories, $categories[$i]),
+                        'abptb_category' => ABPTB_Static::get_id($all_categories, $categories[$i]),
                         'post_feature' => implode(',', array_rand($features, 5)),
                         'abptb_slider' => '10,20,30,40,50,100,60,70,80,90',
                         'active_global_dates' => 'on',
@@ -1198,7 +1176,7 @@
                 return $all_data;
             }
             public function route_info($seat_type = []): array {
-                $this->static_sp();
+                ABPTB_Static::static_sp();
                 $options = ABPTB_Function::get_option('abptb_location');
                 $ticket_options = ABPTB_Function::get_option('abptb_ticket');
                 $random_num = sizeof($ticket_options) > 4 ? 3 : sizeof($ticket_options);
@@ -1231,14 +1209,14 @@
                         $prices = $data['price_infos'] ?? [];
                         if (!empty($route_info) && !empty($prices)) {
                             foreach ($route_info as $info) {
-                                $stop = $this->get_id($options, ($info['stop'] ?? ''));
+                                $stop = ABPTB_Static::get_id($options, ($info['stop'] ?? ''));
                                 $all_data[$key]['routing_infos'][$stop]['type'] = $info['type'] ?? '';
                                 $all_data[$key]['routing_infos'][$stop]['time'] = $info['time'] ?? '';
                                 $all_data[$key]['route_direction'][] = $stop;
                             }
                             foreach ($prices as $info) {
-                                $bp = $this->get_id($options, ($info['bp'] ?? ''));
-                                $dp = $this->get_id($options, ($info['dp'] ?? ''));
+                                $bp = ABPTB_Static::get_id($options, ($info['bp'] ?? ''));
+                                $dp = ABPTB_Static::get_id($options, ($info['dp'] ?? ''));
                                 $price = $info['price'] ?? 0;
                                 $step = 0;
                                 $bp_dp = $bp . '_' . $dp;
@@ -1263,14 +1241,14 @@
                         $prices = $data['return_price_infos'] ?? [];
                         if (!empty($route_info) && !empty($prices)) {
                             foreach ($route_info as $info) {
-                                $stop = $this->get_id($options, ($info['stop'] ?? ''));
+                                $stop = ABPTB_Static::get_id($options, ($info['stop'] ?? ''));
                                 $all_data[$key]['return_routing_infos'][$stop]['type'] = $info['type'] ?? '';
                                 $all_data[$key]['return_routing_infos'][$stop]['time'] = $info['time'] ?? '';
                                 $all_data[$key]['return_route_direction'][] = $stop;
                             }
                             foreach ($prices as $info) {
-                                $bp = $this->get_id($options, ($info['bp'] ?? ''));
-                                $dp = $this->get_id($options, ($info['dp'] ?? ''));
+                                $bp = ABPTB_Static::get_id($options, ($info['bp'] ?? ''));
+                                $dp = ABPTB_Static::get_id($options, ($info['dp'] ?? ''));
                                 $price = $info['price'] ?? 0;
                                 $step = 0;
                                 $bp_dp = $bp . '_' . $dp;
@@ -1286,16 +1264,6 @@
                     }
                 }
                 return $all_data;
-            }
-            public function get_id($options = [], $name = ''): int|string|null {
-                if (!empty($options)) {
-                    foreach ($options as $key => $option) {
-                        if (isset($option['name']) && $option['name'] === $name) {
-                            return $key;
-                        }
-                    }
-                }
-                return null;
             }
             public static function route_data(): array {
                 return [

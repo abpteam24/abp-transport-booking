@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -546,6 +546,16 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.5 =
+
+* Added a new admin business overview dashboard with key transport statistics, today's trips and a system health checklist.
+* Added a customer "Transport Bookings" list to the WooCommerce My Account page.
+* Added an in-plugin documentation and help screen.
+* Added frontend taxonomy filter toggles for brand and organizer (both off by default; category and location remain on by default).
+* Improved WordPress coding standards compliance across admin and frontend code.
+
+Released: September 13, 2026
+
 = 1.0.4 =
 
 * Fixed booking search results and AJAX-loaded content not displaying the full design and layout.
@@ -587,6 +597,10 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+Added the admin business dashboard, the My Account bookings list,Skip an in-plugin help screen,Skip and frontend taxonomy filter toggles. Recommended update.
+Released: September 13, 2026
 
 = 1.0.4 =
 Fixed seat plan legend and booking search result styling on the frontend.

@@ -23,12 +23,12 @@
                 <?php foreach ($post_ids as $post_id) {
                     $post_count++;
                     $post_infos = ABPTB_Function::get_all_meta($post_id);
-                    $cat_id = $post_infos['abptb_category'] ?? '';
+                    $loc_id = $post_infos['route_direction'] ?? [];
                     $url = get_the_permalink($post_id);
                     $show_class = $show_post >= $post_count ? '' : 'abp_close';
                     //echo '<pre>';print_r($filter_args);echo '</pre>';
                     ?>
-                    <div class="pagination_item item_box_1 <?php echo esc_attr($show_class); ?>" data-cat_id="<?php echo esc_attr($cat_id); ?>">
+                    <div class="pagination_item item_box_1 <?php echo esc_attr($show_class); ?>" data-org_id="<?php echo esc_attr($post_infos['abptb_organizer'] ?? ''); ?>" data-brand_id="<?php echo esc_attr($post_infos['abptb_brand'] ?? ''); ?>" data-cat_id="<?php echo esc_attr($post_infos['abptb_category'] ?? ''); ?>" data-loc_id="<?php echo esc_attr(implode(',', $loc_id)); ?>">
                         <div class="item_head">
                             <?php
                                 ABPTB_Layout::image($post_id);

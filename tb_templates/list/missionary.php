@@ -18,10 +18,10 @@
 				<?php foreach ( $post_ids as $post_id ) {
                     $post_infos['post_id']=$post_id;
 					$cat_id = ABPTB_Function::get_post_info( $post_id, 'abptb_category' );
-					$loc_id = ABPTB_Function::get_post_info( $post_id, 'abptb_location' );
+					$loc_id = ABPTB_Function::get_post_info( $post_id, 'route_direction',[] );
 					$post_count ++;
 					$title = get_the_title( $post_id ); ?>
-                    <div class="pagination_item item_box_1  <?php echo esc_attr( $show_post >= $post_count ? '' : 'abp_close' ); ?>" data-cat_id="<?php echo esc_attr( $cat_id ); ?>" data-loc_id="<?php echo esc_attr( $loc_id ); ?>">
+                    <div class="pagination_item item_box_1  <?php echo esc_attr( $show_post >= $post_count ? '' : 'abp_close' ); ?>" data-cat_id="<?php echo esc_attr( $cat_id ); ?>" data-org_id="<?php echo esc_attr( ABPTB_Function::get_post_info( $post_id, 'abptb_organizer' ) ); ?>" data-brand_id="<?php echo esc_attr( ABPTB_Function::get_post_info( $post_id, 'abptb_brand' ) ); ?>" data-loc_id="<?php echo esc_attr( implode( ',', $loc_id ) ); ?>">
                         <div class="item_head">
 							<?php ABPTB_Layout::category($post_infos,'ribbon');?>
 							<?php ABPTB_Layout::image( $post_id ); ?>

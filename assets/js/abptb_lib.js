@@ -181,7 +181,7 @@ function abptb_wc_price_format(price) {
     return price_text;
 }
 function abptb_spinner(parent = abptb_parent) {
-    if (parent.length>0 && parent.find('.abp_spinner').length < 1) {
+    if (parent.length > 0 && parent.find('.abp_spinner').length < 1) {
         parent.addClass('_p_relative').append('<div class="abp_spinner"></div>');
     }
 }
@@ -716,18 +716,27 @@ function abptb_popup_close(target_id = '') {
 //================================================================================Filter and pagination=================//
 function abptb_filter(parent) {
     abptb_spinner(parent);
-    let cat_id = parent.find('[name="cat_id"]').val();
-    let loc_id = parent.find('[name="loc_id"]').val();
-    cat_id = cat_id ? cat_id.trim() : '';
-    loc_id = loc_id ? loc_id.trim() : '';
+    let cat_id = (parent.find('[name="cat_id"]').val() || '').trim();
+    let loc_id = (parent.find('[name="loc_id"]').val() || '').trim();
+    let brand_id = (parent.find('[name="brand_id"]').val() || '').trim();
+    let org_id = (parent.find('[name="org_id"]').val() || '').trim();
     parent.find('.pagination_item').each(function () {
         let item = jQuery(this);
-        let itemCat = item.data('cat_id') ? String(item.data('cat_id')).trim() : '';
-        let itemLocRaw = item.data('loc_id') ? String(item.data('loc_id')).trim() : '';
-        let itemLocArray = itemLocRaw.split(',').map(id => id.trim());
-        let isCatMatch = cat_id === '' || itemCat === cat_id;
-        let isLocMatch = loc_id === '' || itemLocArray.includes(loc_id);
-        if (isCatMatch && isLocMatch) {
+        let isMatch = function (selectedVal, itemDataRaw) {
+            if (!selectedVal) return true;
+            if (!itemDataRaw) return false;
+            let itemArray = String(itemDataRaw).split(',').map(id => id.trim());
+            return itemArray.includes(selectedVal);
+        };
+        let itemCat = item.data('cat_id');
+        let itemLoc = item.data('loc_id');
+        let itemBrand = item.data('brand_id');
+        let itemOrg = item.data('org_id');
+        let isCatMatch = isMatch(cat_id, itemCat);
+        let isLocMatch = isMatch(loc_id, itemLoc);
+        let isBrandMatch = isMatch(brand_id, itemBrand);
+        let isOrgMatch = isMatch(org_id, itemOrg);
+        if (isCatMatch && isLocMatch && isBrandMatch && isOrgMatch) {
             item.removeClass('abp_off').addClass('abp_on abp_close');
         } else {
             item.addClass('abp_off').removeClass('abp_on abp_close');
@@ -798,19 +807,7 @@ function abptb_pagination_item(parent) {
 }
 (function ($) {
     "use strict";
-    $(document).on('change', 'div.abptb_area .abp_pagination [name="cat_id"]', function () {
-        let parent = $(this).closest('.abp_pagination');
-        abptb_filter(parent);
-    });
-    $(document).on('abp_trigger', 'div.abptb_area .abp_pagination [name="cat_id"]', function () {
-        let parent = $(this).closest('.abp_pagination');
-        abptb_filter(parent);
-    });
-    $(document).on('change', 'div.abptb_area .abp_pagination [name="loc_id"]', function () {
-        let parent = $(this).closest('.abp_pagination');
-        abptb_filter(parent);
-    });
-    $(document).on('abp_trigger', 'div.abptb_area .abp_pagination [name="loc_id"]', function () {
+    $(document).on('change', 'div.abptb_area .abp_pagination [name="cat_id"] , div.abptb_area .abp_pagination [name="loc_id"] , div.abptb_area .abp_pagination [name="brand_id"] , div.abptb_area .abp_pagination [name="org_id"]', function () {
         let parent = $(this).closest('.abp_pagination');
         abptb_filter(parent);
     });

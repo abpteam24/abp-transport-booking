@@ -44,6 +44,19 @@
 				);
 				return new WP_Query($args);
 			}
+			public static function dummy_ids(): array {
+				$args = array(
+					'post_type' => ABPTB_Function::get_cpt(),
+					'post_status' => 'any',
+					'posts_per_page' => -1,
+					'fields' => 'ids',
+					'meta_key' => 'dummy',
+					'meta_value' => 'on',
+				);
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				$posts = get_posts($args);
+				return is_array($posts) ? $posts : array();
+			}
 			public static function get_post_id($filters = []): array {
 				$post_type = ($filters['cpt'] ?? null) ?: ABPTB_Function::get_cpt();
 				$show = ($filters['posts_per_page'] ?? null) ?: -1;
