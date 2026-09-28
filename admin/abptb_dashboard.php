@@ -96,6 +96,17 @@
                 <?php
             }
             private function upcoming_journeys($upcoming): void {
+                $upcoming = is_array($upcoming) ? $upcoming : array();
+                $per_page = (int)apply_filters('abptb_dashboard_journeys_per_page', 25);
+                if ($per_page < 1) {
+                    $per_page = 25;
+                }
+                $total_journeys = count($upcoming);
+                $total_pages = max(1, (int)ceil($total_journeys / $per_page));
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination value, cast with absint() and used only as an array_slice() offset.
+                $current_page = isset($_GET['abptb_journey_page']) ? absint($_GET['abptb_journey_page']) : 1;
+                $current_page = max(1, min($current_page, $total_pages));
+                $page_rows = array_slice($upcoming, ($current_page - 1) * $per_page, $per_page);
                 ?>
                 <div class="dash_card">
                     <div class="dash_card_head">
@@ -103,9 +114,17 @@
                         <a class="_btn_light_theme_xs" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>"><?php esc_html_e('View All', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
                     </div>
                     <div class="dash_card_body dash_card_body_plain">
-                        <?php if (!empty($upcoming)) { ?>
+                        <?php if (!empty($page_rows)) { ?>
+                            <?php if ($total_pages > 1) { ?>
+                                <div class="dash_journey_count">
+                                    <?php
+                                        // translators: 1: first journey number, 2: last journey number, 3: total journey count.
+                                        echo esc_html(sprintf(__('Showing %1$d-%2$d of %3$d journeys', 'abp-transport-booking'), (($current_page - 1) * $per_page) + 1, min($total_journeys, $current_page * $per_page), $total_journeys));
+                                    ?>
+                                </div>
+                            <?php } ?>
                             <div class="dash_rows">
-                                <?php foreach ($upcoming as $row) {
+                                <?php foreach ($page_rows as $row) {
                                     $post_id = (int)($row['post_id'] ?? 0);
                                     $start_time = $row['start_time'] ?? '';
                                     $direction = ('return' === ($row['direction'] ?? 'up')) ? 'return' : 'up';
@@ -161,6 +180,9 @@
                                 <?php } ?>
                             </div>
                             <div class="dash_journey_hint"><i class="fas fa-mouse-pointer"></i> <?php esc_html_e('Click a journey to see its booking details.', 'abp-transport-booking'); ?></div>
+                            <?php if ($total_pages > 1) {
+                                $this->journey_pagination($current_page, $total_pages);
+                            } ?>
                         <?php } else { ?>
                             <div class="dash_empty">
                                 <i class="fas fa-calendar-check"></i>
@@ -171,6 +193,42 @@
                 </div>
                 <?php
             }
+            //=============================//
+            private function journey_pagination(int $current_page, int $total_pages): void {
+                $page_url = function (int $page): string {
+                    return 1 === $page
+                        ? ABPTB_Function::build_url('dashboard')
+                        : ABPTB_Function::build_url('dashboard', ['abptb_journey_page' => $page]);
+                };
+                $window = 2;
+                $items = array();
+                $last = 0;
+                for ($page = 1; $page <= $total_pages; $page++) {
+                    $is_edge = (1 === $page || $total_pages === $page);
+                    if (!$is_edge && abs($page - $current_page) > $window) {
+                        continue;
+                    }
+                    if ($last && $page - $last > 1) {
+                        $items[] = '<span class="dash_page_gap">…</span>';
+                    }
+                    $items[] = $page === $current_page
+                        ? '<span class="dash_page abp_active" aria-current="page">' . esc_html($page) . '</span>'
+                        : '<a class="dash_page" href="' . esc_url($page_url($page)) . '">' . esc_html($page) . '</a>';
+                    $last = $page;
+                }
+                ?>
+                <nav class="dash_pagination" aria-label="<?php esc_attr_e('Today Trips pagination', 'abp-transport-booking'); ?>">
+                    <?php if ($current_page > 1) { ?>
+                        <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page - 1)); ?>" rel="prev"><i class="fas fa-angle-left"></i> <?php esc_html_e('Prev', 'abp-transport-booking'); ?></a>
+                    <?php } ?>
+                    <?php echo wp_kses_post(implode('', $items)); ?>
+                    <?php if ($current_page < $total_pages) { ?>
+                        <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page + 1)); ?>" rel="next"><?php esc_html_e('Next', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
+                    <?php } ?>
+                </nav>
+                <?php
+            }
+            //=============================//
             private function quick_actions(): void {
                 $actions = array(
                     array('fas fa-toggle-on', __('ON/OFF Configuration', 'abp-transport-booking'), __('Enable & disable features', 'abp-transport-booking'), ABPTB_Function::build_url('configuration', ['configuration' => 'on_off']), 'warning'),
@@ -730,12 +788,21 @@
                 return $data;
             }
             //=============================//
+            private static array $slot_batch = array();
+            //=============================//
             public static function journey_list(): array {
                 $post_ids = defined('ABPTB_ids') && !empty(ABPTB_ids) ? ABPTB_ids : ABPTB_Query::get_post_id();
                 if (empty($post_ids) || !is_array($post_ids)) {
                     return array();
                 }
                 $today = current_time('Y-m-d');
+                // Batch-load sold qty + order count for every journey of today in one query
+                // instead of two queries per journey row.
+                self::$slot_batch = array(
+                    'ready' => true,
+                    'ids' => array_values(array_filter(array_map('absint', $post_ids))),
+                    'map' => ABPTB_Query::get_slot_aggregates($post_ids, $today),
+                );
                 $journeys = array();
                 foreach ($post_ids as $post_id) {
                     $post_id = (int)$post_id;
@@ -833,20 +900,36 @@
                 return in_array($today, ABPTB_Function::date_list_modify($start_date, $calc_end, $date_infos), true);
             }
             //=============================//
+            private static function prefetched_slot($post_id, $start_time): ?array {
+                if (empty(self::$slot_batch['ready'])) {
+                    return null;
+                }
+                $post_id = (int)$post_id;
+                if (!in_array($post_id, self::$slot_batch['ids'], true)) {
+                    return null;
+                }
+                $timestamp = strtotime($start_time);
+                if (!$timestamp || '00:00' === gmdate('H:i', $timestamp)) {
+                    return null;
+                }
+                $key = $post_id . '|' . gmdate('Y-m-d H:i', $timestamp);
+                // The batch covers this transport and day, so a missing slot means zero orders.
+                return self::$slot_batch['map'][$key] ?? array('sold' => 0, 'orders' => 0);
+            }
+            //=============================//
             public static function journey_meta($post_id, $start_time, $sold_qty = -1, $order_count = -1, $direction = 'up'): array {
                 $post_id = (int)$post_id;
                 $post_infos = ABPTB_Function::get_all_meta($post_id);
                 $seat_type = $post_infos['seat_type'] ?? 'sp';
                 $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
                 $total = (int)(ABPTB_Function::get_total_qty($post_id, $post_infos));
-                $filters = array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false);
+                $prefetched = self::prefetched_slot($post_id, $start_time);
                 // Sold quantity.
                 if ($sold_qty < 0) {
-                    $sold = ABPTB_Query::get_sold_ticket($filters, true);
-                    $sold_qty = (int)($sold['total'] ?? 0);
+                    $sold_qty = null !== $prefetched ? (int)$prefetched['sold'] : (int)((ABPTB_Query::get_sold_ticket(array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false), true)['total'] ?? 0));
                 }
                 if ($order_count < 0) {
-                    $order_count = count(ABPTB_Query::get_booking_query(array(
+                    $order_count = null !== $prefetched ? (int)$prefetched['orders'] : count(ABPTB_Query::get_booking_query(array(
                         'post_id' => $post_id,
                         'start_time' => $start_time,
                         'status' => ABPTB_Function::booking_status_sold(),
@@ -1181,7 +1264,7 @@
                 $ticket_options = ABPTB_Function::get_option('abptb_ticket');
                 $random_num = sizeof($ticket_options) > 4 ? 3 : sizeof($ticket_options);
                 $all_ticket_type = array_rand($ticket_options, $random_num);
-                $routes = self::route_data();
+                $routes = ABPTB_Static::route_data();
                 $all_sp_ticket = ABPTB_Function::get_option('abptb_ticket_sp');
                 $sp_id = [];
                 if (!empty($all_sp_ticket)) {
@@ -1264,187 +1347,6 @@
                     }
                 }
                 return $all_data;
-            }
-            public static function route_data(): array {
-                return [
-                    0 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'New York City', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Philadelphia', 'type' => 'bp', 'time' => '90'],
-                            2 => ['stop' => 'Baltimore', 'type' => 'bp', 'time' => '180'],
-                            3 => ['stop' => 'Washington, D.C.', 'type' => 'dp', 'time' => '240'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'New York City', 'dp' => 'Philadelphia', 'price' => '35'],
-                            1 => ['bp' => 'New York City', 'dp' => 'Baltimore', 'price' => '55'],
-                            2 => ['bp' => 'New York City', 'dp' => 'Washington, D.C.', 'price' => '75'],
-                            3 => ['bp' => 'Philadelphia', 'dp' => 'Baltimore', 'price' => '30'],
-                            4 => ['bp' => 'Philadelphia', 'dp' => 'Washington, D.C.', 'price' => '50'],
-                            5 => ['bp' => 'Baltimore', 'dp' => 'Washington, D.C.', 'price' => '25'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'Washington, D.C.', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Baltimore', 'type' => 'bp', 'time' => '80'],
-                            2 => ['stop' => 'Philadelphia', 'type' => 'bp', 'time' => '150'],
-                            3 => ['stop' => 'New York City', 'type' => 'dp', 'time' => '280'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'Philadelphia', 'dp' => 'New York City', 'price' => '35'],
-                            1 => ['bp' => 'Baltimore', 'dp' => 'New York City', 'price' => '55'],
-                            2 => ['bp' => 'Washington, D.C.', 'dp' => 'New York City', 'price' => '75'],
-                            4 => ['bp' => 'Washington, D.C.', 'dp' => 'Philadelphia', 'price' => '50'],
-                            5 => ['bp' => 'Washington, D.C.', 'dp' => 'Baltimore', 'price' => '25'],
-                        ]
-                    ],
-                    1 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'Los Angeles', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Bakersfield', 'type' => 'bp', 'time' => '120'],
-                            2 => ['stop' => 'Fresno', 'type' => 'both', 'time' => '240'],
-                            3 => ['stop' => 'San Jose', 'type' => 'dp', 'time' => '330'],
-                            4 => ['stop' => 'San Francisco', 'type' => 'dp', 'time' => '390'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'Los Angeles', 'dp' => 'Fresno', 'price' => '40'],
-                            1 => ['bp' => 'Los Angeles', 'dp' => 'San Jose', 'price' => '55'],
-                            2 => ['bp' => 'Los Angeles', 'dp' => 'San Francisco', 'price' => '65'],
-                            3 => ['bp' => 'Bakersfield', 'dp' => 'Fresno', 'price' => '20'],
-                            4 => ['bp' => 'Bakersfield', 'dp' => 'San Jose', 'price' => '35'],
-                            5 => ['bp' => 'Bakersfield', 'dp' => 'San Francisco', 'price' => '45'],
-                            6 => ['bp' => 'Fresno', 'dp' => 'San Jose', 'price' => '25'],
-                            7 => ['bp' => 'Fresno', 'dp' => 'San Francisco', 'price' => '35'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'San Francisco', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'San Jose', 'type' => 'bp', 'time' => '70'],
-                            2 => ['stop' => 'Fresno', 'type' => 'both', 'time' => '130'],
-                            3 => ['stop' => 'Bakersfield', 'type' => 'dp', 'time' => '300'],
-                            4 => ['stop' => 'Los Angeles', 'type' => 'dp', 'time' => '420'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'San Francisco', 'dp' => 'Fresno', 'price' => '35'],
-                            1 => ['bp' => 'San Francisco', 'dp' => 'Bakersfield', 'price' => '45'],
-                            2 => ['bp' => 'San Francisco', 'dp' => 'Los Angeles', 'price' => '65'],
-                            3 => ['bp' => 'San Jose', 'dp' => 'Fresno', 'price' => '25'],
-                            4 => ['bp' => 'San Jose', 'dp' => 'Bakersfield', 'price' => '35'],
-                            5 => ['bp' => 'San Jose', 'dp' => 'Los Angeles', 'price' => '55'],
-                            6 => ['bp' => 'Fresno', 'dp' => 'Bakersfield', 'price' => '20'],
-                            7 => ['bp' => 'Fresno', 'dp' => 'Los Angeles', 'price' => '40'],
-                        ]
-                    ],
-                    2 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'Chicago', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'South Bend', 'type' => 'bp', 'time' => '90'],
-                            2 => ['stop' => 'Toledo', 'type' => 'both', 'time' => '210'],
-                            3 => ['stop' => 'Detroit', 'type' => 'dp', 'time' => '300'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'Chicago', 'dp' => 'Toledo', 'price' => '45'],
-                            1 => ['bp' => 'Chicago', 'dp' => 'Detroit', 'price' => '60'],
-                            2 => ['bp' => 'South Bend', 'dp' => 'Toledo', 'price' => '25'],
-                            3 => ['bp' => 'South Bend', 'dp' => 'Detroit', 'price' => '40'],
-                            4 => ['bp' => 'Toledo', 'dp' => 'Detroit', 'price' => '20'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'Detroit', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Toledo', 'type' => 'both', 'time' => '120'],
-                            2 => ['stop' => 'South Bend', 'type' => 'dp', 'time' => '200'],
-                            3 => ['stop' => 'Chicago', 'type' => 'dp', 'time' => '320'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'Detroit', 'dp' => 'Toledo', 'price' => '20'],
-                            1 => ['bp' => 'Detroit', 'dp' => 'South Bend', 'price' => '40'],
-                            2 => ['bp' => 'Detroit', 'dp' => 'Chicago', 'price' => '60'],
-                            3 => ['bp' => 'Toledo', 'dp' => 'South Bend', 'price' => '25'],
-                            4 => ['bp' => 'Toledo', 'dp' => 'Chicago', 'price' => '45'],
-                        ]
-                    ],
-                    3 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'Boston', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Providence', 'type' => 'bp', 'time' => '60'],
-                            2 => ['stop' => 'New Haven', 'type' => 'both', 'time' => '150'],
-                            3 => ['stop' => 'New York City', 'type' => 'dp', 'time' => '240'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'Boston', 'dp' => 'New Haven', 'price' => '35'],
-                            1 => ['bp' => 'Boston', 'dp' => 'New York City', 'price' => '55'],
-                            2 => ['bp' => 'Providence', 'dp' => 'New Haven', 'price' => '20'],
-                            3 => ['bp' => 'Providence', 'dp' => 'New York City', 'price' => '40'],
-                            4 => ['bp' => 'New Haven', 'dp' => 'New York City', 'price' => '20'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'New York City', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'New Haven', 'type' => 'both', 'time' => '90'],
-                            2 => ['stop' => 'Providence', 'type' => 'dp', 'time' => '150'],
-                            3 => ['stop' => 'Boston', 'type' => 'dp', 'time' => '240'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'New York City', 'dp' => 'New Haven', 'price' => '20'],
-                            1 => ['bp' => 'New York City', 'dp' => 'Providence', 'price' => '40'],
-                            2 => ['bp' => 'New York City', 'dp' => 'Boston', 'price' => '55'],
-                            3 => ['bp' => 'New Haven', 'dp' => 'Providence', 'price' => '20'],
-                            4 => ['bp' => 'New Haven', 'dp' => 'Boston', 'price' => '35'],
-                        ]
-                    ],
-                    4 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'Dallas', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Corsicana', 'type' => 'bp', 'time' => '60'],
-                            2 => ['stop' => 'Huntsville', 'type' => 'both', 'time' => '180'],
-                            3 => ['stop' => 'Houston', 'type' => 'dp', 'time' => '240'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'Dallas', 'dp' => 'Huntsville', 'price' => '35'],
-                            1 => ['bp' => 'Dallas', 'dp' => 'Houston', 'price' => '50'],
-                            2 => ['bp' => 'Corsicana', 'dp' => 'Huntsville', 'price' => '20'],
-                            3 => ['bp' => 'Corsicana', 'dp' => 'Houston', 'price' => '35'],
-                            4 => ['bp' => 'Huntsville', 'dp' => 'Houston', 'price' => '15'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'Houston', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Huntsville', 'type' => 'both', 'time' => '60'],
-                            2 => ['stop' => 'Corsicana', 'type' => 'dp', 'time' => '120'],
-                            3 => ['stop' => 'Dallas', 'type' => 'dp', 'time' => '240'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'Houston', 'dp' => 'Huntsville', 'price' => '15'],
-                            1 => ['bp' => 'Houston', 'dp' => 'Corsicana', 'price' => '35'],
-                            2 => ['bp' => 'Houston', 'dp' => 'Dallas', 'price' => '50'],
-                            3 => ['bp' => 'Huntsville', 'dp' => 'Corsicana', 'price' => '20'],
-                            4 => ['bp' => 'Huntsville', 'dp' => 'Dallas', 'price' => '35'],
-                        ]
-                    ],
-                    5 => [
-                        'routing_infos' => [
-                            0 => ['stop' => 'Seattle', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Tacoma', 'type' => 'bp', 'time' => '45'],
-                            2 => ['stop' => 'Olympia', 'type' => 'both', 'time' => '90'],
-                            3 => ['stop' => 'Portland', 'type' => 'dp', 'time' => '180'],
-                        ],
-                        'price_infos' => [
-                            0 => ['bp' => 'Seattle', 'dp' => 'Olympia', 'price' => '25'],
-                            1 => ['bp' => 'Seattle', 'dp' => 'Portland', 'price' => '45'],
-                            2 => ['bp' => 'Tacoma', 'dp' => 'Olympia', 'price' => '15'],
-                            3 => ['bp' => 'Tacoma', 'dp' => 'Portland', 'price' => '35'],
-                            4 => ['bp' => 'Olympia', 'dp' => 'Portland', 'price' => '20'],
-                        ],
-                        'return_routing_infos' => [
-                            0 => ['stop' => 'Portland', 'type' => 'bp', 'time' => '0'],
-                            1 => ['stop' => 'Olympia', 'type' => 'both', 'time' => '90'],
-                            2 => ['stop' => 'Tacoma', 'type' => 'dp', 'time' => '120'],
-                            3 => ['stop' => 'Seattle', 'type' => 'dp', 'time' => '180'],
-                        ],
-                        'return_price_infos' => [
-                            0 => ['bp' => 'Portland', 'dp' => 'Olympia', 'price' => '20'],
-                            1 => ['bp' => 'Portland', 'dp' => 'Tacoma', 'price' => '35'],
-                            2 => ['bp' => 'Portland', 'dp' => 'Seattle', 'price' => '45'],
-                            3 => ['bp' => 'Olympia', 'dp' => 'Tacoma', 'price' => '15'],
-                            4 => ['bp' => 'Olympia', 'dp' => 'Seattle', 'price' => '25'],
-                        ]
-                    ],
-                ];
             }
         }
         new ABPTB_Dashboard();

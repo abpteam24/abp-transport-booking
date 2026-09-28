@@ -224,51 +224,70 @@
 						$params[] = '%' . $wpdb->esc_like(sanitize_text_field($filters[$like_key])) . '%';
 					}
 }
-			// Aggregate Mode (SUM/MIN/MAX/AVG over numeric columns, e.g. filters['aggregate'] => array('total' => 'SUM'))
-			$aggregate_fields = array();
-			if (!empty($filters['aggregate']) && is_array($filters['aggregate']) && !$count) {
-				$agg_available = array('total' => 1, 'qty' => 1, 'price' => 1);
-				foreach ($filters['aggregate'] as $agg_col => $agg_fn) {
-					$agg_col = sanitize_key($agg_col);
-					$agg_fn = strtoupper(sanitize_key($agg_fn));
-					if (isset($agg_available[$agg_col]) && in_array($agg_fn, array('SUM', 'MIN', 'MAX', 'AVG'), true)) {
-						$aggregate_fields[] = "COALESCE({$agg_fn}({$agg_col}), 0) AS {$agg_col}";
+						// Aggregate Mode (SUM/MIN/MAX/AVG over numeric columns, e.g. filters['aggregate'] => array('total' => 'SUM'))
+				$aggregate_fields = array();
+				if (!empty($filters['aggregate']) && is_array($filters['aggregate']) && !$count) {
+					$agg_select = array(
+						'total' => array(
+							'SUM' => 'COALESCE(SUM(total), 0) AS total',
+							'MIN' => 'COALESCE(MIN(total), 0) AS total',
+							'MAX' => 'COALESCE(MAX(total), 0) AS total',
+							'AVG' => 'COALESCE(AVG(total), 0) AS total',
+						),
+						'qty' => array(
+							'SUM' => 'COALESCE(SUM(qty), 0) AS qty',
+							'MIN' => 'COALESCE(MIN(qty), 0) AS qty',
+							'MAX' => 'COALESCE(MAX(qty), 0) AS qty',
+							'AVG' => 'COALESCE(AVG(qty), 0) AS qty',
+						),
+						'price' => array(
+							'SUM' => 'COALESCE(SUM(price), 0) AS price',
+							'MIN' => 'COALESCE(MIN(price), 0) AS price',
+							'MAX' => 'COALESCE(MAX(price), 0) AS price',
+							'AVG' => 'COALESCE(AVG(price), 0) AS price',
+						),
+					);
+					foreach ($filters['aggregate'] as $agg_col => $agg_fn) {
+						$agg_col = sanitize_key($agg_col);
+						$agg_fn = strtoupper(sanitize_key($agg_fn));
+						if (isset($agg_select[$agg_col][$agg_fn])) {
+							$aggregate_fields[$agg_col] = $agg_select[$agg_col][$agg_fn];
+						}
 					}
 				}
-			}
-			// SQL Query Assembly
-				$select = $count ? 'SELECT COUNT(*)' : ($aggregate_fields ? 'SELECT ' . implode(', ', $aggregate_fields) : 'SELECT *');
-				$sql = "{$select} FROM %i";
-				if (!empty($conditions)) {
-					$sql .= ' WHERE ' . implode(' AND ', $conditions);
-				}
+				// SQL Query Assembly
+				$where_sql = !empty($conditions) ? ' WHERE ' . implode(' AND ', $conditions) : '';
+				$order_sql = '';
 				if (!$count && empty($aggregate_fields)) {
 					$allowed_columns = array('id', 'post_id', 'order_id', 'status', 'created_at', 'updated_at');
 					$raw_order_by = !empty($filters['order_by']) ? sanitize_key($filters['order_by']) : 'order_id';
 					$order_by = in_array($raw_order_by, $allowed_columns, true) ? $raw_order_by : 'order_id';
 					$order_dir = (!empty($filters['order_dir']) && strtoupper($filters['order_dir']) === 'ASC') ? 'ASC' : 'DESC';
-					$sql .= " ORDER BY {$order_by} {$order_dir}";
+					$order_sql = ' ORDER BY %i ' . ('ASC' === $order_dir ? 'ASC' : 'DESC');
+					$params[] = $order_by;
 					if ($limit > 0) {
-						$sql .= ' LIMIT %d OFFSET %d';
+						$order_sql .= ' LIMIT %d OFFSET %d';
 						$params[] = absint($limit);
 						$params[] = absint($offset);
 					}
 				}
+				$select = $count ? 'SELECT COUNT(*)' : ($aggregate_fields ? 'SELECT ' . implode(', ', $aggregate_fields) : 'SELECT *');
+				$sql = "{$select} FROM %i{$where_sql}{$order_sql}";
 				if ($count) {
 					if (!empty($params)) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_var(
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 							$wpdb->prepare($sql, array_merge(array($table_name), $params))
 						);
 					} else {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_var($wpdb->prepare($sql, $table_name));
 					}
 				} elseif (!empty($aggregate_fields)) {
 					if (!empty($params)) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_row(
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 							$wpdb->prepare($sql, array_merge(array($table_name), $params)),
@@ -276,12 +295,12 @@
 						);
 					} else {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_row($wpdb->prepare($sql, $table_name), ARRAY_A);
 					}
 				} else {
 					if (!empty($params)) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_results(
 						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 							$wpdb->prepare($sql, array_merge(array($table_name), $params)),
@@ -289,7 +308,7 @@
 						);
 					} else {
 						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 						$results = $wpdb->get_results($wpdb->prepare($sql, $table_name), ARRAY_A);
 					}
 				}
@@ -320,6 +339,61 @@
 					}
 				}
 				return $sold_qty;
+			}
+			/**
+			 * Batch aggregate sold quantity + order count for many journeys in one query.
+			 *
+			 * Returns a map keyed by "{post_id}|{Y-m-d H:i}" holding the same values that
+			 * get_sold_ticket()['total'] and get_booking_query() would return for that single
+			 * post_id + start_time pair, so callers can render long journey lists without
+			 * issuing two queries per row.
+			 *
+			 * @param array  $post_ids Transport post IDs to cover.
+			 * @param string $date     Day to aggregate (Y-m-d).
+			 * @return array<string, array{sold: int, orders: int}>
+			 */
+			public static function get_slot_aggregates($post_ids = array(), $date = ''): array {
+				global $wpdb;
+				$ids = array_values(array_unique(array_filter(array_map('absint', (array) $post_ids))));
+				if (empty($ids) || empty($date)) {
+					return array();
+				}
+				$table_name = $wpdb->prefix . 'abptb_orders';
+				$statuses = array_values(array_filter(array_map('trim', explode(',', ABPTB_Function::booking_status_sold()))));
+				if (empty($statuses)) {
+					return array();
+				}
+				$status_placeholders = implode(',', array_fill(0, count($statuses), '%s'));
+				$id_placeholders = implode(',', array_fill(0, count($ids), '%d'));
+				// %% escapes a literal percent for $wpdb->prepare().
+				$sql = "SELECT post_id, DATE_FORMAT(start_time, '%%Y-%%m-%%d %%H:%%i') AS slot, ticket_info
+					FROM %i
+					WHERE order_status IN ($status_placeholders)
+					AND post_id IN ($id_placeholders)
+					AND DATE(start_time) = %s";
+				$params = array_merge(array($table_name), $statuses, $ids, array($date));
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$rows = $wpdb->get_results($wpdb->prepare($sql, $params), ARRAY_A);
+				$aggregates = array();
+				foreach ((array) $rows as $row) {
+					$key = (int) $row['post_id'] . '|' . $row['slot'];
+					if (!isset($aggregates[$key])) {
+						$aggregates[$key] = array('sold' => 0, 'orders' => 0);
+					}
+					$aggregates[$key]['orders']++;
+					$ticket_infos = json_decode($row['ticket_info'] ?? '', true) ?: array();
+					if (empty($ticket_infos) || !is_array($ticket_infos)) {
+						continue;
+					}
+					foreach ($ticket_infos as $ticket_info) {
+						if (empty($ticket_info)) {
+							continue;
+						}
+						$aggregates[$key]['sold'] += (int) ($ticket_info['qty'] ?? 1);
+					}
+				}
+				return $aggregates;
 			}
 			public static function get_sp($id = '', $count = false) {
 				global $wpdb;
@@ -533,15 +607,15 @@
 					$conditions[] = 'session_id != %s';
 					$params[] = sanitize_text_field($exclude_session);
 				}
-				$sql = "SELECT * FROM %i";
-				if (!empty($conditions)) {
-					$sql .= ' WHERE ' . implode(' AND ', $conditions);
-				}
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$where_sql = !empty($conditions) ? ' WHERE ' . implode(' AND ', $conditions) : '';
+				$sql = "SELECT * FROM %i{$where_sql}";
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
 				$results = !empty($params)
+					// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
 					? $wpdb->get_results(
 					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 						$wpdb->prepare($sql, array_merge(array($table_name), $params)), ARRAY_A)
+					// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
 					: $wpdb->get_results(
 					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 						$wpdb->prepare($sql, $table_name), ARRAY_A);

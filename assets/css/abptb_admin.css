@@ -295,6 +295,13 @@
 	div.abptb_admin .dash_journey_row {cursor: pointer;}
 	div.abptb_admin .dash_journey_row:hover {background: var(--tb_color_light);}
 	div.abptb_admin .dash_journey_hint {padding: 9px 18px;background: rgba(59, 130, 246, 0.07);color: var(--tb_color_muted);font-size: 11.5px;display: -webkit-flex;display: flex;-webkit-align-items: center;align-items: center;gap: 6px;border-bottom: 1px solid rgba(15, 23, 42, 0.05);}
+	div.abptb_admin .dash_journey_count {padding: 0 18px 9px;color: var(--tb_color_muted);font-size: 11.5px;}
+	div.abptb_admin .dash_pagination {padding: 10px 18px;display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap;flex-wrap: wrap;-webkit-align-items: center;align-items: center;gap: 6px;border-top: 1px solid rgba(15, 23, 42, 0.05);}
+	div.abptb_admin .dash_page {min-width: 30px;height: 30px;padding: 0 9px;display: -webkit-inline-flex;display: inline-flex;-webkit-align-items: center;align-items: center;-webkit-justify-content: center;justify-content: center;font-size: 12px;font-weight: 600;border-radius: var(--tb_br);border: 1px solid rgba(15, 23, 42, 0.1);background: #fff;color: var(--tb_color_dark);text-decoration: none;transition: all 0.2s ease;}
+	div.abptb_admin a.dash_page:hover {border-color: var(--tb_color_theme);color: var(--tb_color_theme);}
+	div.abptb_admin .dash_page.abp_active {background: var(--tb_color_theme);border-color: var(--tb_color_theme);color: #fff;}
+	div.abptb_admin .dash_page_step {padding: 0 11px;}
+	div.abptb_admin .dash_page_gap {color: var(--tb_color_muted);font-size: 12px;padding: 0 2px;}
 	div.abptb_admin .dash_trip_badge {display: -webkit-inline-flex;display: inline-flex;-webkit-align-items: center;align-items: center;gap: 4px;font-size: 10px;font-weight: 700;padding: 2px 7px;border-radius: 20px;white-space: nowrap;text-transform: uppercase;letter-spacing: 0.3px;}
 	div.abptb_admin .dash_trip_badge_up {background: rgba(59, 130, 246, 0.12);color: #1D4ED8;}
 	div.abptb_admin .dash_trip_badge_return {background: rgba(147, 51, 234, 0.12);color: #7E22CE;}

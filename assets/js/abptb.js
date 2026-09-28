@@ -333,6 +333,14 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
     $(document).on('click', 'div.abptb_booking .sp_cell.available', function (e) {
         e.preventDefault();
         let current = $(this);
+        // Touch devices cannot hover, so reveal the seat price on tap instead.
+        if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+            let was_peeked = current.hasClass('sp_peek');
+            current.closest('.booking_area').find('.sp_cell.sp_peek').removeClass('sp_peek');
+            if (!was_peeked) {
+                current.addClass('sp_peek');
+            }
+        }
         current.toggleClass('selected').promise().done(function () {
             all_management(current);
         });

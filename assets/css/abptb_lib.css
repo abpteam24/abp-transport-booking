@@ -385,7 +385,7 @@
 	div.abptb_area [class*="_section"][class*="_card"]:hover {transform: translateY(-2px);}
 	div.abptb_area [class*="_section"].abp_active { border-color: var(--tb_color_theme);box-shadow: var(--tb_shadow_3);}
 	/*=============================*/
-	div.abptb_area [class*="_group_list"] {display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));-webkit-flex-wrap: wrap;flex-wrap: wrap;gap: var(--tb_gap_xxs);background: var(--tb_color_off_white);padding: var(--tb_gap_xxs); }
+	div.abptb_area [class*="_group_list"] {display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));-webkit-flex-wrap: wrap;flex-wrap: wrap;gap: var(--tb_gap_xxs);background: var(--tb_color_off_white);padding: var(--tb_gap_xxs); }
 	div.abptb_area [class*="_group_list"] [class*="_list_item"] {border: 2px solid var(--tb_color_alert);padding: var(--tb_gap_xxs);display: -webkit-flex;display: flex;-webkit-justify-content: space-between;justify-content: space-between;-webkit-align-items: center;align-items: center;-webkit-flex: 1;flex: 1;border-radius: var(--tb_br);}
 	div.abptb_area [class*="_group_list"] h6 {display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; width: 100%; }
 	div.abptb_area [class*="_group_list"] .abp_image {margin: 0 var(--tb_gap_xs) 0 0;width: auto;}
@@ -511,7 +511,7 @@
 	div.abptb_area [class*="_form_control"] :disabled { cursor: not-allowed; opacity: 0.7; background-color: #DDD5; pointer-events: none;}
 	/*=============================*/
 	/*div.abptb_area [class*="_form_inline"] {width: 100%;max-width: 100%;margin: 0; padding: 0; line-height: 1;display: -webkit-flex; display: flex;-webkit-flex-wrap: wrap;flex-wrap: wrap; gap: var(--tb_gap_xs);}*/
-	div.abptb_area [class*="_form_inline"] {width: 100%;max-width: 100%;margin: 0; padding: 0; line-height: 1; display: grid;gap: var(--tb_gap_xs);grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));}
+	div.abptb_area [class*="_form_inline"] {width: 100%;max-width: 100%;margin: 0; padding: 0; line-height: 1; display: grid;gap: var(--tb_gap_xs);grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));}
 	/*div.abptb_area [class*="_form_inline"] [class*="_input_item"] {width: 100%;max-width: calc(25% - var(--tb_gap));position: relative;}*/
 	div.abptb_area [class*="_form_inline"] [class*="_input_item"] {width: 100%;position: relative;gap: var(--tb_gap_xxs); }
 	div.abptb_area [class*="_form_inline"] [class*="_input_item"][class*="_g_input"] {grid-column: span 2;}
@@ -1226,6 +1226,7 @@
 	div.abptb_area .sp_canvas .sp_cell.booked { border-color: var(--tb_color_booked); box-shadow: 0 0 10px var(--tb_color_booked);background: var(--tb_color_booked); cursor: crosshair;pointer-events: none;}
 	div.abptb_area .sp_canvas .sp_tooltip { position: absolute; bottom: 0; left: 0; right: 0;top: 0;padding: var(--tb_gap_xxs); font-size: var(--tb_fs_small); opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 50; background: var(--tb_color_available);display: flex; align-items: center; justify-content: center; flex-direction: column;}
 	div.abptb_area .sp_canvas .sp_cell.available:hover .sp_tooltip {opacity: 1;visibility: visible;}
+	div.abptb_area .sp_canvas .sp_cell.sp_peek .sp_tooltip {opacity: 1;visibility: visible;}
 }
 /******************************************************************** Empty Class************************************************/
 @media only screen and (min-width: 10px) {
@@ -1266,3 +1267,17 @@
 	.fa-bus-simple:before { content: "\f207"; }
 	.fa-table-cells:before { content: "\f00a"; }
 }
+
+/***************Touch device fallbacks***************/
+/* Hover-revealed UI is unreachable on touch devices, so keep it visible there. */
+@media (hover: none) {
+	.abptb_area .date_close_icon,
+	.abptb_area .time_close_icon,
+	.abptb_area .icon_close { opacity: 1; }
+	div.abptb_slider .image_indicator { opacity: 1; }
+	div.abptb_slider .icon_direction { opacity: 1; }
+	div.abptb_gallery .gallery_item .item_caption { opacity: 1; transform: translateY(0); }
+}
+/* Gallery thumbnail images are wider than their track, so clip them to the rounded box. */
+div.abptb_slider .image_indicator .thumb_item { overflow: hidden; min-width: 56px; }
+div.abptb_slider.popup_area .popup_foot .image_indicator .thumb_item { overflow: hidden; }

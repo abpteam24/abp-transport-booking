@@ -52,10 +52,11 @@
 					return $passed;
 				}
 				// Prevent direct (non-form) purchases of the internal WooCommerce product.
-				$valid_submission = isset($_POST['_wpnonce'])
-					&& wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'abptb_registration_nonce')
-					&& isset($_POST['post_id'])
+				$valid_submission = false;
+				if (isset($_POST['_wpnonce']) && isset($_POST['post_id'])) {
+				$valid_submission = wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'abptb_registration_nonce')
 					&& absint($_POST['post_id']) === $post_id;
+				}
 				if (!$valid_submission) {
 					wc_add_notice(__('This transport cannot be purchased directly. Please book through the transport booking form.', 'abp-transport-booking'), 'error');
 					return false;

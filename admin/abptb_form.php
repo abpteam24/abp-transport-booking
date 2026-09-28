@@ -212,7 +212,10 @@
             }
             //=============================//
             public function get_form_array(array $form_infos = []): array {
-                $has_post_nonce = isset($_POST['abptb_post_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['abptb_post_nonce'])), 'abptb_post_nonce');
+                $has_post_nonce = false;
+                if (isset($_POST['abptb_post_nonce'])) {
+                $has_post_nonce = wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['abptb_post_nonce'])), 'abptb_post_nonce');
+                }
                 $has_ajax_nonce = check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false);
                 if (($has_post_nonce || $has_ajax_nonce) && current_user_can('manage_options')) {
                     $post_array = fn($key) => (isset($_POST[$key]) && is_array($_POST[$key])) ? array_map('sanitize_text_field', wp_unslash($_POST[$key])) : [];

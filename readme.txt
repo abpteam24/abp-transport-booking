@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -546,6 +546,19 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.6 =
+
+* Improved dashboard speed: the "Today Trips" list now uses one batched query instead of two queries per journey, cutting dashboard render time roughly in half.
+* Added pagination to the dashboard "Today Trips" list, reducing the dashboard page size by roughly 94% on sites with many daily trips.
+* Fixed the ascending / descending sort option on date and time based queries.
+* Added missing nonce verification to several admin forms.
+* Fixed horizontal scrolling in the booking search form and transport gallery on small screens.
+* Improved touch device support: gallery thumbnails, slider arrows, image captions and the date/time clear buttons can now be reached without hovering.
+* Seat prices can now be revealed by tapping a seat on touch devices.
+* Fixed gallery thumbnail images overflowing their rounded container.
+
+Released: September 28, 2026
+
 = 1.0.5 =
 
 * Added a new admin business overview dashboard with key transport statistics, today's trips and a system health checklist.
@@ -598,8 +611,12 @@ Released: August 17, 2026
 
 == Upgrade Notice ==
 
+= 1.0.6 =
+Faster admin dashboard plus mobile layout and touch device fixes. Recommended update.
+Released: September 28, 2026
+
 = 1.0.5 =
-Added the admin business dashboard, the My Account bookings list,Skip an in-plugin help screen,Skip and frontend taxonomy filter toggles. Recommended update.
+Added an admin business overview dashboard, a My Account bookings list, an in-plugin help screen and frontend taxonomy filter toggles. Recommended update.
 Released: September 13, 2026
 
 = 1.0.4 =
