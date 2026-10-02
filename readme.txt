@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -506,8 +506,8 @@ Yes. The plugin can be used in local WordPress development environments such as 
 == Need help or have suggestions? ==
 If you need any further assistance or support, please contact us through the [🎫 support form](https://abp-team.com/support-desk/). We welcome your suggestions, so feel free to tell us anything we can improve in the plugin.
 
-🌐 [Live Demo](https://transport-booking.abp-team.com/)
-📖 [Documentation](https://transport-booking.abp-team.com/documentation/)
+🌐 [Live Demo](https://demo-tb.abp-team.com/)
+📖 [Documentation](https://abp-team.com/documentation-transport-booking/)
 💬 [Support Forum](https://wordpress.org/support/plugin/abp-transport-booking/)
 🐛 [Bug Reports](https://github.com/abpteam24/abp-transport-booking/issues)
 📧 Email: support@abp-team.com
@@ -542,9 +542,17 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 23. Transport Route Configuration with Return Route
 24. Transport Price Configuration with Return Route
 25. Transport Time Configuration with Return Route
+26. Well come Dashboard view
 
 
 == Changelog ==
+
+= 1.0.7 =
+
+* Improved mobile and tablet layout: the grid / list view toggle, the Book Now button and the pagination buttons now have proper touch target sizes and are easier to tap.
+* Reduced the built-in demo location list to the 24 locations that are actually used by the demo routes, removing 35 unused entries.
+
+Released: October 2, 2026
 
 = 1.0.6 =
 
@@ -610,6 +618,10 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.7 =
+Improved mobile and tablet touch targets, plus a smaller demo location list. Recommended update.
+Released: October 2, 2026
 
 = 1.0.6 =
 Faster admin dashboard plus mobile layout and touch device fixes. Recommended update.
