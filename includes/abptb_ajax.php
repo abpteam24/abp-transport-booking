@@ -105,7 +105,7 @@
                     $file = ABPTB_Function::template_path($templates[$style] ?? $templates['grid']);
                     //echo '<pre>';                    print_r($form_data);                    echo '</pre>';
                     ?>
-                    <div class="abp_pagination _gap_fd_column">
+
                         <?php do_action('abptb_post_filter', $form_data_down);
                             if (is_file($file)) {
                                 include_once $file;
@@ -114,7 +114,7 @@
                                 include_once ABPTB_Function::template_path('list/default.php');
                                 do_action('abptb_default_template', $form_data_down);
                             } ?>
-                    </div>
+
                     <?php
                     $form_data_up = $form_data['up'] ?? [];
                     if (!empty($form_data_up)) {
@@ -123,7 +123,7 @@
                         $form_data_up['all_post'] = $post_ids;
                         $form_data_up = array_merge($defaults, $form_data_up);
                         ?>
-                        <div class="abp_pagination _gap_fd_column">
+
                             <?php do_action('abptb_post_filter', $form_data_up);
                                 if (is_file($file)) {
                                     include_once $file;
@@ -132,7 +132,7 @@
                                     include_once ABPTB_Function::template_path('list/default.php');
                                     do_action('abptb_default_template', $form_data_up);
                                 } ?>
-                        </div>
+
                         <?php
                     }
                     $msg = ABPTB_Function::label() . ' ' . __('List Loaded Successfully.....! ', 'abp-transport-booking');

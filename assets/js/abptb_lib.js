@@ -1,7 +1,11 @@
 if (!window.abptb_parent || !window.abptb_parent.length) {
     window.abptb_parent = jQuery('div.abptb_area');
 }
+function abptb_jq(target) {
+    return (target && target.jquery) ? target : jQuery(target);
+}
 function abptb_init(target = abptb_parent) {
+    target = abptb_jq(target);
     abptb_load_tabs(target);
     abptb_load_more(target);
     abptb_load_image(target);
@@ -66,6 +70,7 @@ function abptb_load_image(parent = abptb_parent) {
     return true;
 }
 function abptb_load_datepicker(parent = abptb_parent) {
+    parent = abptb_jq(parent);
     if (parent.find(".abp_datepicker:visible").length === 0) return;
     parent.find(".abp_datepicker:visible").each(function () {
         jQuery(this).removeClass('hasDatepicker').attr('id', '').removeData('datepicker').unbind();
@@ -687,7 +692,7 @@ function abptb_popup_close(target_id = '') {
                     $('body').find('.dropdown_list').slideUp(250);
                     if ($this.hasClass('abptb_allow')) {
                         parent.find('input[type="hidden"]').val($this.val());
-                        parent.find('input[type="text"]').val($this.val());
+                        parent.find('input[type="text"]').val($this.val()).trigger('abp_trigger');
                     } else {
                         if (target.closest('.abp_dropdown').length === 0) {
                             let current_val = parent.find('input[type="text"]').val().toLowerCase();

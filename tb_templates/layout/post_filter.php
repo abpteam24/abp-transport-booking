@@ -6,6 +6,7 @@
         if (!is_array($params)) {
             return;
         }
+
         $style = $params['style'] ?? 'grid';
         $post_ids = $params['all_post'] ?? [];
         $cat_id = $params['cat_id'] ?? null;

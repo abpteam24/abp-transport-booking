@@ -69,6 +69,7 @@
 				$bp_dp = $filters['bp_dp'] ?? null;
 				$bp = $filters['bp'] ?? null;
 				$dp = $filters['dp'] ?? null;
+				$title = $filters['post_title'] ?? ($filters['title'] ?? null);
 				if (!empty($bp) && !empty($dp)) {
 					$bp_dp = $bp . '_' . $dp;
 				}
@@ -90,7 +91,7 @@
 				if (!empty($loc_id)) {
 					$meta_query[] = ['key' => 'route_direction', 'value' => '"' . $loc_id . '"', 'compare' => 'LIKE'];
 				}
-				$all_data = get_posts(array(
+				$args = array(
 					'fields' => 'ids',
 					'post_type' => $post_type,
 					'posts_per_page' => $show,
@@ -98,7 +99,21 @@
 					'post_status' => $status,
 					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					'meta_query' => $meta_query
-				));
+				);
+				$title_filter = null;
+				if (!empty($title)) {
+					$args['s'] = $title;
+					$args['suppress_filters'] = false;
+					$title_filter = function ($search) use ($title) {
+						global $wpdb;
+						return $wpdb->prepare(" AND {$wpdb->posts}.post_title LIKE %s ", '%' . $wpdb->esc_like($title) . '%');
+					};
+					add_filter('posts_search', $title_filter, 10, 1);
+				}
+				$all_data = get_posts($args);
+				if ($title_filter !== null) {
+					remove_filter('posts_search', $title_filter, 10);
+				}
 				return array_unique($all_data);
 			}
 			public static function get_booking_query($filters = array(), $limit = 0, $offset = 0, $count = false) {

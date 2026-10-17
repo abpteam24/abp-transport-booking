@@ -94,6 +94,7 @@
                 }
             }
             public function passenger_form_settings($passenger_forms, $global = false): void {
+                //echo '<pre>';print_r($passenger_forms);echo '</pre>';
                 ?>
                 <div class="configuration_content _mar_t_xs">
                     <div class="_ov_auto">
@@ -146,6 +147,7 @@
                 $required = $form['required'] ?? 'off';
                 $label = $form['label'] ?? '';
                 $options = $form['option'] ?? '';
+                $options=is_array($options)?implode(',', $options):$options;
                 $d_value = $form['d_value'] ?? '';
                 $active_type = ($type == 'select' || $type == 'checkbox' || $type == 'radio') ? 'abp_active' : '';
                 $active_value = $type != 'date' ? 'abp_active' : '';

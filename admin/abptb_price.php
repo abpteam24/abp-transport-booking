@@ -33,7 +33,7 @@
                 $return_price_infos = $post_infos['return_price_infos'] ?? [];
                 $locations = ABPTB_Function::get_option('abptb_location');
                 //echo '<pre>';                print_r($ticket_infos);                echo '</pre>';
-                // echo '<pre>';                print_r($price_infos);                echo '</pre>';
+                 //echo '<pre>';                print_r($price_infos);                echo '</pre>';
                 ?>
                 <div class="_f_wrap_gap_xs_f_equal">
                     <div class="price_infos">

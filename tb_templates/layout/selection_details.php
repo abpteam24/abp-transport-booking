@@ -37,8 +37,8 @@
                     $route_infos = $post_infos[$key] ?? [];
                     $bp_pd = $route_infos[$bp]['pd'] ?? 'on';
                     $dp_pd = $route_infos[$dp]['pd'] ?? 'on';
-                    $pickup_infos = $bp_pd == 'on' ? ABPTB_Function::get_pd_info($bp, $bp_time) : [];
-                    $drop_up_infos = $dp_pd == 'on' ? ABPTB_Function::get_pd_info($dp, $dp_time) : [];
+                    $pickup_infos = $bp_pd == 'on' ? ABPTB_Function::get_pd_info($bp, $bp_time,$is_return) : [];
+                    $drop_up_infos = $dp_pd == 'on' ? ABPTB_Function::get_pd_info($dp, $dp_time,$is_return) : [];
                     //echo '<pre>';                    print_r($pickup_infos);                    echo '</pre>';
                     //echo '<pre>';                    print_r($drop_up_infos);                    echo '</pre>';
                     if (sizeof($pickup_infos) > 1) {
@@ -51,7 +51,7 @@
                                     $name = $pickup['name'] ?? '';
                                     $time = $pickup['time'] ?? '';
                                     ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $bp) ?>><?php echo esc_html($name . ' - ' . ABPTB_Function::date_format($time)); ?></option>
+                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $bp) ?>><?php echo esc_html(!empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name); ?></option>
                                 <?php } ?>
                             </select>
                         </label>
@@ -68,7 +68,7 @@
                                     $name = $pickup['name'] ?? '';
                                     $time = $pickup['time'] ?? '';
                                     ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $dp) ?>><?php echo esc_html($name . ' - ' . ABPTB_Function::date_format($time)); ?></option>
+                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $dp) ?>><?php echo esc_html(!empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name); ?></option>
                                 <?php } ?>
                             </select>
                         </label>

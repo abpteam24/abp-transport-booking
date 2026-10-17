@@ -36,6 +36,7 @@
                             <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'draft' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTB_Function::build_url('posts', ['status' => 'draft'])); ?>"><?php esc_html_e('Draft', 'abp-transport-booking'); ?> ( <?php echo esc_html($total_draft); ?> )</button>
                             <button type="button" class="_btn_light_active_xs <?php echo esc_attr($status == 'trash' ? 'abp_active' : ''); ?>" data-href="<?php echo esc_url(ABPTB_Function::build_url('posts', ['status' => 'trash'])); ?>"><?php esc_html_e('Trash', 'abp-transport-booking'); ?> ( <?php echo esc_html($total_trash); ?> )</button>
                         </div>
+                        <?php ABPTB_Layout::filter_post_list('',true); ?>
                         <a class="_btn_navy_blue_xs" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>">
                             <?php ABPTB_Static::svg('plus');
                                 esc_html_e('Add New Transport', 'abp-transport-booking'); ?>
@@ -65,13 +66,22 @@
                 $limit = absint(($filter_args['page_item'] ?? 0) ?: ABPTB_Function::get_option('abptb_per_page_item', 20));
                 $count = ($page_number - 1) * $limit + 1;
                 $cpt = ABPTB_Function::get_cpt();
+                $post_title = $filter_args['post_title'] ?? '';
+                $post_title = is_string($post_title) ? trim($post_title) : '';
                 $filters['status'] = $status;
                 $filters['posts_per_page'] = $limit;
                 $filters['paged'] = $page_number - 1;
+                if ($post_title !== '') {
+                    $filters['post_title'] = $post_title;
+                }
                 //echo '<pre>';print_r($filters);echo '</pre>';
                 $post_ids = ABPTB_Query::get_post_id($filters);
                 if (!empty($post_ids) && sizeof($post_ids) > 0) {
-                    $total_post = sizeof(ABPTB_Query::get_post_id(['status' => $status]));
+                    $count_filters = ['status' => $status];
+                    if ($post_title !== '') {
+                        $count_filters['post_title'] = $post_title;
+                    }
+                    $total_post = sizeof(ABPTB_Query::get_post_id($count_filters));
                     $new_post_url = admin_url('post-new.php?post_type=' . $cpt);
                     ?>
                     <table class="abp">
@@ -172,34 +182,43 @@
                 $post_infos = ABPTB_Function::get_all_meta($new_post_id);
                 wp_nonce_field('abptb_post_nonce', 'abptb_post_nonce');
                 ?>
-                <div class="abptb_area abptb_admin abp_post_config">
+                <div class="abptb_area abptb_admin">
                     <input type="hidden" name="abptb_post_id" value="<?php echo esc_attr($post_id); ?>"/>
-                    <div class="abp_panel">
-                        <div class="abp_tabs tab_top">
-                            <div class="_panel_head">
-                                <ul class="abp tab_lists">
-                                    <li data-tabs-target="#abptb_general"><span class="fas fa-rainbow"></span><?php esc_html_e('General', 'abp-transport-booking'); ?></li>
-                                    <li data-tabs-target="#abptb_ticket">🎫<?php esc_html_e('Ticket', 'abp-transport-booking'); ?></li>
-                                    <li data-tabs-target="#abptb_routing"><span class="fas fa-route"></span><?php esc_html_e('Route', 'abp-transport-booking'); ?></li>
-                                    <li data-tabs-target="#abptb_price" onclick="abptb_price_load()">💲<?php esc_html_e(' Price', 'abp-transport-booking'); ?></li>
-                                    <li data-tabs-target="#abptb_dates">🗓️<?php esc_html_e('Date', 'abp-transport-booking'); ?></li>
-                                    <li data-tabs-target="#abptb_times">⏰<?php esc_html_e('Time', 'abp-transport-booking'); ?></li>
-                                    <?php if (ABPTB_Function::on_off('additional_info')) { ?>
-                                        <li data-tabs-target="#abptb_additional_service">💰<?php esc_html_e('Additional services', 'abp-transport-booking'); ?></li>
-                                    <?php } ?>
-                                    <?php if (ABPTB_Function::on_off('client_info')) { ?>
-                                        <li data-tabs-target="#abptb_client_form">📋<?php esc_html_e('Client Form', 'abp-transport-booking'); ?></li>
-                                    <?php } ?>
-                                    <?php do_action('abptb_post_tab_menu', $post_infos); ?>
-                                    <li data-tabs-target="#abptb_resource">📚<?php esc_html_e('Resources', 'abp-transport-booking'); ?></li>
-                                </ul>
-                            </div>
-                            <div class="tab_content _panel_body">
-                                <?php
-                                    $this->general_configuration($post_infos);
-                                    do_action('abptb_post_content', $post_infos);
-                                ?>
-                            </div>
+                    <div class="abp_tabs tab_left">
+                        <ul class="abp tab_lists">
+                            <li data-tabs-target="#abptb_general"><span class="fas fa-rainbow"></span><?php esc_html_e('General', 'abp-transport-booking'); ?></li>
+                            <li data-tabs-target="#abptb_ticket">🎫<?php esc_html_e('Ticket', 'abp-transport-booking'); ?></li>
+                            <li data-tabs-target="#abptb_routing"><span class="fas fa-route"></span><?php esc_html_e('Route', 'abp-transport-booking'); ?></li>
+                            <li data-tabs-target="#abptb_price" onclick="abptb_price_load()">💲<?php esc_html_e(' Price', 'abp-transport-booking'); ?><span class="_color_danger to_be_updated" title="<?php esc_attr_e('Price may be updated otherwise it will zero', 'abp-transport-booking'); ?>"><?php esc_html_e('Need Action', 'abp-transport-booking'); ?></span></li>
+                            <li data-tabs-target="#abptb_dates">🗓️<?php esc_html_e('Date', 'abp-transport-booking'); ?></li>
+                            <li data-tabs-target="#abptb_times">⏰<?php esc_html_e('Time', 'abp-transport-booking'); ?></li>
+                            <?php if (ABPTB_Function::on_off('additional_info')) { ?>
+                                <li data-tabs-target="#abptb_additional_service">💰<?php esc_html_e('Additional services', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <?php if (ABPTB_Function::on_off('client_info')) { ?>
+                                <li data-tabs-target="#abptb_client_form">📋<?php esc_html_e('Client Form', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <?php do_action('abptb_post_tab_menu', $post_infos); ?>
+                            <li data-tabs-target="#abptb_tax">🧾<?php esc_html_e('Tax', 'abp-transport-booking'); ?></li>
+                            <?php if (ABPTB_Function::on_off('tc')) { ?>
+                                <li data-tabs-target="#abptb_tc">🤝<?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <?php if (ABPTB_Function::on_off('faq')) { ?>
+                                <li data-tabs-target="#abptb_faq">❓<?php esc_html_e('FAQ', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <?php if (ABPTB_Function::on_off('related')) { ?>
+                                <li data-tabs-target="#abptb_related">🔗<?php esc_html_e('Related Transport', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <?php if (ABPTB_Function::on_off('feature')) { ?>
+                                <li data-tabs-target="#abptb_post_feature">✅<?php esc_html_e('Feature', 'abp-transport-booking'); ?></li>
+                            <?php } ?>
+                            <li data-tabs-target="#abptb_gallery">🖼️<?php esc_html_e('Gallery', 'abp-transport-booking'); ?></li>
+                        </ul>
+                        <div class="tab_content">
+                            <?php
+                                $this->general_configuration($post_infos);
+                                do_action('abptb_post_content', $post_infos);
+                            ?>
                         </div>
                     </div>
                     <?php ABPTB_Layout::load_admin_globally(); ?>
@@ -333,56 +352,6 @@
                                 <?php ABPTB_Layout::info_text('display_brand'); ?>
                             </div>
                         <?php } ?>
-                        <?php if (ABPTB_Function::on_off('related')) { ?>
-                            <div class="setting_item related_item">
-                                <div class="_fj_between_fa_center">
-                                    <span class="abp_label"><?php esc_html_e('Related Transport', 'abp-transport-booking'); ?></span>
-                                    <div class="selection_area">
-                                        <label>
-                                            <input class="_form_control item_search" type="text" placeholder="<?php esc_attr_e('Search Related Transport ....', 'abp-transport-booking'); ?>"/>
-                                        </label>
-                                        <div class="selection_list"></div>
-                                    </div>
-                                </div>
-                                <div class="_divider_xxs"></div>
-                                <?php ABPTB_Layout::info_text('related_item'); ?>
-                                <div class="_divider_xxs"></div>
-                                <div class="selected_area">
-                                    <input type="hidden" name="related_item" value="<?php echo esc_attr($post_infos['related_item'] ?? ''); ?>"/>
-                                    <div class="selected_list"></div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                        <?php if (ABPTB_Function::on_off('feature')) { ?>
-                            <div class="setting_item full_width post_feature">
-                                <div class="_fj_between_fa_center">
-                                    <span class="abp_label"><?php esc_html_e('Feature', 'abp-transport-booking'); ?></span>
-                                    <div class="_group_content">
-                                        <div class="selection_area">
-                                            <label>
-                                                <input class="_form_control item_search" type="text" placeholder="<?php esc_attr_e('Search feature ....', 'abp-transport-booking'); ?>"/>
-                                            </label>
-                                            <div class="selection_list"></div>
-                                        </div>
-                                        <?php ABPTB_Layout::button_global_popup('option_feature', __('Add New', 'abp-transport-booking') . ' ' . ABPTB_Function::feature_label()); ?>
-                                    </div>
-                                </div>
-                                <div class="_divider_xxs"></div>
-                                <?php ABPTB_Layout::info_text('post_feature'); ?>
-                                <div class="_divider_xxs"></div>
-                                <div class="selected_area">
-                                    <input type="hidden" name="post_feature" value="<?php echo esc_attr($post_infos['post_feature'] ?? ''); ?>"/>
-                                    <div class="selected_list"></div>
-                                </div>
-                            </div>
-                        <?php } ?>
-                        <div class="setting_item full_width">
-                            <span class="abp_label"><?php esc_html_e('Gallery', 'abp-transport-booking'); ?></span>
-                            <div class="_divider_xxs"></div>
-                            <?php ABPTB_Layout::info_text('display_slider'); ?>
-                            <div class="_divider_xxs"></div>
-                            <?php do_action('abptb_add_image_multiple', 'abptb_slider', ($post_infos['abptb_slider'] ?? '')); ?>
-                        </div>
                     </div>
                 </div>
                 <?php
@@ -414,6 +383,7 @@
                     $display_ticket_type = $post_val('display_ticket_type');
                     $ticket_infos = [];
                     $sp_infos = [];
+                    $all_sp_id = [];
                     $all_ticket_types = [];
                     if ($display_ticket_type == 'off') {
                         $all_ticket_types[] = 'price';
@@ -444,7 +414,6 @@
                     } else {
                         $sp_ids = $post_int_array('sp_id');
                         $sp_names = $post_array('sp_name');
-                        $all_sp_id = [];
                         if (!empty($sp_ids)) {
                             foreach ($sp_ids as $key => $id) {
                                 if (!empty($id)) {
@@ -459,6 +428,8 @@
                         if ($display_ticket_type == 'on') {
                             $all_ticket_types = ABPTB_Function::get_sp_ticket($all_sp_id);
                         }
+                        //echo '<pre>';print_r($all_sp_id);echo '</pre>';
+                        //echo '<pre>';print_r($all_ticket_types);echo '</pre>';
                     }
                     /***********************************/
                     $route_data = [];
@@ -708,7 +679,7 @@
                     }
                     //=============================//
                     $meta_info = apply_filters('abptb_meta_info_update', $meta_info, $post_id);
-                    // echo '<pre>';print_r($meta_info);echo '</pre>';die();
+                    //echo '<pre>';print_r($meta_info);echo '</pre>';die();
                     if (sizeof($meta_info) > 0) {
                         foreach ($meta_info as $key => $value) {
                             update_post_meta($post_id, sanitize_key($key), $value);

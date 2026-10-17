@@ -443,63 +443,82 @@ window.abptb_image_selection = function ($this) {
     "use strict";
     //==========Post Pagination=================//
     $(document).on('click', 'div.abptb_admin .post_list .pagination_area button[data-page]', function () {
-        let $this = jQuery(this);
+        let $this = $(this);
         if (!$this.hasClass('abp_active')) {
-            let parent = $this.closest('.abptb_posts');
-            let target = parent.find('.post_list');
             let filter_args = {};
-            if (parent.find("[name='select_hidden_post_status']").length > 0) {
-                filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
-            }
             filter_args['page_number'] = parseInt($this.attr('data-page'));
-            if (parent.find("[name='page_item']").length > 0) {
-                filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
-            }
-            if (target.length > 0) {
-                jQuery.ajax({
-                    type: 'POST', url: abptb_admin_data.ajax_url, data: {
-                        "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
-                    }, beforeSend: function () {
-                        abptb_spinner(parent);
-                        abptb_toast_msg(abptb_admin_data.msg.post_loading);
-                    }, success: function (response) {
-                        if (response.data && response.data.hasOwnProperty('html')) {
-                            target.html(response.data.html);
-                        }
-                        abptb_spinner_remove(parent);
-                        abptb_toast_msg(response.data.msg, response.data.type);
-                    }, error: function (xhr) {
-                        abptb_ajx_error(xhr, parent);
-                    }
-                });
-            } else {
-                parent.find('.post_tab').trigger('click');
-            }
+            abptb_load_post_list($this, filter_args)
         }
     });
+    $(document).on('abp_trigger', 'div.abptb_admin .abptb_posts [name="post_title"]', function () {
+        let $this = $(this);
+        let filter_args = {};
+        filter_args['post_title'] = $this.val();
+        abptb_load_post_list($this, filter_args)
+    });
+    function abptb_load_post_list($this, filter_args) {
+        let parent = $this.closest('.abptb_posts');
+        let target = parent.find('.post_list');
+        if (parent.find("[name='select_hidden_post_status']").length > 0) {
+            filter_args['status'] = parent.find("[name='select_hidden_post_status']").val();
+        }
+        if (parent.find("[name='page_item']").length > 0) {
+            filter_args['page_item'] = parseInt(parent.find("[name='page_item']").val());
+        }
+        if (target.length > 0) {
+            jQuery.ajax({
+                type: 'POST', url: abptb_admin_data.ajax_url, data: {
+                    "action": "abptb_reload_post_list", "filter_args": filter_args, 'nonce': abptb_admin_data.nonce
+                }, beforeSend: function () {
+                    abptb_spinner(parent);
+                    abptb_toast_msg(abptb_admin_data.msg.post_loading);
+                }, success: function (response) {
+                    if (response.data && response.data.hasOwnProperty('html')) {
+                        target.html(response.data.html).promise().done(function () {
+                            abptb_load_image(target);
+                        });
+                    }
+                    abptb_spinner_remove(parent);
+                    abptb_toast_msg(response.data.msg, response.data.type);
+                }, error: function (xhr) {
+                    abptb_ajx_error(xhr, parent);
+                }
+            });
+        } else {
+            parent.find('.post_tab').trigger('click');
+        }
+    }
     //==========Route , ticket config=================//
     $(document).on('abp_trigger', 'div.abptb_admin .abptb_routing .add_new_hook', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         abptb_location_selection();
     });
     $(document).on('abp_trigger', 'div.abptb_admin .ticket_configuration.configuration_content', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         load_total($(this));
     });
     $(document).on('change', 'div.abptb_admin .abptb_routing [name="stop_name[]"] ,div.abptb_admin  .abptb_routing [name="return_stop_name[]"]', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         abptb_location_selection();
     });
     $(document).on('abp_trigger', 'div.abptb_admin .ticket_configuration .add_new_hook', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         abptb_ticket_type_selection();
     });
     $(document).on('change', 'div.abptb_admin .ticket_configuration [name="ticket_name[]"] ', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         abptb_ticket_type_selection();
     });
     $(document).on('change', 'div.abptb_admin .abptb_ticket [name="seat_type"]', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         load_ticket_type($(this));
     });
     $(document).on('abp_trigger', 'div.abptb_admin .abptb_ticket [name="display_ticket_type"]', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         load_ticket_type($(this));
     });
     $(document).on('change', 'div.abptb_admin .sp_selection_area [name="sp_id[]"]', function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideDown('fast');
         let sp_id = $(this).val();
         let parent = $(this).closest('tr');
         let grand_parent = $(this).closest('.ticket_configuration');
@@ -557,6 +576,7 @@ window.abptb_image_selection = function ($this) {
         });
     }
     window.abptb_price_load = function () {
+        $('div.abptb_admin .tab_lists .to_be_updated').slideUp('fast');
         let target = abptb_parent.find('div.abptb_price');
         let formData = new FormData();
         let display_return = abptb_parent.find("[name='display_return']").val();

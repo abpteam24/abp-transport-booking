@@ -25,9 +25,8 @@
         //echo '<pre>';        print_r($all_dates);        echo '</pre>';
         ?>
         <div id="abptb_search_area">
-            <h5 class="abp_gap_xs">
-                <span class="fas fa-ticket"></span><?php esc_html_e('BUY TICKET', 'abp-transport-booking'); ?>
-            </h5>
+            <h5 class="abp_gap_xs_color_theme"><span class="fas fa-ticket"></span><?php esc_html_e('BUY TICKET', 'abp-transport-booking'); ?>            </h5>
+            <div class="_divider_xxs"></div>
             <form class="abp_search_form <?php echo esc_attr($form_type === 'column' ? '_form_column' : '_form_inline'); ?>" method="post" action="">
                 <?php if ($post_id > 0 && empty($global_order)) { ?>
                     <input type="hidden" name="post_id" value="<?php echo esc_attr($post_id); ?>"/>
@@ -46,7 +45,6 @@
                     </div>
                 <?php } ?>
                 <div class="_input_item_fj_between_fd_column">
-                    <span></span>
                     <button type="submit" class="_btn_theme">
                         <?php ABPTB_Layout::image_icon($brand_icon); ?>
                         <?php esc_html_e('Check Availability', 'abp-transport-booking'); ?>

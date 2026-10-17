@@ -14,9 +14,10 @@
                 if (ABPTB_Function::on_off('feature')) {
                     $label = ABPTB_Function::feature_label(); ?>
                     <div class="_fj_between">
-                        <h5 class="abp_gap_xs">🔗<?php echo esc_html($label); ?></h5>
+                        <h5 class="abp_color_theme_gap_xs">🔗<?php echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('option_feature', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
+                    <div class="_divider_xs"></div>
                     <?php ABPTB_Layout::info_text('abptb_feature'); ?>
                     <div class="option_feature _ov_auto_mar_t_xs">
                         <?php $this->feature_list(); ?>

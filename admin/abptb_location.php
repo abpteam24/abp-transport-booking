@@ -14,9 +14,10 @@
             public function global_location(): void {
                 $label = ABPTB_Function::location_label(); ?>
                 <div class="_fj_between">
-                    <h5 class="abp_gap_xs"><span class="fas fa-route"></span><?php echo esc_html($label); ?></h5>
+                    <h5 class="abp_color_theme_gap_xs"><span class="fas fa-route"></span><?php echo esc_html($label); ?></h5>
                     <?php ABPTB_Layout::button_global_popup('tax_location', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                 </div>
+                <div class="_divider_xs"></div>
                 <?php ABPTB_Layout::info_text('abptb_location'); ?>
                 <div class="tax_location _ov_auto_mar_t_xs">
                     <?php $this->location_list(); ?>
@@ -203,7 +204,7 @@
                 $taxonomies = is_array($taxonomies) ? $taxonomies : [];
                 $location = [];
                 $old_location = ABPTB_Function::get_option('abptb_location');
-                $pd_option= [];
+                $pd_option = [];
                 $old_location = is_array($old_location) ? $old_location : [];
                 if (count($taxonomies) > 0) {
                     foreach ($taxonomies as $taxonomy) {
@@ -214,16 +215,16 @@
                         $pd_option[$term_id] = $taxonomy->name;
                         if (!empty($id) && (int)$id === (int)$term_id) {
                             $new_location = $pickup_info;
-                            $pd_info=$pickup_info;
+                            $pd_info = $pickup_info;
                         } else {
-                            $pd_info=$old_location[$term_id]['pd_info'] ?? [];
-                            if(!empty($pd_info)) {
+                            $pd_info = $old_location[$term_id]['pd_info'] ?? [];
+                            if (!empty($pd_info)) {
                                 $new_location = $old_location[$term_id]['pd_info'] ?? [];
                             }
                         }
-                        if(!empty($pd_info)) {
+                        if (!empty($pd_info)) {
                             foreach ($pd_info as $pd_info_key => $pd_info_value) {
-                                $pd_option[$pd_info_key] = $pd_info_value['name']??'';
+                                $pd_option[$pd_info_key] = $pd_info_value['name'] ?? '';
                             }
                         }
                         if (!empty($new_location)) {
@@ -260,20 +261,22 @@
                                 <th><?php echo esc_html($term_id); ?></th>
                                 <th class="_text_left"><a href="<?php echo esc_url(get_term_link((int)$term_id)); ?>" target="_blank" class="abp_fs_h5_color_theme"><?php echo esc_html($name); ?></a></th>
                                 <th>
-                                    <?php
-                                        $drop_info = $option['pd_info'] ?? [];
-                                        if (!empty($drop_info)) {
-                                            foreach ($drop_info as $drop) {
-                                                if (!empty($drop)) { ?>
-                                                    <div class="_section_xxs">
-                                                        <?php echo esc_html($drop['name']);
-                                                            if (!empty($drop['time'])) {
-                                                                echo esc_html(' ( ' . $drop['time'] . ' Min)');
-                                                            } ?>
-                                                    </div>
-                                                <?php }
-                                            }
-                                        } ?>
+                                    <ul class="abp_list">
+                                        <?php
+                                            $drop_info = $option['pd_info'] ?? [];
+                                            if (!empty($drop_info)) {
+                                                foreach ($drop_info as $drop) {
+                                                    if (!empty($drop)) { ?>
+                                                        <li>
+                                                            <?php echo esc_html($drop['name']);
+                                                                if (!empty($drop['time'])) {
+                                                                    echo esc_html(' ( ' . $drop['time'] . ' Min)');
+                                                                } ?>
+                                                        </li>
+                                                    <?php }
+                                                }
+                                            } ?>
+                                    </ul>
                                 </th>
                                 <td><?php echo esc_html($option['description'] ?? ''); ?></td>
                                 <th class="_text_nowrap"><code> [abptb-post loc_id="<?php echo esc_attr($term_id); ?>"]</code></th>

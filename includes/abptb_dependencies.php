@@ -23,6 +23,7 @@
 				if (is_admin()) {
 					require_once ABPTB_DIR . 'admin/abptb_admin.php';
 					require_once ABPTB_DIR . 'admin/abptb_dashboard.php';
+					require_once ABPTB_DIR . 'admin/abptb_dummy_import.php';
 					require_once ABPTB_DIR . 'admin/abptb_post.php';
 					require_once ABPTB_DIR . 'admin/abptb_routing.php';
 					require_once ABPTB_DIR . 'admin/abptb_ticket.php';
@@ -32,7 +33,12 @@
 					require_once ABPTB_DIR . 'admin/abptb_additional.php';
 					require_once ABPTB_DIR . 'admin/abptb_form.php';
 					require_once ABPTB_DIR . 'admin/abptb_seat_plan.php';
-					require_once ABPTB_DIR . 'admin/abptb_resource.php';
+					require_once ABPTB_DIR . 'admin/abptb_tax.php';
+					require_once ABPTB_DIR . 'admin/abptb_tc.php';
+					require_once ABPTB_DIR . 'admin/abptb_faq.php';
+					require_once ABPTB_DIR . 'admin/abptb_related.php';
+					require_once ABPTB_DIR . 'admin/abptb_post_feature.php';
+					require_once ABPTB_DIR . 'admin/abptb_gallery.php';
 					require_once ABPTB_DIR . 'admin/abptb_configuration.php';
 					require_once ABPTB_DIR . 'admin/abptb_documentation.php';
 					require_once ABPTB_DIR . 'admin/abptb_category.php';

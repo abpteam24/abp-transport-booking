@@ -422,26 +422,35 @@
 				}
 				return $start_point;
 			}
-			public static function get_pd_info($stop, $bp_time): array {
+			public static function get_pd_info($stop, $bp_time,$is_return=false): array {
 				$all_info[$stop]['name'] = ABPTB_Function::location_value($stop);
 				$all_info[$stop]['time'] = $bp_time;
 				$infos = ABPTB_Location[$stop]['pd_info'] ?? [];
+				$base = strtotime($bp_time);
 				if (!empty($infos)) {
 					foreach ($infos as $key => $info) {
-						$min = $info['time'] ?? 0;
 						$all_info[$key]['name'] = $info['name'] ?? '';
-						if ($min >= 0) {
-							$all_info[$key]['time'] = gmdate('Y-m-d H:i', strtotime("+{$min} minutes", strtotime($bp_time)));
+						$min = isset($info['time']) ? trim((string)$info['time']) : '';
+						if ($min === '' || !is_numeric($min) || $base === false) {
+							$all_info[$key]['time'] = '';
 						} else {
-							$all_info[$key]['time'] = gmdate('Y-m-d H:i', strtotime("-{$min} minutes", strtotime($bp_time)));
+							if($is_return){
+								$all_info[$key]['time'] = gmdate('Y-m-d H:i', $base - ((int)$min * 60));
+							}else {
+								$all_info[$key]['time'] = gmdate('Y-m-d H:i', $base + ((int)$min * 60));
+							}
 						}
 					}
 				}
 				return $all_info;
 			}
-			public static function get_pd_time($stop, $bp_time, $pd) {
-				$pf_infos = self::get_pd_info($stop, $bp_time);
+			public static function get_pd_time($stop, $bp_time, $pd,$is_return=false) {
+				$pf_infos = self::get_pd_info($stop, $bp_time,$is_return);
 				return $pf_infos[$pd]['time'] ?? '';
+			}
+			public static function pd_label($pd, $time = ''): string {
+				$name = self::pd_value($pd);
+				return !empty($time) ? $name . ' - ' . self::date_format($time) : $name;
 			}
 			//============= Date function================//
 			public static function date_all($post_ids = [], $_date = ''): array {

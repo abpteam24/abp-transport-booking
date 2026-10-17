@@ -26,20 +26,18 @@
                     <div class="abptb_area">
                         <div class="abp_container">
                             <div class="global_form"><?php do_action('abptb_search_form', $params); ?></div>
-                            <div class="abptb_booking  _gap_fd_column">
-                                <div class="abp_pagination _gap_fd_column">
-                                    <?php
-                                        do_action('abptb_post_filter', $params);
-                                        if (is_file($file)) {
-                                            include_once $file;
-                                            do_action('abptb_' . $style . '_template', $params);
-                                        } else {
-                                            include_once ABPTB_Function::template_path('list/default.php');
-                                            do_action('abptb_default_template', $params);
-                                        } ?>
-                                    <div class="not_found">
-                                        <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
-                                    </div>
+                            <div class="abptb_booking abp_pagination">
+                                <?php
+                                    do_action('abptb_post_filter', $params);
+                                    if (is_file($file)) {
+                                        include_once $file;
+                                        do_action('abptb_' . $style . '_template', $params);
+                                    } else {
+                                        include_once ABPTB_Function::template_path('list/default.php');
+                                        do_action('abptb_default_template', $params);
+                                    } ?>
+                                <div class="not_found">
+                                    <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
                                 </div>
                             </div>
                         </div>
@@ -63,20 +61,18 @@
                     $file = ABPTB_Function::template_path($templates[$style] ?? $templates['grid']);
                     ?>
                     <div class="abptb_area">
-                        <div class="abp_container abptb_booking">
-                            <div class="abp_pagination _gap_fd_column">
-                                <?php
-                                    do_action('abptb_post_filter', $params);
-                                    if (is_file($file)) {
-                                        include_once $file;
-                                        do_action('abptb_' . $style . '_template', $params);
-                                    } else {
-                                        include_once ABPTB_Function::template_path('list/default.php');
-                                        do_action('abptb_default_template', $params);
-                                    } ?>
-                                <div class="not_found">
-                                    <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
-                                </div>
+                        <div class="abp_container abptb_booking abp_pagination">
+                            <?php
+                                do_action('abptb_post_filter', $params);
+                                if (is_file($file)) {
+                                    include_once $file;
+                                    do_action('abptb_' . $style . '_template', $params);
+                                } else {
+                                    include_once ABPTB_Function::template_path('list/default.php');
+                                    do_action('abptb_default_template', $params);
+                                } ?>
+                            <div class="not_found">
+                                <?php ABPTB_Layout::layout_warning_info('not_match'); ?>
                             </div>
                         </div>
                     </div>

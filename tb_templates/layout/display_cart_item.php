@@ -42,13 +42,13 @@
                                         <?php if (intval($pick_up) !== intval($bp)) { ?>
                                             <li class="_gap_xxs">
                                                 <span class="fas fa-map-location"></span>
-                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Pick Up  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($booking_item['pick_up_time'] ?? '')); ?>
+                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Pick Up  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_label($pick_up, $booking_item['pick_up_time'] ?? '')); ?>
                                             </li>
                                         <?php } ?>
                                         <?php if (intval($drop_off) !== intval($dp)) { ?>
                                             <li class="_gap_xxs">
                                                 <span class="fas fa-map-location"></span>
-                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Drop-Off  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($booking_item['drop_off_time'] ?? '')); ?>
+                                                <span class="_fs_label_color_burnt_orange"><?php esc_html_e('Drop-Off  : ', 'abp-transport-booking'); ?></span>&nbsp;<?php echo esc_html(ABPTB_Function::pd_label($drop_off, $booking_item['drop_off_time'] ?? '')); ?>
                                             </li>
                                         <?php } ?>
                                         <li class="_gap_xxs">

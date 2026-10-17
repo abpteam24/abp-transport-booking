@@ -270,6 +270,7 @@
 					$start_time = $post_val($prefix . 'start_time');
 					$start_point = ABPTB_Function::start_point($post_infos, $bp_dp);
 					$end_point = ABPTB_Function::start_point($post_infos, $bp_dp, true);
+					$is_return = ABPTB_Function::return_check($post_infos, $bp_dp);
 					$ticket_price = 0;
 					if (!empty($bp_time) && !empty($bp_dp) && !empty($post_id) && !empty($start_time)) {
 						if ($seat_type == 'ticket') {
@@ -322,8 +323,8 @@
 							$booking_info['dp_time'] = $dp_time;
 							$booking_info['pick_up'] = $pick_up;
 							$booking_info['drop_off'] = $drop_off;
-							$booking_info['pick_up_time'] = ABPTB_Function::get_pd_time($bp, $bp_time, $pick_up);
-							$booking_info['drop_off_time'] = ABPTB_Function::get_pd_time($dp, $dp_time, $drop_off);
+							$booking_info['pick_up_time'] = ABPTB_Function::get_pd_time($bp, $bp_time, $pick_up,$is_return);
+							$booking_info['drop_off_time'] = ABPTB_Function::get_pd_time($dp, $dp_time, $drop_off,$is_return);
 							$booking_info['start_time'] = $start_time;
 							$booking_info['start_point'] = $start_point;
 							$booking_info['bp_dp'] = $start_point . '_' . $end_point;
@@ -414,10 +415,10 @@
 								$item_data[] = array('name' => __('Boarding Point', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($bp) . ' -  ' . ABPTB_Function::date_format($bp_time) . '<br />');
 								$item_data[] = array('name' => __('Arrival', 'abp-transport-booking'), 'value' => ABPTB_Function::location_value($dp) . ' -  ' . ABPTB_Function::date_format($dp_time) . '<br />');
 								if (intval($pick_up) !== intval($bp)) {
-									$item_data[] = array('name' => __('Pick Up', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($booking_item['pick_up_time'] ?? '') . '<br />');
+									$item_data[] = array('name' => __('Pick Up', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_label($pick_up, $booking_item['pick_up_time'] ?? '') . '<br />');
 								}
 								if (intval($drop_off) !== intval($dp)) {
-									$item_data[] = array('name' => __('Drop-Off', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($booking_item['drop_off_time'] ?? '') . '<br />');
+									$item_data[] = array('name' => __('Drop-Off', 'abp-transport-booking'), 'value' => ABPTB_Function::pd_label($drop_off, $booking_item['drop_off_time'] ?? '') . '<br />');
 								}
 								$item_data[] = array('name' => __('Approximate Time ', 'abp-transport-booking'), 'value' => ($booking_item['duration'] ?? '') . '<br />');
 								$item_data[] = array('name' => __('Ticket Information', 'abp-transport-booking'), 'value' => '<br />');
@@ -506,10 +507,10 @@
 								$item->add_meta_data(__('Boarding Point', 'abp-transport-booking'), ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($booking_item['bp_time'] ?? ''));
 								$item->add_meta_data(__('Arrival', 'abp-transport-booking'), ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($booking_item['bp_time'] ?? ''));
 								if (intval($pick_up) !== intval($bp)) {
-									$item->add_meta_data(__('Pick Up', 'abp-transport-booking'), ABPTB_Function::pd_value($pick_up) . ' - ' . ABPTB_Function::date_format($booking_item['pick_up_time'] ?? ''));
+									$item->add_meta_data(__('Pick Up', 'abp-transport-booking'), ABPTB_Function::pd_label($pick_up, $booking_item['pick_up_time'] ?? ''));
 								}
 								if (intval($drop_off) !== intval($dp)) {
-									$item->add_meta_data(__('Drop-Off', 'abp-transport-booking'), ABPTB_Function::pd_value($drop_off) . ' - ' . ABPTB_Function::date_format($booking_item['drop_off_time'] ?? ''));
+									$item->add_meta_data(__('Drop-Off', 'abp-transport-booking'), ABPTB_Function::pd_label($drop_off, $booking_item['drop_off_time'] ?? ''));
 								}
 								$item->add_meta_data(__('Approximate Time ', 'abp-transport-booking'), ($booking_item['duration'] ?? ''));
 								$item->add_meta_data(__('Ticket Information', 'abp-transport-booking'), '');

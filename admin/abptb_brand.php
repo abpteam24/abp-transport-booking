@@ -15,9 +15,10 @@
                 if (ABPTB_Function::on_off('brand')) {
                     $label = ABPTB_Function::brand_label(); ?>
                     <div class="_fj_between">
-                        <h5 class="abp"><span class="_mar_r_xs">🏷️</span><?php echo esc_html($label); ?></h5>
+                        <h5 class="abp_color_theme_gap_xs">🏷️<?php echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('tax_brand', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
+                    <div class="_divider_xs"></div>
                     <?php ABPTB_Layout::info_text('abptb_brand'); ?>
                     <div class="tax_brand _ov_auto_mar_t_xs">
                         <?php $this->brand_list(); ?>

@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -547,6 +547,16 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Changelog ==
 
+= 1.0.8 =
+
+* Added a search box to the admin Transport list, so transports can be quickly filtered by title.
+* Fixed the journey-date calendar not opening on some setups, which could block date selection.
+* Fixed the pickup and drop-off times showing a 1970 date when no specific time was selected.
+* Improved admin dashboard and demo-data import reliability.
+* General coding-standards, admin UI and responsive styling improvements.
+
+Released: October 17, 2026
+
 = 1.0.7 =
 
 * Improved mobile and tablet layout: the grid / list view toggle, the Book Now button and the pagination buttons now have proper touch target sizes and are easier to tap.
@@ -618,6 +628,10 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.8 =
+Adds a Transport search box and fixes the journey-date calendar and pickup/drop-off time issues. Recommended update.
+Released: October 17, 2026
 
 = 1.0.7 =
 Improved mobile and tablet touch targets, plus a smaller demo location list. Recommended update.

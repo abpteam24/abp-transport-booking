@@ -15,10 +15,11 @@
                 if (ABPTB_Function::on_off('category')) {
                     $label = ABPTB_Function::category_label(); ?>
                     <div class="_fj_between_mar_b_xs">
-                        <h5 class="abp_gap_xs"><?php ABPTB_Static::svg('category');
+                        <h5 class="abp_color_theme_gap_xs"><?php ABPTB_Static::svg('category');
                                 echo esc_html($label); ?></h5>
                         <?php ABPTB_Layout::button_global_popup('tax_category', __('Add New', 'abp-transport-booking') . ' ' . $label); ?>
                     </div>
+                    <div class="_divider_xs"></div>
                     <?php ABPTB_Layout::info_text('abptb_category'); ?>
                     <div class="tax_category _ov_auto_mar_t_xs">
                         <?php $this->category_list(); ?>
@@ -224,7 +225,7 @@
                 <?php } else {
                     ABPTB_Layout::layout_info_xs('no_category');
                 }
-                ABPTB_Layout::button_global_popup('tax_category', __('Add New', 'abp-transport-booking') . ' ' . ABPTB_Function::category_label());
+                ABPTB_Layout::button_global_popup('tax_category',  ABPTB_Function::category_label());
             }
         }
         new ABPTB_Category();
