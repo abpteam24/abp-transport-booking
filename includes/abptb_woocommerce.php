@@ -505,7 +505,7 @@
 									$item->add_meta_data(__('Starting Point', 'abp-transport-booking'), ABPTB_Function::location_value($start_point) . ' - ' . ABPTB_Function::date_format($booking_item['start_time'] ?? ''));
 								}
 								$item->add_meta_data(__('Boarding Point', 'abp-transport-booking'), ABPTB_Function::location_value($bp) . ' - ' . ABPTB_Function::date_format($booking_item['bp_time'] ?? ''));
-								$item->add_meta_data(__('Arrival', 'abp-transport-booking'), ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($booking_item['bp_time'] ?? ''));
+								$item->add_meta_data(__('Arrival', 'abp-transport-booking'), ABPTB_Function::location_value($dp) . ' - ' . ABPTB_Function::date_format($booking_item['dp_time'] ?? ''));
 								if (intval($pick_up) !== intval($bp)) {
 									$item->add_meta_data(__('Pick Up', 'abp-transport-booking'), ABPTB_Function::pd_label($pick_up, $booking_item['pick_up_time'] ?? ''));
 								}

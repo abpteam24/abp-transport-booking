@@ -12,13 +12,10 @@
                 $label = ABPTB_Function::label();
                 $slug = ABPTB_Function::slug();
                 $icon = ABPTB_Function::icon_wp();
-                add_menu_page($label, $label, 'manage_options', $slug, array($this, 'load_main_page'), $icon, 50);
+                $hook = add_menu_page($label, $label, 'manage_options', $slug, array($this, 'load_main_page'), $icon, 50);
+                add_action('load-' . $hook, array($this, 'clean_notices'));
             }
             public function load_main_page(): void {
-                remove_all_actions('user_admin_notices');
-                remove_all_actions('admin_notices');
-                remove_all_actions('all_admin_notices');
-                remove_all_actions('network_admin_notices');
                 add_filter('wp_dependency_installer_errors', '__return_false');
                 $abptb_info = ABPTB_Query::get_info();
                 $label = ABPTB_Function::label();
@@ -86,6 +83,12 @@
                     <?php ABPTB_Layout::load_admin_globally(); ?>
                 </div>
                 <?php
+            }
+            public function clean_notices(): void {
+                remove_all_actions('user_admin_notices');
+                remove_all_actions('admin_notices');
+                remove_all_actions('all_admin_notices');
+                remove_all_actions('network_admin_notices');
             }
             public function load_global($abptb_info): void {
                 $allowed_tabs = ['dates', 'additional', 'client_form', 'tc', 'faq', 'category', 'organizer', 'location', 'feature', 'brand', 'discount', 'partial_payment', 'cancel_request'];
