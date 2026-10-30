@@ -103,6 +103,7 @@
                     'search_get_wrong_data_info' => __('Somethings went Wrong ! Please Try again', 'abp-transport-booking'),
                     'sale_close_msg' => __('This transport sale close shortly. please try another transport.', 'abp-transport-booking'),
                     'not_date' => __('No Dates Found !', 'abp-transport-booking'),
+                    'date_expire' => __('Date not Found Or Expire .', 'abp-transport-booking'),
                     'not_match' => __('No Results Found !', 'abp-transport-booking'),
                     'not_found' => __('Nothing Found !', 'abp-transport-booking'),
                     'no_sp' => __('No Seat Plan Found. Click Add New to create one.', 'abp-transport-booking'),

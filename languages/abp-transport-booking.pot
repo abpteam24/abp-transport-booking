@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ABP Transport Booking\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-17 12:07+0000\n"
+"POT-Creation-Date: 2026-10-30 10:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.8; wp-7.1; php-8.2.12\n"
+"X-Loco-Version: 2.8.9; wp-7.1.4; php-8.2.12\n"
 "X-Domain: abp-transport-booking"
 
 #. %s = Days
@@ -79,14 +79,14 @@ msgid " Remove Last Row"
 msgstr ""
 
 #. %d: number of trips for the transport.
-#: admin/abptb_dashboard.php:158
+#: admin/abptb_dashboard.php:159
 msgid "%d trip"
 msgid_plural "%d trips"
 msgstr[0] ""
 msgstr[1] ""
 
 #. %s: transport label.
-#: admin/abptb_dashboard.php:716
+#: admin/abptb_dashboard.php:717
 #, php-format
 msgid "%s List Page"
 msgstr ""
@@ -109,13 +109,13 @@ msgstr ""
 #: admin/abptb_orders.php:200 admin/abptb_orders.php:208
 #: admin/abptb_orders.php:208 includes/abptb_layout.php:176
 #: includes/abptb_layout.php:176 includes/abptb_layout.php:186
-#: includes/abptb_layout.php:186 includes/abptb_layout.php:758
-#: includes/abptb_layout.php:758
+#: includes/abptb_layout.php:186 includes/abptb_layout.php:761
+#: includes/abptb_layout.php:761
 msgid ".... More"
 msgstr ""
 
 #: admin/abptb_orders.php:200 admin/abptb_orders.php:208
-#: includes/abptb_layout.php:758
+#: includes/abptb_layout.php:761
 msgid "....Less "
 msgstr ""
 
@@ -123,7 +123,7 @@ msgstr ""
 msgid "....More"
 msgstr ""
 
-#: tb_templates/layout/ticket_type.php:47
+#: tb_templates/layout/ticket_type.php:67
 msgid "/Ticket"
 msgstr ""
 
@@ -135,7 +135,7 @@ msgstr ""
 msgid "1. Ok : To Remove Item ."
 msgstr ""
 
-#: admin/abptb_documentation.php:366
+#: admin/abptb_documentation.php:373
 msgid "1. Site-wide (default) settings"
 msgstr ""
 
@@ -143,29 +143,29 @@ msgstr ""
 msgid "2. Cancel : To Cancel ."
 msgstr ""
 
-#: admin/abptb_documentation.php:371
+#: admin/abptb_documentation.php:378
 msgid "2. Per transport override (optional)"
 msgstr ""
 
-#: admin/abptb_documentation.php:375
+#: admin/abptb_documentation.php:382
 msgid "3. At checkout (customer)"
 msgstr ""
 
-#: admin/abptb_documentation.php:381
+#: admin/abptb_documentation.php:388
 msgid "4. Paid & due shown everywhere"
 msgstr ""
 
-#: admin/abptb_documentation.php:386
+#: admin/abptb_documentation.php:393
 msgid "5. Paying the balance"
 msgstr ""
 
-#: admin/abptb_documentation.php:92
+#: admin/abptb_documentation.php:96
 msgid ""
 "a new menu appears in the left sidebar with your transport name. Open it — "
 "you are now inside the plugin."
 msgstr ""
 
-#: admin/abptb_documentation.php:377
+#: admin/abptb_documentation.php:384
 msgid ""
 "A Payment Option box appears above the payment methods on both the Classic "
 "and the Block checkout."
@@ -186,7 +186,7 @@ msgstr ""
 #: admin/abptb_routing.php:45 admin/abptb_routing.php:83
 #: admin/abptb_seat_plan.php:644 admin/abptb_seat_plan.php:825
 #: admin/abptb_ticket.php:132 admin/abptb_ticket.php:182
-#: tb_templates/layout/selection_details.php:87
+#: tb_templates/layout/selection_details.php:90
 msgid "Action"
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: admin/abptb_documentation.php:73
+#: admin/abptb_documentation.php:77
 msgid "Activate Now"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "Active FAQs ?"
 msgstr ""
 
-#: admin/abptb_dashboard.php:764 admin/abptb_dashboard.php:1023
+#: admin/abptb_dashboard.php:765 admin/abptb_dashboard.php:1027
 msgid "Active Now"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "Active Term & Conditions ?"
 msgstr ""
 
-#: includes/abptb_layout.php:441
+#: includes/abptb_layout.php:444
 msgid "Add  Image"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "ADD / Edit Ticket Type"
 msgstr ""
 
-#: admin/abptb_admin.php:76 admin/abptb_brand.php:19 admin/abptb_brand.php:229
+#: admin/abptb_admin.php:70 admin/abptb_brand.php:19 admin/abptb_brand.php:229
 #: admin/abptb_category.php:20 admin/abptb_feature.php:18
 #: admin/abptb_location.php:18 admin/abptb_organizer.php:21
 #: admin/abptb_organizer.php:229 admin/abptb_post_feature.php:31
@@ -238,7 +238,7 @@ msgid "Add new "
 msgstr ""
 
 #. %s: transport label.
-#: admin/abptb_admin.php:29
+#: admin/abptb_admin.php:26
 #, php-format
 msgid "Add New %s"
 msgstr ""
@@ -299,7 +299,7 @@ msgstr ""
 msgid "Add New Ticket Type Item"
 msgstr ""
 
-#: admin/abptb_documentation.php:225 admin/abptb_post.php:42
+#: admin/abptb_documentation.php:230 admin/abptb_post.php:42
 msgid "Add New Transport"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Add Off Date Range"
 msgstr ""
 
-#: admin/abptb_documentation.php:236
+#: admin/abptb_documentation.php:241
 msgid "Add one of these shortcodes to any WordPress page:"
 msgstr ""
 
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Add Operation Time "
 msgstr ""
 
-#: admin/abptb_documentation.php:401
+#: admin/abptb_documentation.php:408
 msgid "Add Order"
 msgstr ""
 
@@ -336,7 +336,7 @@ msgstr ""
 msgid "Add Specific Off Date"
 msgstr ""
 
-#: admin/abptb_documentation.php:196
+#: admin/abptb_documentation.php:201
 msgid "Add ticket types"
 msgstr ""
 
@@ -372,16 +372,16 @@ msgstr ""
 msgid "Additional Information : "
 msgstr ""
 
-#: admin/abptb_dashboard.php:278
+#: admin/abptb_dashboard.php:279
 msgid "Additional Services"
 msgstr ""
 
-#: admin/abptb_admin.php:107 admin/abptb_configuration.php:450
-#: admin/abptb_documentation.php:146 admin/abptb_post.php:196
+#: admin/abptb_configuration.php:179 admin/abptb_configuration.php:482
+#: admin/abptb_documentation.php:150 admin/abptb_post.php:196
 msgid "Additional services"
 msgstr ""
 
-#: tb_templates/layout/additional_services.php:14
+#: tb_templates/layout/additional_services.php:24
 msgid "Additional services ( Optional ) : "
 msgstr ""
 
@@ -397,37 +397,37 @@ msgstr ""
 msgid "Additional services Imported Successfully ..... !! "
 msgstr ""
 
-#: admin/abptb_documentation.php:177
+#: admin/abptb_documentation.php:181
 msgid "Additional services — optional"
 msgstr ""
 
-#: admin/abptb_configuration.php:481 admin/abptb_location.php:77
+#: admin/abptb_configuration.php:513 admin/abptb_location.php:77
 msgid "Address"
 msgstr ""
 
-#: includes/abptb_layout.php:1063
+#: includes/abptb_layout.php:1087
 msgid "Address :"
 msgstr ""
 
-#: admin/abptb_dashboard.php:38
+#: admin/abptb_dashboard.php:39
 msgid "Admin"
 msgstr ""
 
-#: admin/abptb_documentation.php:389
+#: admin/abptb_documentation.php:396
 msgid "Admin (cash)"
 msgstr ""
 
-#: admin/abptb_documentation.php:389
+#: admin/abptb_documentation.php:396
 msgid ""
 "Admin Order List → under Total, click Paid Now to mark the due amount "
 "collected; the database updates immediately through AJAX."
 msgstr ""
 
-#: admin/abptb_documentation.php:397
+#: admin/abptb_documentation.php:404
 msgid "Admin Power Tools"
 msgstr ""
 
-#: admin/abptb_documentation.php:67
+#: admin/abptb_documentation.php:71
 msgid "Admin Tools"
 msgstr ""
 
@@ -446,19 +446,19 @@ msgstr ""
 msgid "All Booking"
 msgstr ""
 
-#: admin/abptb_dashboard.php:334
+#: admin/abptb_dashboard.php:335
 msgid "All Orders"
 msgstr ""
 
-#: includes/abptb_layout.php:812
+#: includes/abptb_layout.php:821
 msgid "Already Checked By"
 msgstr ""
 
-#: admin/abptb_configuration.php:595
+#: admin/abptb_configuration.php:627
 msgid "Alternate Color"
 msgstr ""
 
-#: admin/abptb_documentation.php:176
+#: admin/abptb_documentation.php:180
 msgid "Amenities like AC, Wi-Fi, toilet — reusable and shown on transports."
 msgstr ""
 
@@ -470,7 +470,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: includes/abptb_my_account.php:123
+#: includes/abptb_my_account.php:121
 msgid "Approximate Time"
 msgstr ""
 
@@ -503,34 +503,34 @@ msgstr ""
 msgid "Arrival : "
 msgstr ""
 
-#: admin/abptb_documentation.php:198
+#: admin/abptb_documentation.php:203
 msgid "Assign tickets to seats"
 msgstr ""
 
-#: admin/abptb_documentation.php:220
+#: admin/abptb_documentation.php:225
 msgid ""
 "attach your seat plan or ticket types, set quantities and min/max per order."
 msgstr ""
 
-#: admin/abptb_configuration.php:421
+#: admin/abptb_configuration.php:453
 msgid "Attendee Form"
 msgstr ""
 
-#: admin/abptb_documentation.php:143
+#: admin/abptb_documentation.php:147
 msgid "Attendee form"
 msgstr ""
 
 #. %d: number of available seats.
-#: admin/abptb_dashboard.php:199 admin/abptb_dashboard.php:440
+#: admin/abptb_dashboard.php:200 admin/abptb_dashboard.php:441
 msgid "Avail %d"
 msgstr ""
 
-#: admin/abptb_dashboard.php:494 admin/abptb_seat_plan.php:498
-#: includes/abptb_layout.php:46 tb_templates/layout/sp_type.php:38
+#: admin/abptb_dashboard.php:495 admin/abptb_seat_plan.php:498
+#: includes/abptb_layout.php:46 tb_templates/layout/sp_type.php:54
 msgid "Available"
 msgstr ""
 
-#: tb_templates/layout/ticket_type.php:52
+#: tb_templates/layout/ticket_type.php:72
 msgid "Available : "
 msgstr ""
 
@@ -538,7 +538,7 @@ msgstr ""
 msgid "Available Color"
 msgstr ""
 
-#: tb_templates/layout/registration_item.php:24
+#: tb_templates/layout/registration_item.php:27
 msgid "Available Ticket"
 msgstr ""
 
@@ -546,7 +546,7 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-#: admin/abptb_configuration.php:588
+#: admin/abptb_configuration.php:620
 msgid "Base Color"
 msgstr ""
 
@@ -558,7 +558,15 @@ msgstr ""
 msgid "Bg Image"
 msgstr ""
 
-#: includes/abptb_layout.php:1255 includes/abptb_layout.php:1256
+#: includes/abptb_layout.php:1299 includes/abptb_layout.php:1300
+msgid "Billing Address"
+msgstr ""
+
+#: includes/abptb_layout.php:1309 includes/abptb_layout.php:1310
+msgid "Billing Ammount"
+msgstr ""
+
+#: includes/abptb_layout.php:1279 includes/abptb_layout.php:1280
 msgid "Billing Email"
 msgstr ""
 
@@ -566,11 +574,11 @@ msgstr ""
 msgid "Billing Info"
 msgstr ""
 
-#: includes/abptb_layout.php:1245 includes/abptb_layout.php:1246
+#: includes/abptb_layout.php:1269 includes/abptb_layout.php:1270
 msgid "Billing Name"
 msgstr ""
 
-#: includes/abptb_layout.php:1265 includes/abptb_layout.php:1266
+#: includes/abptb_layout.php:1289 includes/abptb_layout.php:1290
 msgid "Billing phone"
 msgstr ""
 
@@ -578,17 +586,17 @@ msgstr ""
 msgid "Boarding"
 msgstr ""
 
-#: admin/abptb_documentation.php:172
+#: admin/abptb_documentation.php:176
 msgid ""
 "Boarding and drop-off places. Every transport route uses these stops, so add "
 "them before creating transports."
 msgstr ""
 
-#: admin/abptb_documentation.php:216
+#: admin/abptb_documentation.php:221
 msgid "boarding and drop-off stops + forward/return direction."
 msgstr ""
 
-#: includes/abptb_my_account.php:117 includes/abptb_woocommerce.php:415
+#: includes/abptb_my_account.php:115 includes/abptb_woocommerce.php:415
 #: includes/abptb_woocommerce.php:507
 msgid "Boarding Point"
 msgstr ""
@@ -610,15 +618,15 @@ msgstr ""
 msgid "Booked Color"
 msgstr ""
 
-#: admin/abptb_documentation.php:109
+#: admin/abptb_documentation.php:113
 msgid "Booked order statuses"
 msgstr ""
 
-#: admin/abptb_configuration.php:184
+#: admin/abptb_configuration.php:216
 msgid "Booked Status"
 msgstr ""
 
-#: admin/abptb_dashboard.php:79
+#: admin/abptb_dashboard.php:80
 msgid "Booked Today"
 msgstr ""
 
@@ -626,7 +634,7 @@ msgstr ""
 msgid "Booking"
 msgstr ""
 
-#: admin/abptb_documentation.php:129
+#: admin/abptb_documentation.php:133
 msgid "Booking & tickets"
 msgstr ""
 
@@ -646,7 +654,7 @@ msgstr ""
 msgid "Booking Information "
 msgstr ""
 
-#: admin/abptb_dashboard.php:713
+#: admin/abptb_dashboard.php:714
 msgid "Booking Page"
 msgstr ""
 
@@ -654,7 +662,7 @@ msgstr ""
 msgid "Booking Summary"
 msgstr ""
 
-#: admin/abptb_dashboard.php:470 includes/abptb_my_account.php:28
+#: admin/abptb_dashboard.php:471 includes/abptb_my_account.php:28
 #: includes/abptb_my_account.php:32
 msgid "Bookings"
 msgstr ""
@@ -669,32 +677,32 @@ msgid ""
 "empty, this FAQ item will not be displayed on the frontend."
 msgstr ""
 
-#: admin/abptb_configuration.php:550
+#: admin/abptb_configuration.php:582
 msgid "Bottom"
 msgstr ""
 
-#: admin/abptb_documentation.php:123 includes/abptb_function.php:88
+#: admin/abptb_documentation.php:127 includes/abptb_function.php:88
 msgid "Brand"
 msgstr ""
 
-#: admin/abptb_documentation.php:275
+#: admin/abptb_documentation.php:280
 msgid ""
 "Brand colors, fonts, button styles and border radius without touching code."
 msgstr ""
 
-#: admin/abptb_configuration.php:269
+#: admin/abptb_configuration.php:301
 msgid "Brand Label"
 msgstr ""
 
-#: admin/abptb_configuration.php:277
+#: admin/abptb_configuration.php:309
 msgid "Brand Slug"
 msgstr ""
 
-#: admin/abptb_documentation.php:269
+#: admin/abptb_documentation.php:274
 msgid "Branding & Design"
 msgstr ""
 
-#: admin/abptb_documentation.php:175
+#: admin/abptb_documentation.php:179
 msgid "Brands — optional"
 msgstr ""
 
@@ -702,67 +710,75 @@ msgstr ""
 msgid "Buffer time in MIN (Optional)"
 msgstr ""
 
-#: admin/abptb_documentation.php:194
+#: admin/abptb_documentation.php:199
 msgid ""
 "Build your reusable library first. You need ticket types, and a seat plan "
 "only if customers pick individual seats."
 msgstr ""
 
-#: admin/abptb_configuration.php:696
+#: admin/abptb_configuration.php:728
 msgid "Button Background Color"
 msgstr ""
 
-#: admin/abptb_configuration.php:681
+#: admin/abptb_configuration.php:713
 msgid "Button Font Size"
 msgstr ""
 
-#: admin/abptb_configuration.php:689
+#: admin/abptb_configuration.php:721
 msgid "Button Text Color"
 msgstr ""
 
-#: admin/abptb_dashboard.php:297
+#: admin/abptb_documentation.php:44
+msgid "Buy PRO"
+msgstr ""
+
+#: admin/abptb_dashboard.php:298
 msgid "Buy Pro"
 msgstr ""
 
-#: tb_templates/layout/search_form.php:28
+#: admin/abptb_dashboard.php:1055
+msgid "Buy PRO Now"
+msgstr ""
+
+#: tb_templates/layout/search_form.php:39
 msgid "BUY TICKET"
 msgstr ""
 
-#: admin/abptb_dashboard.php:292
+#: admin/abptb_dashboard.php:293
 msgid "Cancel Request"
 msgstr ""
 
-#: admin/abptb_documentation.php:402
+#: admin/abptb_documentation.php:410
 msgid "Cancel Requests"
 msgstr ""
 
-#: admin/abptb_configuration.php:344
+#: admin/abptb_configuration.php:376
 msgid "Capacity / Available Qty"
 msgstr ""
 
-#: includes/abptb_layout.php:566
+#: includes/abptb_layout.php:569
 msgid "Capacity : "
 msgstr ""
 
-#: admin/abptb_documentation.php:125
+#: admin/abptb_documentation.php:129
 msgid "Capacity badge"
 msgstr ""
 
-#: admin/abptb_documentation.php:274
+#: admin/abptb_documentation.php:279
 msgid ""
 "Carousel or gallery/masonry theme, images per row, indicator position and "
 "lightbox popup."
 msgstr ""
 
-#: admin/abptb_configuration.php:512
+#: admin/abptb_configuration.php:544
 msgid "Carousel Slider"
 msgstr ""
 
-#: admin/abptb_documentation.php:121
+#: admin/abptb_documentation.php:125
 msgid "Category"
 msgstr ""
 
-#: admin/abptb_configuration.php:229
+#: admin/abptb_configuration.php:261
 msgid "Category Label"
 msgstr ""
 
@@ -770,11 +786,11 @@ msgstr ""
 msgid "Category list navigation"
 msgstr ""
 
-#: admin/abptb_configuration.php:237
+#: admin/abptb_configuration.php:269
 msgid "Category Slug"
 msgstr ""
 
-#: admin/abptb_documentation.php:173
+#: admin/abptb_documentation.php:177
 msgid "Category — optional"
 msgstr ""
 
@@ -798,7 +814,7 @@ msgstr ""
 msgid "Cell Width X Height X Gap X Radius in px"
 msgstr ""
 
-#: tb_templates/layout/search_form.php:50
+#: tb_templates/layout/search_form.php:67
 msgid "Check Availability"
 msgstr ""
 
@@ -806,13 +822,13 @@ msgstr ""
 msgid "Check In "
 msgstr ""
 
-#: admin/abptb_documentation.php:261
+#: admin/abptb_documentation.php:266
 msgid ""
 "Check the seat legend (available/selected/sold), then confirm the booking "
 "appears in My Account → Transport Bookings."
 msgstr ""
 
-#: admin/abptb_documentation.php:404
+#: admin/abptb_documentation.php:412
 msgid "Check-in"
 msgstr ""
 
@@ -820,29 +836,29 @@ msgstr ""
 msgid "Checkbox"
 msgstr ""
 
-#: includes/abptb_layout.php:813
+#: includes/abptb_layout.php:822
 msgid "Checked"
 msgstr ""
 
 #. %s: Dashicons library link
-#: admin/abptb_configuration.php:214
+#: admin/abptb_configuration.php:246
 #, php-format
 msgid ""
 "Choose a custom admin menu icon. Please browse the %s, copy the desired icon "
 "class name, and paste it here."
 msgstr ""
 
-#: admin/abptb_configuration.php:544
+#: admin/abptb_configuration.php:576
 msgid ""
 "Choose the geometric layout alignment position anchor for the slide tracking "
 "dot interface elements."
 msgstr ""
 
-#: admin/abptb_form.php:204 includes/abptb_layout.php:280
-#: includes/abptb_layout.php:697 includes/abptb_layout.php:717
-#: includes/abptb_layout.php:1118 includes/abptb_layout.php:1132
-#: includes/abptb_layout.php:1137 includes/abptb_layout.php:1181
-#: includes/abptb_layout.php:1195 includes/abptb_layout.php:1200
+#: admin/abptb_form.php:204 includes/abptb_layout.php:283
+#: includes/abptb_layout.php:700 includes/abptb_layout.php:720
+#: includes/abptb_layout.php:1142 includes/abptb_layout.php:1156
+#: includes/abptb_layout.php:1161 includes/abptb_layout.php:1205
+#: includes/abptb_layout.php:1219 includes/abptb_layout.php:1224
 msgid "Clear Date"
 msgstr ""
 
@@ -850,23 +866,23 @@ msgstr ""
 msgid "Clear Layout"
 msgstr ""
 
-#: includes/abptb_layout.php:289
+#: includes/abptb_layout.php:292
 msgid "Clear Time"
 msgstr ""
 
-#: admin/abptb_dashboard.php:222
+#: admin/abptb_dashboard.php:223
 msgid "Click a trip or its Details button to see booking details."
 msgstr ""
 
-#: includes/abptb_layout.php:816
+#: includes/abptb_layout.php:825
 msgid "Click to Check In"
 msgstr ""
 
-#: admin/abptb_dashboard.php:175
+#: admin/abptb_dashboard.php:176
 msgid "Click to view journey bookings"
 msgstr ""
 
-#: admin/abptb_admin.php:110 admin/abptb_dashboard.php:281
+#: admin/abptb_configuration.php:182 admin/abptb_dashboard.php:282
 #: admin/abptb_post.php:199
 msgid "Client Form"
 msgstr ""
@@ -879,7 +895,7 @@ msgstr ""
 msgid "Client Form Configuration Saved Successfully..... !! "
 msgstr ""
 
-#: admin/abptb_documentation.php:178
+#: admin/abptb_documentation.php:182
 msgid "Client form — optional"
 msgstr ""
 
@@ -887,24 +903,8 @@ msgstr ""
 msgid "Client Forms Configuration"
 msgstr ""
 
-#: tb_templates/layout/client_form.php:11
-msgid "Client Info : "
-msgstr ""
-
-#: admin/abptb_configuration.php:436
-msgid "Client Info Form"
-msgstr ""
-
-#: admin/abptb_documentation.php:142
+#: admin/abptb_documentation.php:146
 msgid "Client info form"
-msgstr ""
-
-#: includes/abptb_woocommerce.php:448 includes/abptb_woocommerce.php:539
-msgid "Client Information"
-msgstr ""
-
-#: tb_templates/layout/display_cart_item.php:105
-msgid "Client Information : "
 msgstr ""
 
 #: admin/abptb_orders.php:51
@@ -923,63 +923,50 @@ msgstr ""
 msgid "Color Combination Saved Successfully..........!!"
 msgstr ""
 
-#: admin/abptb_configuration.php:473
+#: admin/abptb_configuration.php:505
 msgid "Company Name"
 msgstr ""
 
-#: admin/abptb_documentation.php:276
+#: admin/abptb_documentation.php:281
 msgid "Company name, address, phone and e-mail shown on bookings."
 msgstr ""
 
-#: admin/abptb_documentation.php:174
+#: admin/abptb_documentation.php:178
 msgid "Company or operator shown on transports."
 msgstr ""
 
-#: admin/abptb_documentation.php:260
+#: admin/abptb_documentation.php:265
 msgid "Complete payment through WooCommerce checkout."
 msgstr ""
 
-#: admin/abptb_admin.php:66 admin/abptb_configuration.php:143
-#: admin/abptb_documentation.php:42 admin/abptb_post.php:55
+#: admin/abptb_configuration.php:144 admin/abptb_post.php:55
 #: includes/abptb_dependencies.php:529
 msgid "Configuration"
 msgstr ""
 
-#: admin/abptb_documentation.php:103
+#: admin/abptb_documentation.php:107
 msgid "Configuration Basics — Labels & Settings"
 msgstr ""
 
-#: admin/abptb_documentation.php:341
-msgid ""
-"Configuration → E-Mail: branded booking e-mails with PDF attachments; resend "
-"any e-mail from the order list."
-msgstr ""
-
-#: admin/abptb_documentation.php:328
-msgid ""
-"Configuration → PDF: set background image, logo, colors and who can download "
-"tickets."
-msgstr ""
-
-#: admin/abptb_documentation.php:52
+#: admin/abptb_documentation.php:56
 msgid "Configure"
 msgstr ""
 
-#: admin/abptb_dashboard.php:289
+#: admin/abptb_dashboard.php:290
 msgid "Configure global discounts"
 msgstr ""
 
-#: admin/abptb_dashboard.php:286
+#: admin/abptb_dashboard.php:287
 msgid "Configure partial payment"
 msgstr ""
 
-#: admin/abptb_configuration.php:626
+#: admin/abptb_configuration.php:658
 msgid ""
 "Configure the responsive text scale sizing applied strictly to forms, field "
 "labels, and identifier descriptions."
 msgstr ""
 
-#: includes/abptb_static.php:114
+#: includes/abptb_static.php:115
 msgid ""
 "Configure the ticket or seat type with a name, color, prefix, and optional "
 "image, icon, or emoji. These settings will be applied automatically to all "
@@ -987,19 +974,19 @@ msgid ""
 "consistent identification."
 msgstr ""
 
-#: admin/abptb_configuration.php:174
+#: admin/abptb_configuration.php:206
 msgid "Contact Information"
 msgstr ""
 
-#: admin/abptb_documentation.php:276
+#: admin/abptb_documentation.php:281
 msgid "Contact information"
 msgstr ""
 
-#: admin/abptb_configuration.php:488
+#: admin/abptb_configuration.php:520
 msgid "Contact Number"
 msgstr ""
 
-#: admin/abptb_dashboard.php:786
+#: admin/abptb_dashboard.php:787
 msgid "Content Breakdown"
 msgstr ""
 
@@ -1008,14 +995,14 @@ msgid "Continue"
 msgstr ""
 
 #. %1$s: HTML markup for OFF Popup Image Indicator switch, %2$s: HTML markup for ON layout switch, %3$s: Default status Popup Image Indicator layout
-#: admin/abptb_configuration.php:575
+#: admin/abptb_configuration.php:607
 #, php-format
 msgid ""
 "Control navigation pagination tracking assets inside the lightbox modal "
 "container view. Toggle %1$s to hide or %2$s to reveal. (Default: %3$s)"
 msgstr ""
 
-#: admin/abptb_configuration.php:422
+#: admin/abptb_configuration.php:454
 msgid ""
 "Control the Attendee Form feature globally. Disable it to turn the feature "
 "off for all transports. Enable it to allow each transport to enable or "
@@ -1023,7 +1010,7 @@ msgid ""
 "by turning this switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:429
+#: admin/abptb_configuration.php:461
 msgid ""
 "Control the Same Attendee feature globally. Disable it to turn the feature "
 "off for all transports. Enable it to allow each transport to enable or "
@@ -1031,31 +1018,39 @@ msgid ""
 "by turning this switch back ON."
 msgstr ""
 
+#: admin/abptb_dashboard.php:1066 admin/abptb_dashboard.php:1071
+msgid "Copied"
+msgstr ""
+
+#: admin/abptb_dashboard.php:1051
+msgid "Copy Code"
+msgstr ""
+
 #: admin/abptb_post.php:145 admin/abptb_seat_plan.php:119
 msgid "Copy/Clone : "
 msgstr ""
 
-#: admin/abptb_documentation.php:244
+#: admin/abptb_documentation.php:249
 msgid "Create a Page"
 msgstr ""
 
-#: admin/abptb_documentation.php:197
+#: admin/abptb_documentation.php:202
 msgid "Create a seat plan"
 msgstr ""
 
-#: admin/abptb_documentation.php:401
+#: admin/abptb_documentation.php:408
 msgid "Create bookings directly from the dashboard, without checkout."
 msgstr ""
 
-#: admin/abptb_documentation.php:210
+#: admin/abptb_documentation.php:215
 msgid "Create Your First Transport (Lists → Add New)"
 msgstr ""
 
-#: admin/abptb_configuration.php:175
+#: admin/abptb_configuration.php:207
 msgid "CSS Property"
 msgstr ""
 
-#: admin/abptb_documentation.php:275
+#: admin/abptb_documentation.php:280
 msgid "CSS property"
 msgstr ""
 
@@ -1067,58 +1062,58 @@ msgstr ""
 msgid "Custom Text"
 msgstr ""
 
-#: admin/abptb_documentation.php:388
+#: admin/abptb_documentation.php:395
 msgid "Customer (online)"
 msgstr ""
 
-#: admin/abptb_documentation.php:151
+#: admin/abptb_documentation.php:155
 msgid "Customer info"
 msgstr ""
 
-#: admin/abptb_documentation.php:329
+#: admin/abptb_documentation.php:336
 msgid ""
 "Customers download the PDF (with QR code) on the thank-you page and from My "
 "Account."
 msgstr ""
 
-#: admin/abptb_documentation.php:402
+#: admin/abptb_documentation.php:410
 msgid ""
 "Customers request cancellation (with time limit); you approve or reject. "
 "Approving releases the seats."
 msgstr ""
 
-#: admin/abptb_documentation.php:293
+#: admin/abptb_documentation.php:298
 msgid "customers see their own bookings under \"Transport Bookings\"."
 msgstr ""
 
-#: admin/abptb_configuration.php:194
+#: admin/abptb_configuration.php:226
 msgid ""
 "Customize the display label for the plugin menu item in the admin dashboard "
 "side navigation."
 msgstr ""
 
-#: admin/abptb_admin.php:50
+#: admin/abptb_admin.php:47
 msgid "Dashboard"
 msgstr ""
 
-#: admin/abptb_configuration.php:211
+#: admin/abptb_configuration.php:243
 msgid "Dashboard Menu Icon"
 msgstr ""
 
-#: admin/abptb_documentation.php:110
+#: admin/abptb_documentation.php:114
 msgid "Dashboard menu icon and the emoji/icon shown next to transports."
 msgstr ""
 
-#: admin/abptb_documentation.php:292
+#: admin/abptb_documentation.php:297
 msgid "Dashboard tab"
 msgstr ""
 
-#: includes/abptb_ajax.php:94 includes/abptb_ajax.php:182
+#: includes/abptb_ajax.php:98 includes/abptb_ajax.php:180
 msgid "data loaded....!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:358 admin/abptb_dashboard.php:379
-#: admin/abptb_documentation.php:218 admin/abptb_form.php:185
+#: admin/abptb_dashboard.php:359 admin/abptb_dashboard.php:380
+#: admin/abptb_documentation.php:223 admin/abptb_form.php:185
 #: admin/abptb_post.php:193
 msgid "Date"
 msgstr ""
@@ -1135,17 +1130,21 @@ msgstr ""
 msgid "Date Format"
 msgstr ""
 
-#: admin/abptb_documentation.php:171
+#: admin/abptb_documentation.php:175
 msgid ""
 "Date format, booking buffer (cut-off time before a journey) and the advance-"
 "booking window (how far ahead customers can book)."
 msgstr ""
 
-#: includes/abptb_ajax.php:210
+#: includes/abptb_ajax.php:206
 msgid "Date Loaded successfully."
 msgstr ""
 
-#: includes/abptb_static.php:216
+#: includes/abptb_static.php:106
+msgid "Date not Found Or Expire ."
+msgstr ""
+
+#: includes/abptb_static.php:217
 msgid "Date of Birth"
 msgstr ""
 
@@ -1153,11 +1152,11 @@ msgstr ""
 msgid "Date Wise Operation Time (Optional) "
 msgstr ""
 
-#: admin/abptb_admin.php:104
+#: admin/abptb_configuration.php:176
 msgid "Dates"
 msgstr ""
 
-#: admin/abptb_documentation.php:171
+#: admin/abptb_documentation.php:175
 msgid "Dates — MUST"
 msgstr ""
 
@@ -1165,12 +1164,12 @@ msgstr ""
 msgid "Day Wise Operation Time (Optional) "
 msgstr ""
 
-#: admin/abptb_documentation.php:403
+#: admin/abptb_documentation.php:411
 msgid "Day-wise and date-wise departure times for up and return journeys."
 msgstr ""
 
 #. %1$s: HTML markup for OFF layout switch, %2$s: HTML markup for ON layout switch, %3$s: Default status Visible Popup layout
-#: admin/abptb_configuration.php:562
+#: admin/abptb_configuration.php:594
 #, php-format
 msgid ""
 "Decide whether clicking on layout thumbnails triggers a full-screen image "
@@ -1197,15 +1196,15 @@ msgstr ""
 msgid "Decoration Item Saved Successfully..........!!"
 msgstr ""
 
-#: admin/abptb_configuration.php:609
+#: admin/abptb_configuration.php:641
 msgid "Default Border Radius"
 msgstr ""
 
-#: admin/abptb_configuration.php:602
+#: admin/abptb_configuration.php:634
 msgid "Default Color"
 msgstr ""
 
-#: admin/abptb_configuration.php:617
+#: admin/abptb_configuration.php:649
 msgid "Default Font Size"
 msgstr ""
 
@@ -1217,14 +1216,14 @@ msgstr ""
 msgid "Default Value"
 msgstr ""
 
-#: admin/abptb_configuration.php:596
+#: admin/abptb_configuration.php:628
 msgid ""
 "Define a secondary tone reserved mainly for high-contrast foreground text "
 "typography layers sitting over a Base Color background layout block."
 msgstr ""
 
 #. %s: Permalinks settings page link layout
-#: admin/abptb_configuration.php:280
+#: admin/abptb_configuration.php:312
 #, php-format
 msgid ""
 "Define the custom URL structure for Brand archives. Remember to update your "
@@ -1232,7 +1231,7 @@ msgid ""
 msgstr ""
 
 #. %s: Permalinks settings page link layout
-#: admin/abptb_configuration.php:240
+#: admin/abptb_configuration.php:272
 #, php-format
 msgid ""
 "Define the custom URL structure for category archives. Remember to update "
@@ -1240,7 +1239,7 @@ msgid ""
 msgstr ""
 
 #. %s: Permalinks settings page link layout
-#: admin/abptb_configuration.php:260
+#: admin/abptb_configuration.php:292
 #, php-format
 msgid ""
 "Define the custom URL structure for Organizer archives. Remember to update "
@@ -1248,7 +1247,7 @@ msgid ""
 msgstr ""
 
 #. %s: Permalinks settings page link layout
-#: admin/abptb_configuration.php:299
+#: admin/abptb_configuration.php:331
 #, php-format
 msgid ""
 "Define the custom URL structure for Stops archives. Remember to update your "
@@ -1256,14 +1255,14 @@ msgid ""
 msgstr ""
 
 #. %s: Permalinks settings page link layout
-#: admin/abptb_configuration.php:203
+#: admin/abptb_configuration.php:235
 #, php-format
 msgid ""
 "Define the primary URL slug for Transport. Important: After changing this, "
 "you must flush your permalinks by visiting %s and clicking Save Changes."
 msgstr ""
 
-#: admin/abptb_configuration.php:704
+#: admin/abptb_configuration.php:736
 msgid ""
 "Define the system default color block layout rule reserved for error outputs,"
 " alerts, or pending notices."
@@ -1287,7 +1286,7 @@ msgstr ""
 msgid "Deleting............."
 msgstr ""
 
-#: admin/abptb_documentation.php:219
+#: admin/abptb_documentation.php:224
 msgid "departure time(s) for each journey day."
 msgstr ""
 
@@ -1304,15 +1303,15 @@ msgstr ""
 msgid "Description(Optional)"
 msgstr ""
 
-#: admin/abptb_documentation.php:58
+#: admin/abptb_documentation.php:62
 msgid "Design"
 msgstr ""
 
-#: admin/abptb_dashboard.php:214
+#: admin/abptb_dashboard.php:215
 msgid "Details"
 msgstr ""
 
-#: admin/abptb_configuration.php:711
+#: admin/abptb_configuration.php:743
 msgid ""
 "Determine the fallback structural base background color applied to global "
 "layout wrapper segment panels."
@@ -1334,19 +1333,23 @@ msgstr ""
 msgid "Dimension Rows"
 msgstr ""
 
-#: admin/abptb_documentation.php:66
+#: admin/abptb_documentation.php:70
 msgid "Discount / Payment"
 msgstr ""
 
-#: admin/abptb_documentation.php:350
+#: admin/abptb_documentation.php:357
 msgid "Discounts"
+msgstr ""
+
+#: admin/abptb_dashboard.php:1056
+msgid "Dismiss"
 msgstr ""
 
 #: admin/abptb_post.php:308
 msgid "Display Capacity"
 msgstr ""
 
-#: admin/abptb_admin.php:69 admin/abptb_dashboard.php:295
+#: admin/abptb_admin.php:63 admin/abptb_dashboard.php:296
 msgid "Documentation"
 msgstr ""
 
@@ -1358,7 +1361,7 @@ msgstr ""
 msgid "Double-Click"
 msgstr ""
 
-#: admin/abptb_dashboard.php:775 admin/abptb_post.php:36
+#: admin/abptb_dashboard.php:776 admin/abptb_post.php:36
 msgid "Draft"
 msgstr ""
 
@@ -1366,7 +1369,7 @@ msgstr ""
 msgid "Drag Cells"
 msgstr ""
 
-#: admin/abptb_documentation.php:197
+#: admin/abptb_documentation.php:202
 msgid ""
 "drag-and-drop designer: seats, rows, automatic numbering, background images "
 "and colors."
@@ -1380,7 +1383,7 @@ msgstr ""
 msgid "Drop-Off  : "
 msgstr ""
 
-#: tb_templates/layout/selection_details.php:65
+#: tb_templates/layout/selection_details.php:67
 msgid "Drop-Off Point: "
 msgstr ""
 
@@ -1388,11 +1391,11 @@ msgstr ""
 msgid "Dropping"
 msgstr ""
 
-#: includes/abptb_my_account.php:120
+#: includes/abptb_my_account.php:118
 msgid "Dropping Point"
 msgstr ""
 
-#: admin/abptb_dashboard.php:739
+#: admin/abptb_dashboard.php:740
 msgid "Dummy "
 msgstr ""
 
@@ -1404,44 +1407,44 @@ msgstr ""
 msgid "Dummy data imported successfully!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:736
+#: admin/abptb_dashboard.php:737
 msgid "Dummy Import"
 msgstr ""
 
-#: admin/abptb_dashboard.php:741
+#: admin/abptb_dashboard.php:742
 msgid "Dymmy"
 msgstr ""
 
-#: admin/abptb_configuration.php:496 admin/abptb_form.php:179
-#: includes/abptb_static.php:213
+#: admin/abptb_configuration.php:528 admin/abptb_form.php:179
+#: includes/abptb_static.php:214
 msgid "E-Mail"
 msgstr ""
 
-#: includes/abptb_layout.php:1057
+#: includes/abptb_layout.php:1081
 msgid "E-Mail :"
 msgstr ""
 
-#: admin/abptb_documentation.php:337
+#: admin/abptb_documentation.php:344
 msgid "E-Mail Notifications & Exports"
 msgstr ""
 
-#: admin/abptb_configuration.php:492
+#: admin/abptb_configuration.php:524
 msgid "e.g., +1 (234) 567-8901"
 msgstr ""
 
-#: admin/abptb_configuration.php:484
+#: admin/abptb_configuration.php:516
 msgid "e.g., 450 Greene St, New York, NY 10003, USA"
 msgstr ""
 
-#: admin/abptb_configuration.php:477
+#: admin/abptb_configuration.php:509
 msgid "e.g., Transport Forge Ltd."
 msgstr ""
 
-#: admin/abptb_documentation.php:198
+#: admin/abptb_documentation.php:203
 msgid "each seat or seat area can use a different ticket type."
 msgstr ""
 
-#: admin/abptb_documentation.php:273
+#: admin/abptb_documentation.php:278
 msgid "Each transport can use the Default, Light or Premium detail template."
 msgstr ""
 
@@ -1458,6 +1461,12 @@ msgstr ""
 msgid "Edit : "
 msgstr ""
 
+#: admin/abptb_documentation.php:409
+msgid ""
+"Edit existing booking/order items directly from admin (route, seats, "
+"passengers, extras)."
+msgstr ""
+
 #: includes/abptb_dependencies.php:310
 msgid "Edit Post"
 msgstr ""
@@ -1470,7 +1479,7 @@ msgstr ""
 msgid "Edit/Modify"
 msgstr ""
 
-#: admin/abptb_dashboard.php:274
+#: admin/abptb_dashboard.php:275
 msgid "Enable & disable features"
 msgstr ""
 
@@ -1491,53 +1500,53 @@ msgid ""
 "or delete based on your needs."
 msgstr ""
 
-#: admin/abptb_configuration.php:674
+#: admin/abptb_configuration.php:706
 msgid ""
 "Enter the lowest micro-metadata element typographical scale sizing target "
 "for nested H6 headers."
 msgstr ""
 
-#: admin/abptb_configuration.php:474
+#: admin/abptb_configuration.php:506
 msgid ""
 "Enter the official commercial or business name used for invoice branding."
 msgstr ""
 
-#: admin/abptb_configuration.php:658
+#: admin/abptb_configuration.php:690
 msgid ""
 "Enter the typographical scale size target for contextual metadata tracking "
 "level H4 header assets."
 msgstr ""
 
-#: admin/abptb_configuration.php:666
+#: admin/abptb_configuration.php:698
 msgid ""
 "Enter the typographical scale size target for inner card grid elements level "
 "H5 header assets."
 msgstr ""
 
-#: admin/abptb_configuration.php:650
+#: admin/abptb_configuration.php:682
 msgid ""
 "Enter the typographical scale size target for inner panel modular level H3 "
 "header assets."
 msgstr ""
 
-#: admin/abptb_configuration.php:642
+#: admin/abptb_configuration.php:674
 msgid ""
 "Enter the typographical scale size target for subsection level H2 header "
 "assets."
 msgstr ""
 
-#: admin/abptb_configuration.php:634
+#: admin/abptb_configuration.php:666
 msgid ""
 "Enter the typographical scale size target for the primary page-level H1 "
 "header assets."
 msgstr ""
 
-#: admin/abptb_configuration.php:603
+#: admin/abptb_configuration.php:635
 msgid ""
 "Establish the primary body text typography canvas hexadecimal hex color code."
 msgstr ""
 
-#: admin/abptb_documentation.php:113
+#: admin/abptb_documentation.php:117
 msgid ""
 "everything is ON by default. Turn OFF the features your business does not "
 "use — their menu tabs, form fields and options disappear, keeping the "
@@ -1615,13 +1624,13 @@ msgstr ""
 msgid "EX:10"
 msgstr ""
 
-#: admin/abptb_documentation.php:342
+#: admin/abptb_documentation.php:349
 msgid ""
-"Export the order list as PDF or CSV from the Configuration → Order Lists "
-"tabs."
+"Export the order list as PDF or CSV from the Global Configuration → Order "
+"Lists tabs."
 msgstr ""
 
-#: admin/abptb_documentation.php:177
+#: admin/abptb_documentation.php:181
 msgid "Extras customers can add at booking time (baggage, meals, insurance)."
 msgstr ""
 
@@ -1633,8 +1642,8 @@ msgstr ""
 msgid "Failed to resolve location context."
 msgstr ""
 
-#: admin/abptb_admin.php:135 admin/abptb_configuration.php:464
-#: admin/abptb_documentation.php:153 admin/abptb_post.php:207
+#: admin/abptb_configuration.php:202 admin/abptb_configuration.php:496
+#: admin/abptb_documentation.php:157 admin/abptb_post.php:207
 msgid "FAQ"
 msgstr ""
 
@@ -1646,6 +1655,10 @@ msgstr ""
 msgid "FAQ Title"
 msgstr ""
 
+#: admin/abptb_documentation.php:184
+msgid "FAQ — optional"
+msgstr ""
+
 #: admin/abptb_faq.php:119
 msgid "FAQs Configuration"
 msgstr ""
@@ -1654,7 +1667,7 @@ msgstr ""
 msgid "FAQs Configuration Saved Successfully..... !! "
 msgstr ""
 
-#: admin/abptb_documentation.php:217
+#: admin/abptb_documentation.php:222
 msgid "fare for the forward and return journey."
 msgstr ""
 
@@ -1663,7 +1676,7 @@ msgstr ""
 msgid "Feature"
 msgstr ""
 
-#: admin/abptb_documentation.php:113
+#: admin/abptb_documentation.php:117
 msgid "Feature ON/OFF control:"
 msgstr ""
 
@@ -1671,19 +1684,19 @@ msgstr ""
 msgid "Feature Saved Successfully..........!!"
 msgstr ""
 
-#: admin/abptb_documentation.php:176
+#: admin/abptb_documentation.php:180
 msgid "Features Library — optional"
 msgstr ""
 
-#: admin/abptb_documentation.php:213
+#: admin/abptb_documentation.php:218
 msgid "Fill the editor tabs one by one, left to right:"
 msgstr ""
 
-#: admin/abptb_documentation.php:259
+#: admin/abptb_documentation.php:264
 msgid "Fill the passenger/client form and optional additional services."
 msgstr ""
 
-#: admin/abptb_documentation.php:291
+#: admin/abptb_documentation.php:296
 msgid ""
 "filter by transport, date, route, order number or customer; paginate and "
 "cancel line items."
@@ -1693,15 +1706,15 @@ msgstr ""
 msgid "Filter Post List"
 msgstr ""
 
-#: includes/abptb_static.php:211
+#: includes/abptb_static.php:212
 msgid "First Name"
 msgstr ""
 
-#: admin/abptb_dashboard.php:725
+#: admin/abptb_dashboard.php:726
 msgid "First Transport Added"
 msgstr ""
 
-#: admin/abptb_dashboard.php:761 admin/abptb_dashboard.php:767
+#: admin/abptb_dashboard.php:762 admin/abptb_dashboard.php:768
 msgid "Fix"
 msgstr ""
 
@@ -1711,27 +1724,27 @@ msgid ""
 "cards improve the experience, and the purple cards are PRO tools."
 msgstr ""
 
-#: admin/abptb_configuration.php:633
+#: admin/abptb_configuration.php:665
 msgid "Font Size H1"
 msgstr ""
 
-#: admin/abptb_configuration.php:641
+#: admin/abptb_configuration.php:673
 msgid "Font Size H2"
 msgstr ""
 
-#: admin/abptb_configuration.php:649
+#: admin/abptb_configuration.php:681
 msgid "Font Size H3"
 msgstr ""
 
-#: admin/abptb_configuration.php:657
+#: admin/abptb_configuration.php:689
 msgid "Font Size H4"
 msgstr ""
 
-#: admin/abptb_configuration.php:665
+#: admin/abptb_configuration.php:697
 msgid "Font Size H5"
 msgstr ""
 
-#: admin/abptb_configuration.php:673
+#: admin/abptb_configuration.php:705
 msgid "Font Size H6"
 msgstr ""
 
@@ -1749,7 +1762,7 @@ msgstr ""
 msgid "Form Type"
 msgstr ""
 
-#: admin/abptb_documentation.php:140
+#: admin/abptb_documentation.php:144
 msgid "Forms & services"
 msgstr ""
 
@@ -1761,12 +1774,12 @@ msgstr ""
 msgid "Forward Route Configuration"
 msgstr ""
 
-#: admin/abptb_dashboard.php:381 admin/abptb_orders.php:185
+#: admin/abptb_dashboard.php:382 admin/abptb_orders.php:185
 #: admin/abptb_orders.php:187 admin/abptb_orders.php:189
 #: admin/abptb_orders.php:220 admin/abptb_orders.php:222
 #: admin/abptb_orders.php:224 includes/abptb_dependencies.php:286
-#: includes/abptb_layout.php:991 includes/abptb_layout.php:1012
-#: includes/abptb_my_account.php:142 includes/abptb_woocommerce.php:428
+#: includes/abptb_layout.php:1015 includes/abptb_layout.php:1036
+#: includes/abptb_my_account.php:136 includes/abptb_woocommerce.php:428
 #: includes/abptb_woocommerce.php:429 includes/abptb_woocommerce.php:440
 #: includes/abptb_woocommerce.php:441 includes/abptb_woocommerce.php:520
 #: includes/abptb_woocommerce.php:521 includes/abptb_woocommerce.php:531
@@ -1778,16 +1791,16 @@ msgstr ""
 msgid "FREE"
 msgstr ""
 
-#: includes/abptb_layout.php:965 tb_templates/layout/additional_services.php:68
-#: tb_templates/layout/ticket_type.php:46 tb_templates/list/default.php:62
+#: includes/abptb_layout.php:989 tb_templates/layout/additional_services.php:81
+#: tb_templates/layout/ticket_type.php:66 tb_templates/list/default.php:62
 msgid "Free"
 msgstr ""
 
-#: admin/abptb_documentation.php:49
+#: admin/abptb_documentation.php:53
 msgid "Free Setup"
 msgstr ""
 
-#: admin/abptb_documentation.php:80
+#: admin/abptb_documentation.php:84
 msgid "FREE SETUP — follow steps 1 to 9 in order"
 msgstr ""
 
@@ -1795,16 +1808,16 @@ msgstr ""
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: includes/abptb_layout.php:498
+#: includes/abptb_layout.php:501
 msgid "Friday"
 msgstr ""
 
 #: admin/abptb_price.php:49 admin/abptb_price.php:105
-#: includes/abptb_layout.php:1147
+#: includes/abptb_layout.php:1171
 msgid "From"
 msgstr ""
 
-#: admin/abptb_orders.php:123 includes/abptb_my_account.php:115
+#: admin/abptb_orders.php:123 includes/abptb_my_account.php:113
 msgid "From - To"
 msgstr ""
 
@@ -1812,7 +1825,7 @@ msgstr ""
 msgid "Frontend Name"
 msgstr ""
 
-#: admin/abptb_documentation.php:273
+#: admin/abptb_documentation.php:278
 msgid "Frontend templates"
 msgstr ""
 
@@ -1824,24 +1837,28 @@ msgstr ""
 msgid "Full Address(optional)"
 msgstr ""
 
+#: admin/abptb_documentation.php:46
+msgid "Full Documentation"
+msgstr ""
+
 #: admin/abptb_dummy_import.php:30 admin/abptb_gallery.php:20
 #: admin/abptb_post.php:215
 msgid "Gallery"
 msgstr ""
 
-#: admin/abptb_configuration.php:513
+#: admin/abptb_configuration.php:545
 msgid "Gallery / Masonry"
 msgstr ""
 
-#: admin/abptb_dashboard.php:720
+#: admin/abptb_dashboard.php:721
 msgid "Gallery Page"
 msgstr ""
 
-#: includes/abptb_static.php:215
+#: includes/abptb_static.php:216
 msgid "Gender"
 msgstr ""
 
-#: admin/abptb_documentation.php:215 admin/abptb_post.php:189
+#: admin/abptb_documentation.php:220 admin/abptb_post.php:189
 msgid "General"
 msgstr ""
 
@@ -1861,21 +1878,34 @@ msgstr ""
 msgid "Global Client Form Imported Successfully ..... !! "
 msgstr ""
 
-#: admin/abptb_documentation.php:166
-msgid "Global Configuration (Global Data)"
+#: admin/abptb_documentation.php:57
+msgid "Global Config"
 msgstr ""
 
-#: admin/abptb_admin.php:63 admin/abptb_documentation.php:53
-msgid "Global Data"
+#: admin/abptb_admin.php:60 admin/abptb_documentation.php:42
+#: admin/abptb_documentation.php:170
+msgid "Global Configuration"
 msgstr ""
 
-#: admin/abptb_documentation.php:369
+#: admin/abptb_documentation.php:348
 msgid ""
-"Global Data → Partial Payment: choose the method — Fixed Amount or "
+"Global Configuration → E-Mail: branded booking e-mails with PDF attachments; "
+"resend any e-mail from the order list."
+msgstr ""
+
+#: admin/abptb_documentation.php:376
+msgid ""
+"Global Configuration → Partial Payment: choose the method — Fixed Amount or "
 "Percentage — and enter the deposit value/percentage."
 msgstr ""
 
-#: admin/abptb_dashboard.php:275
+#: admin/abptb_documentation.php:335
+msgid ""
+"Global Configuration → PDF: set background image, logo, colors and who can "
+"download tickets."
+msgstr ""
+
+#: admin/abptb_dashboard.php:276
 msgid "Global Date"
 msgstr ""
 
@@ -1891,16 +1921,16 @@ msgstr ""
 msgid "Global Dates Configuration"
 msgstr ""
 
-#: admin/abptb_dashboard.php:289
+#: admin/abptb_dashboard.php:290
 msgid "Global Discount"
-msgstr ""
-
-#: admin/abptb_documentation.php:179
-msgid "Global FAQ and Terms & Conditions content."
 msgstr ""
 
 #: admin/abptb_faq.php:18
 msgid "Global FAQ Configuration"
+msgstr ""
+
+#: admin/abptb_documentation.php:184
+msgid "Global frequently asked questions reused on every transport."
 msgstr ""
 
 #: admin/abptb_tc.php:134
@@ -1911,13 +1941,17 @@ msgstr ""
 msgid "Global Term & Conditions Configuration"
 msgstr ""
 
+#: admin/abptb_documentation.php:183
+msgid "Global Terms & Conditions content reused on every transport."
+msgstr ""
+
 #. %s: transport label.
-#: admin/abptb_dashboard.php:53
+#: admin/abptb_dashboard.php:54
 #, php-format
 msgid "Here is what is happening with your %s booking business today."
 msgstr ""
 
-#: includes/abptb_static.php:120
+#: includes/abptb_static.php:121
 msgid ""
 "Here you can create and manage dynamic ticket types that can be used across "
 "all transports. Examples include Economy, Business Class, VIP, Sleeper, "
@@ -1961,37 +1995,37 @@ msgstr ""
 msgid "ID/SKU"
 msgstr ""
 
-#: admin/abptb_documentation.php:316
+#: admin/abptb_documentation.php:323
 msgid ""
 "If asked, install the ABP PDF Tools (needed for PDF tickets) and wait for it "
 "to finish."
 msgstr ""
 
-#: admin/abptb_documentation.php:111
+#: admin/abptb_documentation.php:115
 msgid "If those features are ON, you can rename their labels and slugs here."
 msgstr ""
 
-#: admin/abptb_configuration.php:359
+#: admin/abptb_configuration.php:391
 msgid ""
 "If you do not want to display route directions across the entire frontend of "
 "your site, turn this switch Off."
 msgstr ""
 
-#: admin/abptb_configuration.php:352
+#: admin/abptb_configuration.php:384
 msgid ""
 "If you do not want to display the available ticket capacity, simply turn "
 "this switch OFF. Once disabled, ticket capacity counts will be completely "
 "removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:345
+#: admin/abptb_configuration.php:377
 msgid ""
 "If you do not want to display transport capacity across the entire frontend "
 "of your site, turn this switch Off. When enabled, you can control the "
 "transport capacity display individually for each transport."
 msgstr ""
 
-#: admin/abptb_configuration.php:451
+#: admin/abptb_configuration.php:483
 msgid ""
 "If you do not want to use Additional services, simply turn this switch OFF. "
 "This will completely disable the Additional services feature across the "
@@ -1999,14 +2033,14 @@ msgid ""
 "re-enable it at any time by turning the switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:380
+#: admin/abptb_configuration.php:412
 msgid ""
 "If you do not want to use Category , simply turn this switch OFF. Once "
 "disabled, Category Title field and related Category options will be "
 "completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:444
+#: admin/abptb_configuration.php:476
 msgid ""
 "If you do not want to use Multi Pickup/Drop-Off , simply turn this switch "
 "OFF. This will completely disable the Multi Pickup/Drop-Off  feature across "
@@ -2014,7 +2048,7 @@ msgid ""
 "can re-enable it at any time by turning the switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:394
+#: admin/abptb_configuration.php:426
 msgid ""
 "If you do not want to use Multiple Ticket Type, simply turn this switch OFF. "
 "This will completely disable the Multiple Ticket Type feature across the "
@@ -2022,14 +2056,14 @@ msgid ""
 "enable it at any time by turning the switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:338
+#: admin/abptb_configuration.php:370
 msgid ""
 "If you do not want to use Organizer , simply turn this switch OFF. Once "
 "disabled, Organizer Title field and related Organizer options will be "
 "completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:331
+#: admin/abptb_configuration.php:363
 msgid ""
 "If you do not want to use Post Description simply turn this switch OFF. This "
 "will completely disable the Post Description across the entire website, "
@@ -2037,7 +2071,7 @@ msgid ""
 "any time by turning the switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:317
+#: admin/abptb_configuration.php:349
 msgid ""
 "If you do not want to use Post Icon simply turn this switch OFF. This will "
 "completely disable the Post Icon across the entire website, including all "
@@ -2045,28 +2079,21 @@ msgid ""
 "turning the switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:366
+#: admin/abptb_configuration.php:398
 msgid ""
 "If you do not want to use the Brand Feature, simply turn this switch OFF. "
 "Once disabled, the Brand Feature field and related Brand Feature options "
 "will be completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:437
-msgid ""
-"If you do not want to use the Client Info Form, simply turn this switch OFF. "
-"Once disabled, the Client Info Form field and related Client Info options "
-"will be completely removed from the site."
-msgstr ""
-
-#: admin/abptb_configuration.php:465
+#: admin/abptb_configuration.php:497
 msgid ""
 "If you do not want to use the FAQs Feature, simply turn this switch OFF. "
 "Once disabled, the FAQ Feature field and related FAQ Feature options will be "
 "completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:415
+#: admin/abptb_configuration.php:447
 msgid ""
 "If you do not want to use the Min & Max feature, simply turn this switch OFF."
 " This will completely disable the Transport Min & Max feature for all "
@@ -2074,7 +2101,14 @@ msgid ""
 "feature at any time by turning this switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:310
+#: admin/abptb_configuration.php:469
+msgid ""
+"If you do not want to use the Passenger Information Form, simply turn this "
+"switch OFF. Once disabled, the Passenger Information Form field and related "
+"Passenger Information options will be completely removed from the site."
+msgstr ""
+
+#: admin/abptb_configuration.php:342
 msgid ""
 "If you do not want to use the Post SKU ID feature, simply turn this switch "
 "OFF. Once disabled, the Post SKU field and related SKU options will be "
@@ -2082,14 +2116,14 @@ msgid ""
 "generated for posts."
 msgstr ""
 
-#: admin/abptb_configuration.php:324
+#: admin/abptb_configuration.php:356
 msgid ""
 "If you do not want to use the Post Sub Title , simply turn this switch OFF. "
 "Once disabled, the Post Sub Title field and related  options will be "
 "completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:408
+#: admin/abptb_configuration.php:440
 msgid ""
 "If you do not want to use the same Transport return feature, simply turn "
 "this switch OFF. This will completely disable the Transport return feature "
@@ -2097,7 +2131,7 @@ msgid ""
 "return feature at any time by turning this switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:401
+#: admin/abptb_configuration.php:433
 msgid ""
 "If you do not want to use the Seat Plan feature, simply turn this switch OFF."
 " This will completely disable the Seat Plan feature for all transports "
@@ -2106,14 +2140,14 @@ msgid ""
 "at any time by turning this switch back ON."
 msgstr ""
 
-#: admin/abptb_configuration.php:458
+#: admin/abptb_configuration.php:490
 msgid ""
 "If you do not want to use the Term & Conditions Feature, simply turn this "
 "switch OFF. Once disabled, the Term & Conditions Feature field and related "
 "Term & Conditions Feature options will be completely removed from the site."
 msgstr ""
 
-#: admin/abptb_configuration.php:373
+#: admin/abptb_configuration.php:405
 msgid ""
 "If you do not want to use the Transport Feature, simply turn this switch OFF."
 " Once disabled, the Transport Feature field and related Transport Feature "
@@ -2126,19 +2160,19 @@ msgid ""
 "active this button .Default is on"
 msgstr ""
 
-#: admin/abptb_configuration.php:270
+#: admin/abptb_configuration.php:302
 msgid "If you wish to modify the Brand label, you can do so here. "
 msgstr ""
 
-#: admin/abptb_configuration.php:230
+#: admin/abptb_configuration.php:262
 msgid "If you wish to modify the category label, you can do so here. "
 msgstr ""
 
-#: admin/abptb_configuration.php:250
+#: admin/abptb_configuration.php:282
 msgid "If you wish to modify the Organizer label, you can do so here. "
 msgstr ""
 
-#: admin/abptb_configuration.php:290
+#: admin/abptb_configuration.php:322
 msgid "If you wish to modify the Stops label, you can do so here. "
 msgstr ""
 
@@ -2146,7 +2180,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: admin/abptb_configuration.php:529
+#: admin/abptb_configuration.php:561
 msgid "Image Indicator?"
 msgstr ""
 
@@ -2154,7 +2188,7 @@ msgstr ""
 msgid "image/Icon"
 msgstr ""
 
-#: admin/abptb_configuration.php:518
+#: admin/abptb_configuration.php:550
 msgid "Images Per Row"
 msgstr ""
 
@@ -2206,11 +2240,11 @@ msgstr ""
 msgid "Importing........"
 msgstr ""
 
-#: admin/abptb_configuration.php:543
+#: admin/abptb_configuration.php:575
 msgid "Indicator Position"
 msgstr ""
 
-#: admin/abptb_configuration.php:497
+#: admin/abptb_configuration.php:529
 msgid ""
 "Input the standard commercial email address reserved for direct customer "
 "support correspondence."
@@ -2220,33 +2254,33 @@ msgstr ""
 msgid "Insert  Post"
 msgstr ""
 
-#: admin/abptb_documentation.php:51
+#: admin/abptb_documentation.php:55
 msgid "Install"
 msgstr ""
 
-#: admin/abptb_dashboard.php:764 admin/abptb_documentation.php:85
+#: admin/abptb_dashboard.php:765 admin/abptb_documentation.php:89
 msgid "Install & Activate"
 msgstr ""
 
-#: admin/abptb_documentation.php:75
+#: admin/abptb_documentation.php:79
 msgid "Install & Activate Now"
 msgstr ""
 
-#: admin/abptb_dashboard.php:1023
+#: admin/abptb_dashboard.php:1027
 msgid "Install & Active Now"
 msgstr ""
 
-#: admin/abptb_documentation.php:90
+#: admin/abptb_documentation.php:94
 msgid ""
 "install and activate first. If you see the warning above, click the green "
 "button."
 msgstr ""
 
-#: admin/abptb_documentation.php:306
+#: admin/abptb_documentation.php:313
 msgid "Install PRO & Activate the License"
 msgstr ""
 
-#: admin/abptb_documentation.php:309
+#: admin/abptb_documentation.php:316
 msgid "Installed"
 msgstr ""
 
@@ -2264,18 +2298,19 @@ msgstr ""
 msgid "Invalid ID ..... !! "
 msgstr ""
 
-#: admin/abptb_dashboard.php:408
+#: admin/abptb_dashboard.php:409
 msgid "Invalid journey."
 msgstr ""
 
 #: admin/abptb_additional.php:170 admin/abptb_additional.php:222
 #: admin/abptb_brand.php:31 admin/abptb_brand.php:89 admin/abptb_brand.php:140
 #: admin/abptb_category.php:32 admin/abptb_category.php:90
-#: admin/abptb_category.php:141 admin/abptb_dashboard.php:402
-#: admin/abptb_dashboard.php:1044 admin/abptb_dates.php:201
-#: admin/abptb_dates.php:210 admin/abptb_dummy_import.php:14
-#: admin/abptb_dummy_import.php:61 admin/abptb_dummy_import.php:75
-#: admin/abptb_faq.php:157 admin/abptb_faq.php:196 admin/abptb_feature.php:30
+#: admin/abptb_category.php:141 admin/abptb_dashboard.php:403
+#: admin/abptb_dashboard.php:1087 admin/abptb_dashboard.php:1095
+#: admin/abptb_dates.php:201 admin/abptb_dates.php:210
+#: admin/abptb_dummy_import.php:14 admin/abptb_dummy_import.php:61
+#: admin/abptb_dummy_import.php:75 admin/abptb_faq.php:157
+#: admin/abptb_faq.php:196 admin/abptb_feature.php:30
 #: admin/abptb_feature.php:81 admin/abptb_feature.php:128
 #: admin/abptb_form.php:253 admin/abptb_form.php:261
 #: admin/abptb_location.php:29 admin/abptb_location.php:115
@@ -2300,11 +2335,11 @@ msgstr ""
 msgid "Item Deleted Successfully............. !"
 msgstr ""
 
-#: includes/abptb_layout.php:694 includes/abptb_layout.php:1115
+#: includes/abptb_layout.php:697 includes/abptb_layout.php:1139
 msgid "Journey Date"
 msgstr ""
 
-#: includes/abptb_layout.php:1127
+#: includes/abptb_layout.php:1151
 msgid "Journey Date Between"
 msgstr ""
 
@@ -2312,11 +2347,11 @@ msgstr ""
 msgid "Journey Date: "
 msgstr ""
 
-#: admin/abptb_dashboard.php:476
+#: admin/abptb_dashboard.php:477
 msgid "Journey loaded."
 msgstr ""
 
-#: admin/abptb_dashboard.php:185 admin/abptb_dashboard.php:424
+#: admin/abptb_dashboard.php:186 admin/abptb_dashboard.php:425
 msgid "Journey Started"
 msgstr ""
 
@@ -2324,23 +2359,23 @@ msgstr ""
 msgid "Journey Time"
 msgstr ""
 
-#: admin/abptb_configuration.php:193 admin/abptb_feature.php:52
+#: admin/abptb_configuration.php:225 admin/abptb_feature.php:52
 msgid "Label"
 msgstr ""
 
-#: admin/abptb_configuration.php:625
+#: admin/abptb_configuration.php:657
 msgid "Label Font Size"
 msgstr ""
 
-#: admin/abptb_documentation.php:111
+#: admin/abptb_documentation.php:115
 msgid "Labels for category / organizer / brand"
 msgstr ""
 
-#: admin/abptb_dashboard.php:331
+#: admin/abptb_dashboard.php:332
 msgid "Last 10 Orders"
 msgstr ""
 
-#: includes/abptb_static.php:212
+#: includes/abptb_static.php:213
 msgid "Last Name"
 msgstr ""
 
@@ -2358,11 +2393,11 @@ msgstr ""
 msgid "Learn how to use %s step by step"
 msgstr ""
 
-#: admin/abptb_configuration.php:551
+#: admin/abptb_configuration.php:583
 msgid "Left"
 msgstr ""
 
-#: admin/abptb_documentation.php:63
+#: admin/abptb_documentation.php:67
 msgid "License"
 msgstr ""
 
@@ -2370,7 +2405,11 @@ msgstr ""
 msgid "Light Template"
 msgstr ""
 
-#: includes/abptb_ajax.php:138
+#: admin/abptb_dashboard.php:1050
+msgid "Limited Time Offer - 50% OFF!"
+msgstr ""
+
+#: includes/abptb_ajax.php:136
 msgid "List Loaded Successfully.....! "
 msgstr ""
 
@@ -2378,11 +2417,11 @@ msgstr ""
 msgid "List Loading............."
 msgstr ""
 
-#: admin/abptb_admin.php:53
+#: admin/abptb_admin.php:50
 msgid "Lists"
 msgstr ""
 
-#: admin/abptb_documentation.php:373
+#: admin/abptb_documentation.php:380
 msgid ""
 "Lists → edit a transport → Partial Payment tab: enable “Pay Partial Amount "
 "at Checkout?” and optionally set its own deposit value (leave empty to use "
@@ -2401,47 +2440,47 @@ msgstr ""
 msgid "Loading..............!"
 msgstr ""
 
-#: admin/abptb_documentation.php:65
+#: admin/abptb_documentation.php:69
 msgid "Mail / Export"
 msgstr ""
 
-#: admin/abptb_documentation.php:59
+#: admin/abptb_documentation.php:63
 msgid "Manage"
 msgstr ""
 
-#: admin/abptb_dashboard.php:278
+#: admin/abptb_dashboard.php:279
 msgid "Manage additional services"
 msgstr ""
 
-#: admin/abptb_dashboard.php:292
+#: admin/abptb_dashboard.php:293
 msgid "Manage cancellation requests"
 msgstr ""
 
-#: admin/abptb_dashboard.php:281
+#: admin/abptb_dashboard.php:282
 msgid "Manage client form fields"
 msgstr ""
 
-#: admin/abptb_dashboard.php:275
+#: admin/abptb_dashboard.php:276
 msgid "Manage global dates"
 msgstr ""
 
-#: admin/abptb_documentation.php:287
+#: admin/abptb_documentation.php:292
 msgid "Manage Orders & Watch the Dashboard"
 msgstr ""
 
 #. %1$s: HTML markup for OFF layout switch, %2$s: HTML markup for ON layout switch, %3$s: Default status indicator layout
-#: admin/abptb_configuration.php:532
+#: admin/abptb_configuration.php:564
 #, php-format
 msgid ""
 "Manage pagination dot indicators on the slide viewport canvas. Toggle %1$s "
 "to hide or %2$s to display. (Default: %3$s)"
 msgstr ""
 
-#: admin/abptb_dashboard.php:283
+#: admin/abptb_dashboard.php:284
 msgid "Manage stops / locations"
 msgstr ""
 
-#: admin/abptb_documentation.php:404
+#: admin/abptb_documentation.php:412
 msgid "Mark bookings as checked-in from the order list."
 msgstr ""
 
@@ -2457,15 +2496,15 @@ msgstr ""
 msgid "Max qty/Order"
 msgstr ""
 
-#: admin/abptb_documentation.php:110
+#: admin/abptb_documentation.php:114
 msgid "Menu & transport icon"
 msgstr ""
 
-#: admin/abptb_configuration.php:414
+#: admin/abptb_configuration.php:446
 msgid "Min & Max qty"
 msgstr ""
 
-#: admin/abptb_documentation.php:135
+#: admin/abptb_documentation.php:139
 msgid "Min & max quantity"
 msgstr ""
 
@@ -2481,7 +2520,7 @@ msgstr ""
 msgid "Modify / Edit Seat Plan Seat Color Combination"
 msgstr ""
 
-#: includes/abptb_layout.php:494
+#: includes/abptb_layout.php:497
 msgid "Monday"
 msgstr ""
 
@@ -2506,11 +2545,11 @@ msgstr ""
 msgid "Moved to trash successfully...... !! "
 msgstr ""
 
-#: admin/abptb_documentation.php:145
+#: admin/abptb_documentation.php:149
 msgid "Multiple pickup / drop-off"
 msgstr ""
 
-#: admin/abptb_configuration.php:443
+#: admin/abptb_configuration.php:475
 msgid "Multiple Pickup/Drop-Off  Point"
 msgstr ""
 
@@ -2518,7 +2557,7 @@ msgstr ""
 msgid "Multiple Pickup/drop-off Point"
 msgstr ""
 
-#: admin/abptb_configuration.php:393
+#: admin/abptb_configuration.php:425
 msgid "Multiple Ticket Type"
 msgstr ""
 
@@ -2526,33 +2565,33 @@ msgstr ""
 msgid "Multiple Ticket Type?"
 msgstr ""
 
-#: admin/abptb_documentation.php:131
+#: admin/abptb_documentation.php:135
 msgid "Multiple ticket types"
 msgstr ""
 
-#: admin/abptb_documentation.php:403
+#: admin/abptb_documentation.php:411
 msgid "Multiple trips / day"
 msgstr ""
 
-#: admin/abptb_documentation.php:86 admin/abptb_documentation.php:104
-#: admin/abptb_documentation.php:211 admin/abptb_documentation.php:234
-#: admin/abptb_documentation.php:253
+#: admin/abptb_documentation.php:90 admin/abptb_documentation.php:108
+#: admin/abptb_documentation.php:216 admin/abptb_documentation.php:239
+#: admin/abptb_documentation.php:258
 msgid "Must"
 msgstr ""
 
-#: admin/abptb_documentation.php:192
+#: admin/abptb_documentation.php:197
 msgid "Must: choose at least tickets or seat plan"
 msgstr ""
 
-#: admin/abptb_documentation.php:167
+#: admin/abptb_documentation.php:171
 msgid "Must: Dates + Stops"
 msgstr ""
 
-#: admin/abptb_documentation.php:293
+#: admin/abptb_documentation.php:298
 msgid "My Account"
 msgstr ""
 
-#: admin/abptb_documentation.php:388
+#: admin/abptb_documentation.php:395
 msgid ""
 "My Account → Transport Bookings → click Pay Due Payment. A WooCommerce order "
 "for the balance is created and paid with the store’s payment methods; the "
@@ -2571,7 +2610,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/abptb_layout.php:1054
+#: includes/abptb_layout.php:1078
 msgid "Name :"
 msgstr ""
 
@@ -2580,7 +2619,7 @@ msgstr ""
 msgid "Name cannot be blank!"
 msgstr ""
 
-#: admin/abptb_documentation.php:196
+#: admin/abptb_documentation.php:201
 msgid "name, icon, color and prefix (e.g. Adult, Child, Concession)."
 msgstr ""
 
@@ -2592,7 +2631,7 @@ msgstr ""
 msgid "NEW"
 msgstr ""
 
-#: admin/abptb_dashboard.php:266
+#: admin/abptb_dashboard.php:267
 msgid "Next"
 msgstr ""
 
@@ -2604,7 +2643,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: admin/abptb_dashboard.php:627
+#: admin/abptb_dashboard.php:628
 msgid "No bookings for this journey yet."
 msgstr ""
 
@@ -2620,7 +2659,7 @@ msgstr ""
 msgid "No Dates Found !"
 msgstr ""
 
-#: includes/abptb_static.php:115
+#: includes/abptb_static.php:116
 msgid "No Decor Item Found ! Please add Decor item to use Multiple Decor item"
 msgstr ""
 
@@ -2644,7 +2683,7 @@ msgstr ""
 msgid "No More Item Found !"
 msgstr ""
 
-#: admin/abptb_dashboard.php:392
+#: admin/abptb_dashboard.php:393
 msgid "No orders found."
 msgstr ""
 
@@ -2652,29 +2691,29 @@ msgstr ""
 msgid "No Organizer Found !"
 msgstr ""
 
-#: includes/abptb_static.php:106
+#: includes/abptb_static.php:107
 msgid "No Results Found !"
 msgstr ""
 
-#: admin/abptb_dashboard.php:525
+#: admin/abptb_dashboard.php:526
 msgid "No seat plan assigned."
 msgstr ""
 
-#: includes/abptb_static.php:113
+#: includes/abptb_static.php:114
 msgid ""
 "No Seat Plan configuration is available for this transport. Please contact "
 "the administrator."
 msgstr ""
 
-#: includes/abptb_static.php:108
+#: includes/abptb_static.php:109
 msgid "No Seat Plan Found. Click Add New to create one."
 msgstr ""
 
-#: admin/abptb_dashboard.php:485
+#: admin/abptb_dashboard.php:486
 msgid "No ticket configuration found."
 msgstr ""
 
-#: includes/abptb_static.php:112
+#: includes/abptb_static.php:113
 msgid ""
 "No ticket configuration is available for this transport. Please contact the "
 "administrator."
@@ -2684,16 +2723,16 @@ msgstr ""
 msgid "No Ticket Selected ! Please Select Ticket"
 msgstr ""
 
-#: includes/abptb_static.php:111
+#: includes/abptb_static.php:112
 msgid ""
 "No Ticket Type Found ! Please add Ticket Type to use Multiple Ticket Type"
 msgstr ""
 
-#: tb_templates/layout/registration_item.php:31
+#: tb_templates/layout/registration_item.php:34
 msgid "No time available : "
 msgstr ""
 
-#: admin/abptb_dashboard.php:229
+#: admin/abptb_dashboard.php:230
 msgid "No upcoming journeys scheduled right now."
 msgstr ""
 
@@ -2702,15 +2741,15 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: admin/abptb_dashboard.php:692
+#: admin/abptb_dashboard.php:693
 msgid "Not active"
 msgstr ""
 
-#: tb_templates/layout/additional_services.php:60
+#: tb_templates/layout/additional_services.php:73
 msgid "Not Available !"
 msgstr ""
 
-#: includes/abptb_layout.php:817
+#: includes/abptb_layout.php:826
 msgid "Not Checked !"
 msgstr ""
 
@@ -2721,7 +2760,7 @@ msgid ""
 "option is enabled."
 msgstr ""
 
-#: includes/abptb_static.php:130
+#: includes/abptb_static.php:131
 msgid ""
 "Note : Here you can create and manage all transport types or categories, "
 "such as Bus, Train, Ferry, Shuttle, Taxi, AC, Non Ac, Sleeper and more. You "
@@ -2732,7 +2771,7 @@ msgid ""
 "assigned to a transport may affect its existing configuration."
 msgstr ""
 
-#: includes/abptb_static.php:121
+#: includes/abptb_static.php:122
 msgid ""
 "Note : Here you can create and manage decorative items for the seat plan "
 "layout. These items are used only for designing and organizing the seating "
@@ -2745,7 +2784,7 @@ msgid ""
 "can be reused across multiple seat plans."
 msgstr ""
 
-#: includes/abptb_static.php:122
+#: includes/abptb_static.php:123
 msgid ""
 "Note : Here you can create and manage reusable seat plans that can be "
 "assigned to any transport multiple times. Instead of designing the same "
@@ -2760,7 +2799,7 @@ msgid ""
 "layout. Every seat plan has a unique ID"
 msgstr ""
 
-#: includes/abptb_static.php:132
+#: includes/abptb_static.php:133
 msgid ""
 "Note : Here you can create and manage transport brands, manufacturers, or "
 "service providers. You can assign one brand to each transport while creating "
@@ -2771,7 +2810,7 @@ msgid ""
 "configuration."
 msgstr ""
 
-#: includes/abptb_static.php:133
+#: includes/abptb_static.php:134
 msgid ""
 "Note : Here you can create and manage transport features that help "
 "passengers understand the facilities and services available with each "
@@ -2782,7 +2821,7 @@ msgid ""
 "already assigned to a transport may affect the existing configuration."
 msgstr ""
 
-#: includes/abptb_static.php:123
+#: includes/abptb_static.php:124
 msgid ""
 "Note : Here you can design and customize the entire seat layout according to "
 "your requirements. You can define the overall layout structure by setting "
@@ -2870,7 +2909,7 @@ msgid ""
 "dont want to show any Sub-title information for this Post."
 msgstr ""
 
-#: includes/abptb_static.php:125
+#: includes/abptb_static.php:126
 msgid ""
 "Note: Add extra services for products/equipment with your transport—import "
 "or set per Post (also usable globally); stock applies per Post, empty "
@@ -2907,7 +2946,7 @@ msgid ""
 "name. "
 msgstr ""
 
-#: includes/abptb_static.php:116
+#: includes/abptb_static.php:117
 msgid ""
 "Note: Choose an image, icon, or emoji to represent this decoration item "
 "within the Seat Plan layout. Enter a name to identify the item while "
@@ -2973,7 +3012,7 @@ msgstr ""
 msgid "Note: Here You can change your details page template."
 msgstr ""
 
-#: includes/abptb_static.php:131
+#: includes/abptb_static.php:132
 msgid ""
 "Note: Here you can create and manage transport organizers, operators, or "
 "companies. You can assign one organizers to each transport while creating or "
@@ -2984,7 +3023,7 @@ msgid ""
 "configuration."
 msgstr ""
 
-#: includes/abptb_static.php:129
+#: includes/abptb_static.php:130
 msgid ""
 "Note: Here, you can add all of your transport stops, which can then be used "
 "across any transport post. You can edit or delete them at any time. However, "
@@ -3184,7 +3223,7 @@ msgid ""
 "website, helping it stand out and improve visual recognition."
 msgstr ""
 
-#: includes/abptb_static.php:124
+#: includes/abptb_static.php:125
 msgid ""
 "Note: Set a global date configuration for your Transport  that can be reused "
 "across all posts, with options to import and customize anytime."
@@ -3207,7 +3246,7 @@ msgid ""
 "can add multiple operation times for the same date.(optional)"
 msgstr ""
 
-#: includes/abptb_static.php:126
+#: includes/abptb_static.php:127
 msgid ""
 "Note: This is a flexibility global form system. Once you design the "
 "structure here, it serves as a global form. You can effortlessly import this "
@@ -3224,14 +3263,14 @@ msgstr ""
 msgid "Note: You can add an icon, or emoji for this Feature(optional)."
 msgstr ""
 
-#: includes/abptb_static.php:127
+#: includes/abptb_static.php:128
 msgid ""
 "Note: You can set all transport-related FAQs here and use them globally "
 "across all transports. You can also import these FAQs into any individual "
 "transport and customize them as needed."
 msgstr ""
 
-#: includes/abptb_static.php:128
+#: includes/abptb_static.php:129
 msgid ""
 "Note: You can set all transport-related Term & Condition here and use them "
 "globally across all transport. You can also import these Term & Condition "
@@ -3262,7 +3301,7 @@ msgid ""
 "passengers. "
 msgstr ""
 
-#: includes/abptb_static.php:107
+#: includes/abptb_static.php:108
 msgid "Nothing Found !"
 msgstr ""
 
@@ -3274,7 +3313,7 @@ msgstr ""
 msgid "Number of advance booking date"
 msgstr ""
 
-#: admin/abptb_dashboard.php:729
+#: admin/abptb_dashboard.php:730
 msgid "Number of Post"
 msgstr ""
 
@@ -3286,8 +3325,12 @@ msgstr ""
 msgid "Off Date Range(optional)"
 msgstr ""
 
-#: includes/abptb_layout.php:508
+#: includes/abptb_layout.php:511
 msgid "Off Dates Range"
+msgstr ""
+
+#: admin/abptb_dashboard.php:1091
+msgid "Offer dismissed."
 msgstr ""
 
 #: includes/abptb_woocommerce.php:478
@@ -3298,71 +3341,71 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: admin/abptb_configuration.php:172
+#: admin/abptb_configuration.php:175
 msgid "ON/OFF"
 msgstr ""
 
-#: admin/abptb_dashboard.php:274
+#: admin/abptb_dashboard.php:275
 msgid "ON/OFF Configuration"
 msgstr ""
 
-#: admin/abptb_documentation.php:384
+#: admin/abptb_documentation.php:391
 msgid ""
 "Once the balance is paid, a Balance Paid Date appears instead of the Pay Due "
 "button."
 msgstr ""
 
-#: admin/abptb_documentation.php:288
+#: admin/abptb_documentation.php:293
 msgid "Ongoing"
 msgstr ""
 
-#: admin/abptb_documentation.php:379
+#: admin/abptb_documentation.php:386
 msgid ""
 "Only transports with Partial Payment enabled are split; other items in the "
 "same cart are always paid in full."
 msgstr ""
 
-#: admin/abptb_documentation.php:158 admin/abptb_documentation.php:279
-msgid "Open Configuration"
-msgstr ""
-
-#: admin/abptb_documentation.php:297
+#: admin/abptb_documentation.php:302
 msgid "Open Dashboard"
 msgstr ""
 
-#: admin/abptb_documentation.php:182
+#: admin/abptb_documentation.php:162 admin/abptb_documentation.php:284
+msgid "Open Global Configuration"
+msgstr ""
+
+#: admin/abptb_documentation.php:187
 msgid "Open Global Dates"
 msgstr ""
 
-#: admin/abptb_documentation.php:224
+#: admin/abptb_documentation.php:229
 msgid "Open Lists"
 msgstr ""
 
-#: admin/abptb_documentation.php:296
+#: admin/abptb_documentation.php:301
 msgid "Open Orders"
 msgstr ""
 
-#: admin/abptb_documentation.php:95
+#: admin/abptb_documentation.php:99
 msgid "Open Plugin Dashboard"
 msgstr ""
 
-#: admin/abptb_documentation.php:106
-msgid ""
-"Open the Configuration tab. Here you control the name and behavior of your "
-"booking system."
-msgstr ""
-
-#: admin/abptb_documentation.php:315
+#: admin/abptb_documentation.php:322
 msgid ""
 "Open the Dashboard — the License card appears there. Paste your license key "
 "and click Activate License."
 msgstr ""
 
-#: admin/abptb_documentation.php:255
+#: admin/abptb_documentation.php:110
+msgid ""
+"Open the Global Configuration tab. Here you control the name and behavior of "
+"your booking system."
+msgstr ""
+
+#: admin/abptb_documentation.php:260
 msgid "Open the page on the frontend and run through the full flow once:"
 msgstr ""
 
-#: admin/abptb_documentation.php:202
+#: admin/abptb_documentation.php:207
 msgid "Open Ticket/Seat Plan"
 msgstr ""
 
@@ -3378,29 +3421,29 @@ msgstr ""
 msgid "Operational Date Type"
 msgstr ""
 
-#: admin/abptb_documentation.php:270
+#: admin/abptb_documentation.php:275
 msgid "Optional"
 msgstr ""
 
-#: admin/abptb_documentation.php:242
+#: admin/abptb_documentation.php:247
 msgid "Optional shortcode attributes:"
 msgstr ""
 
-#: admin/abptb_dashboard.php:342
+#: admin/abptb_dashboard.php:343
 msgid "order"
 msgid_plural "orders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/abptb_dashboard.php:356 admin/abptb_dashboard.php:374
+#: admin/abptb_dashboard.php:357 admin/abptb_dashboard.php:375
 msgid "Order / Vehicle"
 msgstr ""
 
-#: includes/abptb_layout.php:1178
+#: includes/abptb_layout.php:1202
 msgid "Order Date"
 msgstr ""
 
-#: includes/abptb_layout.php:1190
+#: includes/abptb_layout.php:1214
 msgid "Order Date Between"
 msgstr ""
 
@@ -3408,12 +3451,16 @@ msgstr ""
 msgid "Order Filter"
 msgstr ""
 
-#: includes/abptb_layout.php:1235 includes/abptb_layout.php:1236
+#: includes/abptb_layout.php:1259 includes/abptb_layout.php:1260
 msgid "Order ID"
 msgstr ""
 
 #: admin/abptb_orders.php:121
 msgid "Order ID/ Date"
+msgstr ""
+
+#: admin/abptb_documentation.php:409
+msgid "Order Item Edit"
 msgstr ""
 
 #: admin/abptb_orders.php:251
@@ -3424,27 +3471,31 @@ msgstr ""
 msgid "Order Loading........ !"
 msgstr ""
 
-#: admin/abptb_admin.php:56 admin/abptb_dashboard.php:64
+#: includes/abptb_layout.php:1319
+msgid "Order Status"
+msgstr ""
+
+#: admin/abptb_admin.php:53 admin/abptb_dashboard.php:65
 msgid "Orders"
 msgstr ""
 
-#: admin/abptb_documentation.php:291
+#: admin/abptb_documentation.php:296
 msgid "Orders tab"
 msgstr ""
 
-#: admin/abptb_documentation.php:122 includes/abptb_function.php:94
+#: admin/abptb_documentation.php:126 includes/abptb_function.php:94
 msgid "Organizer"
 msgstr ""
 
-#: admin/abptb_configuration.php:249
+#: admin/abptb_configuration.php:281
 msgid "Organizer Label"
 msgstr ""
 
-#: admin/abptb_configuration.php:257
+#: admin/abptb_configuration.php:289
 msgid "Organizer Slug"
 msgstr ""
 
-#: admin/abptb_documentation.php:174
+#: admin/abptb_documentation.php:178
 msgid "Organizer — optional"
 msgstr ""
 
@@ -3464,15 +3515,15 @@ msgstr ""
 msgid "Page Creating ........!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:286
+#: admin/abptb_dashboard.php:287
 msgid "Partial Payment"
 msgstr ""
 
-#: admin/abptb_documentation.php:355
+#: admin/abptb_documentation.php:362
 msgid "Partial payment is explained in detail in the next step (P5)."
 msgstr ""
 
-#: admin/abptb_documentation.php:363
+#: admin/abptb_documentation.php:370
 msgid "Partial Payment — Setup & How It Works"
 msgstr ""
 
@@ -3480,7 +3531,21 @@ msgstr ""
 msgid "Passenger Info"
 msgstr ""
 
-#: includes/abptb_layout.php:566 includes/abptb_layout.php:573
+#: includes/abptb_woocommerce.php:448 includes/abptb_woocommerce.php:539
+msgid "Passenger Information"
+msgstr ""
+
+#: tb_templates/layout/client_form.php:17
+#: tb_templates/layout/client_form.php:30
+#: tb_templates/layout/display_cart_item.php:105
+msgid "Passenger Information : "
+msgstr ""
+
+#: admin/abptb_configuration.php:468
+msgid "Passenger Information Form"
+msgstr ""
+
+#: includes/abptb_layout.php:569 includes/abptb_layout.php:576
 msgid "Passengers   "
 msgstr ""
 
@@ -3488,17 +3553,17 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: admin/abptb_documentation.php:64
+#: admin/abptb_documentation.php:68
 msgid "PDF"
 msgstr ""
 
-#: admin/abptb_documentation.php:383
+#: admin/abptb_documentation.php:390
 msgid ""
 "PDF ticket, booking e-mail, admin order list and My Account show Paid "
 "(Deposit) and Due (Balance)."
 msgstr ""
 
-#: admin/abptb_documentation.php:324
+#: admin/abptb_documentation.php:331
 msgid "PDF Tickets & QR Codes"
 msgstr ""
 
@@ -3522,25 +3587,25 @@ msgstr ""
 msgid "Permanently removed. ..... !! "
 msgstr ""
 
-#: includes/abptb_static.php:214
+#: includes/abptb_static.php:215
 msgid "Phone"
 msgstr ""
 
-#: includes/abptb_layout.php:1060
+#: includes/abptb_layout.php:1084
 msgid "Phone :"
 msgstr ""
 
-#: admin/abptb_dashboard.php:684
+#: admin/abptb_dashboard.php:685
 msgid "PHP"
 msgstr ""
 
-#: admin/abptb_configuration.php:690
+#: admin/abptb_configuration.php:722
 msgid ""
 "Pick a default foreground color shade for interactive typography labels "
 "inside button boundaries."
 msgstr ""
 
-#: admin/abptb_configuration.php:589
+#: admin/abptb_configuration.php:621
 msgid ""
 "Pick the primary corporate core signature theme color for accents, links, "
 "and buttons."
@@ -3566,7 +3631,7 @@ msgstr ""
 msgid "Pickup/Drop-off Point"
 msgstr ""
 
-#: admin/abptb_documentation.php:252
+#: admin/abptb_documentation.php:257
 msgid "Place a Test Booking"
 msgstr ""
 
@@ -3578,15 +3643,15 @@ msgstr ""
 msgid "Please login to see your bookings."
 msgstr ""
 
-#: includes/abptb_static.php:135
+#: includes/abptb_static.php:136
 msgid "Please Login your account to Download/View ticket !"
 msgstr ""
 
 #: admin/abptb_brand.php:220 admin/abptb_category.php:219
-#: admin/abptb_configuration.php:1017 admin/abptb_organizer.php:220
+#: admin/abptb_configuration.php:1049 admin/abptb_organizer.php:220
 #: admin/abptb_post.php:248 admin/abptb_tax.php:30 admin/abptb_tax.php:41
 #: admin/abptb_ticket.php:26 includes/abptb_dependencies.php:283
-#: includes/abptb_layout.php:307
+#: includes/abptb_layout.php:310
 msgid "Please Select"
 msgstr ""
 
@@ -3602,7 +3667,7 @@ msgstr ""
 msgid "Please select dropping point......!"
 msgstr ""
 
-#: includes/abptb_dependencies.php:284 includes/abptb_layout.php:696
+#: includes/abptb_dependencies.php:284 includes/abptb_layout.php:699
 msgid "Please Select Journey Date"
 msgstr ""
 
@@ -3610,17 +3675,17 @@ msgstr ""
 msgid "Please Select Journey Time"
 msgstr ""
 
-#: admin/abptb_dashboard.php:676
+#: admin/abptb_dashboard.php:677
 msgid "Plugin"
 msgstr ""
 
-#: admin/abptb_documentation.php:91
+#: admin/abptb_documentation.php:95
 msgid ""
 "Plugins → Add New → search \"ABP Transport Booking\" (or upload the ZIP) → "
 "Install → Activate."
 msgstr ""
 
-#: admin/abptb_configuration.php:572
+#: admin/abptb_configuration.php:604
 msgid "Popup Image Indicator"
 msgstr ""
 
@@ -3653,7 +3718,7 @@ msgstr ""
 msgid "Post Not found in Trash"
 msgstr ""
 
-#: admin/abptb_configuration.php:309
+#: admin/abptb_configuration.php:341
 msgid "Post SKU"
 msgstr ""
 
@@ -3665,7 +3730,7 @@ msgstr ""
 msgid "Premium Template"
 msgstr ""
 
-#: admin/abptb_dashboard.php:262
+#: admin/abptb_dashboard.php:263
 msgid "Prev"
 msgstr ""
 
@@ -3673,9 +3738,9 @@ msgstr ""
 msgid "Previous Page"
 msgstr ""
 
-#: admin/abptb_additional.php:84 admin/abptb_documentation.php:217
+#: admin/abptb_additional.php:84 admin/abptb_documentation.php:222
 #: admin/abptb_price.php:52 admin/abptb_price.php:108
-#: tb_templates/layout/selection_details.php:86
+#: tb_templates/layout/selection_details.php:89
 msgid "Price"
 msgstr ""
 
@@ -3699,36 +3764,36 @@ msgstr ""
 msgid "Price may be updated otherwise it will zero"
 msgstr ""
 
-#: admin/abptb_dashboard.php:776 admin/abptb_post.php:35
+#: admin/abptb_dashboard.php:777 admin/abptb_post.php:35
 msgid "Private"
 msgstr ""
 
-#: admin/abptb_documentation.php:61 admin/abptb_documentation.php:325
-#: admin/abptb_documentation.php:338 admin/abptb_documentation.php:351
-#: admin/abptb_documentation.php:364 admin/abptb_documentation.php:398
+#: admin/abptb_documentation.php:65 admin/abptb_documentation.php:332
+#: admin/abptb_documentation.php:345 admin/abptb_documentation.php:358
+#: admin/abptb_documentation.php:371 admin/abptb_documentation.php:405
 msgid "PRO"
 msgstr ""
 
-#: admin/abptb_documentation.php:301
+#: admin/abptb_documentation.php:307
 msgid ""
 "PRO POWER-UP — these tools work only when the PRO plugin + license are active"
 msgstr ""
 
-#: admin/abptb_documentation.php:307
+#: admin/abptb_documentation.php:314
 msgid "PRO — Must"
 msgstr ""
 
-#: admin/abptb_configuration.php:482
+#: admin/abptb_configuration.php:514
 msgid ""
 "Provide the full corporate physical location or street address to appear on "
 "booking logs."
 msgstr ""
 
-#: admin/abptb_dashboard.php:774 admin/abptb_post.php:34
+#: admin/abptb_dashboard.php:775 admin/abptb_post.php:34
 msgid "Published"
 msgstr ""
 
-#: admin/abptb_documentation.php:233
+#: admin/abptb_documentation.php:238
 msgid "Put the Booking Form on a Page"
 msgstr ""
 
@@ -3736,7 +3801,7 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: admin/abptb_dashboard.php:302
+#: admin/abptb_dashboard.php:303
 msgid "Quick Actions"
 msgstr ""
 
@@ -3744,19 +3809,19 @@ msgstr ""
 msgid "Radio"
 msgstr ""
 
-#: admin/abptb_dashboard.php:295
+#: admin/abptb_dashboard.php:296
 msgid "Read the plugin documentation & help"
 msgstr ""
 
-#: admin/abptb_dashboard.php:759
+#: admin/abptb_dashboard.php:760
 msgid "Ready"
 msgstr ""
 
-#: admin/abptb_dashboard.php:329
+#: admin/abptb_dashboard.php:330
 msgid "Recent Orders"
 msgstr ""
 
-#: admin/abptb_configuration.php:386
+#: admin/abptb_configuration.php:418
 msgid "Related Post"
 msgstr ""
 
@@ -3765,15 +3830,15 @@ msgstr ""
 msgid "Related Transport"
 msgstr ""
 
-#: admin/abptb_documentation.php:136
+#: admin/abptb_documentation.php:140
 msgid "Related transport"
 msgstr ""
 
-#: includes/abptb_layout.php:398 includes/abptb_layout.php:462
+#: includes/abptb_layout.php:401 includes/abptb_layout.php:465
 msgid "Remove Icon"
 msgstr ""
 
-#: includes/abptb_layout.php:466
+#: includes/abptb_layout.php:469
 msgid "Remove Image"
 msgstr ""
 
@@ -3789,21 +3854,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: admin/abptb_dashboard.php:496
+#: admin/abptb_dashboard.php:497
 msgid "Reserve"
 msgstr ""
 
 #. %d: number of reserved seats.
-#: admin/abptb_dashboard.php:211 admin/abptb_dashboard.php:453
+#: admin/abptb_dashboard.php:212 admin/abptb_dashboard.php:454
 msgid "Reserve %d"
 msgstr ""
 
 #: admin/abptb_ticket.php:178
 msgid "Reserve Quantity"
-msgstr ""
-
-#: admin/abptb_documentation.php:179
-msgid "Resources (FAQ & Terms) — optional"
 msgstr ""
 
 #: admin/abptb_post.php:147
@@ -3818,7 +3879,7 @@ msgstr ""
 msgid "Restoring.........!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:183
+#: admin/abptb_dashboard.php:184
 msgid "Return"
 msgstr ""
 
@@ -3826,11 +3887,11 @@ msgstr ""
 msgid "Return Date  Loading............."
 msgstr ""
 
-#: includes/abptb_layout.php:714
+#: includes/abptb_layout.php:717
 msgid "Return Date (optional)"
 msgstr ""
 
-#: includes/abptb_ajax.php:232
+#: includes/abptb_ajax.php:228
 msgid "Return Date Loaded successfully."
 msgstr ""
 
@@ -3846,16 +3907,16 @@ msgstr ""
 msgid "Return Route Configuration"
 msgstr ""
 
-#: admin/abptb_dashboard.php:422
+#: admin/abptb_dashboard.php:423
 msgid "Return Trip"
 msgstr ""
 
-#: admin/abptb_documentation.php:134
+#: admin/abptb_documentation.php:138
 msgid "Return trip"
 msgstr ""
 
-#: includes/abptb_layout.php:1015
-#: tb_templates/layout/additional_services.php:71
+#: includes/abptb_layout.php:1039
+#: tb_templates/layout/additional_services.php:84
 msgid "Returnable"
 msgstr ""
 
@@ -3863,16 +3924,16 @@ msgstr ""
 msgid "Returnable or Not"
 msgstr ""
 
-#: admin/abptb_documentation.php:178
+#: admin/abptb_documentation.php:182
 msgid "Reusable passenger information fields."
 msgstr ""
 
-#: admin/abptb_configuration.php:549
+#: admin/abptb_configuration.php:581
 msgid "Right"
 msgstr ""
 
-#: admin/abptb_dashboard.php:357 admin/abptb_dashboard.php:378
-#: admin/abptb_documentation.php:216 admin/abptb_orders.php:307
+#: admin/abptb_dashboard.php:358 admin/abptb_dashboard.php:379
+#: admin/abptb_documentation.php:221 admin/abptb_orders.php:307
 #: admin/abptb_post.php:93 admin/abptb_post.php:191
 msgid "Route"
 msgstr ""
@@ -3885,11 +3946,11 @@ msgstr ""
 msgid "Route Data Loaded Successfully !"
 msgstr ""
 
-#: admin/abptb_configuration.php:358
+#: admin/abptb_configuration.php:390
 msgid "Route Direction"
 msgstr ""
 
-#: admin/abptb_documentation.php:147
+#: admin/abptb_documentation.php:151
 msgid "Route direction"
 msgstr ""
 
@@ -3905,7 +3966,7 @@ msgstr ""
 msgid "Sale On"
 msgstr ""
 
-#: admin/abptb_configuration.php:428
+#: admin/abptb_configuration.php:460
 msgid "Same Attendee"
 msgstr ""
 
@@ -3913,7 +3974,7 @@ msgstr ""
 msgid "Same Attendee ?"
 msgstr ""
 
-#: admin/abptb_documentation.php:144
+#: admin/abptb_documentation.php:148
 msgid "Same attendee reuse"
 msgstr ""
 
@@ -3921,12 +3982,12 @@ msgstr ""
 msgid "Same Transport Return"
 msgstr ""
 
-#: includes/abptb_layout.php:499
+#: includes/abptb_layout.php:502
 msgid "Saturday"
 msgstr ""
 
 #: admin/abptb_brand.php:37 admin/abptb_category.php:38
-#: admin/abptb_configuration.php:143 admin/abptb_feature.php:38
+#: admin/abptb_configuration.php:144 admin/abptb_feature.php:38
 #: admin/abptb_location.php:35 admin/abptb_organizer.php:39
 msgid "Save"
 msgstr ""
@@ -3992,7 +4053,7 @@ msgstr ""
 msgid "Search  icon"
 msgstr ""
 
-#: admin/abptb_documentation.php:257
+#: admin/abptb_documentation.php:262
 msgid "Search a route, pick a journey date and press Check Availability."
 msgstr ""
 
@@ -4008,12 +4069,12 @@ msgstr ""
 msgid "Search Related Transport ...."
 msgstr ""
 
-#: admin/abptb_documentation.php:354
+#: admin/abptb_documentation.php:361
 msgid "Seasonal & early-bird discounts"
 msgstr ""
 
-#: includes/abptb_my_account.php:126
-#: tb_templates/layout/selection_details.php:85
+#: includes/abptb_my_account.php:124
+#: tb_templates/layout/selection_details.php:88
 msgid "Seat"
 msgstr ""
 
@@ -4021,20 +4082,20 @@ msgstr ""
 msgid "Seat Information"
 msgstr ""
 
-#: tb_templates/layout/sp_type.php:22
+#: tb_templates/layout/sp_type.php:38
 msgid "Seat Label :"
 msgstr ""
 
-#: admin/abptb_dashboard.php:460
+#: admin/abptb_dashboard.php:461
 msgid "Seat Map"
 msgstr ""
 
-#: admin/abptb_configuration.php:400 admin/abptb_dashboard.php:428
-#: admin/abptb_seat_plan.php:75 includes/abptb_layout.php:480
+#: admin/abptb_configuration.php:432 admin/abptb_dashboard.php:429
+#: admin/abptb_seat_plan.php:75 includes/abptb_layout.php:483
 msgid "Seat Plan"
 msgstr ""
 
-#: admin/abptb_documentation.php:132
+#: admin/abptb_documentation.php:136
 msgid "Seat plan"
 msgstr ""
 
@@ -4074,7 +4135,7 @@ msgstr ""
 msgid "Seat Plan Updated Successfully.....!"
 msgstr ""
 
-#: admin/abptb_documentation.php:199
+#: admin/abptb_documentation.php:204
 msgid ""
 "Seat plans are reusable — one plan can serve many transports, even multiple "
 "times in the same transport (multi-layer seating)."
@@ -4084,7 +4145,7 @@ msgstr ""
 msgid "Seats"
 msgstr ""
 
-#: admin/abptb_configuration.php:710
+#: admin/abptb_configuration.php:742
 msgid "Section Background Color"
 msgstr ""
 
@@ -4092,30 +4153,34 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: includes/abptb_layout.php:783
+#: includes/abptb_layout.php:788
 msgid "Select "
 msgstr ""
 
-#: admin/abptb_configuration.php:223
+#: admin/abptb_configuration.php:255
 msgid ""
 "Select a global FontAwesome vector icon / Emoji to act as the primary visual "
 "brand identity throughout the plugin panels."
 msgstr ""
 
-#: includes/abptb_layout.php:1149
+#: includes/abptb_layout.php:1173
 msgid "Select Boarding Point"
 msgstr ""
 
-#: includes/abptb_layout.php:1164
+#: includes/abptb_layout.php:1188
 msgid "Select Dropping Point"
 msgstr ""
 
-#: includes/abptb_layout.php:415
+#: includes/abptb_layout.php:418
 msgid "Select Image"
 msgstr ""
 
 #: admin/abptb_orders.php:355
 msgid "Select Journey Time"
+msgstr ""
+
+#: includes/abptb_layout.php:1321
+msgid "Select Order Status"
 msgstr ""
 
 #: admin/abptb_orders.php:309
@@ -4126,7 +4191,7 @@ msgstr ""
 msgid "Select Seat plan"
 msgstr ""
 
-#: admin/abptb_documentation.php:258
+#: admin/abptb_documentation.php:263
 msgid "Select seats (if seat plan) and ticket types, set the passenger count."
 msgstr ""
 
@@ -4138,13 +4203,13 @@ msgstr ""
 msgid "Select Stops.."
 msgstr ""
 
-#: admin/abptb_configuration.php:507
+#: admin/abptb_configuration.php:539
 msgid ""
 "Select the preferred frontend presentation layout style for display item "
 "multimedia asset sheets."
 msgstr ""
 
-#: admin/abptb_configuration.php:185
+#: admin/abptb_configuration.php:217
 msgid ""
 "Select the specific order statuses that will automatically trigger inventory "
 "deduction or reserve a seat."
@@ -4158,7 +4223,7 @@ msgstr ""
 msgid "Select Ticket Type.."
 msgstr ""
 
-#: admin/abptb_seat_plan.php:501 tb_templates/layout/sp_type.php:39
+#: admin/abptb_seat_plan.php:501 tb_templates/layout/sp_type.php:55
 msgid "Selected"
 msgstr ""
 
@@ -4166,29 +4231,29 @@ msgstr ""
 msgid "Selected Color"
 msgstr ""
 
-#: includes/abptb_ajax.php:19 includes/abptb_ajax.php:145
+#: includes/abptb_ajax.php:19 includes/abptb_ajax.php:143
 msgid "Session expired. Page Reloading......"
 msgstr ""
 
-#: includes/abptb_ajax.php:189 includes/abptb_ajax.php:218
+#: includes/abptb_ajax.php:187 includes/abptb_ajax.php:214
 msgid "Session expired. Please refresh the page."
 msgstr ""
 
-#: admin/abptb_configuration.php:618
+#: admin/abptb_configuration.php:650
 msgid ""
 "Set the default baseline layout font scale size applied to normal paragraph "
 "blocks across UI views."
 msgstr ""
 
-#: admin/abptb_configuration.php:697
+#: admin/abptb_configuration.php:729
 msgid ""
 "Set the default fill backdrop hexadecimal color value for transactional "
 "action trigger containers."
 msgstr ""
 
-#: admin/abptb_configuration.php:204 admin/abptb_configuration.php:241
-#: admin/abptb_configuration.php:261 admin/abptb_configuration.php:281
-#: admin/abptb_configuration.php:300
+#: admin/abptb_configuration.php:236 admin/abptb_configuration.php:273
+#: admin/abptb_configuration.php:293 admin/abptb_configuration.php:313
+#: admin/abptb_configuration.php:332
 msgid "Settings → Permalinks"
 msgstr ""
 
@@ -4204,12 +4269,12 @@ msgstr ""
 msgid "Short Description"
 msgstr ""
 
-#: admin/abptb_documentation.php:119
+#: admin/abptb_documentation.php:123
 msgid "Short description"
 msgstr ""
 
 #: admin/abptb_brand.php:183 admin/abptb_category.php:184
-#: admin/abptb_documentation.php:56 admin/abptb_organizer.php:183
+#: admin/abptb_documentation.php:60 admin/abptb_organizer.php:183
 #: admin/abptb_post.php:95
 msgid "Shortcode"
 msgstr ""
@@ -4219,7 +4284,7 @@ msgid "Shortcode Post"
 msgstr ""
 
 #. 1: first journey number, 2: last journey number, 3: total journey count.
-#: admin/abptb_dashboard.php:138
+#: admin/abptb_dashboard.php:139
 #, php-format
 msgid "Showing %1$d-%2$d of %3$d journeys"
 msgstr ""
@@ -4238,26 +4303,26 @@ msgstr ""
 msgid "Single"
 msgstr ""
 
-#: admin/abptb_documentation.php:354
+#: admin/abptb_documentation.php:361
 msgid ""
-"site-wide (Global Data → Global Discount) or per transport (Lists → Discount)"
-"."
+"site-wide (Global Configuration → Global Discount) or per transport (Lists → "
+"Discount)."
 msgstr ""
 
-#: admin/abptb_configuration.php:173
+#: admin/abptb_configuration.php:205
 msgid "Slider"
 msgstr ""
 
-#: admin/abptb_documentation.php:274
+#: admin/abptb_documentation.php:279
 msgid "Slider / gallery"
 msgstr ""
 
-#: admin/abptb_configuration.php:506
+#: admin/abptb_configuration.php:538
 msgid "Slider Theme"
 msgstr ""
 
 #: admin/abptb_brand.php:66 admin/abptb_category.php:67
-#: admin/abptb_configuration.php:200 admin/abptb_location.php:69
+#: admin/abptb_configuration.php:232 admin/abptb_location.php:69
 #: admin/abptb_organizer.php:68
 msgid "Slug"
 msgstr ""
@@ -4267,17 +4332,17 @@ msgstr ""
 msgid "Slug (Optional)"
 msgstr ""
 
-#: admin/abptb_dashboard.php:493 admin/abptb_seat_plan.php:499
-#: tb_templates/layout/sp_type.php:40
+#: admin/abptb_dashboard.php:494 admin/abptb_seat_plan.php:499
+#: tb_templates/layout/sp_type.php:56
 msgid "Sold"
 msgstr ""
 
-#: includes/abptb_layout.php:933
+#: includes/abptb_layout.php:957
 msgid "Sold !"
 msgstr ""
 
 #. %d: number of tickets sold.
-#: admin/abptb_dashboard.php:193 admin/abptb_dashboard.php:434
+#: admin/abptb_dashboard.php:194 admin/abptb_dashboard.php:435
 msgid "Sold %d"
 msgstr ""
 
@@ -4285,7 +4350,7 @@ msgstr ""
 msgid "Sold Color"
 msgstr ""
 
-#: includes/abptb_layout.php:802
+#: includes/abptb_layout.php:811
 msgid "Sold Out !"
 msgstr ""
 
@@ -4293,7 +4358,7 @@ msgstr ""
 msgid "Something Error Occurred !"
 msgstr ""
 
-#: includes/abptb_ajax.php:184
+#: includes/abptb_ajax.php:182
 msgid "Something Wrong... Reload Page....!"
 msgstr ""
 
@@ -4305,7 +4370,7 @@ msgstr ""
 msgid "Somethings went Wrong ! Please Try again"
 msgstr ""
 
-#: includes/abptb_static.php:138
+#: includes/abptb_static.php:139
 msgid "Sorry ! We can not find any Order in your criteria."
 msgstr ""
 
@@ -4324,7 +4389,7 @@ msgstr ""
 msgid "Sorry, the seat \"%s\" is no longer available."
 msgstr ""
 
-#: includes/abptb_layout.php:507
+#: includes/abptb_layout.php:510
 msgid "Special On Dates"
 msgstr ""
 
@@ -4340,7 +4405,7 @@ msgstr ""
 msgid "Specific Dates"
 msgstr ""
 
-#: includes/abptb_layout.php:506
+#: includes/abptb_layout.php:509
 msgid "Specific Off Dates"
 msgstr ""
 
@@ -4348,25 +4413,25 @@ msgstr ""
 msgid "Specific Off Dates(optional)"
 msgstr ""
 
-#: admin/abptb_configuration.php:610
+#: admin/abptb_configuration.php:642
 msgid ""
 "Specify a global UI layout component corner sharpness curve boundary "
 "rounding threshold value in raw pixel units."
 msgstr ""
 
-#: admin/abptb_configuration.php:489
+#: admin/abptb_configuration.php:521
 msgid ""
 "Specify the primary telephone or corporate helpline number for client "
 "inquiries."
 msgstr ""
 
-#: admin/abptb_configuration.php:682
+#: admin/abptb_configuration.php:714
 msgid ""
 "Specify the responsive scaling text size applied directly to interactive "
 "call-to-action control items."
 msgstr ""
 
-#: admin/abptb_configuration.php:519
+#: admin/abptb_configuration.php:551
 msgid ""
 "Specify the total number of gallery thumbnails to render in a single "
 "horizontal grid line row layout."
@@ -4384,24 +4449,24 @@ msgstr ""
 msgid "Starting Point  : "
 msgstr ""
 
-#: admin/abptb_dashboard.php:359 admin/abptb_dashboard.php:380
+#: admin/abptb_dashboard.php:360 admin/abptb_dashboard.php:381
 #: admin/abptb_orders.php:134
 msgid "Status"
 msgstr ""
 
-#: includes/abptb_function.php:97 includes/abptb_layout.php:678
+#: includes/abptb_function.php:97 includes/abptb_layout.php:681
 msgid "Stops"
 msgstr ""
 
-#: admin/abptb_documentation.php:172
+#: admin/abptb_documentation.php:176
 msgid "Stops / Locations — MUST"
 msgstr ""
 
-#: admin/abptb_dashboard.php:283
+#: admin/abptb_dashboard.php:284
 msgid "Stops Configuration"
 msgstr ""
 
-#: admin/abptb_configuration.php:289
+#: admin/abptb_configuration.php:321
 msgid "Stops Label"
 msgstr ""
 
@@ -4409,7 +4474,7 @@ msgstr ""
 msgid "Stops Name"
 msgstr ""
 
-#: admin/abptb_configuration.php:296
+#: admin/abptb_configuration.php:328
 msgid "Stops Slug"
 msgstr ""
 
@@ -4421,23 +4486,23 @@ msgstr ""
 msgid "Sub Title"
 msgstr ""
 
-#: admin/abptb_documentation.php:118
+#: admin/abptb_documentation.php:122
 msgid "Sub title"
 msgstr ""
 
-#: tb_templates/layout/selection_details.php:94
+#: tb_templates/layout/selection_details.php:97
 msgid "Sub-Total"
 msgstr ""
 
-#: includes/abptb_layout.php:500
+#: includes/abptb_layout.php:503
 msgid "Sunday"
 msgstr ""
 
-#: admin/abptb_configuration.php:500
+#: admin/abptb_configuration.php:532
 msgid "support@example.com"
 msgstr ""
 
-#: admin/abptb_dashboard.php:671
+#: admin/abptb_dashboard.php:672
 msgid "System Status"
 msgstr ""
 
@@ -4465,13 +4530,13 @@ msgstr ""
 msgid "Template"
 msgstr ""
 
-#: admin/abptb_documentation.php:215
+#: admin/abptb_documentation.php:220
 msgid ""
 "template (Default/Light/Premium), transport icon, sub-title, short "
 "description, category, organizer, brand, related transports."
 msgstr ""
 
-#: admin/abptb_admin.php:132 admin/abptb_configuration.php:457
+#: admin/abptb_configuration.php:199 admin/abptb_configuration.php:489
 #: admin/abptb_post.php:204 admin/abptb_tc.php:41
 #: tb_templates/layout/term_condition.php:20
 msgid "Term & Conditions"
@@ -4481,15 +4546,19 @@ msgstr ""
 msgid "Term & Conditions  Saved Successfully..... !!"
 msgstr ""
 
+#: admin/abptb_documentation.php:183
+msgid "Term & Conditions — optional"
+msgstr ""
+
 #: admin/abptb_dates.php:338
 msgid "Terminate Date (Optional)"
 msgstr ""
 
-#: admin/abptb_documentation.php:154
+#: admin/abptb_documentation.php:158
 msgid "Terms & Conditions"
 msgstr ""
 
-#: admin/abptb_documentation.php:57
+#: admin/abptb_documentation.php:61
 msgid "Test"
 msgstr ""
 
@@ -4501,36 +4570,36 @@ msgstr ""
 msgid "Textarea"
 msgstr ""
 
-#: admin/abptb_documentation.php:378
+#: admin/abptb_documentation.php:385
 msgid ""
 "The customer chooses Pay Full Amount Now or Pay Partial Amount (Deposit) Now."
 " The deposit is charged immediately; the rest is recorded as due."
 msgstr ""
 
-#: admin/abptb_documentation.php:169
+#: admin/abptb_documentation.php:173
 msgid ""
-"The Global Data tab stores reusable settings — create them once and every "
-"transport can use them."
+"The Global Configuration tab stores reusable settings — create them once and "
+"every transport can use them."
 msgstr ""
 
-#: admin/abptb_documentation.php:108
+#: admin/abptb_documentation.php:112
 msgid ""
 "The name customers see (default \"Transport\") and the URL slug of the "
 "listing page."
 msgstr ""
 
-#: admin/abptb_documentation.php:88
+#: admin/abptb_documentation.php:92
 msgid ""
 "The plugin needs WooCommerce because all payments and orders run through it."
 msgstr ""
 
-#: admin/abptb_documentation.php:312
+#: admin/abptb_documentation.php:319
 msgid ""
 "The pro plugin needs WooCommerce and the free plugin to be active. Do these "
 "in order:"
 msgstr ""
 
-#: includes/abptb_static.php:109
+#: includes/abptb_static.php:110
 msgid ""
 "The transport is not available for the selected date and time. Please choose "
 "a different schedule."
@@ -4546,13 +4615,13 @@ msgstr ""
 msgid "This transport sale close shortly. please try another transport."
 msgstr ""
 
-#: includes/abptb_layout.php:497
+#: includes/abptb_layout.php:500
 msgid "Thursday"
 msgstr ""
 
-#: admin/abptb_documentation.php:220 admin/abptb_dummy_import.php:34
+#: admin/abptb_documentation.php:225 admin/abptb_dummy_import.php:34
 #: admin/abptb_post.php:190 admin/abptb_ticket.php:32
-#: includes/abptb_layout.php:481 includes/abptb_woocommerce.php:431
+#: includes/abptb_layout.php:484 includes/abptb_woocommerce.php:431
 msgid "Ticket"
 msgstr ""
 
@@ -4560,11 +4629,11 @@ msgstr ""
 msgid "Ticket Cancel"
 msgstr ""
 
-#: admin/abptb_configuration.php:351
+#: admin/abptb_configuration.php:383
 msgid "Ticket Capacity"
 msgstr ""
 
-#: admin/abptb_documentation.php:133
+#: admin/abptb_documentation.php:137
 msgid "Ticket capacity"
 msgstr ""
 
@@ -4596,7 +4665,7 @@ msgstr ""
 msgid "Ticket Price : "
 msgstr ""
 
-#: admin/abptb_dashboard.php:428 admin/abptb_ticket.php:23
+#: admin/abptb_dashboard.php:429 admin/abptb_ticket.php:23
 #: admin/abptb_ticket.php:47
 msgid "Ticket Type"
 msgstr ""
@@ -4605,7 +4674,7 @@ msgstr ""
 msgid "Ticket Type & Qty"
 msgstr ""
 
-#: admin/abptb_dashboard.php:465
+#: admin/abptb_dashboard.php:466
 msgid "Ticket Type Breakdown"
 msgstr ""
 
@@ -4629,7 +4698,7 @@ msgstr ""
 msgid "Ticket Type Switching... Please Wait......."
 msgstr ""
 
-#: admin/abptb_documentation.php:191
+#: admin/abptb_documentation.php:196
 msgid "Ticket Types & Seat Plans (Ticket/Seat Plan tab)"
 msgstr ""
 
@@ -4645,19 +4714,19 @@ msgstr ""
 msgid "Ticket/Seat : "
 msgstr ""
 
-#: admin/abptb_admin.php:59
+#: admin/abptb_admin.php:56
 msgid "Ticket/Seat Plan"
 msgstr ""
 
-#: admin/abptb_documentation.php:54
+#: admin/abptb_documentation.php:58
 msgid "Tickets / Seats"
 msgstr ""
 
-#: admin/abptb_dashboard.php:77
+#: admin/abptb_dashboard.php:78
 msgid "Tickets Sold"
 msgstr ""
 
-#: admin/abptb_documentation.php:219 admin/abptb_post.php:194
+#: admin/abptb_documentation.php:224 admin/abptb_post.php:194
 msgid "Time"
 msgstr ""
 
@@ -4665,7 +4734,7 @@ msgstr ""
 msgid "Time  List Loaded Successfully !"
 msgstr ""
 
-#: tb_templates/layout/registration_item.php:34
+#: tb_templates/layout/registration_item.php:37
 msgid "Time :"
 msgstr ""
 
@@ -4686,7 +4755,7 @@ msgid "Time(in min)"
 msgstr ""
 
 #: admin/abptb_price.php:50 admin/abptb_price.php:106
-#: includes/abptb_layout.php:1162
+#: includes/abptb_layout.php:1186
 msgid "To"
 msgstr ""
 
@@ -4706,25 +4775,25 @@ msgstr ""
 msgid "To particular Item select"
 msgstr ""
 
-#: admin/abptb_dashboard.php:129
+#: admin/abptb_dashboard.php:130
 msgid "Today Trips"
 msgstr ""
 
-#: admin/abptb_dashboard.php:260
+#: admin/abptb_dashboard.php:261
 msgid "Today Trips pagination"
 msgstr ""
 
-#: admin/abptb_dashboard.php:332
+#: admin/abptb_dashboard.php:333
 msgid "Today's Orders"
 msgstr ""
 
-#: admin/abptb_configuration.php:548
+#: admin/abptb_configuration.php:580
 msgid "Top"
 msgstr ""
 
-#: admin/abptb_dashboard.php:360 admin/abptb_dashboard.php:381
-#: admin/abptb_dashboard.php:386 admin/abptb_dashboard.php:495
-#: includes/abptb_my_account.php:142
+#: admin/abptb_dashboard.php:361 admin/abptb_dashboard.php:382
+#: admin/abptb_dashboard.php:387 admin/abptb_dashboard.php:496
+#: includes/abptb_my_account.php:136
 msgid "Total"
 msgstr ""
 
@@ -4733,7 +4802,7 @@ msgid "Total "
 msgstr ""
 
 #. %d: total number of seats.
-#: admin/abptb_dashboard.php:205 admin/abptb_dashboard.php:446
+#: admin/abptb_dashboard.php:206 admin/abptb_dashboard.php:447
 msgid "Total %d"
 msgstr ""
 
@@ -4741,7 +4810,7 @@ msgstr ""
 msgid "Total : "
 msgstr ""
 
-#: admin/abptb_dashboard.php:76
+#: admin/abptb_dashboard.php:77
 msgid "Total Orders"
 msgstr ""
 
@@ -4749,7 +4818,7 @@ msgstr ""
 msgid "Total Quantity"
 msgstr ""
 
-#: admin/abptb_dashboard.php:78
+#: admin/abptb_dashboard.php:79
 msgid "Total Revenue"
 msgstr ""
 
@@ -4769,53 +4838,53 @@ msgstr ""
 msgid "Total Summary"
 msgstr ""
 
-#: admin/abptb_dashboard.php:75
+#: admin/abptb_dashboard.php:76
 msgid "Total Transport"
 msgstr ""
 
-#: admin/abptb_documentation.php:292
+#: admin/abptb_documentation.php:297
 msgid ""
 "total transports, orders, tickets sold, revenue, booked today, today's trips "
 "and system health."
 msgstr ""
 
-#: admin/abptb_configuration.php:196 admin/abptb_dashboard.php:417
-#: admin/abptb_documentation.php:55 includes/abptb_function.php:83
+#: admin/abptb_configuration.php:228 admin/abptb_dashboard.php:418
+#: admin/abptb_documentation.php:59 includes/abptb_function.php:83
 msgid "Transport"
 msgstr ""
 
-#: admin/abptb_configuration.php:222
+#: admin/abptb_configuration.php:254
 msgid "Transport Booking Icon"
 msgstr ""
 
-#: includes/abptb_static.php:118
+#: includes/abptb_static.php:119
 msgid ""
 "Transport Booking is entirely dependent on the WooCommerce plugin. Please "
 "install and activate the WooCommerce plugin otherwise the plugin will not "
 "work. Installing this tool may take some time"
 msgstr ""
 
-#: admin/abptb_documentation.php:175
+#: admin/abptb_documentation.php:179
 msgid "Transport brands for your fleet."
 msgstr ""
 
-#: admin/abptb_documentation.php:115
+#: admin/abptb_documentation.php:119
 msgid "Transport content"
 msgstr ""
 
-#: admin/abptb_configuration.php:330
+#: admin/abptb_configuration.php:362
 msgid "Transport Description"
 msgstr ""
 
-#: admin/abptb_documentation.php:124
+#: admin/abptb_documentation.php:128
 msgid "Transport features"
 msgstr ""
 
-#: admin/abptb_configuration.php:316 admin/abptb_post.php:275
+#: admin/abptb_configuration.php:348 admin/abptb_post.php:275
 msgid "Transport Icon"
 msgstr ""
 
-#: admin/abptb_documentation.php:117
+#: admin/abptb_documentation.php:121
 msgid "Transport icon"
 msgstr ""
 
@@ -4823,31 +4892,31 @@ msgstr ""
 msgid "Transport ID"
 msgstr ""
 
-#: admin/abptb_documentation.php:120
+#: admin/abptb_documentation.php:124
 msgid "Transport ID/SKU"
 msgstr ""
 
-#: admin/abptb_documentation.php:240
+#: admin/abptb_documentation.php:245
 msgid "transport image gallery / slider."
 msgstr ""
 
-#: admin/abptb_documentation.php:108
+#: admin/abptb_documentation.php:112
 msgid "Transport label & slug"
 msgstr ""
 
-#: admin/abptb_documentation.php:239
+#: admin/abptb_documentation.php:244
 msgid "transport list only."
 msgstr ""
 
-#: admin/abptb_documentation.php:238
+#: admin/abptb_documentation.php:243
 msgid "transport list with the booking search form (recommended)."
 msgstr ""
 
-#: admin/abptb_configuration.php:407
+#: admin/abptb_configuration.php:439
 msgid "Transport return"
 msgstr ""
 
-#: admin/abptb_configuration.php:323 admin/abptb_post.php:287
+#: admin/abptb_configuration.php:355 admin/abptb_post.php:287
 msgid "Transport Sub Title"
 msgstr ""
 
@@ -4855,11 +4924,11 @@ msgstr ""
 msgid "Transport Type"
 msgstr ""
 
-#: admin/abptb_documentation.php:173
+#: admin/abptb_documentation.php:177
 msgid "Transport types for filtering and SEO pages (bus, ferry, coach …)."
 msgstr ""
 
-#: admin/abptb_dashboard.php:777 admin/abptb_post.php:37
+#: admin/abptb_dashboard.php:778 admin/abptb_post.php:37
 msgid "Trash"
 msgstr ""
 
@@ -4870,15 +4939,15 @@ msgstr ""
 msgid "Trash : "
 msgstr ""
 
-#: includes/abptb_layout.php:495
+#: includes/abptb_layout.php:498
 msgid "Tuesday"
 msgstr ""
 
-#: admin/abptb_documentation.php:368
-msgid "Turn on the Partial Payment switch in Global Data."
+#: admin/abptb_documentation.php:375
+msgid "Turn on the Partial Payment switch in Global Configuration."
 msgstr ""
 
-#: admin/abptb_configuration.php:387
+#: admin/abptb_configuration.php:419
 msgid ""
 "Turn this switch OFF to completely disable the Related Posts feature. Once "
 "disabled, Related Post items will no longer be displayed on any details page "
@@ -4886,7 +4955,7 @@ msgid ""
 "again."
 msgstr ""
 
-#: admin/abptb_dashboard.php:492
+#: admin/abptb_dashboard.php:493
 msgid "Type"
 msgstr ""
 
@@ -4902,15 +4971,15 @@ msgstr ""
 msgid "Unique ID"
 msgstr ""
 
-#: admin/abptb_dashboard.php:297
+#: admin/abptb_dashboard.php:298
 msgid "Unlock all Pro features"
 msgstr ""
 
-#: admin/abptb_dashboard.php:183
+#: admin/abptb_dashboard.php:184
 msgid "Up"
 msgstr ""
 
-#: admin/abptb_dashboard.php:422
+#: admin/abptb_dashboard.php:423
 msgid "Up Trip"
 msgstr ""
 
@@ -4923,7 +4992,7 @@ msgstr ""
 msgid "Update Post"
 msgstr ""
 
-#: admin/abptb_documentation.php:314
+#: admin/abptb_documentation.php:321
 msgid ""
 "Upload <code>abp-transport-booking-pro.zip</code> under Plugins → Add New → "
 "Upload Plugin → Activate."
@@ -4935,6 +5004,12 @@ msgstr ""
 
 #: includes/abptb_static.php:91
 msgid "Use comma( , ) to separate option."
+msgstr ""
+
+#: admin/abptb_dashboard.php:1051
+msgid ""
+"Use coupon code <strong id=\"abptb-pro-offer-code\">ABP50</strong> at "
+"checkout."
 msgstr ""
 
 #: admin/abptb_additional.php:55
@@ -4975,7 +5050,7 @@ msgid ""
 "it. By default, this option is set to ON."
 msgstr ""
 
-#: includes/abptb_layout.php:1213 includes/abptb_layout.php:1215
+#: includes/abptb_layout.php:1237 includes/abptb_layout.php:1239
 msgid "User Name"
 msgstr ""
 
@@ -4995,7 +5070,7 @@ msgstr ""
 msgid "View : Seat Plan"
 msgstr ""
 
-#: admin/abptb_dashboard.php:130
+#: admin/abptb_dashboard.php:131
 msgid "View All"
 msgstr ""
 
@@ -5007,31 +5082,31 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
-#: admin/abptb_configuration.php:559
+#: admin/abptb_configuration.php:591
 msgid "Visible Popup?"
 msgstr ""
 
-#: admin/abptb_configuration.php:703
+#: admin/abptb_configuration.php:735
 msgid "Warning Color"
 msgstr ""
 
-#: admin/abptb_dashboard.php:706
+#: admin/abptb_dashboard.php:707
 msgid "WC Email"
 msgstr ""
 
-#: admin/abptb_dashboard.php:700
+#: admin/abptb_dashboard.php:701
 msgid "WC Name"
 msgstr ""
 
-#: includes/abptb_static.php:137
+#: includes/abptb_static.php:138
 msgid "We see, this id are not valid !"
 msgstr ""
 
-#: includes/abptb_layout.php:496
+#: includes/abptb_layout.php:499
 msgid "Wednesday"
 msgstr ""
 
-#: includes/abptb_layout.php:505
+#: includes/abptb_layout.php:508
 msgid "Weekend"
 msgstr ""
 
@@ -5040,30 +5115,30 @@ msgid "Weekend(optional)"
 msgstr ""
 
 #. %s: current user display name.
-#: admin/abptb_dashboard.php:47
+#: admin/abptb_dashboard.php:48
 #, php-format
 msgid "Welcome back, %s!"
 msgstr ""
 
-#: admin/abptb_documentation.php:222
+#: admin/abptb_documentation.php:227
 msgid ""
 "When everything is filled, click Publish. The transport is now bookable on "
 "the frontend."
 msgstr ""
 
-#: admin/abptb_documentation.php:218
+#: admin/abptb_documentation.php:223
 msgid ""
 "which dates the transport runs: schedule, date range, weekends only, or off-"
 "dates."
 msgstr ""
 
-#: admin/abptb_documentation.php:109
+#: admin/abptb_documentation.php:113
 msgid ""
 "Which WooCommerce statuses count as a real booking (default Processing + "
 "Completed)."
 msgstr ""
 
-#: admin/abptb_dashboard.php:688
+#: admin/abptb_dashboard.php:689
 msgid "WooCommerce"
 msgstr ""
 
@@ -5071,7 +5146,7 @@ msgstr ""
 msgid "WooCommerce  Installing.........Please Wait...............!!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:1094
+#: admin/abptb_dashboard.php:1145
 msgid "WooCommerce activated successfully!"
 msgstr ""
 
@@ -5080,25 +5155,25 @@ msgid ""
 "WooCommerce Downloading And Installing.........Please Wait...............!!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:1086
+#: admin/abptb_dashboard.php:1137
 msgid "WooCommerce installed and activated successfully!"
 msgstr ""
 
-#: admin/abptb_dashboard.php:1097
+#: admin/abptb_dashboard.php:1148
 msgid "WooCommerce is either not installed or already active."
 msgstr ""
 
-#: admin/abptb_dashboard.php:1028
+#: admin/abptb_dashboard.php:1032
 msgid "WooCommerce is required"
 msgstr ""
 
-#: admin/abptb_documentation.php:71
+#: admin/abptb_documentation.php:75
 msgid ""
 "WooCommerce is required before you can start booking. Please install and "
 "activate WooCommerce first."
 msgstr ""
 
-#: admin/abptb_dashboard.php:712
+#: admin/abptb_dashboard.php:713
 msgid "WooCommerce Plugin"
 msgstr ""
 
@@ -5108,11 +5183,11 @@ msgid ""
 "with seat plans, ticket types, routes, schedules and return trips."
 msgstr ""
 
-#: admin/abptb_dashboard.php:680
+#: admin/abptb_dashboard.php:681
 msgid "WordPress"
 msgstr ""
 
-#: admin/abptb_configuration.php:215
+#: admin/abptb_configuration.php:247
 msgid "WordPress Dashicons Library"
 msgstr ""
 
@@ -5120,7 +5195,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/abptb_static.php:136
+#: includes/abptb_static.php:137
 msgid "You are not permitted to Download/View this ticket !"
 msgstr ""
 
@@ -5134,7 +5209,7 @@ msgid ""
 "20 for 20 minutes after it."
 msgstr ""
 
-#: includes/abptb_hooks.php:65
+#: includes/abptb_hooks.php:69
 msgid "You can buy max ticket :"
 msgstr ""
 

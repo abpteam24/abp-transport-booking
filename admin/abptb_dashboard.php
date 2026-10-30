@@ -1,1102 +1,1152 @@
 <?php
-    if (!defined('ABSPATH')) {
-        exit; // Exit if accessed directly
-    }
-    if (!class_exists('ABPTB_Dashboard')) {
-        class ABPTB_Dashboard {
-            public function __construct() {
-                add_action('abptb_load_dashboard', array($this, 'load_dashboard'), 10);
-                add_action('wp_ajax_abptb_journey_popup', array($this, 'journey_popup'));
-                add_action('abptb_notice', [$this, 'wc_notice']);
-                add_action('wp_ajax_abptb_wc_config', array($this, 'wc_config'));
-            }
-            public function load_dashboard($abptb_info): void {
-                $label = ABPTB_Function::label();
-                $kpi = self::kpi_data();
-                ?>
-                <div class="abptb_dashboard">
-                    <?php $this->hero($label); ?>
-                    <?php $this->kpi_cards($abptb_info, $kpi); ?>
-                    <div class="dash_columns">
-                        <div class="dash_main">
-                            <?php $this->upcoming_journeys($kpi['upcoming'] ?? array()); ?>
-                            <?php $this->orders_summary(); ?>
-                        </div>
-                        <aside class="dash_side">
-                            <?php do_action('abptb_dashboard_sidebar'); ?>
-                            <?php $this->quick_actions(); ?>
-                            <?php $this->system_status($abptb_info, $label); ?>
-                            <?php $this->content_breakdown($abptb_info); ?>
-                        </aside>
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly
+}
+if (!class_exists('ABPTB_Dashboard')) {
+	class ABPTB_Dashboard {
+		public function __construct() {
+			add_action('abptb_load_dashboard', array($this, 'load_dashboard'), 10);
+			add_action('wp_ajax_abptb_journey_popup', array($this, 'journey_popup'));
+			add_action('abptb_notice', [$this, 'wc_notice']);
+			add_action('wp_ajax_abptb_wc_config', array($this, 'wc_config'));
+			add_action('wp_ajax_abptb_dismiss_pro_offer', array($this, 'dismiss_pro_offer'));
+		}
+		public function load_dashboard($abptb_info): void {
+			$label = ABPTB_Function::label();
+			$kpi = self::kpi_data();
+			?>
+            <div class="abptb_dashboard">
+				<?php $this->hero($label); ?>
+				<?php $this->kpi_cards($abptb_info, $kpi); ?>
+                <div class="dash_columns">
+                    <div class="dash_main">
+						<?php $this->upcoming_journeys($kpi['upcoming'] ?? array()); ?>
+						<?php $this->orders_summary(); ?>
+                    </div>
+                    <aside class="dash_side">
+						<?php do_action('abptb_dashboard_sidebar'); ?>
+						<?php $this->quick_actions(); ?>
+						<?php $this->system_status($abptb_info, $label); ?>
+						<?php $this->content_breakdown($abptb_info); ?>
+                    </aside>
+                </div>
+            </div>
+			<?php
+		}
+		//=============================//
+		private function hero($label): void {
+			$user = wp_get_current_user();
+			$name = $user && !empty($user->display_name) ? $user->display_name : __('Admin', 'abp-transport-booking');
+			?>
+            <div class="dash_hero">
+                <div class="dash_hero_main">
+                    <div class="dash_hero_text">
+                        <span class="dash_hero_date"><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format(current_time('Y-m-d'))); ?></span>
+                        <h2>
+							<?php
+							/* translators: %s: current user display name. */
+							printf(esc_html__('Welcome back, %s!', 'abp-transport-booking'), esc_html($name));
+							?>
+                        </h2>
+                        <p>
+							<?php
+							/* translators: %s: transport label. */
+							printf(esc_html__('Here is what is happening with your %s booking business today.', 'abp-transport-booking'), esc_html($label));
+							?>
+                        </p>
                     </div>
                 </div>
-                <?php
-            }
-            //=============================//
-            private function hero($label): void {
-                $user = wp_get_current_user();
-                $name = $user && !empty($user->display_name) ? $user->display_name : __('Admin', 'abp-transport-booking');
-                ?>
-                <div class="dash_hero">
-                    <div class="dash_hero_main">
-                        <div class="dash_hero_text">
-                            <span class="dash_hero_date"><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format(current_time('Y-m-d'))); ?></span>
-                            <h2>
-                                <?php
-                                    /* translators: %s: current user display name. */
-                                    printf(esc_html__('Welcome back, %s!', 'abp-transport-booking'), esc_html($name));
-                                ?>
-                            </h2>
-                            <p>
-                                <?php
-                                    /* translators: %s: transport label. */
-                                    printf(esc_html__('Here is what is happening with your %s booking business today.', 'abp-transport-booking'), esc_html($label));
-                                ?>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="dash_hero_side">
-                        <div class="dash_hero_actions">
-                            <a class="dash_btn dash_btn_solid" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>">
-                                <i class="fas fa-plus"></i> <?php echo esc_html($label); ?>
-                            </a>
-                            <a class="dash_btn dash_btn_ghost" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>">
-                                <i class="fas fa-file-invoice"></i> <?php esc_html_e('Orders', 'abp-transport-booking'); ?>
-                            </a>
-                        </div>
+                <div class="dash_hero_side">
+                    <div class="dash_hero_actions">
+                        <a class="dash_btn dash_btn_solid" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>">
+                            <i class="fas fa-plus"></i> <?php echo esc_html($label); ?>
+                        </a>
+                        <a class="dash_btn dash_btn_ghost" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>">
+                            <i class="fas fa-file-invoice"></i> <?php esc_html_e('Orders', 'abp-transport-booking'); ?>
+                        </a>
                     </div>
                 </div>
-                <?php
-            }
-            private function kpi_cards($abptb_info, $kpi): void {
-                $currency = function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : '';
-                $revenue = $currency . number_format_i18n((float)($kpi['revenue'] ?? 0), 2);
-                $cards = array(
-                    array('theme', 'fas fa-bus', (string)($abptb_info['total_post'] ?? 0), __('Total Transport', 'abp-transport-booking'), ABPTB_Function::build_url('posts')),
-                    array('navy', 'fas fa-file-invoice', (string)($abptb_info['total_order'] ?? 0), __('Total Orders', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
-                    array('success', 'fas fa-ticket-alt', (string)($kpi['tickets'] ?? 0), __('Tickets Sold', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
-                    array('purple', 'fas fa-money-bill-wave', $revenue, __('Total Revenue', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
-                    array('warning', 'fas fa-calendar-day', (string)($kpi['today'] ?? 0), __('Booked Today', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
-                );
-                ?>
-                <div class="dash_kpi_grid">
-                    <?php foreach ($cards as $card) { ?>
-                        <a class="dash_kpi" href="<?php echo esc_url($card[4]); ?>">
-                            <span class="dash_kpi_icon <?php echo esc_attr($card[0]); ?>"><i class="<?php echo esc_attr($card[1]); ?>"></i></span>
-                            <span class="dash_kpi_body">
+            </div>
+			<?php
+		}
+		private function kpi_cards($abptb_info, $kpi): void {
+			$currency = function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : '';
+			$revenue = $currency . number_format_i18n((float)($kpi['revenue'] ?? 0), 2);
+			$cards = array(
+				array('theme', 'fas fa-bus', (string)($abptb_info['total_post'] ?? 0), __('Total Transport', 'abp-transport-booking'), ABPTB_Function::build_url('posts')),
+				array('navy', 'fas fa-file-invoice', (string)($abptb_info['total_order'] ?? 0), __('Total Orders', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
+				array('success', 'fas fa-ticket-alt', (string)($kpi['tickets'] ?? 0), __('Tickets Sold', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
+				array('purple', 'fas fa-money-bill-wave', $revenue, __('Total Revenue', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
+				array('warning', 'fas fa-calendar-day', (string)($kpi['today'] ?? 0), __('Booked Today', 'abp-transport-booking'), ABPTB_Function::build_url('orders')),
+			);
+			?>
+            <div class="dash_kpi_grid">
+				<?php foreach ($cards as $card) { ?>
+                    <a class="dash_kpi" href="<?php echo esc_url($card[4]); ?>">
+                        <span class="dash_kpi_icon <?php echo esc_attr($card[0]); ?>"><i class="<?php echo esc_attr($card[1]); ?>"></i></span>
+                        <span class="dash_kpi_body">
                                 <span class="dash_kpi_value"><?php echo esc_html($card[2]); ?></span>
                                 <span class="dash_kpi_label"><?php echo esc_html($card[3]); ?></span>
                             </span>
-                        </a>
-                    <?php } ?>
+                    </a>
+				<?php } ?>
+            </div>
+			<?php
+		}
+		private function upcoming_journeys($upcoming): void {
+			$upcoming = is_array($upcoming) ? $upcoming : array();
+			$per_page = (int)apply_filters('abptb_dashboard_journeys_per_page', 25);
+			if ($per_page < 1) {
+				$per_page = 25;
+			}
+			$total_journeys = count($upcoming);
+			// Group journeys by transport so every trip of one transport stays together.
+			$groups = array();
+			foreach ($upcoming as $journey) {
+				$group_post_id = (int)($journey['post_id'] ?? 0);
+				if (!isset($groups[$group_post_id])) {
+					$groups[$group_post_id] = array('post_id' => $group_post_id, 'rows' => array());
+				}
+				$groups[$group_post_id]['rows'][] = $journey;
+			}
+			$group_list = array_values($groups);
+			$total_pages = max(1, (int)ceil(count($group_list) / $per_page));
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination value, cast with absint() and used only as an array_slice() offset.
+			$current_page = isset($_GET['abptb_journey_page']) ? absint($_GET['abptb_journey_page']) : 1;
+			$current_page = max(1, min($current_page, $total_pages));
+			$page_offset = ($current_page - 1) * $per_page;
+			$page_groups = array_slice($group_list, $page_offset, $per_page);
+			$journey_before = 0;
+			for ($gi = 0; $gi < $page_offset; $gi++) {
+				$journey_before += count($group_list[$gi]['rows']);
+			}
+			$journey_on_page = 0;
+			foreach ($page_groups as $group_page) {
+				$journey_on_page += count($group_page['rows']);
+			}
+			?>
+            <div class="dash_card">
+                <div class="dash_card_head">
+                    <h4 class="abp"><i class="fas fa-route _color_theme"></i> <?php esc_html_e('Today Trips', 'abp-transport-booking'); ?></h4>
+                    <a class="_btn_light_theme_xs" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>"><?php esc_html_e('View All', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
                 </div>
-                <?php
-            }
-            private function upcoming_journeys($upcoming): void {
-                $upcoming = is_array($upcoming) ? $upcoming : array();
-                $per_page = (int)apply_filters('abptb_dashboard_journeys_per_page', 25);
-                if ($per_page < 1) {
-                    $per_page = 25;
-                }
-                $total_journeys = count($upcoming);
-                // Group journeys by transport so every trip of one transport stays together.
-                $groups = array();
-                foreach ($upcoming as $journey) {
-                    $group_post_id = (int)($journey['post_id'] ?? 0);
-                    if (!isset($groups[$group_post_id])) {
-                        $groups[$group_post_id] = array('post_id' => $group_post_id, 'rows' => array());
-                    }
-                    $groups[$group_post_id]['rows'][] = $journey;
-                }
-                $group_list = array_values($groups);
-                $total_pages = max(1, (int)ceil(count($group_list) / $per_page));
-                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination value, cast with absint() and used only as an array_slice() offset.
-                $current_page = isset($_GET['abptb_journey_page']) ? absint($_GET['abptb_journey_page']) : 1;
-                $current_page = max(1, min($current_page, $total_pages));
-                $page_offset = ($current_page - 1) * $per_page;
-                $page_groups = array_slice($group_list, $page_offset, $per_page);
-                $journey_before = 0;
-                for ($gi = 0; $gi < $page_offset; $gi++) {
-                    $journey_before += count($group_list[$gi]['rows']);
-                }
-                $journey_on_page = 0;
-                foreach ($page_groups as $group_page) {
-                    $journey_on_page += count($group_page['rows']);
-                }
-                ?>
-                <div class="dash_card">
-                    <div class="dash_card_head">
-                        <h4 class="abp"><i class="fas fa-route _color_theme"></i> <?php esc_html_e('Today Trips', 'abp-transport-booking'); ?></h4>
-                        <a class="_btn_light_theme_xs" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>"><?php esc_html_e('View All', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
-                    </div>
-                    <div class="dash_card_body dash_card_body_plain">
-                        <?php if (!empty($page_groups)) { ?>
-                            <?php if ($total_pages > 1) { ?>
-                                <div class="dash_journey_count">
-                                    <?php
-                                        // translators: 1: first journey number, 2: last journey number, 3: total journey count.
-                                        echo esc_html(sprintf(__('Showing %1$d-%2$d of %3$d journeys', 'abp-transport-booking'), $journey_before + 1, $journey_before + $journey_on_page, $total_journeys));
-                                    ?>
-                                </div>
-                            <?php } ?>
-                            <div class="dash_rows">
-                                <?php foreach ($page_groups as $group) {
-                                    $group_rows = $group['rows'];
-                                    $group_trip_count = count($group_rows);
-                                    $group_first_start = (string)($group_rows[0]['start_time'] ?? '');
-                                    ?>
-                                    <div class="dash_journey_group">
-                                        <div class="dash_journey_group_head">
-                                            <h6 class="abp_gap_xs"><?php ABPTB_Layout::title(array('post_id' => (int)$group['post_id'])); ?></h6>
-                                            <div class="dash_journey_group_meta">
-                                                <?php if (!empty($group_first_start)) { ?>
-                                                    <span class="dash_chip"><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format($group_first_start)); ?></span>
-                                                <?php } ?>
-                                                <span class="dash_chip dash_journey_group_count">
+                <div class="dash_card_body dash_card_body_plain">
+					<?php if (!empty($page_groups)) { ?>
+						<?php if ($total_pages > 1) { ?>
+                            <div class="dash_journey_count">
+								<?php
+								// translators: 1: first journey number, 2: last journey number, 3: total journey count.
+								echo esc_html(sprintf(__('Showing %1$d-%2$d of %3$d journeys', 'abp-transport-booking'), $journey_before + 1, $journey_before + $journey_on_page, $total_journeys));
+								?>
+                            </div>
+						<?php } ?>
+                        <div class="dash_rows">
+							<?php foreach ($page_groups as $group) {
+								$group_rows = $group['rows'];
+								$group_trip_count = count($group_rows);
+								$group_first_start = (string)($group_rows[0]['start_time'] ?? '');
+								?>
+                                <div class="dash_journey_group">
+                                    <div class="dash_journey_group_head">
+                                        <h6 class="abp_gap_xs"><?php ABPTB_Layout::title(array('post_id' => (int)$group['post_id'])); ?></h6>
+                                        <div class="dash_journey_group_meta">
+											<?php if (!empty($group_first_start)) { ?>
+                                                <span class="dash_chip"><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format($group_first_start)); ?></span>
+											<?php } ?>
+                                            <span class="dash_chip dash_journey_group_count">
                                                     <?php
-                                                        // translators: %d: number of trips for the transport.
-                                                        echo esc_html(sprintf(_n('%d trip', '%d trips', $group_trip_count, 'abp-transport-booking'), $group_trip_count));
+                                                    // translators: %d: number of trips for the transport.
+                                                    echo esc_html(sprintf(_n('%d trip', '%d trips', $group_trip_count, 'abp-transport-booking'), $group_trip_count));
                                                     ?>
                                                 </span>
-                                            </div>
-                                        </div>
-                                        <div class="dash_journey_group_body">
-                                            <?php foreach ($group_rows as $row) {
-                                                $post_id = (int)($row['post_id'] ?? 0);
-                                                $start_time = $row['start_time'] ?? '';
-                                                $direction = ('return' === ($row['direction'] ?? 'up')) ? 'return' : 'up';
-                                                $route = $row['route'] ?? '';
-                                                $started = !empty($row['started']);
-                                                $sold = (int)($row['sold'] ?? 0);
-                                                $available = (int)($row['available'] ?? 0);
-                                                $total = (int)($row['total'] ?? 0);
-                                                $reserve = (int)($row['reserve'] ?? 0);
-                                                ?>
-                                                <div class="dash_row dash_journey_row" data-journey data-post="<?php echo esc_attr($post_id); ?>" data-start="<?php echo esc_attr($start_time); ?>" data-direction="<?php echo esc_attr($direction); ?>" title="<?php esc_attr_e('Click to view journey bookings', 'abp-transport-booking'); ?>">
-                                                    <div class="dash_row_main">
-                                                        <?php if (!empty($route)) { ?>
-                                                            <small><i class="fas fa-route"></i> <?php echo esc_html($route); ?></small>
-                                                        <?php } ?>
-                                                        <small>
-                                                            <i class="far fa-calendar-alt"></i>
-                                                            <?php echo esc_html(ABPTB_Function::date_format($start_time)); ?>
-                                                            <span class="dash_trip_badge dash_trip_badge_<?php echo esc_attr($direction); ?>"><i class="fas fa-<?php echo esc_attr('return' === $direction ? 'reply' : 'arrow-right'); ?>"></i> <?php echo esc_html('return' === $direction ? __('Return', 'abp-transport-booking') : __('Up', 'abp-transport-booking')); ?></span>
-                                                            <?php if ($started) { ?>
-                                                                <span class="dash_trip_state dash_trip_state_started"><i class="fas fa-play-circle"></i> <?php esc_html_e('Journey Started', 'abp-transport-booking'); ?></span>
-                                                            <?php } ?>
-                                                        </small>
-                                                    </div>
-                                                    <div class="dash_row_meta dash_journey_meta">
-                                                        <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i>
-                                                            <?php
-                                                                // translators: %d: number of tickets sold.
-                                                                echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $sold));
-                                                            ?>
-                                                        </span>
-                                                        <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
-                                                            <?php
-                                                                // translators: %d: number of available seats.
-                                                                echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $available));
-                                                            ?>
-                                                        </span>
-                                                        <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
-                                                            <?php
-                                                                // translators: %d: total number of seats.
-                                                                echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $total));
-                                                            ?>
-                                                        </span>
-                                                        <?php if ($reserve > 0) { ?>
-                                                            <?php
-                                                            // translators: %d: number of reserved seats.
-                                                            echo '<span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i> ' . esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $reserve)) . '</span>';
-                                                            ?>
-                                                        <?php } ?>
-                                                        <button type="button" class="_btn_light_theme_xs dash_journey_btn"><i class="fas fa-eye"></i> <?php esc_html_e('Details', 'abp-transport-booking'); ?></button>
-                                                    </div>
-                                                </div>
-                                            <?php } ?>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
-                            <div class="dash_journey_hint"><i class="fas fa-mouse-pointer"></i> <?php esc_html_e('Click a trip or its Details button to see booking details.', 'abp-transport-booking'); ?></div>
-                            <?php if ($total_pages > 1) {
-                                $this->journey_pagination($current_page, $total_pages);
-                            } ?>
-                        <?php } else { ?>
-                            <div class="dash_empty">
-                                <i class="fas fa-calendar-check"></i>
-                                <p><?php esc_html_e('No upcoming journeys scheduled right now.', 'abp-transport-booking'); ?></p>
-                            </div>
-                        <?php } ?>
-                    </div>
+                                    <div class="dash_journey_group_body">
+										<?php foreach ($group_rows as $row) {
+											$post_id = (int)($row['post_id'] ?? 0);
+											$start_time = $row['start_time'] ?? '';
+											$direction = ('return' === ($row['direction'] ?? 'up')) ? 'return' : 'up';
+											$route = $row['route'] ?? '';
+											$started = !empty($row['started']);
+											$sold = (int)($row['sold'] ?? 0);
+											$available = (int)($row['available'] ?? 0);
+											$total = (int)($row['total'] ?? 0);
+											$reserve = (int)($row['reserve'] ?? 0);
+											?>
+                                            <div class="dash_row dash_journey_row" data-journey data-post="<?php echo esc_attr($post_id); ?>" data-start="<?php echo esc_attr($start_time); ?>" data-direction="<?php echo esc_attr($direction); ?>" title="<?php esc_attr_e('Click to view journey bookings', 'abp-transport-booking'); ?>">
+                                                <div class="dash_row_main">
+													<?php if (!empty($route)) { ?>
+                                                        <small><i class="fas fa-route"></i> <?php echo esc_html($route); ?></small>
+													<?php } ?>
+                                                    <small>
+                                                        <i class="far fa-calendar-alt"></i>
+														<?php echo esc_html(ABPTB_Function::date_format($start_time)); ?>
+                                                        <span class="dash_trip_badge dash_trip_badge_<?php echo esc_attr($direction); ?>"><i class="fas fa-<?php echo esc_attr('return' === $direction ? 'reply' : 'arrow-right'); ?>"></i> <?php echo esc_html('return' === $direction ? __('Return', 'abp-transport-booking') : __('Up', 'abp-transport-booking')); ?></span>
+														<?php if ($started) { ?>
+                                                            <span class="dash_trip_state dash_trip_state_started"><i class="fas fa-play-circle"></i> <?php esc_html_e('Journey Started', 'abp-transport-booking'); ?></span>
+														<?php } ?>
+                                                    </small>
+                                                </div>
+                                                <div class="dash_row_meta dash_journey_meta">
+                                                        <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i>
+                                                            <?php
+                                                            // translators: %d: number of tickets sold.
+                                                            echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $sold));
+                                                            ?>
+                                                        </span>
+                                                    <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
+                                                            <?php
+                                                            // translators: %d: number of available seats.
+                                                            echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $available));
+                                                            ?>
+                                                        </span>
+                                                    <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
+                                                            <?php
+                                                            // translators: %d: total number of seats.
+                                                            echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $total));
+                                                            ?>
+                                                        </span>
+													<?php if ($reserve > 0) { ?>
+														<?php
+														// translators: %d: number of reserved seats.
+														echo '<span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i> ' . esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $reserve)) . '</span>';
+														?>
+													<?php } ?>
+                                                    <button type="button" class="_btn_light_theme_xs dash_journey_btn"><i class="fas fa-eye"></i> <?php esc_html_e('Details', 'abp-transport-booking'); ?></button>
+                                                </div>
+                                            </div>
+										<?php } ?>
+                                    </div>
+                                </div>
+							<?php } ?>
+                        </div>
+                        <div class="dash_journey_hint"><i class="fas fa-mouse-pointer"></i> <?php esc_html_e('Click a trip or its Details button to see booking details.', 'abp-transport-booking'); ?></div>
+						<?php if ($total_pages > 1) {
+							$this->journey_pagination($current_page, $total_pages);
+						} ?>
+					<?php } else { ?>
+                        <div class="dash_empty">
+                            <i class="fas fa-calendar-check"></i>
+                            <p><?php esc_html_e('No upcoming journeys scheduled right now.', 'abp-transport-booking'); ?></p>
+                        </div>
+					<?php } ?>
                 </div>
-                <?php
-            }
-            //=============================//
-            private function journey_pagination(int $current_page, int $total_pages): void {
-                $page_url = function (int $page): string {
-                    return 1 === $page
-                        ? ABPTB_Function::build_url('dashboard')
-                        : ABPTB_Function::build_url('dashboard', ['abptb_journey_page' => $page]);
-                };
-                $window = 2;
-                $items = array();
-                $last = 0;
-                for ($page = 1; $page <= $total_pages; $page++) {
-                    $is_edge = (1 === $page || $total_pages === $page);
-                    if (!$is_edge && abs($page - $current_page) > $window) {
-                        continue;
-                    }
-                    if ($last && $page - $last > 1) {
-                        $items[] = '<span class="dash_page_gap">…</span>';
-                    }
-                    $items[] = $page === $current_page
-                        ? '<span class="dash_page abp_active" aria-current="page">' . esc_html($page) . '</span>'
-                        : '<a class="dash_page" href="' . esc_url($page_url($page)) . '">' . esc_html($page) . '</a>';
-                    $last = $page;
-                }
-                ?>
-                <nav class="dash_pagination" aria-label="<?php esc_attr_e('Today Trips pagination', 'abp-transport-booking'); ?>">
-                    <?php if ($current_page > 1) { ?>
-                        <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page - 1)); ?>" rel="prev"><i class="fas fa-angle-left"></i> <?php esc_html_e('Prev', 'abp-transport-booking'); ?></a>
-                    <?php } ?>
-                    <?php echo wp_kses_post(implode('', $items)); ?>
-                    <?php if ($current_page < $total_pages) { ?>
-                        <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page + 1)); ?>" rel="next"><?php esc_html_e('Next', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
-                    <?php } ?>
-                </nav>
-                <?php
-            }
-            //=============================//
-            private function quick_actions(): void {
-                $actions = array(
-                    array('fas fa-toggle-on', __('ON/OFF Configuration', 'abp-transport-booking'), __('Enable & disable features', 'abp-transport-booking'), ABPTB_Function::build_url('configuration', ['configuration' => 'on_off']), 'warning'),
-                    array('fas fa-calendar-days', __('Global Date', 'abp-transport-booking'), __('Manage global dates', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'dates']), 'theme'),
-                );
-                if (ABPTB_Function::on_off('additional_info')) {
-                    $actions[] = array('fas fa-list-check', __('Additional Services', 'abp-transport-booking'), __('Manage additional services', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'additional']), 'success');
-                }
-                if (ABPTB_Function::on_off('client_info')) {
-                    $actions[] = array('fas fa-user', __('Client Form', 'abp-transport-booking'), __('Manage client form fields', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'client_form']), 'purple');
-                }
-                $actions[] = array('fas fa-route', __('Stops Configuration', 'abp-transport-booking'), __('Manage stops / locations', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'location']), 'navy');
-                if (defined('ABPTB_DIR_PRO')) {
-                    if (ABPTB_Function::on_off('partial_payment')) {
-                        $actions[] = array('fas fa-hand-holding-dollar', __('Partial Payment', 'abp-transport-booking'), __('Configure partial payment', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'partial_payment']), 'success');
-                    }
-                    if ((ABPTB_Function::on_off('seasonal') && ABPTB_Function::on_off('seasonal_global')) || (ABPTB_Function::on_off('early_bird') && ABPTB_Function::on_off('early_bird_global'))) {
-                        $actions[] = array('fas fa-percent', __('Global Discount', 'abp-transport-booking'), __('Configure global discounts', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'discount']), 'info');
-                    }
-                    if (ABPTB_Function::on_off('cancel_request')) {
-                        $actions[] = array('fas fa-ban', __('Cancel Request', 'abp-transport-booking'), __('Manage cancellation requests', 'abp-transport-booking'), ABPTB_Function::build_url('cancel_requests'), 'warning');
-                    }
-                }
-                $actions[] = array('fas fa-book-open', __('Documentation', 'abp-transport-booking'), __('Read the plugin documentation & help', 'abp-transport-booking'), 'https://transport-booking.abp-team.com/documentation/', 'info', '_blank');
-                if (!defined('ABPTB_DIR_PRO')) {
-                    $actions[] = array('fas fa-crown', __('Buy Pro', 'abp-transport-booking'), __('Unlock all Pro features', 'abp-transport-booking'), 'https://abp-team.com/downloads/abp-transport-booking-pro/', 'success', '_blank');
-                }
-                ?>
-                <div class="dash_card">
-                    <div class="dash_card_head">
-                        <h4 class="abp_gap_xs"><i class="fas fa-bolt"></i> <?php esc_html_e('Quick Actions', 'abp-transport-booking'); ?></h4>
-                    </div>
-                    <div class="dash_card_body">
-                        <div class="dash_action_grid">
-                            <?php foreach ($actions as $action) { ?>
-                                <a class="dash_action" href="<?php echo esc_url($action[3]); ?>"<?php echo !empty($action[5]) ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
-                                    <span class="dash_action_icon <?php echo esc_attr($action[4]); ?>"><i class="<?php echo esc_attr($action[0]); ?>"></i></span>
-                                    <span class="dash_action_text">
+            </div>
+			<?php
+		}
+		//=============================//
+		private function journey_pagination(int $current_page, int $total_pages): void {
+			$page_url = function (int $page): string {
+				return 1 === $page
+					? ABPTB_Function::build_url('dashboard')
+					: ABPTB_Function::build_url('dashboard', ['abptb_journey_page' => $page]);
+			};
+			$window = 2;
+			$items = array();
+			$last = 0;
+			for ($page = 1; $page <= $total_pages; $page++) {
+				$is_edge = (1 === $page || $total_pages === $page);
+				if (!$is_edge && abs($page - $current_page) > $window) {
+					continue;
+				}
+				if ($last && $page - $last > 1) {
+					$items[] = '<span class="dash_page_gap">…</span>';
+				}
+				$items[] = $page === $current_page
+					? '<span class="dash_page abp_active" aria-current="page">' . esc_html($page) . '</span>'
+					: '<a class="dash_page" href="' . esc_url($page_url($page)) . '">' . esc_html($page) . '</a>';
+				$last = $page;
+			}
+			?>
+            <nav class="dash_pagination" aria-label="<?php esc_attr_e('Today Trips pagination', 'abp-transport-booking'); ?>">
+				<?php if ($current_page > 1) { ?>
+                    <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page - 1)); ?>" rel="prev"><i class="fas fa-angle-left"></i> <?php esc_html_e('Prev', 'abp-transport-booking'); ?></a>
+				<?php } ?>
+				<?php echo wp_kses_post(implode('', $items)); ?>
+				<?php if ($current_page < $total_pages) { ?>
+                    <a class="dash_page dash_page_step" href="<?php echo esc_url($page_url($current_page + 1)); ?>" rel="next"><?php esc_html_e('Next', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
+				<?php } ?>
+            </nav>
+			<?php
+		}
+		//=============================//
+		private function quick_actions(): void {
+			$actions = array(
+				array('fas fa-toggle-on', __('ON/OFF Configuration', 'abp-transport-booking'), __('Enable & disable features', 'abp-transport-booking'), ABPTB_Function::build_url('configuration', ['configuration' => 'on_off']), 'warning'),
+				array('fas fa-calendar-days', __('Global Date', 'abp-transport-booking'), __('Manage global dates', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'dates']), 'theme'),
+			);
+			if (ABPTB_Function::on_off('additional_info')) {
+				$actions[] = array('fas fa-list-check', __('Additional Services', 'abp-transport-booking'), __('Manage additional services', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'additional']), 'success');
+			}
+			if (ABPTB_Function::on_off('client_info')) {
+				$actions[] = array('fas fa-user', __('Client Form', 'abp-transport-booking'), __('Manage client form fields', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'client_form']), 'purple');
+			}
+			$actions[] = array('fas fa-route', __('Stops Configuration', 'abp-transport-booking'), __('Manage stops / locations', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'location']), 'navy');
+			if (defined('ABPTB_DIR_PRO')) {
+				if (ABPTB_Function::on_off('partial_payment')) {
+					$actions[] = array('fas fa-hand-holding-dollar', __('Partial Payment', 'abp-transport-booking'), __('Configure partial payment', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'partial_payment']), 'success');
+				}
+				if ((ABPTB_Function::on_off('seasonal') && ABPTB_Function::on_off('seasonal_global')) || (ABPTB_Function::on_off('early_bird') && ABPTB_Function::on_off('early_bird_global'))) {
+					$actions[] = array('fas fa-percent', __('Global Discount', 'abp-transport-booking'), __('Configure global discounts', 'abp-transport-booking'), ABPTB_Function::build_url('global', ['global' => 'discount']), 'info');
+				}
+				if (ABPTB_Function::on_off('cancel_request')) {
+					$actions[] = array('fas fa-ban', __('Cancel Request', 'abp-transport-booking'), __('Manage cancellation requests', 'abp-transport-booking'), ABPTB_Function::build_url('cancel_requests'), 'warning');
+				}
+			}
+			$actions[] = array('fas fa-book-open', __('Documentation', 'abp-transport-booking'), __('Read the plugin documentation & help', 'abp-transport-booking'), 'https://demo-tb.abp-team.com/documentation/', 'info', '_blank');
+			if (!defined('ABPTB_DIR_PRO')) {
+				$actions[] = array('fas fa-crown', __('Buy Pro', 'abp-transport-booking'), __('Unlock all Pro features', 'abp-transport-booking'), 'https://abp-team.com/downloads/abp-transport-booking-pro/', 'success', '_blank');
+			}
+			?>
+            <div class="dash_card">
+                <div class="dash_card_head">
+                    <h4 class="abp_gap_xs"><i class="fas fa-bolt"></i> <?php esc_html_e('Quick Actions', 'abp-transport-booking'); ?></h4>
+                </div>
+                <div class="dash_card_body">
+                    <div class="dash_action_grid">
+						<?php foreach ($actions as $action) { ?>
+                            <a class="dash_action" href="<?php echo esc_url($action[3]); ?>"<?php echo !empty($action[5]) ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                                <span class="dash_action_icon <?php echo esc_attr($action[4]); ?>"><i class="<?php echo esc_attr($action[0]); ?>"></i></span>
+                                <span class="dash_action_text">
                                         <b><?php echo esc_html($action[1]); ?></b>
                                         <small><?php echo esc_html($action[2]); ?></small>
                                     </span>
-                                    <i class="fas fa-angle-right dash_action_arrow"></i>
-                                </a>
-                            <?php } ?>
+                                <i class="fas fa-angle-right dash_action_arrow"></i>
+                            </a>
+						<?php } ?>
+                    </div>
+                </div>
+            </div>
+			<?php
+		}
+		private function orders_summary(): void {
+			$last = ABPTB_Query::get_booking_query(array(), 10);
+			$today_date = current_time('Y-m-d');
+			$today = ABPTB_Query::get_booking_query(array('order_date' => $today_date), 10);
+			$today_total = (int)ABPTB_Query::get_booking_query(array('order_date' => $today_date), 0, 0, true);
+			?>
+            <div class="dash_card dash_orders_card">
+                <div class="dash_card_head ">
+                    <h4 class="abp_gap_xs"><i class="fas fa-receipt"></i> <?php esc_html_e('Recent Orders', 'abp-transport-booking'); ?></h4>
+                    <div class="_group_content">
+                        <button type="button" class="_btn_light_theme_xs abp_active dash_order_tab" data-dtab="recent"><i class="fas fa-list-ul"></i> <?php esc_html_e('Last 10 Orders', 'abp-transport-booking'); ?></button>
+                        <button type="button" class="_btn_light_theme_xs dash_order_tab" data-dtab="today"><i class="fas fa-calendar-day"></i> <?php esc_html_e("Today's Orders", 'abp-transport-booking'); ?></button>
+                    </div>
+                    <a class="dash_card_link" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>"><?php esc_html_e('All Orders', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
+                </div>
+                <div class="dash_orders_body">
+                    <div class="dash_orders_pane abp_active" data-dpane="recent">
+						<?php $this->order_table($last, false); ?>
+                    </div>
+                    <div class="dash_orders_pane" data-dpane="today">
+                        <div class="dash_pane_content">
+                            <div class="dash_orders_meta"><?php echo esc_html($today_total); ?><?php echo esc_html(_n('order', 'orders', $today_total, 'abp-transport-booking')); ?></div>
+							<?php $this->order_table($today, false); ?>
                         </div>
                     </div>
                 </div>
-                <?php
-            }
-            private function orders_summary(): void {
-                $last = ABPTB_Query::get_booking_query(array(), 10);
-                $today_date = current_time('Y-m-d');
-                $today = ABPTB_Query::get_booking_query(array('order_date' => $today_date), 10);
-                $today_total = (int)ABPTB_Query::get_booking_query(array('order_date' => $today_date), 0, 0, true);
-                ?>
-                <div class="dash_card dash_orders_card">
-                    <div class="dash_card_head ">
-                        <h4 class="abp_gap_xs"><i class="fas fa-receipt"></i> <?php esc_html_e('Recent Orders', 'abp-transport-booking'); ?></h4>
-                        <div class="_group_content">
-                            <button type="button" class="_btn_light_theme_xs abp_active dash_order_tab" data-dtab="recent"><i class="fas fa-list-ul"></i> <?php esc_html_e('Last 10 Orders', 'abp-transport-booking'); ?></button>
-                            <button type="button" class="_btn_light_theme_xs dash_order_tab" data-dtab="today"><i class="fas fa-calendar-day"></i> <?php esc_html_e("Today's Orders", 'abp-transport-booking'); ?></button>
-                        </div>
-                        <a class="dash_card_link" href="<?php echo esc_url(ABPTB_Function::build_url('orders')); ?>"><?php esc_html_e('All Orders', 'abp-transport-booking'); ?> <i class="fas fa-angle-right"></i></a>
-                    </div>
-                    <div class="dash_orders_body">
-                        <div class="dash_orders_pane abp_active" data-dpane="recent">
-                            <?php $this->order_table($last, false); ?>
-                        </div>
-                        <div class="dash_orders_pane" data-dpane="today">
-                            <div class="dash_pane_content">
-                                <div class="dash_orders_meta"><?php echo esc_html($today_total); ?><?php echo esc_html(_n('order', 'orders', $today_total, 'abp-transport-booking')); ?></div>
-                                <?php $this->order_table($today, false); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php
-            }
-            private function order_table($items, $with_total = true): void {
-                $totals = array('total' => 0);
-                ?>
-                <table class="dash_order_table">
-                    <thead>
-                    <tr>
-                        <th><?php esc_html_e('Order / Vehicle', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Route', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Date', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Status', 'abp-transport-booking'); ?></th>
-                        <th class="dash_num"><?php esc_html_e('Total', 'abp-transport-booking'); ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if (!empty($items)) { ?>
-                        <?php foreach ($items as $item) {
-                            $order_id = (int)($item['order_id'] ?? 0);
-                            $bp_id = (int)($item['bp'] ?? 0);
-                            $dp_id = (int)($item['dp'] ?? 0);
-                            $route = ($bp_id > 0 && $dp_id > 0) ? ABPTB_Function::location_value($bp_id) . ' - ' . ABPTB_Function::location_value($dp_id) : '&mdash;';
-                            $total = (float)($item['total'] ?? 0);
-                            $totals['total'] += $total;
-                            ?>
-                            <tr>
-                                <td data-label="<?php esc_attr_e('Order / Vehicle', 'abp-transport-booking'); ?>">
-                                    <b class="dash_oid">#<?php echo esc_html($order_id); ?></b>
-                                    <?php ABPTB_Layout::title(array('post_id' => (int)($item['post_id'] ?? 0))); ?>
-                                </td>
-                                <td data-label="<?php esc_attr_e('Route', 'abp-transport-booking'); ?>"><span class="dash_route"><?php echo wp_kses_post($route); ?></span></td>
-                                <td data-label="<?php esc_attr_e('Date', 'abp-transport-booking'); ?>"><?php echo esc_html(ABPTB_Function::date_format($item['created_at'] ?? '', 'date')); ?></td>
-                                <td data-label="<?php esc_attr_e('Status', 'abp-transport-booking'); ?>"><span class="dash_pill <?php echo esc_attr($item['order_status'] ?? ''); ?>"><?php echo esc_html(ABPTB_Layout::status_text($item['order_status'] ?? '')); ?></span></td>
-                                <td class="dash_num" data-label="<?php esc_attr_e('Total', 'abp-transport-booking'); ?>"><?php echo $total > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total) : number_format_i18n((float)$total, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></td>
-                            </tr>
-                        <?php } ?>
-                        <?php if ($with_total) { ?>
-                            <tr class="dash_order_total_row">
-                                <td colspan="4"><?php esc_html_e('Total', 'abp-transport-booking'); ?></td>
-                                <td class="dash_num"><?php echo wp_kses_post(ABPTB_WC >= 2 ? wc_price($totals['total']) : number_format_i18n((float)$totals['total'], 2)); ?></td>
-                            </tr>
-                        <?php } ?>
-                    <?php } else { ?>
+            </div>
+			<?php
+		}
+		private function order_table($items, $with_total = true): void {
+			$totals = array('total' => 0);
+			?>
+            <table class="dash_order_table">
+                <thead>
+                <tr>
+                    <th><?php esc_html_e('Order / Vehicle', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Route', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Date', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Status', 'abp-transport-booking'); ?></th>
+                    <th class="dash_num"><?php esc_html_e('Total', 'abp-transport-booking'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+				<?php if (!empty($items)) { ?>
+					<?php foreach ($items as $item) {
+						$order_id = (int)($item['order_id'] ?? 0);
+						$bp_id = (int)($item['bp'] ?? 0);
+						$dp_id = (int)($item['dp'] ?? 0);
+						$route = ($bp_id > 0 && $dp_id > 0) ? ABPTB_Function::location_value($bp_id) . ' - ' . ABPTB_Function::location_value($dp_id) : '&mdash;';
+						$total = (float)($item['total'] ?? 0);
+						$totals['total'] += $total;
+						?>
                         <tr>
-                            <td colspan="5" class="dash_order_empty"><?php esc_html_e('No orders found.', 'abp-transport-booking'); ?></td>
+                            <td data-label="<?php esc_attr_e('Order / Vehicle', 'abp-transport-booking'); ?>">
+                                <b class="dash_oid">#<?php echo esc_html($order_id); ?></b>
+								<?php ABPTB_Layout::title(array('post_id' => (int)($item['post_id'] ?? 0))); ?>
+                            </td>
+                            <td data-label="<?php esc_attr_e('Route', 'abp-transport-booking'); ?>"><span class="dash_route"><?php echo wp_kses_post($route); ?></span></td>
+                            <td data-label="<?php esc_attr_e('Date', 'abp-transport-booking'); ?>"><?php echo esc_html(ABPTB_Function::date_format($item['created_at'] ?? '', 'date')); ?></td>
+                            <td data-label="<?php esc_attr_e('Status', 'abp-transport-booking'); ?>"><span class="dash_pill <?php echo esc_attr($item['order_status'] ?? ''); ?>"><?php echo esc_html(ABPTB_Layout::status_text($item['order_status'] ?? '')); ?></span></td>
+                            <td class="dash_num" data-label="<?php esc_attr_e('Total', 'abp-transport-booking'); ?>"><?php echo $total > 0 ? wp_kses_post(ABPTB_WC >= 2 ? wc_price($total) : number_format_i18n((float)$total, 2)) : esc_html__('FREE', 'abp-transport-booking'); ?></td>
                         </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-                <?php
-            }
-            //=============================//
-            public function journey_popup(): void {
-                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
-                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
-                }
-                $post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : 0;
-                $start_time = isset($_POST['start_time']) ? sanitize_text_field(wp_unslash($_POST['start_time'])) : '';
-                $direction = isset($_POST['direction']) && 'return' === $_POST['direction'] ? 'return' : 'up';
-                if ($post_id <= 0 || empty($start_time)) {
-                    wp_send_json_error(['msg' => __('Invalid journey.', 'abp-transport-booking'), 'type' => 'warn'], 400);
-                }
-                $meta = self::journey_meta($post_id, $start_time, -1, -1, $direction);
-                $seat_type = $meta['seat_type'] ?? 'ticket';
-                ob_start();
-                ?>
-                <div class="dash_journey_popup">
-                    <div class="dash_journey_pop_head">
-                        <div>
-                            <h4><i class="fas fa-bus"></i> <?php echo esc_html($meta['title'] ?? __('Transport', 'abp-transport-booking')); ?></h4>
-                            <?php if (!empty($meta['route'])) { ?>
-                                <small><i class="fas fa-route"></i> <?php echo esc_html($meta['route']); ?></small>
-                            <?php } ?>
-                            <small><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format($start_time)); ?>
-                                <span class="dash_trip_badge dash_trip_badge_<?php echo esc_attr($direction); ?>"><i class="fas fa-<?php echo esc_attr('return' === $direction ? 'reply' : 'arrow-right'); ?>"></i> <?php echo esc_html('return' === $direction ? __('Return Trip', 'abp-transport-booking') : __('Up Trip', 'abp-transport-booking')); ?></span>
-                                <?php if (!empty($meta['started'])) { ?>
-                                    <span class="dash_trip_state dash_trip_state_started"><i class="fas fa-play-circle"></i> <?php esc_html_e('Journey Started', 'abp-transport-booking'); ?></span>
-                                <?php } ?>
-                            </small>
-                        </div>
-                        <span class="dash_chip dash_chip_total"><?php echo esc_html(('sp' === $seat_type) ? __('Seat Plan', 'abp-transport-booking') : __('Ticket Type', 'abp-transport-booking')); ?></span>
+					<?php } ?>
+					<?php if ($with_total) { ?>
+                        <tr class="dash_order_total_row">
+                            <td colspan="4"><?php esc_html_e('Total', 'abp-transport-booking'); ?></td>
+                            <td class="dash_num"><?php echo wp_kses_post(ABPTB_WC >= 2 ? wc_price($totals['total']) : number_format_i18n((float)$totals['total'], 2)); ?></td>
+                        </tr>
+					<?php } ?>
+				<?php } else { ?>
+                    <tr>
+                        <td colspan="5" class="dash_order_empty"><?php esc_html_e('No orders found.', 'abp-transport-booking'); ?></td>
+                    </tr>
+				<?php } ?>
+                </tbody>
+            </table>
+			<?php
+		}
+		//=============================//
+		public function journey_popup(): void {
+			if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+				wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+			}
+			$post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : 0;
+			$start_time = isset($_POST['start_time']) ? sanitize_text_field(wp_unslash($_POST['start_time'])) : '';
+			$direction = isset($_POST['direction']) && 'return' === $_POST['direction'] ? 'return' : 'up';
+			if ($post_id <= 0 || empty($start_time)) {
+				wp_send_json_error(['msg' => __('Invalid journey.', 'abp-transport-booking'), 'type' => 'warn'], 400);
+			}
+			$meta = self::journey_meta($post_id, $start_time, -1, -1, $direction);
+			$seat_type = $meta['seat_type'] ?? 'ticket';
+			ob_start();
+			?>
+            <div class="dash_journey_popup">
+                <div class="dash_journey_pop_head">
+                    <div>
+                        <h4><i class="fas fa-bus"></i> <?php echo esc_html($meta['title'] ?? __('Transport', 'abp-transport-booking')); ?></h4>
+						<?php if (!empty($meta['route'])) { ?>
+                            <small><i class="fas fa-route"></i> <?php echo esc_html($meta['route']); ?></small>
+						<?php } ?>
+                        <small><i class="far fa-calendar-alt"></i> <?php echo esc_html(ABPTB_Function::date_format($start_time)); ?>
+                            <span class="dash_trip_badge dash_trip_badge_<?php echo esc_attr($direction); ?>"><i class="fas fa-<?php echo esc_attr('return' === $direction ? 'reply' : 'arrow-right'); ?>"></i> <?php echo esc_html('return' === $direction ? __('Return Trip', 'abp-transport-booking') : __('Up Trip', 'abp-transport-booking')); ?></span>
+							<?php if (!empty($meta['started'])) { ?>
+                                <span class="dash_trip_state dash_trip_state_started"><i class="fas fa-play-circle"></i> <?php esc_html_e('Journey Started', 'abp-transport-booking'); ?></span>
+							<?php } ?>
+                        </small>
                     </div>
-                    <div class="dash_journey_stats">
+                    <span class="dash_chip dash_chip_total"><?php echo esc_html(('sp' === $seat_type) ? __('Seat Plan', 'abp-transport-booking') : __('Ticket Type', 'abp-transport-booking')); ?></span>
+                </div>
+                <div class="dash_journey_stats">
                         <span class="dash_chip dash_chip_sold"><i class="fas fa-ticket-alt"></i>
                             <?php
-                                // translators: %d: number of tickets sold.
-                                echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $meta['sold']));
+                            // translators: %d: number of tickets sold.
+                            echo esc_html(sprintf(__('Sold %d', 'abp-transport-booking'), $meta['sold']));
                             ?>
                         </span>
-                        <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
+                    <span class="dash_chip dash_chip_avail"><i class="fas fa-chair"></i>
                             <?php
-                                // translators: %d: number of available seats.
-                                echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $meta['available']));
+                            // translators: %d: number of available seats.
+                            echo esc_html(sprintf(__('Avail %d', 'abp-transport-booking'), $meta['available']));
                             ?>
                         </span>
-                        <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
+                    <span class="dash_chip dash_chip_total"><i class="fas fa-users"></i>
                             <?php
-                                // translators: %d: total number of seats.
-                                echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $meta['total']));
+                            // translators: %d: total number of seats.
+                            echo esc_html(sprintf(__('Total %d', 'abp-transport-booking'), $meta['total']));
                             ?>
                         </span>
-                        <?php if ($meta['reserve'] > 0) { ?>
-                            <span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i>
+					<?php if ($meta['reserve'] > 0) { ?>
+                        <span class="dash_chip dash_chip_reserve"><i class="fas fa-lock"></i>
                                 <?php
-                                    // translators: %d: number of reserved seats.
-                                    echo esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $meta['reserve']));
+                                // translators: %d: number of reserved seats.
+                                echo esc_html(sprintf(__('Reserve %d', 'abp-transport-booking'), $meta['reserve']));
                                 ?>
                             </span>
-                        <?php } ?>
-                    </div>
-                    <?php if ('sp' === $seat_type) { ?>
-                        <div class="dash_journey_section">
-                            <h5><i class="fas fa-chair"></i> <?php esc_html_e('Seat Map', 'abp-transport-booking'); ?></h5>
-                            <?php $this->journey_seat_map($post_id, $start_time); ?>
-                        </div>
-                    <?php } else { ?>
-                        <div class="dash_journey_section">
-                            <h5><i class="fas fa-tags"></i> <?php esc_html_e('Ticket Type Breakdown', 'abp-transport-booking'); ?></h5>
-                            <?php $this->journey_ticket_table($post_id, $start_time); ?>
-                        </div>
-                    <?php } ?>
+					<?php } ?>
+                </div>
+				<?php if ('sp' === $seat_type) { ?>
                     <div class="dash_journey_section">
-                        <h5><i class="fas fa-file-invoice"></i> <?php esc_html_e('Bookings', 'abp-transport-booking'); ?> (<?php echo esc_html($meta['order_count']); ?>)</h5>
-                        <?php $this->journey_bookings($post_id, $start_time); ?>
+                        <h5><i class="fas fa-chair"></i> <?php esc_html_e('Seat Map', 'abp-transport-booking'); ?></h5>
+						<?php $this->journey_seat_map($post_id, $start_time); ?>
                     </div>
+				<?php } else { ?>
+                    <div class="dash_journey_section">
+                        <h5><i class="fas fa-tags"></i> <?php esc_html_e('Ticket Type Breakdown', 'abp-transport-booking'); ?></h5>
+						<?php $this->journey_ticket_table($post_id, $start_time); ?>
+                    </div>
+				<?php } ?>
+                <div class="dash_journey_section">
+                    <h5><i class="fas fa-file-invoice"></i> <?php esc_html_e('Bookings', 'abp-transport-booking'); ?> (<?php echo esc_html($meta['order_count']); ?>)</h5>
+					<?php $this->journey_bookings($post_id, $start_time); ?>
                 </div>
-                <?php
-                $html = ob_get_clean();
-                wp_send_json_success(['html' => $html, 'msg' => esc_html__('Journey loaded.', 'abp-transport-booking'), 'type' => 'success']);
-            }
-            //=============================//
-            private function journey_ticket_table($post_id, $start_time): void {
-                $post_infos = ABPTB_Function::get_all_meta($post_id);
-                $ticket_infos = $post_infos['ticket_infos'] ?? array();
-                $filters = array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false);
-                $sold = ABPTB_Query::get_sold_ticket($filters, true);
-                if (empty($ticket_infos) || !is_array($ticket_infos)) {
-                    echo '<div class="dash_empty"><i class="fas fa-tag"></i><p>' . esc_html__('No ticket configuration found.', 'abp-transport-booking') . '</p></div>';
-                    return;
-                }
-                ?>
-                <table class="dash_journey_table">
-                    <thead>
+            </div>
+			<?php
+			$html = ob_get_clean();
+			wp_send_json_success(['html' => $html, 'msg' => esc_html__('Journey loaded.', 'abp-transport-booking'), 'type' => 'success']);
+		}
+		//=============================//
+		private function journey_ticket_table($post_id, $start_time): void {
+			$post_infos = ABPTB_Function::get_all_meta($post_id);
+			$ticket_infos = $post_infos['ticket_infos'] ?? array();
+			$filters = array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false);
+			$sold = ABPTB_Query::get_sold_ticket($filters, true);
+			if (empty($ticket_infos) || !is_array($ticket_infos)) {
+				echo '<div class="dash_empty"><i class="fas fa-tag"></i><p>' . esc_html__('No ticket configuration found.', 'abp-transport-booking') . '</p></div>';
+				return;
+			}
+			?>
+            <table class="dash_journey_table">
+                <thead>
+                <tr>
+                    <th><?php esc_html_e('Type', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Sold', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Available', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Total', 'abp-transport-booking'); ?></th>
+                    <th><?php esc_html_e('Reserve', 'abp-transport-booking'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+				<?php foreach ($ticket_infos as $tic_id => $ticket_info) {
+					$qty = (int)($ticket_info['qty'] ?? 0);
+					$reserve = (int)($ticket_info['reserve'] ?? 0);
+					$sold_qty = (int)($sold[$tic_id] ?? 0);
+					$avail = max(0, $qty - $sold_qty - $reserve);
+					?>
                     <tr>
-                        <th><?php esc_html_e('Type', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Sold', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Available', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Total', 'abp-transport-booking'); ?></th>
-                        <th><?php esc_html_e('Reserve', 'abp-transport-booking'); ?></th>
+                        <td>
+                            <strong><?php echo esc_html(ABPTB_Function::ticket_name($tic_id)); ?></strong>
+                        </td>
+                        <td><?php echo esc_html($sold_qty); ?></td>
+                        <td><?php echo esc_html($avail); ?></td>
+                        <td><?php echo esc_html($qty); ?></td>
+                        <td><?php echo esc_html($reserve); ?></td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($ticket_infos as $tic_id => $ticket_info) {
-                        $qty = (int)($ticket_info['qty'] ?? 0);
-                        $reserve = (int)($ticket_info['reserve'] ?? 0);
-                        $sold_qty = (int)($sold[$tic_id] ?? 0);
-                        $avail = max(0, $qty - $sold_qty - $reserve);
-                        ?>
-                        <tr>
-                            <td>
-                                <strong><?php echo esc_html(ABPTB_Function::ticket_name($tic_id)); ?></strong>
-                            </td>
-                            <td><?php echo esc_html($sold_qty); ?></td>
-                            <td><?php echo esc_html($avail); ?></td>
-                            <td><?php echo esc_html($qty); ?></td>
-                            <td><?php echo esc_html($reserve); ?></td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-                <?php
-            }
-            //=============================//
-            private function journey_seat_map($post_id, $start_time): void {
-                $post_infos = ABPTB_Function::get_all_meta($post_id);
-                $sp_infos = $post_infos['sp_infos'] ?? array();
-                if (empty($sp_infos) || !is_array($sp_infos)) {
-                    echo '<div class="dash_empty"><i class="fas fa-chair"></i><p>' . esc_html__('No seat plan assigned.', 'abp-transport-booking') . '</p></div>';
-                    return;
-                }
-                $filters = array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false);
-                $sold_seat = ABPTB_Query::get_sold_seat($filters, true);
-                foreach ($sp_infos as $sp_item) {
-                    $sp_id = (int)($sp_item['id'] ?? 0);
-                    if ($sp_id <= 0) {
-                        continue;
-                    }
-                    $this->render_seat_plan($sp_id, $sold_seat);
-                }
-            }
-            //=============================//
-            private function render_seat_plan($sp_id, $sold_seat): void {
-                $row = ABPTB_Query::get_sp($sp_id);
-                $sp_info = !empty($row) ? current($row) : array();
-                if (empty($sp_info)) {
-                    return;
-                }
-                $others = json_decode($sp_info['others'] ?? '', true) ?: array();
-                $cell_width = $others['width'] ?? 40;
-                $cell_height = $others['height'] ?? 40;
-                $gap = $others['gap'] ?? 0;
-                $radius = $others['radius'] ?? 0;
-                $cols = intval($others['column'] ?? 10);
-                $bg_image = $others['bg_image'] ?? '';
-                $img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
-                $bg_color = $others['bg_color'] ?? '#fff';
-                $layout = json_decode($sp_info['layout_data'] ?? '', true) ?: array();
-                $sp_name = $sp_info['name'] ?? '';
-                // Multi-row/column cells must hide their "occupied" grid slots.
-                $hidden_cells = array();
-                foreach ($layout as $index => $cell) {
-                    $c_span = intval($cell['width_ratio'] ?? 1);
-                    $r_span = intval($cell['height_ratio'] ?? 1);
-                    if ($c_span > 1 || $r_span > 1) {
-                        for ($r = 0; $r < $r_span; $r++) {
-                            for ($c = 0; $c < $c_span; $c++) {
-                                if ($r === 0 && $c === 0) {
-                                    continue;
-                                }
-                                $target_idx = $index + ($r * $cols) + $c;
-                                $hidden_cells[$target_idx] = true;
-                            }
-                        }
-                    }
-                }
-                ?>
-                <div class="dash_sp_block">
-                    <?php if (!empty($sp_name)) { ?>
-                        <div class="dash_sp_title"><?php echo esc_html($sp_name); ?></div>
-                    <?php } ?>
-                    <div class="sp_canvas dash_sp_canvas" style="grid-template-columns: repeat(<?php echo esc_attr($cols); ?>, 1fr); background-image: url('<?php echo esc_url($img_url); ?>'); background-color: <?php echo esc_attr($bg_color); ?>;gap: <?php echo esc_attr($gap); ?>px;">
-                        <?php foreach ($layout as $index => $cell) {
-                            if (isset($hidden_cells[$index])) {
-                                continue;
-                            }
-                            $type_id = $cell['id'] ?? '';
-                            $name = $cell['name'] ?? '';
-                            $c_span = intval($cell['width_ratio'] ?? 1);
-                            $r_span = intval($cell['height_ratio'] ?? 1);
-                            $rotate = intval($cell['rotate'] ?? 0);
-                            $fs = $cell['fs'] ?? 12;
-                            $is_seat = ('seat' === ($cell['type'] ?? ''));
-                            $seat_type_class = $is_seat ? 'available' : '';
-                            $seat_type_class = $is_seat && in_array($name, $sold_seat, true) ? 'sold' : $seat_type_class;
-                            $class = $is_seat ? 'sp_cell ' . $seat_type_class : 'sp_decor';
-                            $color = $is_seat ? ABPTB_Function::ticket_color($type_id) : ABPTB_Function::decor_color($type_id);
-                            $icon_image = $is_seat ? ABPTB_Function::ticket_icon($type_id) : ABPTB_Function::decor_icon($type_id);
-                            $width = $cell_width * $c_span;
-                            $height = $cell_height * $r_span;
-                            if ($gap > 0) {
-                                $width = $c_span > 1 ? $width + ($c_span - 1) * $gap : $width;
-                                $height = $r_span > 1 ? $height + ($r_span - 1) * $gap : $height;
-                            }
-                            $style = "color: {$color}; grid-column: span {$c_span}; grid-row: span {$r_span}; width:{$width}px;height:{$height}px; border:1px solid  {$color};font-size:{$fs}px;border-radius:{$radius}px;";
-                            $image = '';
-                            if (!empty($icon_image) && is_numeric($icon_image)) {
-                                $image = ABPTB_Function::get_image_url('', $icon_image);
-                            }
-                            ?>
-                            <div class="<?php echo esc_attr($class); ?>" style="<?php echo esc_attr($style); ?>">
-                                <div class="cell_content <?php echo esc_attr($rotate ? "rotate-{$rotate}" : ''); ?>" style="background-image: url('<?php echo esc_url($image); ?>');">
-                                    <?php ABPTB_Layout::image_icon($icon_image); ?>
-                                    <span class="cell_label"><?php echo esc_html($name); ?></span>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php
-            }
-            //=============================//
-            private function journey_bookings($post_id, $start_time): void {
-                $bookings = ABPTB_Query::get_booking_query(array(
-                    'post_id' => $post_id,
-                    'start_time' => $start_time,
-                    'status' => ABPTB_Function::booking_status_sold(),
-                    'cache' => false,
-                ));
-                if (empty($bookings)) {
-                    echo '<div class="dash_empty"><i class="fas fa-file-invoice"></i><p>' . esc_html__('No bookings for this journey yet.', 'abp-transport-booking') . '</p></div>';
-                    return;
-                }
-                ?>
-                <div class="dash_journey_bookings">
-                    <?php foreach ($bookings as $booking) {
-                        $name = $booking['billing_name'] ?? '';
-                        $qty = (int)($booking['qty'] ?? 0);
-                        $status = $booking['order_status'] ?? '';
-                        $ticket_infos = json_decode($booking['ticket_info'] ?? '', true) ?: array();
-                        $ticket_text = array();
-                        if (is_array($ticket_infos)) {
-                            foreach ($ticket_infos as $ticket_info) {
-                                $tic_qty = (int)($ticket_info['qty'] ?? 1);
-                                $label = ABPTB_Function::ticket_label($ticket_info, $booking);
-                                if (!empty($label)) {
-                                    $ticket_text[] = esc_html($label) . ' x ' . $tic_qty;
-                                }
-                            }
-                        }
-                        ?>
-                        <div class="dash_journey_booking">
-                            <div class="dash_journey_booking_main">
-                                <strong><?php echo esc_html($name ? $name : '#' . esc_html($booking['order_id'] ?? '')); ?></strong>
-                                <?php if (!empty($ticket_text)) { ?>
-                                    <small><?php echo esc_html(implode(', ', array_map('esc_html', $ticket_text))); ?></small>
-                                <?php } ?>
-                            </div>
-                            <div class="dash_journey_booking_side">
-                                <span class="dash_pill <?php echo esc_attr($status); ?>"><?php echo esc_html(ABPTB_Layout::status_text($status)); ?></span>
-                                <span class="dash_chip dash_chip_total"><?php echo esc_html('x' . $qty); ?></span>
+				<?php } ?>
+                </tbody>
+            </table>
+			<?php
+		}
+		//=============================//
+		private function journey_seat_map($post_id, $start_time): void {
+			$post_infos = ABPTB_Function::get_all_meta($post_id);
+			$sp_infos = $post_infos['sp_infos'] ?? array();
+			if (empty($sp_infos) || !is_array($sp_infos)) {
+				echo '<div class="dash_empty"><i class="fas fa-chair"></i><p>' . esc_html__('No seat plan assigned.', 'abp-transport-booking') . '</p></div>';
+				return;
+			}
+			$filters = array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false);
+			$sold_seat = ABPTB_Query::get_sold_seat($filters, true);
+			foreach ($sp_infos as $sp_item) {
+				$sp_id = (int)($sp_item['id'] ?? 0);
+				if ($sp_id <= 0) {
+					continue;
+				}
+				$this->render_seat_plan($sp_id, $sold_seat);
+			}
+		}
+		//=============================//
+		private function render_seat_plan($sp_id, $sold_seat): void {
+			$row = ABPTB_Query::get_sp($sp_id);
+			$sp_info = !empty($row) ? current($row) : array();
+			if (empty($sp_info)) {
+				return;
+			}
+			$others = json_decode($sp_info['others'] ?? '', true) ?: array();
+			$cell_width = $others['width'] ?? 40;
+			$cell_height = $others['height'] ?? 40;
+			$gap = $others['gap'] ?? 0;
+			$radius = $others['radius'] ?? 0;
+			$cols = intval($others['column'] ?? 10);
+			$bg_image = $others['bg_image'] ?? '';
+			$img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
+			$bg_color = $others['bg_color'] ?? '#fff';
+			$layout = json_decode($sp_info['layout_data'] ?? '', true) ?: array();
+			$sp_name = $sp_info['name'] ?? '';
+			// Multi-row/column cells must hide their "occupied" grid slots.
+			$hidden_cells = array();
+			foreach ($layout as $index => $cell) {
+				$c_span = intval($cell['width_ratio'] ?? 1);
+				$r_span = intval($cell['height_ratio'] ?? 1);
+				if ($c_span > 1 || $r_span > 1) {
+					for ($r = 0; $r < $r_span; $r++) {
+						for ($c = 0; $c < $c_span; $c++) {
+							if ($r === 0 && $c === 0) {
+								continue;
+							}
+							$target_idx = $index + ($r * $cols) + $c;
+							$hidden_cells[$target_idx] = true;
+						}
+					}
+				}
+			}
+			?>
+            <div class="dash_sp_block">
+				<?php if (!empty($sp_name)) { ?>
+                    <div class="dash_sp_title"><?php echo esc_html($sp_name); ?></div>
+				<?php } ?>
+                <div class="sp_canvas dash_sp_canvas" style="grid-template-columns: repeat(<?php echo esc_attr($cols); ?>, 1fr); background-image: url('<?php echo esc_url($img_url); ?>'); background-color: <?php echo esc_attr($bg_color); ?>;gap: <?php echo esc_attr($gap); ?>px;">
+					<?php foreach ($layout as $index => $cell) {
+						if (isset($hidden_cells[$index])) {
+							continue;
+						}
+						$type_id = $cell['id'] ?? '';
+						$name = $cell['name'] ?? '';
+						$c_span = intval($cell['width_ratio'] ?? 1);
+						$r_span = intval($cell['height_ratio'] ?? 1);
+						$rotate = intval($cell['rotate'] ?? 0);
+						$fs = $cell['fs'] ?? 12;
+						$is_seat = ('seat' === ($cell['type'] ?? ''));
+						$seat_type_class = $is_seat ? 'available' : '';
+						$seat_type_class = $is_seat && in_array($name, $sold_seat, true) ? 'sold' : $seat_type_class;
+						$class = $is_seat ? 'sp_cell ' . $seat_type_class : 'sp_decor';
+						$color = $is_seat ? ABPTB_Function::ticket_color($type_id) : ABPTB_Function::decor_color($type_id);
+						$icon_image = $is_seat ? ABPTB_Function::ticket_icon($type_id) : ABPTB_Function::decor_icon($type_id);
+						$width = $cell_width * $c_span;
+						$height = $cell_height * $r_span;
+						if ($gap > 0) {
+							$width = $c_span > 1 ? $width + ($c_span - 1) * $gap : $width;
+							$height = $r_span > 1 ? $height + ($r_span - 1) * $gap : $height;
+						}
+						$style = "color: {$color}; grid-column: span {$c_span}; grid-row: span {$r_span}; width:{$width}px;height:{$height}px; border:1px solid  {$color};font-size:{$fs}px;border-radius:{$radius}px;";
+						$image = '';
+						if (!empty($icon_image) && is_numeric($icon_image)) {
+							$image = ABPTB_Function::get_image_url('', $icon_image);
+						}
+						?>
+                        <div class="<?php echo esc_attr($class); ?>" style="<?php echo esc_attr($style); ?>">
+                            <div class="cell_content <?php echo esc_attr($rotate ? "rotate-{$rotate}" : ''); ?>" style="background-image: url('<?php echo esc_url($image); ?>');">
+								<?php ABPTB_Layout::image_icon($icon_image); ?>
+                                <span class="cell_label"><?php echo esc_html($name); ?></span>
                             </div>
                         </div>
-                    <?php } ?>
+					<?php } ?>
                 </div>
-                <?php
-            }
-//=============================//
-            private function system_status($abptb_info, $label): void {
-                $total = (int)($abptb_info['total_post'] ?? 0);
-                $dummy_total = count(ABPTB_Query::dummy_ids());
-                ?>
-                <div class="dash_card">
-                    <div class="dash_card_head">
-                        <h4 class="abp_gap_xs"><i class="fas fa-server"></i> <?php esc_html_e('System Status', 'abp-transport-booking'); ?></h4>
+            </div>
+			<?php
+		}
+		//=============================//
+		private function journey_bookings($post_id, $start_time): void {
+			$bookings = ABPTB_Query::get_booking_query(array(
+				'post_id' => $post_id,
+				'start_time' => $start_time,
+				'status' => ABPTB_Function::booking_status_sold(),
+				'cache' => false,
+			));
+			if (empty($bookings)) {
+				echo '<div class="dash_empty"><i class="fas fa-file-invoice"></i><p>' . esc_html__('No bookings for this journey yet.', 'abp-transport-booking') . '</p></div>';
+				return;
+			}
+			?>
+            <div class="dash_journey_bookings">
+				<?php foreach ($bookings as $booking) {
+					$name = $booking['billing_name'] ?? '';
+					$qty = (int)($booking['qty'] ?? 0);
+					$status = $booking['order_status'] ?? '';
+					$ticket_infos = json_decode($booking['ticket_info'] ?? '', true) ?: array();
+					$ticket_text = array();
+					if (is_array($ticket_infos)) {
+						foreach ($ticket_infos as $ticket_info) {
+							$tic_qty = (int)($ticket_info['qty'] ?? 1);
+							$label = ABPTB_Function::ticket_label($ticket_info, $booking);
+							if (!empty($label)) {
+								$ticket_text[] = esc_html($label) . ' x ' . $tic_qty;
+							}
+						}
+					}
+					?>
+                    <div class="dash_journey_booking">
+                        <div class="dash_journey_booking_main">
+                            <strong><?php echo esc_html($name ? $name : '#' . esc_html($booking['order_id'] ?? '')); ?></strong>
+							<?php if (!empty($ticket_text)) { ?>
+                                <small><?php echo esc_html(implode(', ', array_map('esc_html', $ticket_text))); ?></small>
+							<?php } ?>
+                        </div>
+                        <div class="dash_journey_booking_side">
+                            <span class="dash_pill <?php echo esc_attr($status); ?>"><?php echo esc_html(ABPTB_Layout::status_text($status)); ?></span>
+                            <span class="dash_chip dash_chip_total"><?php echo esc_html('x' . $qty); ?></span>
+                        </div>
                     </div>
-                    <div class="dash_card_body dash_card_body_plain">
-                        <div class="dash_kv_list">
-                            <div class="dash_kv">
-                                <span><?php esc_html_e('Plugin', 'abp-transport-booking'); ?></span>
-                                <b><?php echo esc_html(ABPTB_VERSION); ?></b>
-                            </div>
-                            <div class="dash_kv">
-                                <span><?php esc_html_e('WordPress', 'abp-transport-booking'); ?></span>
-                                <b><?php echo esc_html(get_bloginfo('version')); ?></b>
-                            </div>
-                            <div class="dash_kv">
-                                <span><?php esc_html_e('PHP', 'abp-transport-booking'); ?></span>
-                                <b><?php echo esc_html(phpversion()); ?></b>
-                            </div>
-                            <div class="dash_kv">
-                                <span><?php esc_html_e('WooCommerce', 'abp-transport-booking'); ?></span>
-                                <?php if (ABPTB_WC >= 2 && defined('WC_VERSION')) { ?>
-                                    <b class="<?php echo esc_attr(version_compare(WC_VERSION, '8.0', '>') ? '' : 'dash_status_warn'); ?>"><?php echo esc_html(WC_VERSION); ?></b>
-                                <?php } else { ?>
-                                    <b class="dash_status_warn"><?php esc_html_e('Not active', 'abp-transport-booking'); ?></b>
-                                <?php } ?>
-                            </div>
-                            <?php if (ABPTB_WC >= 2) {
-                                $wc_name = get_option('woocommerce_email_from_name');
-                                $wc_email = get_option('woocommerce_email_from_address');
-                                if (!empty($wc_name)) { ?>
-                                    <div class="dash_kv">
-                                        <span><?php esc_html_e('WC Name', 'abp-transport-booking'); ?></span>
-                                        <b><?php echo esc_html($wc_name); ?></b>
-                                    </div>
-                                <?php }
-                                if (!empty($wc_email)) { ?>
-                                    <div class="dash_kv">
-                                        <span><?php esc_html_e('WC Email', 'abp-transport-booking'); ?></span>
-                                        <b><?php echo esc_html($wc_email); ?></b>
-                                    </div>
-                                <?php }
-                            } ?>
-                            <div class="dash_status_checklist">
-                                <?php $this->checklist_item(__('WooCommerce Plugin', 'abp-transport-booking'), ABPTB_WC >= 2, ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active'); ?>
-                                <?php $this->checklist_item(__('Booking Page', 'abp-transport-booking'), (bool)ABPTB_Function::get_page_by_slug('tf_booking'), 'tf_booking'); ?>
-                                <?php $this->checklist_item(
-                                /* translators: %s: transport label. */
-                                    sprintf(esc_html__('%s List Page', 'abp-transport-booking'), esc_html($label)),
-                                    (bool)ABPTB_Function::get_page_by_slug('tf_post'),
-                                    'tf_post'
-                                ); ?>
-                                <?php $this->checklist_item(__('Gallery Page', 'abp-transport-booking'), (bool)ABPTB_Function::get_page_by_slug('tf_gallery'), 'tf_gallery'); ?>
-                                <?php if (ABPTB_WC > 1) {
-                                    do_action('abptb_add_page');
-                                    do_action('abptb_add_tools');
-                                } ?>
-                                <?php $this->checklist_item(__('First Transport Added', 'abp-transport-booking'), $total > 0, 'add_new'); ?>
+				<?php } ?>
+            </div>
+			<?php
+		}
+//=============================//
+		private function system_status($abptb_info, $label): void {
+			$total = (int)($abptb_info['total_post'] ?? 0);
+			$dummy_total = count(ABPTB_Query::dummy_ids());
+			?>
+            <div class="dash_card">
+                <div class="dash_card_head">
+                    <h4 class="abp_gap_xs"><i class="fas fa-server"></i> <?php esc_html_e('System Status', 'abp-transport-booking'); ?></h4>
+                </div>
+                <div class="dash_card_body dash_card_body_plain">
+                    <div class="dash_kv_list">
+                        <div class="dash_kv">
+                            <span><?php esc_html_e('Plugin', 'abp-transport-booking'); ?></span>
+                            <b><?php echo esc_html(ABPTB_VERSION); ?></b>
+                        </div>
+                        <div class="dash_kv">
+                            <span><?php esc_html_e('WordPress', 'abp-transport-booking'); ?></span>
+                            <b><?php echo esc_html(get_bloginfo('version')); ?></b>
+                        </div>
+                        <div class="dash_kv">
+                            <span><?php esc_html_e('PHP', 'abp-transport-booking'); ?></span>
+                            <b><?php echo esc_html(phpversion()); ?></b>
+                        </div>
+                        <div class="dash_kv">
+                            <span><?php esc_html_e('WooCommerce', 'abp-transport-booking'); ?></span>
+							<?php if (ABPTB_WC >= 2 && defined('WC_VERSION')) { ?>
+                                <b class="<?php echo esc_attr(version_compare(WC_VERSION, '8.0', '>') ? '' : 'dash_status_warn'); ?>"><?php echo esc_html(WC_VERSION); ?></b>
+							<?php } else { ?>
+                                <b class="dash_status_warn"><?php esc_html_e('Not active', 'abp-transport-booking'); ?></b>
+							<?php } ?>
+                        </div>
+						<?php if (ABPTB_WC >= 2) {
+							$wc_name = get_option('woocommerce_email_from_name');
+							$wc_email = get_option('woocommerce_email_from_address');
+							if (!empty($wc_name)) { ?>
                                 <div class="dash_kv">
+                                    <span><?php esc_html_e('WC Name', 'abp-transport-booking'); ?></span>
+                                    <b><?php echo esc_html($wc_name); ?></b>
+                                </div>
+							<?php }
+							if (!empty($wc_email)) { ?>
+                                <div class="dash_kv">
+                                    <span><?php esc_html_e('WC Email', 'abp-transport-booking'); ?></span>
+                                    <b><?php echo esc_html($wc_email); ?></b>
+                                </div>
+							<?php }
+						} ?>
+                        <div class="dash_status_checklist">
+							<?php $this->checklist_item(__('WooCommerce Plugin', 'abp-transport-booking'), ABPTB_WC >= 2, ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active'); ?>
+							<?php $this->checklist_item(__('Booking Page', 'abp-transport-booking'), (bool)ABPTB_Function::get_page_by_slug('tf_booking'), 'tf_booking'); ?>
+							<?php $this->checklist_item(
+							/* translators: %s: transport label. */
+								sprintf(esc_html__('%s List Page', 'abp-transport-booking'), esc_html($label)),
+								(bool)ABPTB_Function::get_page_by_slug('tf_post'),
+								'tf_post'
+							); ?>
+							<?php $this->checklist_item(__('Gallery Page', 'abp-transport-booking'), (bool)ABPTB_Function::get_page_by_slug('tf_gallery'), 'tf_gallery'); ?>
+							<?php if (ABPTB_WC > 1) {
+								do_action('abptb_add_page');
+								do_action('abptb_add_tools');
+							} ?>
+							<?php $this->checklist_item(__('First Transport Added', 'abp-transport-booking'), $total > 0, 'add_new'); ?>
+                            <div class="dash_kv">
                                     <span class="dash_status_item is_todo">
                                         <i class="far fa-circle"></i>
                                         <?php esc_html_e('Number of Post', 'abp-transport-booking'); ?>
                                     </span>
-                                    <b class="dash_status_ready"><?php echo esc_html($total); ?></b>
-                                </div>
-                                <div class="dash_kv" id="abptb_dummy_row">
+                                <b class="dash_status_ready"><?php echo esc_html($total); ?></b>
+                            </div>
+                            <div class="dash_kv" id="abptb_dummy_row">
                                     <span class="dash_status_item is_todo">
                                         <i class="far fa-circle"></i>
                                         <?php esc_html_e('Dummy Import', 'abp-transport-booking'); ?>
                                     </span>
-                                    <div class="_group_content">
-                                        <button class="_btn_light_theme_xxs" onclick="abptb_import_global('dummy')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Dummy ', 'abp-transport-booking'); ?></button>
-                                        <?php if ($dummy_total > 0) { ?>
-                                            <button class="_btn_light_warning_xxs" onclick="abptb_delete_dummy()" type="button"><span class="fas fa-trash"></span><?php echo esc_html($dummy_total); ?> <?php esc_html_e('Dymmy', 'abp-transport-booking'); ?></button>
-                                        <?php } ?>
-                                    </div>
+                                <div class="_group_content">
+                                    <button class="_btn_light_theme_xxs" onclick="abptb_import_global('dummy')" type="button"><span class="fas fa-plus"></span><?php esc_html_e('Dummy ', 'abp-transport-booking'); ?></button>
+									<?php if ($dummy_total > 0) { ?>
+                                        <button class="_btn_light_warning_xxs" onclick="abptb_delete_dummy()" type="button"><span class="fas fa-trash"></span><?php echo esc_html($dummy_total); ?> <?php esc_html_e('Dymmy', 'abp-transport-booking'); ?></button>
+									<?php } ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php
-            }
-            private function checklist_item($label, $done, $fix_type = ''): void {
-                ?>
-                <div class="dash_kv" <?php echo in_array($fix_type, array('wc_active', 'wc_install_active'), true) ? 'id="abptb_wc_row"' : ''; ?>>
+            </div>
+			<?php
+		}
+		private function checklist_item($label, $done, $fix_type = ''): void {
+			?>
+            <div class="dash_kv" <?php echo in_array($fix_type, array('wc_active', 'wc_install_active'), true) ? 'id="abptb_wc_row"' : ''; ?>>
                     <span class="dash_status_item <?php echo esc_attr($done ? 'is_done' : 'is_todo'); ?>">
                         <i class="<?php echo esc_attr($done ? 'fas fa-check-circle' : 'far fa-circle'); ?>"></i>
                         <?php echo esc_html($label); ?>
                     </span>
-                    <?php if ($done) { ?>
-                        <b class="dash_status_ready"><?php esc_html_e('Ready', 'abp-transport-booking'); ?></b>
-                    <?php } elseif ($fix_type === 'add_new') { ?>
-                        <a class="dash_status_fix" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>"><?php esc_html_e('Fix', 'abp-transport-booking'); ?></a>
-                    <?php } elseif (in_array($fix_type, array('wc_active', 'wc_install_active'), true)) { ?>
-                        <button class="dash_status_fix" onclick="abptb_wc_config('<?php echo esc_attr($fix_type); ?>', this)" type="button">
-                            <?php echo esc_html($fix_type === 'wc_active' ? __('Active Now', 'abp-transport-booking') : __('Install & Activate', 'abp-transport-booking')); ?>
-                        </button>
-                    <?php } elseif (!empty($fix_type)) { ?>
-                        <button class="dash_status_fix" onclick="abptb_create_page('<?php echo esc_attr($fix_type); ?>')" type="button"><?php esc_html_e('Fix', 'abp-transport-booking'); ?></button>
-                    <?php } ?>
+				<?php if ($done) { ?>
+                    <b class="dash_status_ready"><?php esc_html_e('Ready', 'abp-transport-booking'); ?></b>
+				<?php } elseif ($fix_type === 'add_new') { ?>
+                    <a class="dash_status_fix" href="<?php echo esc_url(admin_url('post-new.php?post_type=' . ABPTB_Function::get_cpt())); ?>"><?php esc_html_e('Fix', 'abp-transport-booking'); ?></a>
+				<?php } elseif (in_array($fix_type, array('wc_active', 'wc_install_active'), true)) { ?>
+                    <button class="dash_status_fix" onclick="abptb_wc_config('<?php echo esc_attr($fix_type); ?>', this)" type="button">
+						<?php echo esc_html($fix_type === 'wc_active' ? __('Active Now', 'abp-transport-booking') : __('Install & Activate', 'abp-transport-booking')); ?>
+                    </button>
+				<?php } elseif (!empty($fix_type)) { ?>
+                    <button class="dash_status_fix" onclick="abptb_create_page('<?php echo esc_attr($fix_type); ?>')" type="button"><?php esc_html_e('Fix', 'abp-transport-booking'); ?></button>
+				<?php } ?>
+            </div>
+			<?php
+		}
+		private function content_breakdown($abptb_info): void {
+			$rows = array(
+				array('publish', __('Published', 'abp-transport-booking'), (int)($abptb_info['total_publish'] ?? 0)),
+				array('draft', __('Draft', 'abp-transport-booking'), (int)($abptb_info['total_draft'] ?? 0)),
+				array('private', __('Private', 'abp-transport-booking'), (int)($abptb_info['total_private'] ?? 0)),
+				array('trash', __('Trash', 'abp-transport-booking'), (int)($abptb_info['total_trash'] ?? 0)),
+			);
+			$sum = 0;
+			foreach ($rows as $row) {
+				$sum += $row[2];
+			}
+			?>
+            <div class="dash_card">
+                <div class="dash_card_head">
+                    <h4 class="abp_gap_xs"><i class="fas fa-layer-group"></i> <?php esc_html_e('Content Breakdown', 'abp-transport-booking'); ?></h4>
                 </div>
-                <?php
-            }
-            private function content_breakdown($abptb_info): void {
-                $rows = array(
-                    array('publish', __('Published', 'abp-transport-booking'), (int)($abptb_info['total_publish'] ?? 0)),
-                    array('draft', __('Draft', 'abp-transport-booking'), (int)($abptb_info['total_draft'] ?? 0)),
-                    array('private', __('Private', 'abp-transport-booking'), (int)($abptb_info['total_private'] ?? 0)),
-                    array('trash', __('Trash', 'abp-transport-booking'), (int)($abptb_info['total_trash'] ?? 0)),
-                );
-                $sum = 0;
-                foreach ($rows as $row) {
-                    $sum += $row[2];
-                }
-                ?>
-                <div class="dash_card">
-                    <div class="dash_card_head">
-                        <h4 class="abp_gap_xs"><i class="fas fa-layer-group"></i> <?php esc_html_e('Content Breakdown', 'abp-transport-booking'); ?></h4>
+                <div class="dash_card_body">
+                    <div class="dash_bar">
+						<?php foreach ($rows as $row) {
+							$width = $sum > 0 ? (int)round(($row[2] / $sum) * 100) : 0;
+							if ($row[2] > 0 && $width < 1) {
+								$width = 1;
+							}
+							?>
+                            <span class="<?php echo esc_attr($row[0]); ?>" style="width:<?php echo esc_attr($width); ?>%;" title="<?php echo esc_attr($row[1] . ': ' . $row[2]); ?>"></span>
+						<?php } ?>
                     </div>
-                    <div class="dash_card_body">
-                        <div class="dash_bar">
-                            <?php foreach ($rows as $row) {
-                                $width = $sum > 0 ? (int)round(($row[2] / $sum) * 100) : 0;
-                                if ($row[2] > 0 && $width < 1) {
-                                    $width = 1;
-                                }
-                                ?>
-                                <span class="<?php echo esc_attr($row[0]); ?>" style="width:<?php echo esc_attr($width); ?>%;" title="<?php echo esc_attr($row[1] . ': ' . $row[2]); ?>"></span>
-                            <?php } ?>
+                    <ul class="dash_legend">
+						<?php foreach ($rows as $row) { ?>
+                            <li>
+                                <span class="dash_dot <?php echo esc_attr($row[0]); ?>"></span>
+								<?php echo esc_html($row[1]); ?>
+                                <b><?php echo esc_html($row[2]); ?></b>
+                            </li>
+						<?php } ?>
+                    </ul>
+                </div>
+            </div>
+			<?php
+		}
+		//=============================//
+		public static function kpi_data(): array {
+			$cache_key = 'abptb_dashboard_kpi';
+			$cached = wp_cache_get($cache_key, 'abptb_dashboard');
+			if (is_array($cached)) {
+				return $cached;
+			}
+			$data = array('revenue' => 0, 'tickets' => 0, 'today' => 0, 'upcoming' => array());
+			$agg = ABPTB_Query::get_booking_query(array('aggregate' => array('total' => 'SUM', 'qty' => 'SUM')));
+			if (is_array($agg)) {
+				$data['revenue'] = (float)($agg['total'] ?? 0);
+				$data['tickets'] = (int)($agg['qty'] ?? 0);
+			}
+			$data['today'] = (int)ABPTB_Query::get_booking_query(array('order_date' => current_time('Y-m-d')), 0, 0, true);
+			$data['upcoming'] = self::journey_list();
+			wp_cache_set($cache_key, $data, 'abptb_dashboard');
+			return $data;
+		}
+		//=============================//
+		private static array $slot_batch = array();
+		//=============================//
+		public static function journey_list(): array {
+			$post_ids = defined('ABPTB_ids') && !empty(ABPTB_ids) ? ABPTB_ids : ABPTB_Query::get_post_id();
+			if (empty($post_ids) || !is_array($post_ids)) {
+				return array();
+			}
+			$today = current_time('Y-m-d');
+			// Batch-load sold qty + order count for every journey of today in one query
+			// instead of two queries per journey row.
+			self::$slot_batch = array(
+				'ready' => true,
+				'ids' => array_values(array_filter(array_map('absint', $post_ids))),
+				'map' => ABPTB_Query::get_slot_aggregates($post_ids, $today),
+			);
+			$journeys = array();
+			foreach ($post_ids as $post_id) {
+				$post_id = (int)$post_id;
+				if ($post_id <= 0) {
+					continue;
+				}
+				$journeys = array_merge($journeys, self::journey_today($post_id, $today));
+			}
+			if (count($journeys) > 1) {
+				usort($journeys, function ($a, $b) {
+					return strtotime($a['start_time'] ?? '') <=> strtotime($b['start_time'] ?? '');
+				});
+			}
+			return $journeys;
+		}
+		//=============================//
+		private static function journey_today($post_id, $today): array {
+			$post_infos = ABPTB_Function::get_all_meta($post_id);
+			if (empty($post_infos)) {
+				return array();
+			}
+			// Is today among the post's scheduled dates?
+			$dates = ABPTB_Function::date($post_id, array(), $today);
+			$today_is_schedule = is_array($dates) && in_array($today, $dates, true);
+			// Keep listing transports whose trips have already started today.
+			if (!$today_is_schedule && !self::is_schedule_day($post_infos, $today)) {
+				return array();
+			}
+			$journeys = array();
+			// Outbound trips: every scheduled departure time today (multi schedule = several times).
+			$times = ABPTB_Function::time_operation($post_id, $today);
+			if (!empty($times) && is_array($times)) {
+				foreach ($times as $_time) {
+					if ('' === (string)$_time) {
+						continue;
+					}
+					$journeys[] = self::journey_meta($post_id, $today . ' ' . $_time, -1, -1, 'up');
+				}
+			}
+			// Return trips: separate return timetable when the transport has return active.
+			if (self::return_enabled($post_infos)) {
+				$return_times = ABPTB_Function::time_operation($post_id, $today, true);
+				if (!empty($return_times) && is_array($return_times)) {
+					foreach ($return_times as $_time) {
+						if ('' === (string)$_time) {
+							continue;
+						}
+						$journeys[] = self::journey_meta($post_id, $today . ' ' . $_time, -1, -1, 'return');
+					}
+				}
+			}
+			return $journeys;
+		}
+		//=============================//
+		private static function return_enabled($post_infos): bool {
+			if (!ABPTB_Function::on_off('return')) {
+				return false;
+			}
+			$display_return = $post_infos['display_return'] ?? 'off';
+			if ('on' !== $display_return) {
+				return false;
+			}
+			$return_price_infos = $post_infos['return_price_infos'] ?? array();
+			return !empty($return_price_infos) && is_array($return_price_infos);
+		}
+		//=============================//
+		private static function is_schedule_day($post_infos, $today): bool {
+			$date_infos = $post_infos['abptb_dates'] ?? array();
+			if (empty($date_infos) || !is_array($date_infos)) {
+				return false;
+			}
+			$date_type = $date_infos['date_type'] ?? 'periodic_date';
+			if ('specific_date' === $date_type) {
+				$specific_dates = $date_infos['specific_dates'] ?? array();
+				if (is_array($specific_dates)) {
+					foreach ($specific_dates as $date_item) {
+						if (!empty($date_item) && gmdate('Y-m-d', strtotime($date_item)) === $today) {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			$start_date = $date_infos['periodic_start_date'] ?? '';
+			if (empty($start_date) || strtotime($today) < strtotime($start_date)) {
+				return false;
+			}
+			$end_date = $date_infos['periodic_end_date'] ?? '';
+			$end_date = !empty($end_date) ? gmdate('Y-m-d', strtotime($end_date)) : '';
+			$advance_days = (ABPTB_Date_Config['advance_date_number'] ?? null) ?: 28;
+			$calc_end = gmdate('Y-m-d', strtotime($start_date . ' +' . $advance_days . ' day'));
+			if (!empty($end_date) && strtotime($end_date) < strtotime($calc_end)) {
+				$calc_end = $end_date;
+			}
+			return in_array($today, ABPTB_Function::date_list_modify($start_date, $calc_end, $date_infos), true);
+		}
+		//=============================//
+		private static function prefetched_slot($post_id, $start_time): ?array {
+			if (empty(self::$slot_batch['ready'])) {
+				return null;
+			}
+			$post_id = (int)$post_id;
+			if (!in_array($post_id, self::$slot_batch['ids'], true)) {
+				return null;
+			}
+			$timestamp = strtotime($start_time);
+			if (!$timestamp || '00:00' === gmdate('H:i', $timestamp)) {
+				return null;
+			}
+			$key = $post_id . '|' . gmdate('Y-m-d H:i', $timestamp);
+			// The batch covers this transport and day, so a missing slot means zero orders.
+			return self::$slot_batch['map'][$key] ?? array('sold' => 0, 'orders' => 0);
+		}
+		//=============================//
+		public static function journey_meta($post_id, $start_time, $sold_qty = -1, $order_count = -1, $direction = 'up'): array {
+			$post_id = (int)$post_id;
+			$post_infos = ABPTB_Function::get_all_meta($post_id);
+			$seat_type = $post_infos['seat_type'] ?? 'sp';
+			$seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
+			$total = (int)(ABPTB_Function::get_total_qty($post_id, $post_infos));
+			$prefetched = self::prefetched_slot($post_id, $start_time);
+			// Sold quantity.
+			if ($sold_qty < 0) {
+				$sold_qty = null !== $prefetched ? (int)$prefetched['sold'] : (int)((ABPTB_Query::get_sold_ticket(array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false), true)['total'] ?? 0));
+			}
+			if ($order_count < 0) {
+				$order_count = null !== $prefetched ? (int)$prefetched['orders'] : count(ABPTB_Query::get_booking_query(array(
+					'post_id' => $post_id,
+					'start_time' => $start_time,
+					'status' => ABPTB_Function::booking_status_sold(),
+					'cache' => false,
+				)));
+			}
+			// Reserve quantity (only meaningful for ticket-type seating).
+			$reserve = 0;
+			if ('ticket' === $seat_type) {
+				$ticket_infos = $post_infos['ticket_infos'] ?? array();
+				if (is_array($ticket_infos)) {
+					foreach ($ticket_infos as $ticket_info) {
+						$reserve += (int)($ticket_info['reserve'] ?? 0);
+					}
+				}
+			}
+			$available = $total - $sold_qty - $reserve;
+			if ($available < 0) {
+				$available = 0;
+			}
+			// Route label of the trip direction (start -> end point).
+			$is_return = 'return' === $direction;
+			$route_infos = $is_return ? ($post_infos['return_routing_infos'] ?? array()) : ($post_infos['routing_infos'] ?? array());
+			$route = '';
+			if (!empty($route_infos) && is_array($route_infos)) {
+				$bp = array_key_first($route_infos);
+				$dp = array_key_last($route_infos);
+				if ($bp !== $dp && null !== $bp && null !== $dp) {
+					$route = ABPTB_Function::location_value($bp) . ' -> ' . ABPTB_Function::location_value($dp);
+				}
+			}
+			return array(
+				'post_id' => $post_id,
+				'start_time' => $start_time,
+				'title' => get_the_title($post_id),
+				'seat_type' => $seat_type,
+				'direction' => $is_return ? 'return' : 'up',
+				'route' => $route,
+				'started' => strtotime($start_time) <= current_time('timestamp'),
+				'sold' => (int)$sold_qty,
+				'available' => $available,
+				'total' => $total,
+				'reserve' => $reserve,
+				'order_count' => (int)$order_count,
+			);
+		}
+		//=============================//
+		public function wc_notice(): void {
+			$pro_active = defined('ABPTB_DIR_PRO');
+			$offer_key = 'abptb_pro_offer_dismissed_' . get_current_user_id();
+			$offer_dismissed = get_transient($offer_key);
+			if (ABPTB_WC < 2) {
+				$type = ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active';
+				$btn = ABPTB_WC == 1 ? __('Active Now', 'abp-transport-booking') : __('Install & Active Now', 'abp-transport-booking');
+				?>
+                <div class="dash_card dash_wc_setup">
+                    <div class="dash_wc_setup_icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="dash_wc_setup_body">
+                        <h4><?php esc_html_e('WooCommerce is required', 'abp-transport-booking'); ?></h4>
+                        <p><?php echo esc_html(ABPTB_Static::array_info('must_wc')); ?></p>
+                    </div>
+					<?php
+					$icon = ABPTB_WC == 1 ? 'fa-tasks' : 'fa-file-download';
+					?>
+                    <button type="button" class="_btn_warning_xs" onclick="abptb_wc_config('<?php echo esc_attr($type); ?>', this)">
+                        <i class="fas <?php echo esc_attr($icon); ?>"></i> <?php echo esc_html($btn); ?>
+                    </button>
+                </div>
+                <div class="_divider"></div>
+				<?php
+			}
+			if (!$pro_active && !$offer_dismissed) { ?>
+                <div class="dash_card" id="abptb-pro-offer-notice" style="padding:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:linear-gradient(90deg,#fff7e6 0%,#ffffff 100%);border:1px solid #f5b700;">
+                    <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:250px;">
+                        <div style="color:#b8860b;font-size:18px;"><i class="fas fa-gift"></i></div>
+                        <div>
+                            <strong style="color:#8a6d3b;"><?php esc_html_e('Limited Time Offer - 50% OFF!', 'abp-transport-booking'); ?></strong>
+                            <div style="color:#8a6d3b;margin-top:2px;"><?php echo wp_kses_post(__('Use coupon code <strong id="abptb-pro-offer-code">ABP50</strong> at checkout.', 'abp-transport-booking')); ?> <button type="button" class="_btn_theme_xs" onclick="abptbCopyOfferCode(this)"><i class="fas fa-copy"></i> <?php esc_html_e('Copy Code', 'abp-transport-booking'); ?></button></div>
                         </div>
-                        <ul class="dash_legend">
-                            <?php foreach ($rows as $row) { ?>
-                                <li>
-                                    <span class="dash_dot <?php echo esc_attr($row[0]); ?>"></span>
-                                    <?php echo esc_html($row[1]); ?>
-                                    <b><?php echo esc_html($row[2]); ?></b>
-                                </li>
-                            <?php } ?>
-                        </ul>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <a href="https://abp-team.com/downloads/abp-transport-booking-pro/" target="_blank" class="_btn_warning_xs"><i class="fas fa-shopping-cart"></i> <?php esc_html_e('Buy PRO Now', 'abp-transport-booking'); ?></a>
+                        <button type="button" class="_btn_theme_xs" onclick="abptbDismissProOffer()"><i class="fas fa-times"></i> <?php esc_html_e('Dismiss', 'abp-transport-booking'); ?></button>
                     </div>
                 </div>
-                <?php
-            }
-            //=============================//
-            public static function kpi_data(): array {
-                $cache_key = 'abptb_dashboard_kpi';
-                $cached = wp_cache_get($cache_key, 'abptb_dashboard');
-                if (is_array($cached)) {
-                    return $cached;
-                }
-                $data = array('revenue' => 0, 'tickets' => 0, 'today' => 0, 'upcoming' => array());
-                $agg = ABPTB_Query::get_booking_query(array('aggregate' => array('total' => 'SUM', 'qty' => 'SUM')));
-                if (is_array($agg)) {
-                    $data['revenue'] = (float)($agg['total'] ?? 0);
-                    $data['tickets'] = (int)($agg['qty'] ?? 0);
-                }
-                $data['today'] = (int)ABPTB_Query::get_booking_query(array('order_date' => current_time('Y-m-d')), 0, 0, true);
-                $data['upcoming'] = self::journey_list();
-                wp_cache_set($cache_key, $data, 'abptb_dashboard');
-                return $data;
-            }
-            //=============================//
-            private static array $slot_batch = array();
-            //=============================//
-            public static function journey_list(): array {
-                $post_ids = defined('ABPTB_ids') && !empty(ABPTB_ids) ? ABPTB_ids : ABPTB_Query::get_post_id();
-                if (empty($post_ids) || !is_array($post_ids)) {
-                    return array();
-                }
-                $today = current_time('Y-m-d');
-                // Batch-load sold qty + order count for every journey of today in one query
-                // instead of two queries per journey row.
-                self::$slot_batch = array(
-                    'ready' => true,
-                    'ids' => array_values(array_filter(array_map('absint', $post_ids))),
-                    'map' => ABPTB_Query::get_slot_aggregates($post_ids, $today),
-                );
-                $journeys = array();
-                foreach ($post_ids as $post_id) {
-                    $post_id = (int)$post_id;
-                    if ($post_id <= 0) {
-                        continue;
-                    }
-                    $journeys = array_merge($journeys, self::journey_today($post_id, $today));
-                }
-                if (count($journeys) > 1) {
-                    usort($journeys, function ($a, $b) {
-                        return strtotime($a['start_time'] ?? '') <=> strtotime($b['start_time'] ?? '');
-                    });
-                }
-                return $journeys;
-            }
-            //=============================//
-            private static function journey_today($post_id, $today): array {
-                $post_infos = ABPTB_Function::get_all_meta($post_id);
-                if (empty($post_infos)) {
-                    return array();
-                }
-                // Is today among the post's scheduled dates?
-                $dates = ABPTB_Function::date($post_id, array(), $today);
-                $today_is_schedule = is_array($dates) && in_array($today, $dates, true);
-                // Keep listing transports whose trips have already started today.
-                if (!$today_is_schedule && !self::is_schedule_day($post_infos, $today)) {
-                    return array();
-                }
-                $journeys = array();
-                // Outbound trips: every scheduled departure time today (multi schedule = several times).
-                $times = ABPTB_Function::time_operation($post_id, $today);
-                if (!empty($times) && is_array($times)) {
-                    foreach ($times as $_time) {
-                        if ('' === (string)$_time) {
-                            continue;
-                        }
-                        $journeys[] = self::journey_meta($post_id, $today . ' ' . $_time, -1, -1, 'up');
+                <div class="_divider_xs"></div>
+                <script>
+                function abptbCopyOfferCode(btn){
+                    var code = document.getElementById('abptb-pro-offer-code').innerText;
+                    if(navigator.clipboard){
+                        navigator.clipboard.writeText(code).then(function(){
+                            var old = btn.innerHTML;
+                            btn.innerHTML = '<i class="fas fa-check"></i> <?php echo esc_js(__('Copied', 'abp-transport-booking')); ?>';
+                            setTimeout(function(){ btn.innerHTML = old; }, 1500);
+                        });
+                    }else{
+                        var ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                        var old=btn.innerHTML; btn.innerHTML='<i class="fas fa-check"></i> <?php echo esc_js(__('Copied', 'abp-transport-booking')); ?>'; setTimeout(function(){btn.innerHTML=old;},1500);
                     }
                 }
-                // Return trips: separate return timetable when the transport has return active.
-                if (self::return_enabled($post_infos)) {
-                    $return_times = ABPTB_Function::time_operation($post_id, $today, true);
-                    if (!empty($return_times) && is_array($return_times)) {
-                        foreach ($return_times as $_time) {
-                            if ('' === (string)$_time) {
-                                continue;
-                            }
-                            $journeys[] = self::journey_meta($post_id, $today . ' ' . $_time, -1, -1, 'return');
-                        }
-                    }
+                function abptbDismissProOffer(){
+                    var notice = document.getElementById('abptb-pro-offer-notice');
+                    if(notice){ notice.style.display='none'; }
+                    var data = new FormData();
+                    data.append('action','abptb_dismiss_pro_offer');
+                    data.append('nonce','<?php echo esc_js(wp_create_nonce('abptb_admin_ajax_nonce')); ?>');
+                    fetch(ajaxurl,{method:'POST',credentials:'same-origin',body:data});
                 }
-                return $journeys;
-            }
-            //=============================//
-            private static function return_enabled($post_infos): bool {
-                if (!ABPTB_Function::on_off('return')) {
-                    return false;
-                }
-                $display_return = $post_infos['display_return'] ?? 'off';
-                if ('on' !== $display_return) {
-                    return false;
-                }
-                $return_price_infos = $post_infos['return_price_infos'] ?? array();
-                return !empty($return_price_infos) && is_array($return_price_infos);
-            }
-            //=============================//
-            private static function is_schedule_day($post_infos, $today): bool {
-                $date_infos = $post_infos['abptb_dates'] ?? array();
-                if (empty($date_infos) || !is_array($date_infos)) {
-                    return false;
-                }
-                $date_type = $date_infos['date_type'] ?? 'periodic_date';
-                if ('specific_date' === $date_type) {
-                    $specific_dates = $date_infos['specific_dates'] ?? array();
-                    if (is_array($specific_dates)) {
-                        foreach ($specific_dates as $date_item) {
-                            if (!empty($date_item) && gmdate('Y-m-d', strtotime($date_item)) === $today) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-                $start_date = $date_infos['periodic_start_date'] ?? '';
-                if (empty($start_date) || strtotime($today) < strtotime($start_date)) {
-                    return false;
-                }
-                $end_date = $date_infos['periodic_end_date'] ?? '';
-                $end_date = !empty($end_date) ? gmdate('Y-m-d', strtotime($end_date)) : '';
-                $advance_days = (ABPTB_Date_Config['advance_date_number'] ?? null) ?: 28;
-                $calc_end = gmdate('Y-m-d', strtotime($start_date . ' +' . $advance_days . ' day'));
-                if (!empty($end_date) && strtotime($end_date) < strtotime($calc_end)) {
-                    $calc_end = $end_date;
-                }
-                return in_array($today, ABPTB_Function::date_list_modify($start_date, $calc_end, $date_infos), true);
-            }
-            //=============================//
-            private static function prefetched_slot($post_id, $start_time): ?array {
-                if (empty(self::$slot_batch['ready'])) {
-                    return null;
-                }
-                $post_id = (int)$post_id;
-                if (!in_array($post_id, self::$slot_batch['ids'], true)) {
-                    return null;
-                }
-                $timestamp = strtotime($start_time);
-                if (!$timestamp || '00:00' === gmdate('H:i', $timestamp)) {
-                    return null;
-                }
-                $key = $post_id . '|' . gmdate('Y-m-d H:i', $timestamp);
-                // The batch covers this transport and day, so a missing slot means zero orders.
-                return self::$slot_batch['map'][$key] ?? array('sold' => 0, 'orders' => 0);
-            }
-            //=============================//
-            public static function journey_meta($post_id, $start_time, $sold_qty = -1, $order_count = -1, $direction = 'up'): array {
-                $post_id = (int)$post_id;
-                $post_infos = ABPTB_Function::get_all_meta($post_id);
-                $seat_type = $post_infos['seat_type'] ?? 'sp';
-                $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
-                $total = (int)(ABPTB_Function::get_total_qty($post_id, $post_infos));
-                $prefetched = self::prefetched_slot($post_id, $start_time);
-                // Sold quantity.
-                if ($sold_qty < 0) {
-                    $sold_qty = null !== $prefetched ? (int)$prefetched['sold'] : (int)((ABPTB_Query::get_sold_ticket(array('post_id' => $post_id, 'start_time' => $start_time, 'cache' => false), true)['total'] ?? 0));
-                }
-                if ($order_count < 0) {
-                    $order_count = null !== $prefetched ? (int)$prefetched['orders'] : count(ABPTB_Query::get_booking_query(array(
-                        'post_id' => $post_id,
-                        'start_time' => $start_time,
-                        'status' => ABPTB_Function::booking_status_sold(),
-                        'cache' => false,
-                    )));
-                }
-                // Reserve quantity (only meaningful for ticket-type seating).
-                $reserve = 0;
-                if ('ticket' === $seat_type) {
-                    $ticket_infos = $post_infos['ticket_infos'] ?? array();
-                    if (is_array($ticket_infos)) {
-                        foreach ($ticket_infos as $ticket_info) {
-                            $reserve += (int)($ticket_info['reserve'] ?? 0);
-                        }
-                    }
-                }
-                $available = $total - $sold_qty - $reserve;
-                if ($available < 0) {
-                    $available = 0;
-                }
-                // Route label of the trip direction (start -> end point).
-                $is_return = 'return' === $direction;
-                $route_infos = $is_return ? ($post_infos['return_routing_infos'] ?? array()) : ($post_infos['routing_infos'] ?? array());
-                $route = '';
-                if (!empty($route_infos) && is_array($route_infos)) {
-                    $bp = array_key_first($route_infos);
-                    $dp = array_key_last($route_infos);
-                    if ($bp !== $dp && null !== $bp && null !== $dp) {
-                        $route = ABPTB_Function::location_value($bp) . ' -> ' . ABPTB_Function::location_value($dp);
-                    }
-                }
-                return array(
-                    'post_id' => $post_id,
-                    'start_time' => $start_time,
-                    'title' => get_the_title($post_id),
-                    'seat_type' => $seat_type,
-                    'direction' => $is_return ? 'return' : 'up',
-                    'route' => $route,
-                    'started' => strtotime($start_time) <= current_time('timestamp'),
-                    'sold' => (int)$sold_qty,
-                    'available' => $available,
-                    'total' => $total,
-                    'reserve' => $reserve,
-                    'order_count' => (int)$order_count,
-                );
-            }
-            //=============================//
-            public function wc_notice(): void {
-                if (ABPTB_WC < 2) {
-                    $type = ABPTB_WC == 1 ? 'wc_active' : 'wc_install_active';
-                    $btn = ABPTB_WC == 1 ? __('Active Now', 'abp-transport-booking') : __('Install & Active Now', 'abp-transport-booking');
-                    ?>
-                    <div class="dash_card dash_wc_setup">
-                        <div class="dash_wc_setup_icon"><i class="fas fa-shopping-cart"></i></div>
-                        <div class="dash_wc_setup_body">
-                            <h4><?php esc_html_e('WooCommerce is required', 'abp-transport-booking'); ?></h4>
-                            <p><?php echo esc_html(ABPTB_Static::array_info('must_wc')); ?></p>
-                        </div>
-                        <?php
-                            $icon = ABPTB_WC == 1 ? 'fa-tasks' : 'fa-file-download';
-                        ?>
-                        <button type="button" class="_btn_warning_xs" onclick="abptb_wc_config('<?php echo esc_attr($type); ?>', this)">
-                            <i class="fas <?php echo esc_attr($icon); ?>"></i> <?php echo esc_html($btn); ?>
-                        </button>
-                    </div>
-                    <div class="_divider"></div>
-                    <?php
-                }
-            }
-            public function wc_config(): void {
-                if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
-                    wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
-                }
-                $post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
-                $page_type = $post_val('type');
-                if ($page_type == 'wc_install_active') {
-                    include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
-                    include_once(ABSPATH . 'wp-admin/includes/file.php');
-                    include_once(ABSPATH . 'wp-admin/includes/misc.php');
-                    include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
-                    $plugin = 'woocommerce';
-                    $api = plugins_api('plugin_information', array(
-                        'slug' => $plugin,
-                        'fields' => array(
-                            'short_description' => false,
-                            'sections' => false,
-                            'requires' => false,
-                            'rating' => false,
-                            'ratings' => false,
-                            'downloaded' => false,
-                            'last_updated' => false,
-                            'added' => false,
-                            'tags' => false,
-                            'compatibility' => false,
-                            'homepage' => false,
-                            'donate_link' => false,
-                        ),
-                    ));
-                    if (is_wp_error($api)) {
-                        wp_send_json_error(['html' => '', 'msg' => $api->get_error_message()]);
-                    }
-                    $title = 'title';
-                    $url = 'url';
-                    $nonce = 'nonce';
-                    $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
-                    $installed = $woocommerce_plugin->install($api->download_link);
-                    if (is_wp_error($installed)) {
-                        wp_send_json_error(['msg' => $installed->get_error_message(), 'type' => 'warn']);
-                    }
-                    $activated = activate_plugin('woocommerce/woocommerce.php');
-                    if (is_wp_error($activated)) {
-                        wp_send_json_error(['msg' => $activated->get_error_message(), 'type' => 'warn']);
-                    }
-                    wp_send_json_success(['msg' => esc_html__('WooCommerce installed and activated successfully!', 'abp-transport-booking'), 'type' => 'success'], 200);
-                }
-                if ($page_type == 'wc_active') {
-                    if (defined('ABPTB_WC') && ABPTB_WC == 1) {
-                        $activated = activate_plugin('woocommerce/woocommerce.php');
-                        if (is_wp_error($activated)) {
-                            wp_send_json_error(['msg' => $activated->get_error_message(), 'type' => 'warn']);
-                        }
-                        wp_send_json_success(['msg' => esc_html__('WooCommerce activated successfully!', 'abp-transport-booking'), 'type' => 'success'], 200);
-                    }
-                }
-                wp_send_json_error(['msg' => esc_html__('WooCommerce is either not installed or already active.', 'abp-transport-booking'), 'type' => 'warn'], 403);
-            }
-
-        }
-        new ABPTB_Dashboard();
-    }
+                </script>
+            <?php }
+		}
+		public function dismiss_pro_offer(): void {
+			if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+				wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+			}
+			$offer_key = 'abptb_pro_offer_dismissed_' . get_current_user_id();
+			set_transient($offer_key, 1, 24 * HOUR_IN_SECONDS);
+			wp_send_json_success(['msg' => __('Offer dismissed.', 'abp-transport-booking')]);
+		}
+		public function wc_config(): void {
+			if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {
+				wp_send_json_error(['msg' => __('Invalid security token or Insufficient permissions.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+			}
+			$post_val = fn($key, $default = '') => isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : $default;
+			$page_type = $post_val('type');
+			if ($page_type == 'wc_install_active') {
+				include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
+				include_once(ABSPATH . 'wp-admin/includes/file.php');
+				include_once(ABSPATH . 'wp-admin/includes/misc.php');
+				include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+				$plugin = 'woocommerce';
+				$api = plugins_api('plugin_information', array(
+					'slug' => $plugin,
+					'fields' => array(
+						'short_description' => false,
+						'sections' => false,
+						'requires' => false,
+						'rating' => false,
+						'ratings' => false,
+						'downloaded' => false,
+						'last_updated' => false,
+						'added' => false,
+						'tags' => false,
+						'compatibility' => false,
+						'homepage' => false,
+						'donate_link' => false,
+					),
+				));
+				if (is_wp_error($api)) {
+					wp_send_json_error(['html' => '', 'msg' => $api->get_error_message()]);
+				}
+				$title = 'title';
+				$url = 'url';
+				$nonce = 'nonce';
+				$woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
+				$installed = $woocommerce_plugin->install($api->download_link);
+				if (is_wp_error($installed)) {
+					wp_send_json_error(['msg' => $installed->get_error_message(), 'type' => 'warn']);
+				}
+				$activated = activate_plugin('woocommerce/woocommerce.php');
+				if (is_wp_error($activated)) {
+					wp_send_json_error(['msg' => $activated->get_error_message(), 'type' => 'warn']);
+				}
+				wp_send_json_success(['msg' => esc_html__('WooCommerce installed and activated successfully!', 'abp-transport-booking'), 'type' => 'success'], 200);
+			}
+			if ($page_type == 'wc_active') {
+				if (defined('ABPTB_WC') && ABPTB_WC == 1) {
+					$activated = activate_plugin('woocommerce/woocommerce.php');
+					if (is_wp_error($activated)) {
+						wp_send_json_error(['msg' => $activated->get_error_message(), 'type' => 'warn']);
+					}
+					wp_send_json_success(['msg' => esc_html__('WooCommerce activated successfully!', 'abp-transport-booking'), 'type' => 'success'], 200);
+				}
+			}
+			wp_send_json_error(['msg' => esc_html__('WooCommerce is either not installed or already active.', 'abp-transport-booking'), 'type' => 'warn'], 403);
+		}
+	}
+	new ABPTB_Dashboard();
+}

@@ -5,10 +5,10 @@
     add_action('abptb_selection_details_template', function ($post_infos, $form_data = [], $prefix = '') {
         //echo '<pre>';                print_r($prefix);                echo '</pre>';
         //echo '<pre>';                print_r(ABPTB_Location);                echo '</pre>';
-        //echo '<pre>';        print_r($form_data);        echo '</pre>';
         $seat_type = $post_infos['seat_type'] ?? 'sp';
         $seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
         $bp_dp = $form_data['bp_dp'] ?? '';
+        $booking_item = $form_data['booking_item'] ?? [];
         if (!empty($bp_dp)) {
             [$bp, $dp] = array_map('intval', explode('_', $bp_dp));
             //$start_point = $form_data['start_point'] ?? '';
@@ -37,11 +37,11 @@
                     $route_infos = $post_infos[$key] ?? [];
                     $bp_pd = $route_infos[$bp]['pd'] ?? 'on';
                     $dp_pd = $route_infos[$dp]['pd'] ?? 'on';
-                    $pickup_infos = $bp_pd == 'on' ? ABPTB_Function::get_pd_info($bp, $bp_time,$is_return) : [];
-                    $drop_up_infos = $dp_pd == 'on' ? ABPTB_Function::get_pd_info($dp, $dp_time,$is_return) : [];
-                    //echo '<pre>';                    print_r($pickup_infos);                    echo '</pre>';
-                    //echo '<pre>';                    print_r($drop_up_infos);                    echo '</pre>';
+                    $pickup_infos = $bp_pd == 'on' ? ABPTB_Function::get_pd_info($bp, $bp_time, $is_return) : [];
+                    $drop_up_infos = $dp_pd == 'on' ? ABPTB_Function::get_pd_info($dp, $dp_time, $is_return) : [];
+                    //echo '<pre>';                    print_r($booking_item);                    echo '</pre>';
                     if (sizeof($pickup_infos) > 1) {
+                        $pp_selected = ($booking_item['pick_up'] ?? '') ?? $bp;
                         ?>
                         <div class="_divider_xs"></div>
                         <label class="_fj_between">
@@ -50,8 +50,9 @@
                                 <?php foreach ($pickup_infos as $key => $pickup) {
                                     $name = $pickup['name'] ?? '';
                                     $time = $pickup['time'] ?? '';
+                                    $value = !empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name;
                                     ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $bp) ?>><?php echo esc_html(!empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name); ?></option>
+                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $pp_selected) ?>><?php echo esc_html($value); ?></option>
                                 <?php } ?>
                             </select>
                         </label>
@@ -59,6 +60,7 @@
                         <input type="hidden" name="<?php echo esc_attr($prefix); ?>pick_up" value="<?php echo esc_attr($bp); ?>">
                     <?php } ?>
                     <?php if (sizeof($drop_up_infos) > 1) {
+                        $dp_selected = ($booking_item['drop_off'] ?? '') ?? $dp;
                         ?>
                         <div class="_divider_xs"></div>
                         <label class="_fj_between">
@@ -67,8 +69,9 @@
                                 <?php foreach ($drop_up_infos as $key => $pickup) {
                                     $name = $pickup['name'] ?? '';
                                     $time = $pickup['time'] ?? '';
+                                    $value = !empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name;
                                     ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $dp) ?>><?php echo esc_html(!empty($time) ? $name . ' - ' . ABPTB_Function::date_format($time) : $name); ?></option>
+                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($key, $dp_selected) ?>><?php echo esc_html($value); ?></option>
                                 <?php } ?>
                             </select>
                         </label>
@@ -92,7 +95,7 @@
                             <tfoot>
                             <tr class="_fs_h5">
                                 <th><?php esc_html_e('Sub-Total', 'abp-transport-booking'); ?></th>
-                                <th class="_color_theme sub_total"></th>
+                                <th class="sub_total"></th>
                                 <th></th>
                             </tr>
                             </tfoot>

@@ -4,7 +4,7 @@ Tags: transport booking, bus booking, seat reservation, ticket booking, passenge
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,7 +22,7 @@ The frontend includes a **booking search form**, **featured transport slider / g
 
 An **admin dashboard** gives you a live business overview: total transports, total orders, tickets sold, revenue, bookings made today, today's trips and a system health checklist.
 
-Want advanced tools? **ABP Transport Booking PRO** adds PDF tickets with QR codes, CSV/PDF export, e-mail notifications, seasonal & early-bird discounts, partial payment, admin order creation, customer cancel requests, day-wise/date-wise multiple trips and more — see the Pro Features section below.
+Want advanced tools? **ABP Transport Booking PRO** adds PDF tickets with QR codes, CSV/PDF export, e-mail notifications, seasonal & early-bird discounts, partial payment, admin order creation, order item edit from admin, customer cancel requests, day-wise/date-wise multiple trips and more — see the Pro Features section below. [Buy PRO](https://abp-team.com/downloads/abp-transport-booking-pro/) | [Full Documentation](https://demo-tb.abp-team.com/documentation/)
 
 == Key Features ==
 
@@ -507,7 +507,7 @@ Yes. The plugin can be used in local WordPress development environments such as 
 If you need any further assistance or support, please contact us through the [🎫 support form](https://abp-team.com/support-desk/). We welcome your suggestions, so feel free to tell us anything we can improve in the plugin.
 
 🌐 [Live Demo](https://demo-tb.abp-team.com/)
-📖 [Documentation](https://abp-team.com/documentation-transport-booking/)
+📖 [Documentation](https://demo-tb.abp-team.com/documentation/)
 💬 [Support Forum](https://wordpress.org/support/plugin/abp-transport-booking/)
 🐛 [Bug Reports](https://github.com/abpteam24/abp-transport-booking/issues)
 📧 Email: support@abp-team.com
@@ -517,35 +517,57 @@ If you find ABP Transport Booking useful, please leave a ⭐⭐⭐⭐⭐ review 
 
 == Screenshots ==
 
-1. Transport List Page – Grid View
-2. Transport List Page – List View
-3. All Transport Bookings – Grid View
-4. Transport Details – Default Template with Ticket Types
-5. Transport Details – Default Template with Return Transport
-6. Transport Details – Light Template with Seat Plan and Single Attendee Information
-7. Transport Details – Light Template with Seat Plan, Single Attendee Information, and Return Transport
-8. Related Transport
-9. Transport List – Admin View
-10. Order List and Filter – Admin View
-11. Global Ticket Type and Seat Plan Configuration
-12. Global Reusable Date Configuration
-13. Global Reusable Additional Service Configuration
-14. Global Reusable Passenger Form Configuration
-15. Global Reusable Stops and Location Configuration
-16. Transport Type / Category Configuration
-17. Transport Feature Configuration
-18. Transport Global Configuration
-19. Global Feature Controls
-20. Transport General Configuration
-21. Multi-Layer Seat Plan Configuration for Transport
-22. Transport Ticket Type Configuration
-23. Transport Route Configuration with Return Route
-24. Transport Price Configuration with Return Route
-25. Transport Time Configuration with Return Route
-26. Well come Dashboard view
+1.Well come Dashboard view-Admin View
+2.Transport List – Admin View
+3.Order List and Filter – Admin View
+4.Ticket Type and Seat Plan Configuration– Admin View
+5. Seat Plan Design– Admin View
+6. Transport Global Configuration– Admin View
+7. Feature ON/OFF Configuration– Admin View
+8. Global Reusable Date Configuration– Admin View
+9. Global Reusable Additional Service Configuration– Admin View
+10. Global Reusable Passenger Form Configuration– Admin View
+11. Global Reusable Stops and Location Configurati– Admin View
+12. Global Transport Type / Category Configuration– Admin View
+13. Global Organizer Configuration– Admin View
+14. Global Brand Configuration– Admin View
+15. Global Feature Configuration– Admin View
+16. Global Term & Conditions  Configuration– Admin View
+17. Global FAQ Configuration– Admin View
+18. Global Slider Configuration– Admin View
+19. Global Contact Information Configuration– Admin View
+20. Global CSS Configuration– Admin View
+21. Transport General Configuration– Admin View
+22. Transport Ticket Type Configuration– Admin View
+23. Multi-Layer Seat Plan Configuration for Transport– Admin View
+24. Transport Route Configuration with Return Route– Admin View
+25. Transport Price Configuration with Return Route– Admin View
+26. Transport Date Configuration – Admin View
+27. Transport Time Configuration with Return– Admin View
+28. Transport Additional Service Configuration– Admin View
+29. Transport Passenger Form Configuration– Admin View
+30. Transport Term & Conditions Configuration– Admin View
+31. Transport FAQ Configuration– Admin View
+32. Related Transport Configuration– Admin View
+33. Transport Feature Configuration– Admin View
+34. Transport Gallery Configuration– Admin View
+35. All Transport Bookings – Grid View
+36. Transport List Page – Grid View
+37. Transport List Page – List View
+38. Transport Details – Default Template with Seat plan and Return
+39. Transport Details – Default Template with Ticket Types
 
 
 == Changelog ==
+
+= 1.1.0 =
+
+* Minor design improvements and UI refinements.
+* Minor bug fixes for better stability and compatibility.
+* Coding standards improvements.
+* Version bumped to 1.1.0.
+
+Released: October 30, 2026
 
 = 1.0.8 =
 
@@ -628,6 +650,10 @@ Released: August 17, 2026
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Minor design improvements and UI refinements, minor bug fixes, and coding standards improvements. Recommended update.
+Released: October 30, 2026
 
 = 1.0.8 =
 Adds a Transport search box and fixes the journey-date calendar and pickup/drop-off time issues. Recommended update.

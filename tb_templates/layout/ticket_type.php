@@ -6,7 +6,7 @@
         if (!empty($post_infos)) {
             $bp_dp = $form_data['bp_dp'] ?? '';
             $journey_date = $form_data['journey_date'] ?? '';
-            $bp_times = $form_data['bp_times'] ?? [];
+            $bp_time = $form_data['bp_time'] ?? '';
             $display_ticket_type = $post_infos['display_ticket_type'] ?? 'on';
             $display_ticket_type = ABPTB_Function::on_off('ticket_type') ? $display_ticket_type : 'off';
             $ticket_infos = [];
@@ -20,8 +20,22 @@
                     $ticket_infos = $_ticket_infos;
                 }
                 $sold_infos = [];
-                if (!empty($bp_dp) && !empty($bp_times)) {
+                if (!empty($bp_dp) && !empty($bp_time)) {
                     $sold_infos = ABPTB_Query::get_sold_ticket($form_data);
+                }
+                $booking_item = $form_data['booking_item'] ?? [];
+                $booking_tickets=json_decode($booking_item['ticket_info'] ?? '', true) ?: [];
+                $selected_seat=[];
+                if(!empty($booking_tickets) && is_array($booking_tickets) ){
+                    foreach ($booking_tickets as $booking_ticket) {
+                        if (!empty($booking_ticket) && sizeof($booking_ticket) > 0) {
+                            $qty=$booking_ticket['qty']??0;
+                            $type=$booking_ticket['id']??'';
+                            if(!empty($qty) && !empty($type)){
+                                $selected_seat[$type]=$qty;
+                            }
+                        }
+                    }
                 }
                 //echo '<pre>';        print_r($sold_infos);        echo '</pre>';
                 ?>
@@ -37,8 +51,14 @@
                     $reserve = $ticket_info['reserve'] ?? 0;
                     $available = $qty - $sold - $reserve;
                     $ticket_info['available'] = $available;
+                    $active_class='';
+                    if(!empty($selected_seat) && array_key_exists($key,$selected_seat)){
+                        $ticket_info['value'] = $selected_seat[$key]??'';
+                        $ticket_info['active_class'] = 'abp_active';
+                        $active_class='abp_active';
+                    }
                     ?>
-                    <div class="ticket_item _section_card_xs_w_full">
+                    <div class="ticket_item _section_card_xs_w_full <?php echo esc_attr($active_class); ?>">
                         <div class="_fj_between">
                             <h5 class="abp_gap_xxs"><?php ABPTB_Layout::image_icon(ABPTB_Function::ticket_icon($key)); ?><?php echo esc_html(ABPTB_Function::ticket_name($key)); ?></h5>
                             <?php if (!empty($price) && !empty($bp_dp)) { ?>
@@ -52,7 +72,7 @@
                             <h6 class="abp"><?php echo esc_html__('Available : ', 'abp-transport-booking') . ' ' . esc_html($available . '/' . $qty); ?></h6>
                         <?php } ?>
                         <p class="abp"><?php echo esc_html($ticket_info['description'] ?? ''); ?></p>
-                        <?php if (!empty($bp_dp) && !empty($bp_times)) {
+                        <?php if (!empty($bp_dp) && !empty($bp_time)) {
                             ABPTB_Layout::item_select($ticket_info, $key, $price, $prefix);
                         } ?>
                     </div>

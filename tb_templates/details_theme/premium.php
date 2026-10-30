@@ -45,7 +45,8 @@
                         <div class="abp_row">
                             <div class="_col_12">
                                 <div class="the_post_content">
-                                    <?php the_content(); ?>
+                                    <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+                                    echo wp_kses_post(apply_filters('the_content', $content)); ?>
                                 </div>
                             </div>
                         </div>

@@ -151,7 +151,7 @@
                 $bg_color = $others['bg_color'] ?? '#fff';
                 $img_url = !empty($bg_image) && $bg_image > 0 ? ABPTB_Function::get_image_url('', $bg_image) : '';
                 ?>
-                <div class="sp_section_card_xs _p_relative">
+                <div class="sp_section_card_xs _mar_t_xs _p_relative">
                     <?php ABPTB_Layout::info_text('abptb_sp_design'); ?>
                     <div class="_divider_xxs"></div>
                     <div class="info_text ">

@@ -4,17 +4,23 @@ let abptb_location_info = JSON.parse(abptb_infos.location_info);
     "use strict";
     $(document).ready(function () {
         $(document).find('div.abptb_area .abp_search_form').each(function () {
-            load_bp($(this));
+            if ($(this).find('[name="booking_id"]').length > 0) {
+                load_bp($(this), false);
+            } else {
+                load_bp($(this));
+            }
         })
     });
     //console.log(abptb_route_info);
-    function load_bp(parent) {
+    function load_bp(parent, clear = true) {
         let post_id = $.trim(parent.find('[name="post_id"]').val());
         if (!abptb_route_info) return;
-        parent.find('.abptb_bp ul').html('');
-        parent.find('.abptb_dp ul').html('');
-        parent.find('.abptb_bp input').val('');
-        parent.find('.abptb_dp input').val('');
+        if (clear) {
+            parent.find('.abptb_bp ul').html('');
+            parent.find('.abptb_dp ul').html('');
+            parent.find('.abptb_bp input').val('');
+            parent.find('.abptb_dp input').val('');
+        }
         let rawData;
         if (post_id) {
             if (abptb_route_info[post_id]) {

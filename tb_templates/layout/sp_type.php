@@ -4,22 +4,38 @@
     }
     add_action('abptb_sp_type_template', function ($post_infos, $form_data = [], $prefix = '') {
         if (!empty($post_infos)) {
-            //echo '<pre>';        print_r($form_data);        echo '</pre>';
             $_ticket_infos = $post_infos['sp_infos'] ?? [];
+            //echo '<pre>';            print_r($post_infos);            echo '</pre>';
             if (is_array($_ticket_infos) && sizeof($_ticket_infos) > 0) {
+                $booking_item = $form_data['booking_item'] ?? [];
                 $sp_id = $form_data['sp_id'] ?? (current($_ticket_infos)['id'] ?? '');
-                //echo '<pre>';            print_r($_ticket_infos);            echo '</pre>';
+                $sp_id=$booking_item['sp_id'] ??$sp_id;
+                $booking_tickets=json_decode($booking_item['ticket_info'] ?? '', true) ?: [];
+                $selected_seat=[];
+                $selected_type=[];
+                if(!empty($booking_tickets) && is_array($booking_tickets) ){
+                    foreach ($booking_tickets as $booking_ticket) {
+                        if (!empty($booking_ticket) && sizeof($booking_ticket) > 0) {
+                            $seat=$booking_ticket['name']??'';
+                            $type=$booking_ticket['id']??'';
+                            if(!empty($seat) && !empty($type)){
+                                $selected_seat[]=$seat;
+                                $selected_type[]=$type;
+                            }
+                        }
+                    }
+                }
                 //echo '<pre>';            print_r(ABPTB_Query::get_sold_seat($form_data));            echo '</pre>';
                 ?>
                 <input type="hidden" name="<?php echo esc_attr($prefix); ?>start_point" value="<?php echo esc_attr($form_data['start_point'] ?? ''); ?>">
                 <input type="hidden" name="<?php echo esc_attr($prefix); ?>start_time" value="<?php echo esc_attr($form_data['start_time'] ?? ''); ?>">
                 <input type="hidden" name="<?php echo esc_attr($prefix); ?>bp_dp" value="<?php echo esc_attr($form_data['bp_dp'] ?? ''); ?>">
                 <input type="hidden" name="prefix" value="<?php echo esc_attr($prefix); ?>">
-                <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_selected_seat" value="">
-                <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_selected_seat_id" value="">
+                <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_selected_seat" value="<?php echo esc_attr(!empty($selected_seat)?implode(',',$selected_seat):''); ?>">
+                <input type="hidden" name="<?php echo esc_attr($prefix); ?>sp_selected_seat_id" value="<?php echo esc_attr(!empty($selected_type)?implode(',',$selected_type):''); ?> ">
                 <?php if (sizeof($_ticket_infos) > 1) { ?>
                     <label class="_text_nowrap _min_300_mar_auto">
-                        <span class="abp_label"> <?php esc_html_e('Seat Label :', 'abp-transport-booking'); ?></span>
+                        <span> <?php esc_html_e('Seat Label :', 'abp-transport-booking'); ?></span>
                         <select class="_form_control" name="<?php echo esc_attr($prefix); ?>sp_id">
                             <?php foreach ($_ticket_infos as $_ticket_info) {
                                 $id = $_ticket_info['id'] ?? '';

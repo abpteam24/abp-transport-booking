@@ -13,8 +13,8 @@
 				add_action('abptb_registration', [$this, 'registration'], 10, 2);
 				add_action('abptb_registration_item', [$this, 'registration_item'], 10, 3);
 				add_action('abptb_selection_details', [$this, 'selection_details'], 10, 3);
-				add_action('abptb_additional', [$this, 'additional'], 10, 2);
-				add_action('abptb_client_form', [$this, 'client_form'], 10, 2);
+				add_action('abptb_additional', [$this, 'additional'], 10, 3);
+				add_action('abptb_client_form', [$this, 'client_form'], 10, 3);
 				add_action('abptb_total_price', [$this, 'total_price'], 10, 2);
 				add_action('abptb_pagination', [$this, 'pagination']);
 				add_action('abptb_display_cart_item', [$this, 'display_cart_item']);
@@ -29,9 +29,9 @@
 				$template_name = ABPTB_Function::get_post_info($post_id, 'abptb_template', 'default');
 				do_action('abptb_details_' . $template_name . '_template', $post_id);
 			}
-			public function search_form($post_infos = []): void {
+			public function search_form($post_infos = [],$form_data=[]): void {
 				include_once ABPTB_Function::template_path('layout/search_form.php');
-				do_action('abptb_search_form_template', $post_infos);
+				do_action('abptb_search_form_template', $post_infos,$form_data);
 			}
 			public function post_filter($params = []): void {
 				include_once ABPTB_Function::template_path('layout/post_filter.php');
@@ -48,13 +48,17 @@
 			}
 			public function registration($post_infos = [], $form_data = []): void {
 				if (!empty($post_infos)) {
+
 					$sale_continue = $post_infos['sale_continue'] ?? 'on';
 					$seat_type = $post_infos['seat_type'] ?? 'sp';
 					$seat_type = ABPTB_Function::on_off('sp') ? $seat_type : 'ticket';
 					$post_id = absint($post_infos['post_id'] ?? 0);
+					$booking_id = $form_data['booking_id'] ??'';
 					$form_data_down = $form_data['down'] ??[];
 					$form_data_up = $form_data['up'] ?? [];
                     $double_route = $form_data_down['double_route'] ?? '';
+					$post_infos['all_dates']=ABPTB_Function::date($post_id);
+                   // echo '<pre>';        print_r($booking_id);        echo '</pre>';
 					if ($sale_continue == 'on') { ?>
                         <form action="" method="post" class="_grid_600 <?php echo esc_attr($double_route); ?>" enctype="multipart/form-data">
                             <input type="hidden" name="double_route" value="<?php echo esc_attr($double_route); ?>">
@@ -64,7 +68,7 @@
                             <input type="hidden" name="min_qty" value="<?php echo esc_attr($post_infos['min_qty'] ?? 1); ?>">
                             <input type="hidden" name="max_qty" value="<?php echo esc_attr($post_infos['max_qty'] ?? ''); ?>" data-msg="<?php echo esc_attr__('You can buy max ticket :', 'abp-transport-booking') . ' ' . esc_attr(($post_infos['max_qty'] ?? '')); ?>">
 							<?php wp_nonce_field('abptb_registration_nonce');
-								do_action('abptb_admin_order', $post_id); ?>
+								do_action('abptb_admin_order', $booking_id); ?>
                             <div class="booking_area">
 								<?php do_action('abptb_registration_item', $post_infos, $form_data_down); ?>
                             </div>
@@ -90,13 +94,13 @@
 				include_once ABPTB_Function::template_path('layout/selection_details.php');
 				do_action('abptb_selection_details_template', $post_infos, $form_data, $prefix);
 			}
-			public function additional($post_infos = [], $prefix = ''): void {
+			public function additional($post_infos = [], $form_data=[],$prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/additional_services.php');
-				do_action('abptb_additional_template', $post_infos, $prefix);
+				do_action('abptb_additional_template', $post_infos, $form_data,$prefix);
 			}
-			public function client_form($post_infos = [], $prefix = ''): void {
+			public function client_form($post_infos = [],$form_data=[], $prefix = ''): void {
 				include_once ABPTB_Function::template_path('layout/client_form.php');
-				do_action('abptb_client_form_template', $post_infos, $prefix);
+				do_action('abptb_client_form_template', $post_infos, $form_data,$prefix);
 			}
 			public function total_price($post_infos = [], $form_data = []): void {
 				include_once ABPTB_Function::template_path('layout/total_price.php');

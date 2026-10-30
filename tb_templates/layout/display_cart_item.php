@@ -17,7 +17,7 @@
                         $pick_up = $booking_item['pick_up'] ?? '';
                         $drop_off = $booking_item['drop_off'] ?? '';
                         $start_point = $booking_item['start_point'] ?? '';
-                        //echo '<pre>';                    print_r($start_point);                    echo '</pre>';
+                        //echo '<pre>';                    print_r($booking_item);                    echo '</pre>';
                         ?>
                         <div class="abptb_area">
                             <div class="_section_card_xs _fd_column_gap_xs">
@@ -102,7 +102,7 @@
                                 <?php } ?>
                                 <?php if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && is_array($attendee_infos)) { ?>
                                     <div class="cart_client_info _w_full">
-                                        <h6 class="abp _color_theme"><?php esc_html_e('Client Information : ', 'abp-transport-booking'); ?></h6>
+                                        <h6 class="abp _color_theme"><?php esc_html_e('Passenger Information : ', 'abp-transport-booking'); ?></h6>
                                         <?php
                                             foreach ($attendee_infos as $attendee_info) {
                                                 if (!empty($attendee_info)) { ?>

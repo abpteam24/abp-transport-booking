@@ -78,7 +78,7 @@
                                                         ?>
                                                         <th>
                                                             <label>
-                                                                <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? 0); ?>" name="<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-transport-booking') ?>">
+                                                                <input type="text" class="_form_control validation_price" value="<?php echo esc_attr($price_info[$key] ?? ''); ?>" name="<?php echo esc_attr($key); ?>_price[]" placeholder="<?php esc_attr_e('EX:10', 'abp-transport-booking') ?>" required>
                                                             </label>
                                                         </th>
                                                     <?php } ?>

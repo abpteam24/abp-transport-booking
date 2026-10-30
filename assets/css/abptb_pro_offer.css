@@ -1,0 +1,6 @@
+.abptb-pro-offer-notice{padding:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:linear-gradient(90deg,#fff7e6 0%,#ffffff 100%);border:1px solid #f5b700;}
+.abptb-pro-offer-left{display:flex;align-items:center;gap:10px;flex:1;min-width:250px;}
+.abptb-pro-offer-icon{color:#b8860b;font-size:18px;}
+.abptb-pro-offer-text strong{color:#8a6d3b;}
+.abptb-pro-offer-code-line{color:#8a6d3b;margin-top:2px;}
+.abptb-pro-offer-actions{display:flex;align-items:center;gap:8px;}

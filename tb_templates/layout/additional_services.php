@@ -2,12 +2,22 @@
     if (!defined('ABSPATH')) {
         exit; // Exit if accessed directly
     }
-    add_action('abptb_additional_template', function ($post_infos = [], $prefix = '') {
+    add_action('abptb_additional_template', function ($post_infos = [],$form_data=[], $prefix = '') {
         $additional_services = ABPTB_Function::additional_data($post_infos);
         //echo '<pre>';            print_r($additional_services);            echo '</pre>';
         if (!empty($additional_services) && is_array($additional_services)) {
             $ex_count = 0;
             $post_id = absint($post_infos['post_id'] ?? 0);
+            $booking_item = $form_data['booking_item'] ?? [];
+            $booking_ex=json_decode($booking_item['ex_info'] ?? '', true) ?: [];
+            $selected_ex=[];
+            if(!empty($booking_ex) && is_array($booking_ex) ){
+                foreach ($booking_ex as $ex_id=>$ex) {
+                    if (!empty($ex) && sizeof($ex) > 0) {
+                        $selected_ex[$ex_id]=$ex['qty']??'';;
+                    }
+                }
+            }
             ?>
             <div class="additional_service_area">
                 <div class="item_box_1 additional_service">
@@ -55,6 +65,9 @@
                                             'max_qty' => $max_qty,
                                             'class' => 'ex_price_calculate',
                                         ];
+                                        if(!empty($selected_ex) && array_key_exists($id,$selected_ex)){
+                                            $input_info['value'] = $selected_ex[$id]??0;
+                                        }
                                         ABPTB_Layout::quantity_input($input_info);
                                     } else { ?>
                                         <span class="_color_warning"><?php esc_html_e('Not Available !', 'abp-transport-booking'); ?></span>
@@ -79,4 +92,4 @@
             </div>
             <?php
         }
-    }, 10, 2);
+    }, 10, 3);

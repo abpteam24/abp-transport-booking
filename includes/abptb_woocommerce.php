@@ -445,7 +445,7 @@
 								}
 								$attendee_infos = $booking_item['pass_info'] ?? [];
 								if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
-									$item_data[] = array('name' => __('Client Information', 'abp-transport-booking'), 'value' => '<br />');
+									$item_data[] = array('name' => __('Passenger Information', 'abp-transport-booking'), 'value' => '<br />');
 									foreach ($attendee_infos as $attendee_info) {
 										if (!empty($attendee_info)) {
 											foreach ($attendee_info as $attendee) {
@@ -536,7 +536,7 @@
 									}
 								}
 								if (ABPTB_Function::on_off('client_info') && !empty($attendee_infos) && sizeof($attendee_infos) > 0) {
-									$item->add_meta_data(__('Client Information', 'abp-transport-booking'), '');
+									$item->add_meta_data(__('Passenger Information', 'abp-transport-booking'), '');
 									foreach ($attendee_infos as $attendee_info) {
 										if (!empty($attendee_info)) {
 											foreach ($attendee_info as $attendee) {

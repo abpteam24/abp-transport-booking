@@ -18,8 +18,8 @@
                 add_filter('pre_update_option_abptb_csv', array($this, 'update_sanitize'), 10, 3);
             }
             public function admin_init(): void {
-                foreach ($this->configuration_section() as $section) {
-                    register_setting($section['id'], $section['id'], array($this, 'sanitize_options'));
+                foreach ($this->configuration_data() as $section_id => $section) {
+                    register_setting($section_id, $section_id, array($this, 'sanitize_options'));
                 }
             }
             public function permalink_flush(): void {
@@ -44,8 +44,8 @@
                 }
                 return sizeof($new) > 0 ? $new : $old;
             }
-            public function load_configuration(): void {
-                $allowed_tabs = [];
+            public function load_configuration($abptb_info = []): void {
+                $allowed_tabs = ['dates', 'additional', 'client_form', 'tc', 'faq', 'category', 'organizer', 'location', 'brand', 'feature', 'discount', 'partial_payment'];
                 $all_sections = $this->configuration_section();
                 foreach ($all_sections as $tab) {
                     $tab_id = $tab['id'] ?? '';
@@ -55,7 +55,7 @@
                 }
                 $active_tab = 'configuration';
                 if (isset($_GET['_abptb_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_abptb_nonce'])), 'abptb_url_action')) {
-                    $active_tab = isset($_GET['configuration']) ? sanitize_text_field(wp_unslash($_GET['configuration'])) : 'configuration';
+                    $active_tab = isset($_GET['configuration']) ? sanitize_text_field(wp_unslash($_GET['configuration'])) : (isset($_GET['global']) ? sanitize_text_field(wp_unslash($_GET['global'])) : 'configuration');
                 }
                 if (!in_array($active_tab, $allowed_tabs, true)) {
                     $active_tab = 'configuration';
@@ -66,22 +66,23 @@
                 $current_section = [];
                 ?>
                 <div id="abptb_configuration" class="global_config">
-                    <div class="_section_card">
-                        <div class="_group_content_w_full_f_equal_f_wrap">
+                    <div class="abp_tabs tab_left">
+                        <ul class="abp tab_lists">
                             <?php foreach ($all_sections as $tab) {
                                 $tab_id = $tab['id'] ?? '';
                                 if (!empty($tab_id)) {
                                     $key = preg_replace('/^abptb_/', '', $tab_id);
                                     $current_section = $key == $active_tab ? $tab : $current_section; ?>
-                                    <a href="<?php echo esc_url(ABPTB_Function::build_url('configuration', ['configuration' => $key])); ?>" class="_btn_light_active_xs  <?php echo esc_attr($active_tab == $key ? 'abp_active' : ''); ?>">
+                                    <li data-href="<?php echo esc_url(ABPTB_Function::build_url('configuration', ['configuration' => $key])); ?>" class="<?php echo esc_attr($active_tab == $key ? 'abp_active' : ''); ?>">
                                         <?php ABPTB_Layout::image_icon($tab['icon'] ?? '');
+                                            ABPTB_Static::svg($tab['svg'] ?? '');
                                             echo esc_html($tab['menu'] ?? ''); ?>
-                                    </a>
+                                    </li>
                                 <?php }
                             } ?>
-                        </div>
-                        <div class="_divider_xs"></div>
-                        <div class="<?php echo esc_attr($section_id); ?>">
+                            <?php do_action('abptb_add_admin_global_tab', $active_tab); ?>
+                        </ul>
+                        <div class="tab_content <?php echo esc_attr($section_id); ?>">
                             <?php if (sizeof($fields) > 0) {
                                 $title = $current_section['menu'] ?? '';
                                 ABPTB_Layout::info_text($section_id);
@@ -142,7 +143,9 @@
                                     <div class="_divider_xs"></div>
                                     <?php ABPTB_Layout::button_save(__('Save', 'abp-transport-booking') . ' ' . $title . ' ' . __('Configuration', 'abp-transport-booking')); ?>
                                 </form>
-                            <?php } ?>
+                            <?php } else {
+                                do_action('abptb_global_' . $active_tab, $abptb_info);
+                            } ?>
                         </div>
                     </div>
                 </div>
@@ -167,13 +170,42 @@
             public function configuration_section(): array {
                 $label = ABPTB_Function::label();
                 $brand_icon = ABPTB_Function::icon();
-                $configuration = apply_filters('abptb_configuration_after', array(array('id' => 'abptb_configuration', 'icon' => $brand_icon, 'menu' => $label)));
-                $contact = apply_filters('abptb_contact_after', array(
-                    array('id' => 'abptb_on_off', 'icon' => 'fa-solid fa-toggle-on', 'menu' => __('ON/OFF', 'abp-transport-booking')),
-                    array('id' => 'abptb_slider', 'icon' => 'fas fa-photo-video', 'menu' => __('Slider', 'abp-transport-booking')),
-                    array('id' => 'abptb_contact', 'icon' => 'fas fa-id-card-alt', 'menu' => __('Contact Information', 'abp-transport-booking')),
-                    array('id' => 'abptb_css_var', 'icon' => 'fas fa-drafting-compass', 'menu' => __('CSS Property', 'abp-transport-booking')),
-                ));
+                $configuration = [
+                    ['id' => 'abptb_configuration', 'icon' => $brand_icon, 'menu' => $label],
+                    ['id' => 'abptb_on_off', 'icon' => 'fa-solid fa-toggle-on', 'menu' => __('ON/OFF', 'abp-transport-booking')],
+                    ['id' => 'abptb_dates', 'svg' => 'date_1', 'menu' => __('Dates', 'abp-transport-booking')],
+                ];
+                if (ABPTB_Function::on_off('additional_info')) {
+                    $configuration[] = ['id' => 'abptb_additional', 'icon' => '💰', 'menu' => __('Additional services', 'abp-transport-booking')];
+                }
+                if (ABPTB_Function::on_off('client_info')) {
+                    $configuration[] = ['id' => 'abptb_client_form', 'icon' => '📋', 'menu' => __('Client Form', 'abp-transport-booking')];
+                }
+                $configuration = apply_filters('abptb_configuration_after', $configuration);
+                $configuration[] = ['id' => 'abptb_location', 'icon' => 'fas fa-route', 'menu' => ABPTB_Function::location_label()];
+                if (ABPTB_Function::on_off('category')) {
+                    $configuration[] = ['id' => 'abptb_category', 'svg' => 'category', 'menu' => ABPTB_Function::category_label()];
+                }
+                if (ABPTB_Function::on_off('organizer')) {
+                    $configuration[] = ['id' => 'abptb_organizer', 'icon' => '🏢', 'menu' => ABPTB_Function::organizer_label()];
+                }
+                if (ABPTB_Function::on_off('brand')) {
+                    $configuration[] = ['id' => 'abptb_brand', 'icon' => '🏷️', 'menu' => ABPTB_Function::brand_label()];
+                }
+                if (ABPTB_Function::on_off('feature')) {
+                    $configuration[] = ['id' => 'abptb_feature', 'icon' => '🔗', 'menu' => ABPTB_Function::feature_label()];
+                }
+                if (ABPTB_Function::on_off('tc')) {
+                    $configuration[] = ['id' => 'abptb_tc', 'icon' => '🤝', 'menu' => __('Term & Conditions', 'abp-transport-booking')];
+                }
+                if (ABPTB_Function::on_off('faq')) {
+                    $configuration[] = ['id' => 'abptb_faq', 'icon' => '❓', 'menu' => __('FAQ', 'abp-transport-booking')];
+                }
+                $contact = apply_filters('abptb_contact_after', [
+                    ['id' => 'abptb_slider', 'icon' => 'fas fa-photo-video', 'menu' => __('Slider', 'abp-transport-booking')],
+                    ['id' => 'abptb_contact', 'icon' => 'fas fa-id-card-alt', 'menu' => __('Contact Information', 'abp-transport-booking')],
+                    ['id' => 'abptb_css_var', 'icon' => 'fas fa-drafting-compass', 'menu' => __('CSS Property', 'abp-transport-booking')],
+                ]);
                 return array_merge($configuration, $contact);
             }
             public function configuration_data() {
@@ -433,8 +465,8 @@
                         ),
                         array(
                             'name' => 'client_info',
-                            'label' => __('Client Info Form', 'abp-transport-booking'),
-                            'desc' => __('If you do not want to use the Client Info Form, simply turn this switch OFF. Once disabled, the Client Info Form field and related Client Info options will be completely removed from the site.', 'abp-transport-booking'),
+                            'label' => __('Passenger Information Form', 'abp-transport-booking'),
+                            'desc' => __('If you do not want to use the Passenger Information Form, simply turn this switch OFF. Once disabled, the Passenger Information Form field and related Passenger Information options will be completely removed from the site.', 'abp-transport-booking'),
                             'type' => 'button_switch',
                             'default' => 'on',
                         ),
