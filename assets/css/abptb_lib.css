@@ -847,6 +847,7 @@
 	div.abptb_area .woocommerce-input-wrapper,
 	div.abptb_area .woocommerce-input-wrapper span {display: block;}
 	div.abptb_area .woocommerce-checkout.woocommerce-page {padding: var(--tb_gap_xs);}
+	.wc-block-components-product-details__value~span[aria-hidden]{display: none;}
 	/******astra theme********/
 	body.theme-astra div.woocommerce td.product-name._btn_warning,
 	body.theme-astra div.woocommerce td.product-name {display: block !important;}

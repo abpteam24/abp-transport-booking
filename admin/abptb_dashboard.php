@@ -1039,7 +1039,6 @@ if (!class_exists('ABPTB_Dashboard')) {
                         <i class="fas <?php echo esc_attr($icon); ?>"></i> <?php echo esc_html($btn); ?>
                     </button>
                 </div>
-                <div class="_divider"></div>
 				<?php
 			}
 			if (!$pro_active && !$offer_dismissed) { ?>
@@ -1048,39 +1047,17 @@ if (!class_exists('ABPTB_Dashboard')) {
                         <div style="color:#b8860b;font-size:18px;"><i class="fas fa-gift"></i></div>
                         <div>
                             <strong style="color:#8a6d3b;"><?php esc_html_e('Limited Time Offer - 50% OFF!', 'abp-transport-booking'); ?></strong>
-                            <div style="color:#8a6d3b;margin-top:2px;"><?php echo wp_kses_post(__('Use coupon code <strong id="abptb-pro-offer-code">ABP50</strong> at checkout.', 'abp-transport-booking')); ?> <button type="button" class="_btn_theme_xs" onclick="abptbCopyOfferCode(this)"><i class="fas fa-copy"></i> <?php esc_html_e('Copy Code', 'abp-transport-booking'); ?></button></div>
+                            <div style="color:#8a6d3b;margin-top:2px;"><?php echo wp_kses_post(__('Use coupon code <strong id="abptb-pro-offer-code">ABP50</strong> at checkout.', 'abp-transport-booking')); ?>
+                                <button type="button" class="_btn_theme_xs abptb-copy-offer-code"   ><i class="fas fa-copy"></i> <?php esc_html_e('Copy Code', 'abp-transport-booking'); ?></button>
+                            </div>
                         </div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;">
                         <a href="https://abp-team.com/downloads/abp-transport-booking-pro/" target="_blank" class="_btn_warning_xs"><i class="fas fa-shopping-cart"></i> <?php esc_html_e('Buy PRO Now', 'abp-transport-booking'); ?></a>
-                        <button type="button" class="_btn_theme_xs" onclick="abptbDismissProOffer()"><i class="fas fa-times"></i> <?php esc_html_e('Dismiss', 'abp-transport-booking'); ?></button>
+                        <button type="button" class="_btn_theme_xs abptb-dismiss-pro-offe"><i class="fas fa-times"></i> <?php esc_html_e('Dismiss', 'abp-transport-booking'); ?></button>
                     </div>
                 </div>
-                <div class="_divider_xs"></div>
-                <script>
-                function abptbCopyOfferCode(btn){
-                    var code = document.getElementById('abptb-pro-offer-code').innerText;
-                    if(navigator.clipboard){
-                        navigator.clipboard.writeText(code).then(function(){
-                            var old = btn.innerHTML;
-                            btn.innerHTML = '<i class="fas fa-check"></i> <?php echo esc_js(__('Copied', 'abp-transport-booking')); ?>';
-                            setTimeout(function(){ btn.innerHTML = old; }, 1500);
-                        });
-                    }else{
-                        var ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-                        var old=btn.innerHTML; btn.innerHTML='<i class="fas fa-check"></i> <?php echo esc_js(__('Copied', 'abp-transport-booking')); ?>'; setTimeout(function(){btn.innerHTML=old;},1500);
-                    }
-                }
-                function abptbDismissProOffer(){
-                    var notice = document.getElementById('abptb-pro-offer-notice');
-                    if(notice){ notice.style.display='none'; }
-                    var data = new FormData();
-                    data.append('action','abptb_dismiss_pro_offer');
-                    data.append('nonce','<?php echo esc_js(wp_create_nonce('abptb_admin_ajax_nonce')); ?>');
-                    fetch(ajaxurl,{method:'POST',credentials:'same-origin',body:data});
-                }
-                </script>
-            <?php }
+			<?php }
 		}
 		public function dismiss_pro_offer(): void {
 			if (!check_ajax_referer('abptb_admin_ajax_nonce', 'nonce', false) || !current_user_can('manage_options')) {

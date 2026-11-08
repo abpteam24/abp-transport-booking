@@ -493,12 +493,14 @@
             }
             public function day_wise_time($day_times = [], $prefix = ''): void {
                 $days = ABPTB_Layout::week_day();
+                $day_keys=!empty($day_times)?implode(", ", array_keys($day_times)):'';
                 ?>
                 <div class="full_width  <?php echo esc_attr(!empty($day_times) ? 'abp_active' : ''); ?>" data-collapse="#<?php echo esc_attr($prefix); ?>day_wise_time">
                     <div class="_divider_xxs"></div>
                     <div class="_fj_between _fa_center">
                         <span class="abp_label"><?php esc_html_e('Day Wise Operation Time (Optional) ', 'abp-transport-booking'); ?></span>
                         <div class="_group_content custom_checkbox">
+                            <input type="hidden" name="<?php echo esc_attr($prefix); ?>operation_time_day_name" value="<?php echo esc_attr($day_keys); ?>"/>
                             <?php foreach ($days as $key => $day) { ?>
                                 <div class="checkbox_item">
                                     <button type="button" class="_btn_light_info_xs <?php echo esc_attr(array_key_exists($key, $day_times) ? 'abp_active' : ''); ?>" data-collapse-target="#<?php echo esc_attr($prefix . $key); ?>" data-checked="<?php echo esc_attr($key); ?>" data-open-icon="fa-check-square" data-close-icon="fa-square">

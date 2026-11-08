@@ -485,10 +485,12 @@
                     $opt_time = $post_val('operation_time_optional');
                     $opt_time = !empty($opt_time) ? explode(',', $opt_time) : [];
                     if (in_array('day_wise_time', $opt_time)) {
+	                    $day_keys = $post_val('operation_time_day_name');
+	                    $day_keys = !empty($day_keys) ? explode(',', $day_keys) : [];
                         foreach (ABPTB_Layout::week_day() as $key => $day) {
                             $times = $post_array($key . '_time');
                             $times = array_filter($times);
-                            if (!empty($times)) {
+                            if (!empty($times) && in_array($key, $day_keys)) {
                                 sort($times);
                                 $time_info['day_time'][$key] = array_values(array_unique($times));
                             }
@@ -569,10 +571,12 @@
                         $opt_time = $post_val('return_operation_time_optional');
                         $opt_time = !empty($opt_time) ? explode(',', $opt_time) : [];
                         if (in_array('return_day_wise_time', $opt_time)) {
+	                        $day_keys = $post_val('return_operation_time_day_name');
+	                        $day_keys = !empty($day_keys) ? explode(',', $day_keys) : [];
                             foreach (ABPTB_Layout::week_day() as $key => $day) {
                                 $times = $post_array('return_' . $key . '_time');
                                 $times = array_filter($times);
-                                if (!empty($times)) {
+                                if (!empty($times) && in_array($key, $day_keys)) {
                                     sort($times);
                                     $return_time_info['day_time'][$key] = array_values(array_unique($times));
                                 }
