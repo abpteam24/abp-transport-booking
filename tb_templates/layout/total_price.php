@@ -19,10 +19,10 @@
         <div class="total_continue_area">
             <div class="total_continue item_box_1">
                 <div class="_fj_between">
-                    <div class="total_summary_head">
+                    <h4 class="abp_color_theme_gap_xs">
                         <span class="fas fa-receipt"></span>
                         <span><?php esc_html_e('Booking Summary', 'abp-transport-booking'); ?></span>
-                    </div>
+                    </h4>
                     <?php if (is_admin() && str_contains(wp_get_referer(), 'admin_order')) { ?>
                         <input type="submit" class="_d_none" name="add-admin-order" value="<?php echo esc_attr($wc_link); ?>"/>
                     <?php } else { ?>

@@ -15,7 +15,7 @@
                 $post_id = $params['post_id'] ?? '';
                 ob_start();
                 if (!empty($post_id)) {
-                    do_action('abptb_load_details_template', $post_id);
+                    do_action('abptb_load_details_template', $post_id,[],false);
                 } else {
                     $params['all_post'] = ABPTB_Query::get_post_id($params);
                     $params['global_order'] = 'yes';

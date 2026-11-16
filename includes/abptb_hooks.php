@@ -5,7 +5,7 @@
 	if (!class_exists('ABPTB_Hooks')) {
 		class ABPTB_Hooks {
 			public function __construct() {
-				add_action('abptb_load_details_template', [$this, 'details_template']);
+				add_action('abptb_load_details_template', [$this, 'details_template'],10,3);
 				add_action('abptb_search_form', [$this, 'search_form'], 10, 2);
 				add_action('abptb_post_filter', [$this, 'post_filter'], 10, 2);
 				add_action('abptb_ticket_type', [$this, 'ticket_type'], 10, 3);
@@ -24,10 +24,10 @@
 				add_action('abptb_slider', [$this, 'slider'], 10, 3);
 				add_action('abptb_slider_popup', [$this, 'slider_popup'], 10, 3);
 			}
-			public function details_template($post_id): void {
+			public function details_template($post_id,$form_data = [],$full_content=true): void {
 				require_once ABPTB_Function::details_template_path($post_id);
 				$template_name = ABPTB_Function::get_post_info($post_id, 'abptb_template', 'default');
-				do_action('abptb_details_' . $template_name . '_template', $post_id);
+				do_action('abptb_details_' . $template_name . '_template', $post_id,$form_data,$full_content);
 			}
 			public function search_form($post_infos = [],$form_data=[]): void {
 				include_once ABPTB_Function::template_path('layout/search_form.php');

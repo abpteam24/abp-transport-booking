@@ -60,6 +60,8 @@
 			public static function get_post_id($filters = []): array {
 				$post_type = ($filters['cpt'] ?? null) ?: ABPTB_Function::get_cpt();
 				$show = ($filters['posts_per_page'] ?? null) ?: -1;
+				$pagination= ($filters['pagination'] ?? null) ?:'yes';
+				$show=$pagination=='yes'?$show:-1;
 				$page = ($filters['paged'] ?? null) ?: 1;
 				$status = ($filters['status'] ?? null) ?: 'publish';
 				$cat_id = $filters['cat_id'] ?? null;
@@ -69,7 +71,7 @@
 				$bp_dp = $filters['bp_dp'] ?? null;
 				$bp = $filters['bp'] ?? null;
 				$dp = $filters['dp'] ?? null;
-				$title = $filters['post_title'] ?? ($filters['title'] ?? null);
+				$title = $filters['post_title'] ?? ($filters['post_title'] ?? null);
 				if (!empty($bp) && !empty($dp)) {
 					$bp_dp = $bp . '_' . $dp;
 				}

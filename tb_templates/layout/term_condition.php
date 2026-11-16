@@ -19,10 +19,7 @@
                 <div class="_section_card_xs_w_full term_condition">
                     <h4 class="abp_gap_xs">🤝 <?php esc_html_e('Term & Conditions', 'abp-transport-booking'); ?></h4>
                     <div class="_divider_xs"></div>
-                    <?php
-                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-                        echo wp_kses_post(apply_filters('the_content', $infos));
-                    ?>
+	                <?php echo wp_kses_post(ABPTB_Function::format_content($infos)); ?>
                 </div>
                 <?php
             }

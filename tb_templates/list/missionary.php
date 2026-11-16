@@ -9,6 +9,8 @@
 		if ( ! empty( $post_ids ) && sizeof( $post_ids ) > 0 ) {
 			$column            = $params['column'] ?? 3;
 			$show_post         = absint( ( $params['show'] ?? 0 ) ?: ( $column * 3 ) );
+			$pagination= ($params['pagination'] ?? null) ?:'yes';
+			$show_post=$pagination=='yes'?$show_post:sizeof($post_ids);
 			$post_count        = 0;
 			$args['total']     = sizeof( $post_ids );
 			$args['page_item'] = $show_post;

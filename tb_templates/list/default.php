@@ -12,6 +12,8 @@
             $related = $params['related'] ?? '';
             $bp_dp = $params['bp_dp'] ?? '';
             $show_post = absint(($params['show'] ?? 0) ?: ($column * 3));
+	        $pagination= ($params['pagination'] ?? null) ?:'yes';
+	        $show_post=$pagination=='yes'?$show_post:sizeof($post_ids);
             $class = $style == 'grid' && $column > 1 ? 'abptb_grid item_' . $column : 'abptb_lists item_' . $column;
             $class = !empty($related) ? 'abptb_grid ' : $class;
             $post_count = 0;
@@ -78,7 +80,7 @@
                     </div>
                 <?php } ?>
             </div>
-            <?php if (empty($related)) {
+            <?php if (empty($related) && $pagination=='yes') {
                 do_action('abptb_pagination', $args);
             } ?>
             <?php

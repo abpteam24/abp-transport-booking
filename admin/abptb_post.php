@@ -66,11 +66,12 @@
                 $limit = absint(($filter_args['page_item'] ?? 0) ?: ABPTB_Function::get_option('abptb_per_page_item', 20));
                 $count = ($page_number - 1) * $limit + 1;
                 $cpt = ABPTB_Function::get_cpt();
-                $post_title = $filter_args['post_title'] ?? '';
-                $post_title = is_string($post_title) ? trim($post_title) : '';
+
                 $filters['status'] = $status;
                 $filters['posts_per_page'] = $limit;
                 $filters['paged'] = $page_number - 1;
+	            $post_title = $filter_args['post_title'] ?? '';
+	            $post_title = is_string($post_title) ? trim($post_title) : '';
                 if ($post_title !== '') {
                     $filters['post_title'] = $post_title;
                 }

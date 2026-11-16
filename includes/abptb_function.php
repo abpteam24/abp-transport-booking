@@ -452,6 +452,17 @@
 				$name = self::pd_value($pd);
 				return !empty($time) ? $name . ' - ' . self::date_format($time) : $name;
 			}
+			public static function format_content( $content ): string {
+				if ( trim( $content ) === '' ) {
+					$content = html_entity_decode( $content );
+					$content     = (string) $content;
+					$content = wptexturize( $content );
+					$content = wpautop( $content );
+					$content = shortcode_unautop( $content );
+					$content = do_shortcode( $content );
+				}
+				return (string)  $content ;
+			}
 			//============= Date function================//
 			public static function date_all($post_ids = [], $_date = ''): array {
 				$all_dates = [];
