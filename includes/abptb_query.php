@@ -71,7 +71,7 @@
 				$bp_dp = $filters['bp_dp'] ?? null;
 				$bp = $filters['bp'] ?? null;
 				$dp = $filters['dp'] ?? null;
-				$title = $filters['post_title'] ?? ($filters['post_title'] ?? null);
+				$title = $filters['post_title'] ?? null;
 				if (!empty($bp) && !empty($dp)) {
 					$bp_dp = $bp . '_' . $dp;
 				}
